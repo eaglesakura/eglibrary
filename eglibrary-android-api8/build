@@ -1,0 +1,13 @@
+#! /bin/sh
+RELEASE_NAME=eglibrary-android-api8.jar
+RELEASE_DIR=release
+
+ant clean
+ant release
+if [ $? -ne 0 ]; then
+    echo "build fail..."
+    exit 1
+fi
+cd bin/
+zip -u -r classes.jar ../src/**
+mv classes.jar ../../$RELEASE_DIR/$RELEASE_NAME
