@@ -1,0 +1,4 @@
+#! /bin/sh
+cd eglibrary-android-api8/
+./build
+cd ../
