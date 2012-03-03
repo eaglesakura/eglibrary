@@ -1,8 +1,9 @@
 # eglibrary
 
-## ‚±‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚É‚Â‚¢‚Ä
+## eglibrary-android-api8‚É‚Â‚¢‚Ä
 
 AndroidŒü‚¯OpenGL ES 1.1ƒ‰ƒbƒp[ƒ‰ƒCƒuƒ‰ƒŠ‚Å‚·B
+API8iAndroid 2.2jˆÈ~Œü‚¯‚Éì¬‚³‚ê‚Ä‚¢‚Ü‚·B
 2DƒQ[ƒ€‚Ì§ì‚É•K—v‚È•`‰æŽü‚è‚Ìˆ—A”Šwˆ—AƒXƒŒƒbƒh‘€ìŒn‚Ì•â•ƒNƒ‰ƒX‚ª‘å—Ê‚É‚ ‚è‚Ü‚·B
 Šî–{“I‚É@eaglesakura‚ªŒÂl“I‚ÉŽg‚¤orŽg‚¢‚½‚¢‹@”\‚Ì‚Ý‚Å\¬‚³‚ê‚Ä‚¢‚Ü‚·B
 ƒ\[ƒXƒR[ƒh‚Íƒ‰ƒCƒZƒ“ƒX‚É]‚Á‚ÄŽ©—R‚ÉŽg‚Á‚Ä‚à‚ç‚Á‚Ä\‚¢‚Ü‚¹‚ñ‚ªA‚Ç‚ñ‚È•s‹ï‡‚ª‚ ‚Á‚Ä‚àÓ”C‚ÍŽ‚¿‚Ü‚¹‚ñB
@@ -16,7 +17,10 @@ jar‚É‚Íƒ\[ƒXƒR[ƒh‚àŠÜ‚Ü‚ê‚Ä‚¢‚Ü‚·‚Ì‚ÅA“à•”‚ÅƒGƒ‰[‚ª”­¶‚µ‚Ä‚àƒgƒŒ[ƒX‚ª‚Å‚«‚
 ## Šù’m‚Ì–â‘èjMaliŒnGPU‚Å‚Ì•s‹ï‡
 
 ŽŸ‚ÌðŒ‰º‚ÅAMaliŒn‚ÌGPUiGalaxy S2“™j‚ÉŒÀ‚èEGL‚Ì•œ‹A‚ÉŽ¸”s‚·‚é‚æ‚¤‚Å‚·B
+
 ¡‚Ì‚Æ‚±‚ëQualcommŒn‚ÌGPUiNexus One“™j‚Å‚Í”­¶‚µ‚Ü‚¹‚ñB
+
+startActivity’¼Œã‚ÌonPause’†‚ÉThread#sleep‚Å1•b’ö“x‹­§’âŽ~‚³‚¹‚é‚±‚Æ‚Å‰ñ”ð‚Å‚«‚é‚æ‚¤‚Å‚·B
 
 1. OpenGLManagerƒNƒ‰ƒX‚ÆOpenGLView‚ðŽg‚Á‚Ä‚¢‚éActivity‚©‚ç•Ê‚ÈActivity‚ðŒÄ‚Ño‚·
 1. ‰æ–Ê‘JˆÚ’†‚©‚çu–ß‚évƒL[‚ð˜A‘Å‚µA‚·‚®‚ÉActivity‚Ö–ß‚é
