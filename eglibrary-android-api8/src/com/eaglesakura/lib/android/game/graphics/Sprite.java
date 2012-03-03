@@ -83,8 +83,10 @@ public class Sprite {
      * @param master
      */
     public Sprite(SpriteMaster master) {
+        if (master == null) {
+            throw new NullPointerException("master is null");
+        }
         this.master = master;
-
         dstArea = new Rect(0, 0, master.image.getWidth(), master.image.getHeight());
     }
 
@@ -176,6 +178,14 @@ public class Sprite {
 
     public int getDstBottom() {
         return dstArea.bottom;
+    }
+
+    public int getDstCenterX() {
+        return dstArea.centerX();
+    }
+
+    public int getDstCenterY() {
+        return dstArea.centerY();
     }
 
     /**
