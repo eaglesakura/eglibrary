@@ -1,7 +1,6 @@
 */bin/**
 */gen/**
 */private/**
-*.jar
 apk-build/**
 .DS_Store
 local.properties
