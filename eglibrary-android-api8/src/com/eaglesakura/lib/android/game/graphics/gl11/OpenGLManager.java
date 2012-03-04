@@ -193,7 +193,11 @@ public class OpenGLManager extends DisposableResource {
      * @param a
      */
     public void clearColorRGBA(int r, int g, int b, int a) {
-        gl11.glClearColorx((r & 0xff) << 8, (g & 0xff) << 8, (b & 0xff) << 8, (a & 0xff) << 8);
+        r = (r & 0xff) * 256 / 255;
+        g = (g & 0xff) * 256 / 255;
+        b = (b & 0xff) * 256 / 255;
+        a = (a & 0xff) * 256 / 255;
+        gl11.glClearColorx(r << 8, g << 8, b << 8, a << 8);
     }
 
     /**
