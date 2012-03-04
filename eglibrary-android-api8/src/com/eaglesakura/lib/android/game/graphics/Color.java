@@ -3,6 +3,27 @@ package com.eaglesakura.lib.android.game.graphics;
 import com.eaglesakura.lib.android.game.util.GameUtil;
 
 public class Color {
+
+    /**
+     * 白
+     */
+    public static final int WHITE = toColorRGBA(255, 255, 255, 255);
+
+    /**
+     * 赤
+     */
+    public static final int RED = toColorRGBA(255, 0, 0, 255);
+
+    /**
+     * 緑
+     */
+    public static final int GREEN = toColorRGBA(0, 255, 0, 255);
+
+    /**
+     * 青
+     */
+    public static final int BLUE = toColorRGBA(0, 0, 255, 255);
+
     /**
      * 透過成分
      */
