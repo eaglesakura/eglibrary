@@ -1,6 +1,7 @@
 package com.eaglesakura.lib.android.game.input;
 
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.view.MotionEvent;
 
 import com.eaglesakura.lib.android.game.display.VirtualDisplay;
@@ -576,7 +577,7 @@ public class MultiTouchInput {
          * @return
          */
         public boolean isInside() {
-            if (!isTouch()) {
+            if (isRelease() && !isReleaseOnce()) {
                 return false;
             }
 
@@ -589,6 +590,19 @@ public class MultiTouchInput {
             }
 
             return true;
+        }
+
+        /**
+         * 指定した範囲にタップがある場合trueを返す。
+         * 
+         * @return
+         */
+        public boolean isInside(Rect rect) {
+            if (isRelease() && !isReleaseOnce()) {
+                return false;
+            }
+
+            return rect.contains(getCurrentX(), getCurrentY());
         }
     }
 
@@ -713,6 +727,20 @@ public class MultiTouchInput {
     }
 
     /**
+     * 指定したエリアにあるタッチポイントを取得する。
+     * @param area
+     * @return
+     */
+    public TouchPoint getEnableTouchPoint(Rect area) {
+        for (TouchPoint point : touchPoints) {
+            if (point.isInside(area)) {
+                return point;
+            }
+        }
+        return null;
+    }
+
+    /**
      * 有効なタッチポイント数を取得する。
      * 
      * @return
@@ -728,6 +756,10 @@ public class MultiTouchInput {
         return result;
     }
 
+    /**
+     * 関連付けられた仮想ディスプレイを取得する。
+     * @return
+     */
     public VirtualDisplay getVirtualDisplay() {
         return virtualDisplay;
     }

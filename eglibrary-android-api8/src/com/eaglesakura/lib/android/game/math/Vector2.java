@@ -90,6 +90,15 @@ public final class Vector2 {
     }
 
     /**
+     * XYをmul倍する。
+     * @param mul
+     */
+    public void mul(float mul) {
+        x *= mul;
+        y *= mul;
+    }
+
+    /**
      * 長さを取得する。
      * 
      * @author eagle.sakura
@@ -130,6 +139,9 @@ public final class Vector2 {
      */
     public void normalize() {
         final float len = length();
+        if (len == 0) {
+            return;
+        }
         x /= len;
         y /= len;
     }
