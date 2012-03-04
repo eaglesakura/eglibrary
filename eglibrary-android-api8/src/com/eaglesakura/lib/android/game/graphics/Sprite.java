@@ -536,6 +536,23 @@ public class Sprite {
 
     /**
      * スプライトと指が接触していたらtrueを返す。
+     * touchOnce / touch / releaseOnceの場合に!=nullを返す。
+     * @param input
+     * @return
+     */
+    public TouchPoint isIntersectAndTouchOrReleaseOnce(MultiTouchInput input) {
+        for (int i = 0; i < input.getTouchPointCount(); ++i) {
+            TouchPoint touchPoint = input.getTouchPoint(i);
+            if ((touchPoint.isReleaseOnce() || touchPoint.isTouch())
+                    && isIntersect(touchPoint.getCurrentX(), touchPoint.getCurrentY())) {
+                return touchPoint;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * スプライトと指が接触していたらtrueを返す。
      * @param input
      * @return
      */
