@@ -519,11 +519,11 @@ public class Sprite {
     }
 
     /**
-     * スプライトと指が接触していたらtrueを返す。
+     * スプライトと指が接触していたらタッチ座標。
      * @param input
      * @return
      */
-    public TouchPoint isIntersect(MultiTouchInput input) {
+    public TouchPoint findIntersect(MultiTouchInput input) {
         for (int i = 0; i < input.getTouchPointCount(); ++i) {
             TouchPoint touchPoint = input.getTouchPoint(i);
             if (!touchPoint.isRelease() && !touchPoint.isReleaseOnce()
@@ -535,12 +535,12 @@ public class Sprite {
     }
 
     /**
-     * スプライトと指が接触していたらtrueを返す。
+     * スプライトと指が接触していたら!=nullを返す。
      * touchOnce / touch / releaseOnceの場合に!=nullを返す。
      * @param input
      * @return
      */
-    public TouchPoint isIntersectAndTouchOrReleaseOnce(MultiTouchInput input) {
+    public TouchPoint findIntersectTouchOrReleaseOnce(MultiTouchInput input) {
         for (int i = 0; i < input.getTouchPointCount(); ++i) {
             TouchPoint touchPoint = input.getTouchPoint(i);
             if ((touchPoint.isReleaseOnce() || touchPoint.isTouch())
@@ -552,11 +552,11 @@ public class Sprite {
     }
 
     /**
-     * スプライトと指が接触していたらtrueを返す。
+     * スプライトと指が接触していたら!=nullを返す。
      * @param input
      * @return
      */
-    public TouchPoint isIntersectAndReleaseOnce(MultiTouchInput input) {
+    public TouchPoint findIntersectReleaseOnce(MultiTouchInput input) {
         for (int i = 0; i < input.getTouchPointCount(); ++i) {
             TouchPoint touchPoint = input.getTouchPoint(i);
             if (touchPoint.isReleaseOnce() && isIntersect(touchPoint.getCurrentX(), touchPoint.getCurrentY())) {
@@ -567,11 +567,11 @@ public class Sprite {
     }
 
     /**
-     * スプライトと指が接触していたらtrueを返す。
+     * スプライトと指が接触していたら!=nullを返す。
      * @param input
      * @return
      */
-    public TouchPoint isIntersectAndTouchOnce(MultiTouchInput input) {
+    public TouchPoint isIntersectTouchOnce(MultiTouchInput input) {
         for (int i = 0; i < input.getTouchPointCount(); ++i) {
             TouchPoint touchPoint = input.getTouchPoint(i);
             if (touchPoint.isTouchOnce() && isIntersect(touchPoint.getCurrentX(), touchPoint.getCurrentY())) {
@@ -582,11 +582,11 @@ public class Sprite {
     }
 
     /**
-     * スプライトと指が接触していたらtrueを返す。
+     * スプライトと指が接触していたら!=nullを返す。
      * @param input
      * @return
      */
-    public TouchPoint isIntersectAndTouch(MultiTouchInput input) {
+    public TouchPoint findIntersectTouch(MultiTouchInput input) {
         for (int i = 0; i < input.getTouchPointCount(); ++i) {
             TouchPoint touchPoint = input.getTouchPoint(i);
             if (touchPoint.isTouch() && isIntersect(touchPoint.getCurrentX(), touchPoint.getCurrentY())) {
