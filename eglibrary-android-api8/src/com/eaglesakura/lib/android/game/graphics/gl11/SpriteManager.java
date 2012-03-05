@@ -239,28 +239,7 @@ public class SpriteManager extends DisposableResource {
 
         //! テクスチャ位置を行列で操作する
         {
-            gl.glMatrixMode(GL10.GL_TEXTURE);
-
-            //! identity以外の設定がされている場合、もとに戻す
-            if (!textureMatrixIdentity) {
-                gl.glLoadIdentity();
-                textureMatrixIdentity = true;
-            }
-
-            //! identity以外の行列が必要な場合は加工
-            if (srcX != 0 || srcY != 0 || image.getWidth() != srcWidth || image.getHeight() != srcHeight
-                    || texture.getTextureScaleX() != 1.0f || texture.getTextureScaleY() != 1.0f) {
-                float sizeX = (float) srcWidth / (float) image.getWidth();
-                float sizeY = (float) srcHeight / (float) image.getHeight();
-                float sx = (float) srcX / (float) image.getWidth();
-                float sy = (float) srcY / (float) image.getHeight();
-
-                gl.glScalef(texture.getTextureScaleX(), texture.getTextureScaleY(), 1);
-                gl.glTranslatef(sx, sy, 0.0f);
-                gl.glScalef(sizeX, sizeY, 1.0f);
-                textureMatrixIdentity = false;
-            }
-            gl.glMatrixMode(GL10.GL_MODELVIEW);
+            texture.bindTextureCoord(srcX, srcY, srcWidth, srcHeight);
         }
 
         //! 描画する

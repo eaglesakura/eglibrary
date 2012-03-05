@@ -737,7 +737,7 @@ public class OpenGLManager extends DisposableResource {
             printGlError();
             throw new IllegalStateException("buffer not create");
         }
-        return buffer[1];
+        return buffer[0];
     }
 
     /**

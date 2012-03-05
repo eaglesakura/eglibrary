@@ -17,7 +17,7 @@ public class RenderTargetTexture extends TextureImageBase {
     /**
      * 描画対象の仮想ディスプレイ
      */
-    VirtualDisplay display;
+    VirtualDisplay display = new VirtualDisplay();
 
     /**
      * 描画対象のカラーバッファ。
@@ -36,6 +36,12 @@ public class RenderTargetTexture extends TextureImageBase {
      */
     int frameBuffer = NULL;
 
+    /**
+     * テクスチャレンダリング時のUVオフセット値。
+     * 上下反転の補正用
+     */
+    float yUvOffset = 0;
+
     GL11 gl11 = null;
     GL11ExtensionPack gl11EP = null;
 
@@ -43,17 +49,18 @@ public class RenderTargetTexture extends TextureImageBase {
         super(glManager);
         gl11 = glManager.getGL();
         gl11EP = (GL11ExtensionPack) gl11;
-        display = new VirtualDisplay();
         display.setRealDisplaySize(targetWidth, targetHeight);
         display.setVirtualDisplaySize(targetWidth, targetHeight);
         height = targetHeight;
         width = targetWidth;
+
+        initRenderFrame();
     }
 
     /**
      * 
      */
-    void initRenderFrame() {
+    protected void initRenderFrame() {
         GL10 gl10 = glManager.getGL();
         GL11ExtensionPack gl = (GL11ExtensionPack) gl10;
 
@@ -64,6 +71,12 @@ public class RenderTargetTexture extends TextureImageBase {
 
         final int renderWidth = toGLTextureSize(width);
         final int renderHeight = toGLTextureSize(height);
+        textureScale.x = (float) width / (float) renderWidth;
+        textureScale.y = (float) height / (float) renderHeight;
+        {
+            final int yOver = renderHeight - height;
+            yUvOffset = (float) yOver / (float) renderHeight;
+        }
 
         //! レンダリング対象のテクスチャを生成する
         {
@@ -86,6 +99,7 @@ public class RenderTargetTexture extends TextureImageBase {
                     renderWidth, renderHeight);
             gl.glFramebufferRenderbufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, GL11ExtensionPack.GL_DEPTH_COMPONENT,
                     GL11ExtensionPack.GL_RENDERBUFFER_OES, depthBuffer);
+            gl.glBindRenderbufferOES(GL11ExtensionPack.GL_RENDERBUFFER_OES, 0);
         }
         //! カラーバッファの準備
         {
@@ -94,6 +108,7 @@ public class RenderTargetTexture extends TextureImageBase {
                     renderHeight);
             gl.glFramebufferRenderbufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES,
                     GL11ExtensionPack.GL_COLOR_ATTACHMENT0_OES, GL11ExtensionPack.GL_RENDERBUFFER_OES, colorBuffer);
+            gl.glBindRenderbufferOES(GL11ExtensionPack.GL_RENDERBUFFER_OES, 0);
         }
         //! カラーバッファとテクスチャの関連付け
         {
@@ -111,6 +126,28 @@ public class RenderTargetTexture extends TextureImageBase {
         gl.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, frameBuffer);
     }
 
+    @Override
+    public void bindTextureCoord(int x, int y, int w, int h) {
+        GL11 gl = glManager.getGL();
+        gl.glMatrixMode(GL10.GL_TEXTURE);
+        gl.glLoadIdentity();
+        float sizeX = (float) w / (float) getWidth();
+        float sizeY = (float) h / (float) getHeight();
+        float sx = (float) x / (float) getWidth();
+        float sy = (float) y / (float) getHeight();
+
+        // 上下反転に対応
+        {
+            gl.glScalef(1, -1, 0);
+            gl.glTranslatef(0, yUvOffset, 0);
+        }
+        gl.glScalef(getTextureScaleX(), getTextureScaleY(), 1);
+        gl.glTranslatef(sx, sy, 0.0f);
+        gl.glScalef(sizeX, sizeY, 1.0f);
+
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+    }
+
     /**
      * テクスチャへのレンダリングを開始する。
      */
@@ -121,6 +158,14 @@ public class RenderTargetTexture extends TextureImageBase {
     }
 
     /**
+     * 投影用のディスプレイを取得する。
+     * @return
+     */
+    public VirtualDisplay getDisplay() {
+        return display;
+    }
+
+    /**
      * テクスチャのレンダリングを終了する。
      */
     public void unbindRenderTarget(VirtualDisplay originDisplay) {
@@ -128,6 +173,9 @@ public class RenderTargetTexture extends TextureImageBase {
         glManager.updateDrawArea(originDisplay);
     }
 
+    /**
+     * ターゲットを全て破棄する
+     */
     @Override
     public void dispose() {
         super.dispose();

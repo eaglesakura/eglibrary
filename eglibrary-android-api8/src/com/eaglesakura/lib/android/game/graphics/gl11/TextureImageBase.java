@@ -88,6 +88,24 @@ public abstract class TextureImageBase extends ImageBase {
     }
 
     /**
+     * UVのバインドを行わせる。
+     */
+    public void bindTextureCoord(int x, int y, int w, int h) {
+        GL11 gl = glManager.getGL();
+        gl.glMatrixMode(GL10.GL_TEXTURE);
+        gl.glLoadIdentity();
+        float sizeX = (float) w / (float) getWidth();
+        float sizeY = (float) h / (float) getHeight();
+        float sx = (float) x / (float) getWidth();
+        float sy = (float) y / (float) getHeight();
+
+        gl.glScalef(getTextureScaleX(), getTextureScaleY(), 1);
+        gl.glTranslatef(sx, sy, 0.0f);
+        gl.glScalef(sizeX, sizeY, 1.0f);
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+    }
+
+    /**
      * OpenGLへの関連付けを解除する。
      */
     public void unbind() {
@@ -104,7 +122,7 @@ public abstract class TextureImageBase extends ImageBase {
      * Origin-Texture Width / GLES-Texture Widthが格納される。
      * @return
      */
-    public float getTextureScaleX() {
+    protected float getTextureScaleX() {
         return textureScale.x;
     }
 
@@ -113,7 +131,7 @@ public abstract class TextureImageBase extends ImageBase {
      * Origin-Texture Height / GLES-Texture Heightが格納される。
      * @return
      */
-    public float getTextureScaleY() {
+    protected float getTextureScaleY() {
         return textureScale.y;
     }
 
