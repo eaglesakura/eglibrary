@@ -6,6 +6,11 @@
  */
 package com.eaglesakura.lib.android.game.graphics.gl11;
 
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -889,5 +894,50 @@ public class OpenGLManager extends DisposableResource {
      */
     public boolean isInitialized() {
         return gl11 != null;
+    }
+
+    /**
+     * 指定した配列をラッピングする。
+     * @param buffer
+     * @return
+     */
+    public static IntBuffer wrap(int[] buffer) {
+        IntBuffer result = ByteBuffer.allocateDirect(buffer.length * 4).order(ByteOrder.nativeOrder()).asIntBuffer();
+        result.put(buffer).position(0);
+        return result;
+    }
+
+    /**
+     * 指定した配列をラッピングする。
+     * @param buffer
+     * @return
+     */
+    public static ByteBuffer wrap(byte[] buffer) {
+        ByteBuffer result = ByteBuffer.allocateDirect(buffer.length).order(ByteOrder.nativeOrder());
+        result.put(buffer).position(0);
+        return result;
+    }
+
+    /**
+     * 指定した配列を色情報としてラッピングする。
+     * @param buffer
+     * @return
+     */
+    public static Buffer wrapColor(int[] buffer) {
+        IntBuffer result = ByteBuffer.allocateDirect(buffer.length * 4).order(ByteOrder.BIG_ENDIAN).asIntBuffer();
+        result.put(buffer).position(0);
+        return result;
+    }
+
+    /**
+     * 指定した配列をラッピングする。
+     * @param buffer
+     * @return
+     */
+    public static ShortBuffer wrap(short[] buffer) {
+        ShortBuffer result = ByteBuffer.allocateDirect(buffer.length * 2).order(ByteOrder.nativeOrder())
+                .asShortBuffer();
+        result.put(buffer).position(0);
+        return result;
     }
 }

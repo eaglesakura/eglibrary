@@ -169,6 +169,20 @@ public class Color {
     }
 
     /**
+     * RGB565のshort型へ変換する。
+     * @param r
+     * @param g
+     * @param b
+     * @return
+     */
+    public static short toColorRGB565(int r, int g, int b) {
+        r = (r & 0xff) >> 3;
+        g = (g & 0xff) >> 2;
+        b = (b & 0xff) >> 3;
+        return (short) ((r << (6 + 5)) | g << 5 | b);
+    }
+
+    /**
      * RGBA色からAを取り出す。
      * @param colorRGBA
      * @return
