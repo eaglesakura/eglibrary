@@ -1,5 +1,7 @@
 package com.eaglesakura.lib.android.game.graphics.gl11;
 
+import java.nio.Buffer;
+
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 import javax.microedition.khronos.opengles.GL11ExtensionPack;
@@ -190,5 +192,43 @@ public class RenderTargetTexture extends TextureImageBase {
         if (depthBuffer != NULL) {
             glManager.deleteRenderBuffer(depthBuffer);
         }
+    }
+
+    protected Buffer fullScreenRenderVertices = null;
+
+    public void drawFullScreen() {
+        if (fullScreenRenderVertices == null) {
+            //! 頂点を１VBOにまとめる。
+            float[] vertices = {
+                    // 位置情報
+                    -1, 1, //!< 左上
+                    1, 1, //!< 右上
+                    -1, -1, //!< 左下
+                    1, -1, //!< 右下
+
+                    //! UV情報
+                    0, getTextureScaleY(), //!< 左上
+                    getTextureScaleX(), getTextureScaleY(), //!< 右上
+                    0, 0, //!< 左下
+                    getTextureScaleX(), 0, //!< 右下
+            };
+            fullScreenRenderVertices = OpenGLManager.wrap(vertices);
+        }
+
+        GL11 gl = glManager.getGL();
+        fullScreenRenderVertices.position(0);
+        gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+        gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+
+        gl.glLoadIdentity();
+        gl.glVertexPointer(2, GL10.GL_FLOAT, 0, fullScreenRenderVertices);
+        fullScreenRenderVertices.position(2 * 4);
+        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, fullScreenRenderVertices);
+
+        bind();
+        {
+            gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4);
+        }
+        unbind();
     }
 }

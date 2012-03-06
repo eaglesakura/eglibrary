@@ -9,6 +9,7 @@ package com.eaglesakura.lib.android.game.graphics.gl11;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
@@ -469,16 +470,35 @@ public class OpenGLManager extends DisposableResource {
      * @return
      */
     protected EGLSurface refreshRenderSurface() {
+
         if (eglSurface != null) {
             egl.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, eglContext);
             eglSurface = null;
         }
 
-        /*
-        for (EGLConfig config : deviceConfigs)
-        */
         {
-            EGLConfig config = eglConfig;
+            // コンフィグ設定
+            final int CONFIG_MAX = 100;
+            EGLConfig[] configs = new EGLConfig[CONFIG_MAX];
+            int[] numConfigs = new int[1];
+
+            //! コンフィグを全て取得する
+            if (!egl.eglChooseConfig(eglDisplay, configSpec, configs, CONFIG_MAX, numConfigs)) {
+                throw new IllegalStateException(toEglErrorInfo(egl.eglGetError()));
+            }
+
+            //! 必要なものを保存する
+            final int num = numConfigs[0];
+            for (int i = 0; i < num; ++i) {
+                deviceConfigs.add(configs[i]);
+            }
+            eglConfig = deviceConfigs.get(0);
+        }
+
+        /*
+         */
+        for (EGLConfig config : deviceConfigs) {
+            //            EGLConfig config = eglConfig;
             EGLSurface surface = egl.eglCreateWindowSurface(eglDisplay, config, holder, null);
             if (!printEglError()) {
                 LogUtil.log("match surface!! " + (deviceConfigs.indexOf(config) + 1) + " / " + deviceConfigs.size());
@@ -903,6 +923,18 @@ public class OpenGLManager extends DisposableResource {
      */
     public static IntBuffer wrap(int[] buffer) {
         IntBuffer result = ByteBuffer.allocateDirect(buffer.length * 4).order(ByteOrder.nativeOrder()).asIntBuffer();
+        result.put(buffer).position(0);
+        return result;
+    }
+
+    /**
+     * 指定した配列をラッピングする。
+     * @param buffer
+     * @return
+     */
+    public static FloatBuffer wrap(float[] buffer) {
+        FloatBuffer result = ByteBuffer.allocateDirect(buffer.length * 4).order(ByteOrder.nativeOrder())
+                .asFloatBuffer();
         result.put(buffer).position(0);
         return result;
     }

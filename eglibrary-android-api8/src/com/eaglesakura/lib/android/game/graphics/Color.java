@@ -143,6 +143,15 @@ public class Color {
     }
 
     /**
+     * ARGB(Canvas color)をRGBA(GL color）に変換する。
+     * @param argb
+     * @return
+     */
+    public static int argb2rgba(int argb) {
+        return (argb << 8) | ((argb >> 24) & 0xff);
+    }
+
+    /**
      * RGBA8bitを一つのintにまとめる。
      * 上位ビットからRGBAの順に並ぶ。
      * @param r

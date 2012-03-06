@@ -286,4 +286,19 @@ public class VirtualDisplay {
         result.y = 1.0f - result.y;
         return result;
     }
+
+    /**
+     * 実際のピクセル位置を正規化座標系に変換する。 
+     * この値は、仮想ディスプレイに対するUVとして動作する。
+     * 
+     * @param realPos ピクセル単位の位置
+     * @param result 結果を格納する参照。realPosと同じオブジェクトで問題ない。
+     * @return
+     */
+    public Vector2 projectionNormalizePosition2D(Vector2 realPos, Vector2 result) {
+        projectionPixelPosition(realPos, result);
+        result.x /= virtualDisplaySize.x;
+        result.y /= virtualDisplaySize.y;
+        return result;
+    }
 }

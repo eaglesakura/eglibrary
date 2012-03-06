@@ -94,6 +94,13 @@ public abstract class TextureImageBase extends ImageBase {
         GL11 gl = glManager.getGL();
         gl.glMatrixMode(GL10.GL_TEXTURE);
         gl.glLoadIdentity();
+
+        if (x == 0 && y == 0 && w == getWidth() && h == getHeight() && getTextureScaleX() == 1
+                && getTextureScaleY() == 1) {
+            gl.glMatrixMode(GL10.GL_MODELVIEW);
+            return;
+        }
+
         float sizeX = (float) w / (float) getWidth();
         float sizeY = (float) h / (float) getHeight();
         float sx = (float) x / (float) getWidth();

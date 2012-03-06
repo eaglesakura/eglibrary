@@ -31,7 +31,6 @@ public class SpriteManager extends DisposableResource {
 
     TextureImageBase texture = null;
     FontTexture fontTexture = null;
-    boolean textureMatrixIdentity = true;
 
     Rect renderArea = null;
 
@@ -126,11 +125,11 @@ public class SpriteManager extends DisposableResource {
 
         //! ポリゴン色の設定
         setColor(0xffffffff);
+        glManager.getGL().glColor4f(1, 1, 1, 1);
 
         //! テクスチャ行列のリセット
         {
             gl.glMatrixMode(GL10.GL_TEXTURE);
-            textureMatrixIdentity = true;
             gl.glLoadIdentity();
             gl.glMatrixMode(GL10.GL_MODELVIEW);
         }
@@ -189,16 +188,21 @@ public class SpriteManager extends DisposableResource {
     public void drawImage(ImageBase image, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY,
             int dstWidth, int dstHeight, float degree, int colorRGBA) {
 
+        final int left = dstX;
+        final int top = dstY;
+        final int right = (dstX + dstWidth);
+        final int bottom = (dstY + dstHeight);
         //! 描画が画面外のため何もしない
         if (renderArea != null) {
-            final int left = dstX;
-            final int top = dstY;
-            final int right = (dstX + dstWidth);
-            final int bottom = (dstY + dstHeight);
 
             //! 右側が0を下回っている、左側が画面サイズよりも大きい、下が画面から見切れている、上が画面から見切れている、いずれかがヒット
             if (right < renderArea.left || left > (int) renderArea.right || bottom < renderArea.top
                     || top > (int) renderArea.bottom) {
+                return;
+            }
+        } else {
+            if (left > virtualDisplay.getVirtualDisplayWidth() || right < 0
+                    || top > virtualDisplay.getVirtualDisplayHeight() || bottom < 0) {
                 return;
             }
         }
@@ -363,6 +367,12 @@ public class SpriteManager extends DisposableResource {
 
         //! 評価式を標準に戻す
         gl.glDepthFunc(GL10.GL_LESS);
+
+        {
+            gl.glMatrixMode(GL10.GL_TEXTURE);
+            gl.glLoadIdentity();
+            gl.glMatrixMode(GL10.GL_MODELVIEW);
+        }
 
         //! テクスチャをアンバインドする。
         setTexture(null);
