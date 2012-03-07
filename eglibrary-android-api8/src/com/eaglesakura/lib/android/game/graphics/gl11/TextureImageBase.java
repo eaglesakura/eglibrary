@@ -129,7 +129,7 @@ public abstract class TextureImageBase extends ImageBase {
      * Origin-Texture Width / GLES-Texture Widthが格納される。
      * @return
      */
-    protected float getTextureScaleX() {
+    public float getTextureScaleX() {
         return textureScale.x;
     }
 
@@ -138,7 +138,7 @@ public abstract class TextureImageBase extends ImageBase {
      * Origin-Texture Height / GLES-Texture Heightが格納される。
      * @return
      */
-    protected float getTextureScaleY() {
+    public float getTextureScaleY() {
         return textureScale.y;
     }
 

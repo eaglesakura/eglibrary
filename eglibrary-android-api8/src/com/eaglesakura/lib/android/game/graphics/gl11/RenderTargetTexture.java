@@ -125,7 +125,7 @@ public class RenderTargetTexture extends TextureImageBase {
         }
 
         //! フレームバッファ関連付け解除
-        gl.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, frameBuffer);
+        gl.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, 0);
     }
 
     @Override
@@ -155,7 +155,10 @@ public class RenderTargetTexture extends TextureImageBase {
      */
     public void bindRenderTarget() {
         //! フレームバッファ関連付け
+        gl11.glBindTexture(GL10.GL_TEXTURE_2D, 0);
+        glManager.printGlError();
         gl11EP.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, frameBuffer);
+        glManager.printGlError();
         gl11.glViewport(0, 0, display.getVirtualDisplayWidth(), display.getVirtualDisplayHeight());
     }
 
@@ -172,7 +175,9 @@ public class RenderTargetTexture extends TextureImageBase {
      */
     public void unbindRenderTarget(VirtualDisplay originDisplay) {
         gl11EP.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, 0);
+        glManager.printGlError();
         glManager.updateDrawArea(originDisplay);
+        glManager.printGlError();
     }
 
     /**
@@ -180,18 +185,20 @@ public class RenderTargetTexture extends TextureImageBase {
      */
     @Override
     public void dispose() {
-        super.dispose();
-
         if (frameBuffer != NULL) {
             glManager.deleteFrameBufferObject(frameBuffer);
+            frameBuffer = NULL;
         }
 
         if (colorBuffer != NULL) {
             glManager.deleteRenderBuffer(colorBuffer);
+            colorBuffer = NULL;
         }
         if (depthBuffer != NULL) {
             glManager.deleteRenderBuffer(depthBuffer);
+            depthBuffer = NULL;
         }
+        super.dispose();
     }
 
     protected Buffer fullScreenRenderVertices = null;
