@@ -124,6 +124,8 @@ public class RenderTargetTexture extends TextureImageBase {
             }
         }
 
+        gl11.glClearColor(0, 0, 0, 0);
+        gl11.glClear(GL10.GL_DEPTH_BUFFER_BIT | GL10.GL_COLOR_BUFFER_BIT);
         //! フレームバッファ関連付け解除
         gl.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, 0);
     }
