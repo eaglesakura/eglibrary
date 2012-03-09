@@ -917,6 +917,22 @@ public class OpenGLManager extends DisposableResource {
     }
 
     /**
+     * OpenGLが休止状態の場合はtrueを返す。
+     * @return
+     */
+    public boolean isPaused() {
+        return egl != null && eglSurface == null;
+    }
+
+    /**
+     * OpenGLが活性化されている場合はtrue
+     * @return
+     */
+    public boolean isRunning() {
+        return egl != null && eglSurface != null && gl11 != null;
+    }
+
+    /**
      * 指定した配列をラッピングする。
      * @param buffer
      * @return
@@ -952,6 +968,7 @@ public class OpenGLManager extends DisposableResource {
 
     /**
      * 指定した配列を色情報としてラッピングする。
+     * 色はRGBAで配列されている必要がある。
      * @param buffer
      * @return
      */

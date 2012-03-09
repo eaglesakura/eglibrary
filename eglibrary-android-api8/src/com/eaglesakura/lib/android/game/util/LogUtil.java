@@ -90,7 +90,9 @@ public class LogUtil {
     }
 
     public static void log(Exception e) {
-        e.printStackTrace();
-        log(e.getMessage());
+        if (output) {
+            e.printStackTrace();
+            log(e.getMessage());
+        }
     }
 }
