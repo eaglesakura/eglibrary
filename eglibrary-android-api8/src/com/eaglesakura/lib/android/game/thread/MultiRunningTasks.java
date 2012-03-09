@@ -88,7 +88,7 @@ public class MultiRunningTasks {
         exit();
 
         while (threads.size() > 0) {
-            GameUtil.sleep(1000);
+            GameUtil.sleep(10);
         }
     }
 
