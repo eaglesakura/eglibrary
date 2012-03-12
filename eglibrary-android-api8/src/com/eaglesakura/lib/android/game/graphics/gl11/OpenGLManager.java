@@ -25,7 +25,10 @@ import javax.microedition.khronos.opengles.GL11;
 import javax.microedition.khronos.opengles.GL11Ext;
 import javax.microedition.khronos.opengles.GL11ExtensionPack;
 
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Handler;
 import android.view.SurfaceHolder;
@@ -874,28 +877,12 @@ public class OpenGLManager extends DisposableResource {
 
     /**
      * テクスチャバッファを削除する。
-     * 別スレッドから投げられた場合、GLスレッドにpostされる。
+     * gcリストに登録されるため、必要に応じてgcを行うこと。
      * 
      * @param tex
      */
     public void deleteTexture(final int tex) {
-        if (!isGLThread()) {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    deleteTexture(tex);
-                }
-            });
-            return;
-        }
-
-        gl11.glGetError();
-        gl11.glDeleteTextures(1, new int[] {
-            tex
-        }, 0);
-        if (printGlError()) {
-            LogUtil.log("Texture Delete Error :: " + tex);
-        }
+        addDeleteTexture(tex);
     }
 
     /**
@@ -988,5 +975,92 @@ public class OpenGLManager extends DisposableResource {
                 .asShortBuffer();
         result.put(buffer).position(0);
         return result;
+    }
+
+    /**
+     * 削除対象のテクスチャリスト。
+     * gcが行われるまで削除されない。
+     */
+    protected List<Integer> delTextures = new ArrayList<Integer>();
+
+    /**
+     * Listの内容を配列にコピーする。
+     * @param list
+     * @return
+     */
+    private static int[] toArray(List<Integer> list) {
+        int[] result = new int[list.size()];
+        for (int i = 0; i < result.length; ++i) {
+            result[i] = list.get(i);
+        }
+        return result;
+    }
+
+    /**
+     * 削除対象のテクスチャを追加する。
+     * @param textureId
+     */
+    public void addDeleteTexture(int textureId) {
+        synchronized (delTextures) {
+            if (delTextures.indexOf(textureId) >= 0) {
+                return;
+            }
+            delTextures.add(textureId);
+        }
+    }
+
+    /**
+     * 解放対象のメモリを全て解放する。
+     */
+    public void gc() {
+        /*
+        if (!isGLThread()) {
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    gc();
+                }
+            });
+            return;
+        }
+        */
+
+        // テクスチャリストを解放する。
+        synchronized (delTextures) {
+            if (!delTextures.isEmpty()) {
+                final int[] array = toArray(delTextures);
+                LogUtil.log("dispose textures :: " + delTextures.size());
+                gl11.glDeleteTextures(array.length, array, 0);
+                printGlError();
+                delTextures.clear();
+            }
+        }
+    }
+
+    /**
+     * バックバッファの内容を撮影し、バッファに収める
+     * @return
+     */
+    public Bitmap captureSurfaceRGB888(Rect area) {
+        ByteBuffer buffer = ByteBuffer.allocateDirect(4 * area.width() * area.height());
+        gl11.glReadPixels(area.left, area.top, area.width(), area.height(), GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, buffer);
+        buffer.position(0);
+
+        byte[] source = new byte[4 * area.width() * area.height()];
+        buffer.get(source);
+        buffer = null;
+        System.gc();
+
+        Bitmap bmp = Bitmap.createBitmap(area.width(), area.height(), Config.ARGB_8888);
+
+        for (int y = 0; y < area.height(); ++y) {
+            for (int x = 0; x < area.width(); ++x) {
+                int head = (bmp.getWidth() * y + x) * 4;
+                bmp.setPixel(x, area.height() - y - 1, ((((int) source[head + 3]) & 0xff) << 24)
+                        | ((((int) source[head + 0]) & 0xff) << 16) | ((((int) source[head + 1]) & 0xff) << 8)
+                        | (((int) source[head + 2]) & 0xff));
+            }
+        }
+        return bmp;
     }
 }

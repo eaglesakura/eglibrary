@@ -59,7 +59,7 @@ public abstract class TextureImageBase extends ImageBase {
     }
 
     @Override
-    public void dispose() {
+    public synchronized void dispose() {
         if (textureId != NULL) {
             glManager.deleteTexture(textureId);
             textureId = NULL;
