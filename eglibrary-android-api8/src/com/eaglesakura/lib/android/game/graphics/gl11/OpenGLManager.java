@@ -110,6 +110,14 @@ public class OpenGLManager extends DisposableResource {
     }
 
     /**
+     * 操作対象のハンドラを取得する。
+     * @return
+     */
+    public Handler getHandler() {
+        return glHandler;
+    }
+
+    /**
      * 通常合成
      */
     public static final int BLEND_ALPHA_NORMAL = 0;
@@ -852,6 +860,29 @@ public class OpenGLManager extends DisposableResource {
     }
 
     /**
+     * テクスチャバッファを削除する。
+     * 
+     * @param tex
+     */
+    public void deleteTexture(final int tex) {
+        if (!isGLThread()) {
+            glHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    deleteTexture(tex);
+                }
+            });
+        }
+
+        gl11.glDeleteTextures(1, new int[] {
+            tex
+        }, 0);
+        if (printGlError()) {
+            LogUtil.log("Texture Delete Error :: " + tex);
+        }
+    }
+
+    /**
      * GLスレッドで何らかの処理を行わせる。
      * 主にファイナライザからの連携で利用する。
      * @param runable
@@ -873,16 +904,6 @@ public class OpenGLManager extends DisposableResource {
             throw new NullPointerException("GL Handler Not Found...");
         }
         return Thread.currentThread().equals(glHandler.getLooper().getThread());
-    }
-
-    /**
-     * テクスチャバッファを削除する。
-     * gcリストに登録されるため、必要に応じてgcを行うこと。
-     * 
-     * @param tex
-     */
-    public void deleteTexture(final int tex) {
-        addDeleteTexture(tex);
     }
 
     /**
@@ -978,63 +999,23 @@ public class OpenGLManager extends DisposableResource {
     }
 
     /**
-     * 削除対象のテクスチャリスト。
-     * gcが行われるまで削除されない。
+     * GC対象管理クラス
      */
-    protected List<Integer> delTextures = new ArrayList<Integer>();
+    private GLGarbageCollector garbageCollector = new GLGarbageCollector(this);
 
     /**
-     * Listの内容を配列にコピーする。
-     * @param list
+     * GC管理クラスを取得する。
      * @return
      */
-    private static int[] toArray(List<Integer> list) {
-        int[] result = new int[list.size()];
-        for (int i = 0; i < result.length; ++i) {
-            result[i] = list.get(i);
-        }
-        return result;
-    }
-
-    /**
-     * 削除対象のテクスチャを追加する。
-     * @param textureId
-     */
-    public void addDeleteTexture(int textureId) {
-        synchronized (delTextures) {
-            if (delTextures.indexOf(textureId) >= 0) {
-                return;
-            }
-            delTextures.add(textureId);
-        }
+    public GLGarbageCollector getGarbageCollector() {
+        return garbageCollector;
     }
 
     /**
      * 解放対象のメモリを全て解放する。
      */
-    public void gc() {
-        /*
-        if (!isGLThread()) {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    gc();
-                }
-            });
-            return;
-        }
-        */
-
-        // テクスチャリストを解放する。
-        synchronized (delTextures) {
-            if (!delTextures.isEmpty()) {
-                final int[] array = toArray(delTextures);
-                LogUtil.log("dispose textures :: " + delTextures.size());
-                gl11.glDeleteTextures(array.length, array, 0);
-                printGlError();
-                delTextures.clear();
-            }
-        }
+    public int gc() {
+        return garbageCollector.gc();
     }
 
     /**

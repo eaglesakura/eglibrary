@@ -1,5 +1,8 @@
 package com.eaglesakura.lib.android.game.graphics.gl11;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
@@ -16,8 +19,6 @@ public abstract class TextureImageBase extends ImageBase {
 
     static final boolean DEBUG = false;
 
-    protected static final int NULL = 0;
-
     /**
      * 関連付けるGL
      */
@@ -26,7 +27,7 @@ public abstract class TextureImageBase extends ImageBase {
     /**
      * バインド対象
      */
-    protected int textureId = NULL;
+    protected int textureId = GL_NULL;
 
     /**
      * テクスチャの幅
@@ -45,6 +46,7 @@ public abstract class TextureImageBase extends ImageBase {
     protected Vector2 textureScale = new Vector2(1, 1);
 
     protected TextureImageBase(OpenGLManager glManager) {
+        super(glManager.getGarbageCollector());
         this.glManager = glManager;
     }
 
@@ -59,10 +61,19 @@ public abstract class TextureImageBase extends ImageBase {
     }
 
     @Override
-    public synchronized void dispose() {
-        if (textureId != NULL) {
+    public List<GLResource> getRawResources() {
+        List<GLResource> result = new LinkedList<DisposableGLResource.GLResource>();
+        if (textureId != GL_NULL) {
+            result.add(new GLResource(Type.Texture, textureId));
+        }
+        return result;
+    }
+
+    @Override
+    public void onDispose() {
+        if (textureId != GL_NULL) {
             glManager.deleteTexture(textureId);
-            textureId = NULL;
+            textureId = GL_NULL;
         }
     }
 
@@ -79,7 +90,7 @@ public abstract class TextureImageBase extends ImageBase {
      * OpenGLへ関連付ける。
      */
     public void bind() {
-        if (textureId == NULL) {
+        if (textureId == GL_NULL) {
             return;
         }
         GL11 gl = glManager.getGL();
@@ -116,7 +127,7 @@ public abstract class TextureImageBase extends ImageBase {
      * OpenGLへの関連付けを解除する。
      */
     public void unbind() {
-        if (textureId == NULL) {
+        if (textureId == GL_NULL) {
             return;
         }
         GL11 gl = glManager.getGL();
@@ -148,7 +159,7 @@ public abstract class TextureImageBase extends ImageBase {
      * @param linear
      */
     public void setTextureLinearFilter(boolean linear) {
-        if (textureId == NULL) {
+        if (textureId == GL_NULL) {
             return;
         }
 

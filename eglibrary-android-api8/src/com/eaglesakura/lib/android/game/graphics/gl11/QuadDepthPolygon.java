@@ -3,11 +3,11 @@ package com.eaglesakura.lib.android.game.graphics.gl11;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
-
-import com.eaglesakura.lib.android.game.graphics.DisposableResource;
 
 /**
  * 四角形ポリゴンを扱うクラス。 <BR>
@@ -23,7 +23,7 @@ import com.eaglesakura.lib.android.game.graphics.DisposableResource;
  * @author Takeshi
  * 
  */
-public class QuadDepthPolygon extends DisposableResource {
+public class QuadDepthPolygon extends DisposableGLResource {
     /**
      * OpenGL管理
      */
@@ -39,6 +39,7 @@ public class QuadDepthPolygon extends DisposableResource {
     }
 
     public QuadDepthPolygon(OpenGLManager glManager, float left, float top, float right, float bottom, float depth) {
+        super(glManager.getGarbageCollector());
         this.glManager = glManager;
 
         vbo = glManager.genVertexBufferObject();
@@ -72,16 +73,24 @@ public class QuadDepthPolygon extends DisposableResource {
             gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
 
         }
+
+        syncGC();
     }
 
-    /**
-     * メモリを破棄する。 finalizeでも行なっているが、明示的に呼ぶのが好ましい。
-     */
     @Override
-    public void dispose() {
-        if (vbo != 0) {
+    public List<GLResource> getRawResources() {
+        List<GLResource> result = new ArrayList<DisposableGLResource.GLResource>();
+        if (vbo != GL_NULL) {
+            result.add(new GLResource(Type.VertexBufferObject, vbo));
+        }
+        return result;
+    }
+
+    @Override
+    public void onDispose() {
+        if (vbo != GL_NULL) {
             glManager.deleteVertexBufferObject(vbo);
-            vbo = 0;
+            vbo = GL_NULL;
         }
     }
 

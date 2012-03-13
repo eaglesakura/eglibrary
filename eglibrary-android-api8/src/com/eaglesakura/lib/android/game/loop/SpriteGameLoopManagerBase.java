@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
 import com.eaglesakura.lib.android.game.graphics.gl11.SpriteManager;
+import com.eaglesakura.lib.android.game.util.LogUtil;
+import com.eaglesakura.lib.android.game.util.Timer;
 
 public abstract class SpriteGameLoopManagerBase extends GameLoopManagerBase {
     SpriteManager spriteManager;
@@ -75,6 +77,27 @@ public abstract class SpriteGameLoopManagerBase extends GameLoopManagerBase {
      */
     protected abstract void onGameFrameEnd();
 
+    /**
+     * 定期的なGCを行うためのタイマ。
+     */
+    private Timer gcTimer = new Timer();
+
+    /**
+     * GCを行う間隔。
+     */
+    private int gcIntervalMs = 1000 * 60;
+
+    /**
+     * GCを行う間隔を指定する。
+     * このGCにはOpenGL ESの不要リソース廃棄も含まれる。
+     * 0以下を設定することで、自動的なgcを行わなくする。
+     * デフォルトは1分間隔。
+     * @param gcIntervalMs
+     */
+    public void setGcIntervalMs(int gcIntervalMs) {
+        this.gcIntervalMs = gcIntervalMs;
+    }
+
     @Override
     protected void onGameFrame() {
         onGameFrameBegin();
@@ -90,6 +113,14 @@ public abstract class SpriteGameLoopManagerBase extends GameLoopManagerBase {
         }
         spriteManager.end();
         glManager.swapBuffers();
+
+        // 一定時間以上経過していたらGC
+        if (gcIntervalMs > 0 && gcTimer.end() > gcIntervalMs) {
+            gcTimer.start();
+            int gcItems = getGLManager().gc(); // GLのGCを行う
+            LogUtil.log("OpenGL ES Auto GC :: " + gcTimer.end() + " ms = " + gcItems + " resources");
+            gcTimer.start(); // タイマーの開始時刻をリセットする
+        }
 
         onGameFrameEnd();
     }

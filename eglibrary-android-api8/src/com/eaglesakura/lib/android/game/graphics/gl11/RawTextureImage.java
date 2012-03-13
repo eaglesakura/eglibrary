@@ -9,6 +9,7 @@ public class RawTextureImage extends TextureImageBase {
         width = texWidth;
         height = texHeight;
         textureId = glManager.genTexture();
+        syncGC();
         setTextureLinearFilter(false);
     }
 

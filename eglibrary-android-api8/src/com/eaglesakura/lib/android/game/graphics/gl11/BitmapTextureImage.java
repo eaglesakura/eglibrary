@@ -74,6 +74,8 @@ public class BitmapTextureImage extends TextureImageBase {
             setTextureLinearFilter(false);
         }
         unbind();
+
+        syncGC();
     }
 
     /**

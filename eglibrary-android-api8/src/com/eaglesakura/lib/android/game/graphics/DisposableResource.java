@@ -10,16 +10,6 @@ package com.eaglesakura.lib.android.game.graphics;
  * 
  */
 public abstract class DisposableResource {
-
-    /**
-     * 破棄時に自動的に {@link #dispose()} を呼ぶようにする
-     */
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        dispose();
-    }
-
     /**
      * テクスチャ識別のためのタグ
      */

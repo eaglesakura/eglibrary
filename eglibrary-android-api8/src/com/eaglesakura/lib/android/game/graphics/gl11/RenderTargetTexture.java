@@ -1,6 +1,7 @@
 package com.eaglesakura.lib.android.game.graphics.gl11;
 
 import java.nio.Buffer;
+import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
@@ -25,18 +26,18 @@ public class RenderTargetTexture extends TextureImageBase {
      * 描画対象のカラーバッファ。
      * 通常、テクスチャとバインドされている。
      */
-    int colorBuffer = NULL;
+    int colorBuffer = GL_NULL;
 
     /**
      * 描画対象の深度バッファ。
      * テクスチャにはバインドされていない。
      */
-    int depthBuffer = NULL;
+    int depthBuffer = GL_NULL;
 
     /**
      * 描画対象のフレームバッファ
      */
-    int frameBuffer = NULL;
+    int frameBuffer = GL_NULL;
 
     /**
      * テクスチャレンダリング時のUVオフセット値。
@@ -128,6 +129,8 @@ public class RenderTargetTexture extends TextureImageBase {
         gl11.glClear(GL10.GL_DEPTH_BUFFER_BIT | GL10.GL_COLOR_BUFFER_BIT);
         //! フレームバッファ関連付け解除
         gl.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, 0);
+
+        syncGC();
     }
 
     @Override
@@ -183,24 +186,42 @@ public class RenderTargetTexture extends TextureImageBase {
     }
 
     /**
-     * ターゲットを全て破棄する
+     * 利用しているリソースの一覧を追加する。
      */
     @Override
-    public void dispose() {
-        if (frameBuffer != NULL) {
+    public List<GLResource> getRawResources() {
+        List<GLResource> result = super.getRawResources();
+        if (frameBuffer != GL_NULL) {
+            result.add(new GLResource(Type.FrameBuffer, frameBuffer));
+        }
+        if (colorBuffer != GL_NULL) {
+            result.add(new GLResource(Type.RenderBuffer, colorBuffer));
+        }
+        if (depthBuffer != GL_NULL) {
+            result.add(new GLResource(Type.RenderBuffer, depthBuffer));
+        }
+        return result;
+    }
+
+    /**
+     * 持っているリソースを廃棄する。
+     */
+    @Override
+    public void onDispose() {
+        if (frameBuffer != GL_NULL) {
             glManager.deleteFrameBufferObject(frameBuffer);
-            frameBuffer = NULL;
+            frameBuffer = GL_NULL;
         }
 
-        if (colorBuffer != NULL) {
+        if (colorBuffer != GL_NULL) {
             glManager.deleteRenderBuffer(colorBuffer);
-            colorBuffer = NULL;
+            colorBuffer = GL_NULL;
         }
-        if (depthBuffer != NULL) {
+        if (depthBuffer != GL_NULL) {
             glManager.deleteRenderBuffer(depthBuffer);
-            depthBuffer = NULL;
+            depthBuffer = GL_NULL;
         }
-        super.dispose();
+        super.onDispose();
     }
 
     protected Buffer fullScreenRenderVertices = null;
