@@ -759,7 +759,7 @@ public class OpenGLManager extends DisposableResource {
             buffer
         }, 0);
         if (printGlError()) {
-            LogUtil.log("Buffer Delete Error :: " + buffer);
+            LogUtil.log("Frame Delete Error :: " + buffer);
         }
     }
 
@@ -799,7 +799,7 @@ public class OpenGLManager extends DisposableResource {
         }, 0);
 
         if (printGlError()) {
-            LogUtil.log("Buffer Delete Error :: " + buffer);
+            LogUtil.log("Render Delete Error :: " + buffer);
         }
 
     }
@@ -842,7 +842,7 @@ public class OpenGLManager extends DisposableResource {
             vbo
         }, 0);
         if (printGlError()) {
-            LogUtil.log("Buffer Delete Error :: " + vbo);
+            LogUtil.log("VBO Delete Error :: " + vbo);
         }
     }
 
