@@ -754,6 +754,7 @@ public class OpenGLManager extends DisposableResource {
             return;
         }
 
+        gl11.glGetError();
         gl11EP.glDeleteFramebuffersOES(1, new int[] {
             buffer
         }, 0);
@@ -792,6 +793,7 @@ public class OpenGLManager extends DisposableResource {
             return;
         }
 
+        gl11.glGetError();
         gl11EP.glDeleteRenderbuffersOES(1, new int[] {
             buffer
         }, 0);
@@ -835,6 +837,7 @@ public class OpenGLManager extends DisposableResource {
             return;
         }
 
+        gl11.glGetError();
         gl11.glDeleteBuffers(1, new int[] {
             vbo
         }, 0);
@@ -851,6 +854,7 @@ public class OpenGLManager extends DisposableResource {
     public int genTexture() {
         gl11.glGetError();
         int[] buf = new int[1];
+        gl11.glGetError();
         gl11.glGenTextures(1, buf, 0);
         if (gl11.glGetError() == GL11.GL_OUT_OF_MEMORY) {
             throw new OutOfMemoryError("glGenTexture Error");
@@ -874,6 +878,7 @@ public class OpenGLManager extends DisposableResource {
             });
         }
 
+        gl11.glGetError();
         gl11.glDeleteTextures(1, new int[] {
             tex
         }, 0);
