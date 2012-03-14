@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 /**
  * 非同期待ち行列の処理を行う。
  */
+@Deprecated
 public class AsyncActionQueue {
     private List<Action> queue = new ArrayList<Action>();
     private ActionTask current = null;

@@ -1,8 +1,11 @@
 package com.eaglesakura.lib.android.game.thread;
 
+import java.util.concurrent.TimeoutException;
+
 import android.os.Handler;
 
 import com.eaglesakura.lib.android.game.util.GameUtil;
+import com.eaglesakura.lib.android.game.util.Timer;
 
 /**
  * 何らかの事情で別スレッドで特定処理を行わせる必要がある場合に利用するヘルパ。
@@ -19,6 +22,11 @@ public abstract class ThreadSyncRunnerBase<T> {
     T result = null;
 
     /**
+     * タイムアウトした場合true
+     */
+    boolean timeout = false;
+
+    /**
      * 投げられた例外を一時的に格納する。
      */
     Exception exception = null;
@@ -29,10 +37,19 @@ public abstract class ThreadSyncRunnerBase<T> {
     boolean finish = false;
 
     /**
+     * 処理にかけていい最大時間
+     */
+    long maxTime = -1;
+
+    /**
      * 
      * @param targetHandler 実行対象スレッドのハンドラ
      */
     public ThreadSyncRunnerBase(Handler targetHandler) {
+        if (GameUtil.isUIThread()) {
+            maxTime = 1000 * 5;
+        }
+
         if (Thread.currentThread().equals(targetHandler.getLooper().getThread())) {
             //! 呼び出しスレッドと対象スレッドが同じため、ロックが発生してしまう
             throw new IllegalArgumentException("target is current thread!!");
@@ -57,11 +74,20 @@ public abstract class ThreadSyncRunnerBase<T> {
             }
         });
 
+        final Timer timer = new Timer();
         /**
          * 終了まで待つ
          */
         while (!finish) {
             GameUtil.sleep(1);
+
+            // タイムアウトしたら制御を抜ける
+            if (maxTime > 0 && timer.end() > maxTime) {
+                exception = new TimeoutException("thread is timeout!!");
+                finish = true;
+                timeout = true;
+                return result;
+            }
         }
 
         if (exception != null && exception instanceof RuntimeException) {
@@ -69,6 +95,24 @@ public abstract class ThreadSyncRunnerBase<T> {
         }
 
         return result;
+    }
+
+    /**
+     * 処理がタイムアウトしたらtrue
+     * @return
+     */
+    public boolean isTimeout() {
+        return timeout;
+    }
+
+    /**
+     * 処理にかけていい最大時間を指定する。
+     * 0以下でタイムアウト無効
+     * @param maxTime
+     */
+    public ThreadSyncRunnerBase<T> setMaxTime(long maxTime) {
+        this.maxTime = maxTime;
+        return this;
     }
 
     /**

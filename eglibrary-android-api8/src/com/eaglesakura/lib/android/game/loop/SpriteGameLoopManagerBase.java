@@ -98,6 +98,16 @@ public abstract class SpriteGameLoopManagerBase extends GameLoopManagerBase {
         this.gcIntervalMs = gcIntervalMs;
     }
 
+    protected void updateGC() {
+        // 一定時間以上経過していたらGC
+        if (gcIntervalMs > 0 && gcTimer.end() > gcIntervalMs) {
+            gcTimer.start();
+            int gcItems = getGLManager().gc(); // GLのGCを行う
+            LogUtil.log("OpenGL ES Auto GC :: " + gcTimer.end() + " ms = " + gcItems + " resources");
+            gcTimer.start(); // タイマーの開始時刻をリセットする
+        }
+    }
+
     @Override
     protected void onGameFrame() {
         onGameFrameBegin();
@@ -113,15 +123,7 @@ public abstract class SpriteGameLoopManagerBase extends GameLoopManagerBase {
         }
         spriteManager.end();
         glManager.swapBuffers();
-
-        // 一定時間以上経過していたらGC
-        if (gcIntervalMs > 0 && gcTimer.end() > gcIntervalMs) {
-            gcTimer.start();
-            int gcItems = getGLManager().gc(); // GLのGCを行う
-            LogUtil.log("OpenGL ES Auto GC :: " + gcTimer.end() + " ms = " + gcItems + " resources");
-            gcTimer.start(); // タイマーの開始時刻をリセットする
-        }
-
+        updateGC();
         onGameFrameEnd();
     }
 }

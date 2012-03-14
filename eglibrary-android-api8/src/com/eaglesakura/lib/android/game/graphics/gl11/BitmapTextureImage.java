@@ -28,6 +28,9 @@ public class BitmapTextureImage extends TextureImageBase {
      */
     public BitmapTextureImage(Bitmap image, OpenGLManager glManager) {
         super(glManager);
+        if (image == null) {
+            throw new NullPointerException("input bitmap image is null !!");
+        }
         initTexture(image);
     }
 
