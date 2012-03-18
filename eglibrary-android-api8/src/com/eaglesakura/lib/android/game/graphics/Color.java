@@ -70,7 +70,7 @@ public class Color {
     }
 
     public Color(int rgba) {
-        set(toColorR(rgba), toColorG(rgba), toColorG(rgba), toColorA(rgba));
+        set(toColorR(rgba), toColorG(rgba), toColorB(rgba), toColorA(rgba));
     }
 
     public void set(int r, int g, int b, int a) {
@@ -147,8 +147,17 @@ public class Color {
      * @param argb
      * @return
      */
-    public static int argb2rgba(int argb) {
+    public static int argb2rgba(final int argb) {
         return (argb << 8) | ((argb >> 24) & 0xff);
+    }
+
+    /**
+     * RGBA(GL color）をARGB(Canvas color)に変換する。
+     * @param argb
+     * @return
+     */
+    public static int rgba2argb(final int rgba) {
+        return ((rgba >> 8) & 0x00ffffff) | (rgba & 0xff) << 24;
     }
 
     /**
