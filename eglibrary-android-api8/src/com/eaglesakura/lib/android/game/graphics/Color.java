@@ -25,6 +25,11 @@ public class Color {
     public static final int BLUE = toColorRGBA(0, 0, 255, 255);
 
     /**
+     * 黒
+     */
+    public static final int BLACK = toColorRGBA(0, 0, 0, 255);
+
+    /**
      * 透過成分
      */
     public float a = 1;

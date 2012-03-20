@@ -121,6 +121,28 @@ public class Sprite {
     }
 
     /**
+     * 指定したグリッドへSource位置を設定する。
+     * @param onceWidth
+     * @param onceHeight
+     * @param index
+     */
+    public void setSliceGrid(final int blockWidth, final int blockHeight, final int index) {
+        Rect src = getCurrentFrame().area;
+
+        //! 並べられるシートの数を数える
+        final int x = (getImage().getWidth() / blockWidth);
+
+        //! 画像シートの位置を求める
+        final int px = (index % x);
+        final int py = (index / x);
+
+        src.left = px * blockWidth;
+        src.top = py * blockHeight;
+        src.right = (src.left + blockWidth);
+        src.bottom = (src.top + blockHeight);
+    }
+
+    /**
      * 描画フレームを設定する。
      */
     public void setFrame(int newFrame) {
