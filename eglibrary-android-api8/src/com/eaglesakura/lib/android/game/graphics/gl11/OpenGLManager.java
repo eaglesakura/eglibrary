@@ -37,6 +37,7 @@ import com.eaglesakura.lib.android.game.display.VirtualDisplay;
 import com.eaglesakura.lib.android.game.graphics.Color;
 import com.eaglesakura.lib.android.game.graphics.DisposableResource;
 import com.eaglesakura.lib.android.game.math.Matrix4x4;
+import com.eaglesakura.lib.android.game.math.Vector2;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
 /**
@@ -918,7 +919,9 @@ public class OpenGLManager extends DisposableResource {
      */
     public void updateDrawArea(VirtualDisplay correction) {
         RectF area = correction.getDrawingArea(new RectF());
-        gl11.glViewport((int) area.left, (int) area.top, (int) area.width(), (int) area.height());
+        Vector2 realDisplaySize = correction.getRealDisplaySize(new Vector2());
+        gl11.glViewport((int) area.left, (int) (realDisplaySize.y - area.bottom), (int) area.width(),
+                (int) area.height());
     }
 
     /**
@@ -1048,5 +1051,41 @@ public class OpenGLManager extends DisposableResource {
             }
         }
         return bmp;
+    }
+
+    /**
+     * デバイス座標系のXをU座標に変換する
+     * @param x
+     * @return
+     */
+    public static float deviceX2U(float x) {
+        return (x + 1.0f) / 2;
+    }
+
+    /**
+     * 
+     * @param u
+     * @return
+     */
+    public static float u2DeviceX(float u) {
+        return u * 2 - 1.0f;
+    }
+
+    /**
+     * デバイス座標系のYをV座標に変換する
+     * @param y
+     * @return
+     */
+    public static float deviceY2V(float y) {
+        return 1.0f - ((y + 1.0f) / 2);
+    }
+
+    /**
+     * V座標をデバイス座標系のYに変換する
+     * @param v
+     * @return
+     */
+    public static float v2DeviceU(float v) {
+        return -(v * 2 - 1.0f);
     }
 }
