@@ -39,6 +39,11 @@ public class WebFile implements IFile {
     }
 
     @Override
+    public long length() {
+        return -1;
+    }
+
+    @Override
     public boolean exists() {
         if (exist == null) {
             try {

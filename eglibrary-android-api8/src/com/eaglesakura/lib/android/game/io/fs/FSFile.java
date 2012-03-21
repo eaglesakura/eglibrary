@@ -45,6 +45,11 @@ public class FSFile implements IFile {
     }
 
     @Override
+    public long length() {
+        return file.length();
+    }
+
+    @Override
     public List<IFile> list() {
         List<IFile> result = new ArrayList<IFile>();
         File[] files = file.listFiles();

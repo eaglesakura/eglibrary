@@ -49,6 +49,13 @@ public interface IFile {
     List<IFile> list();
 
     /**
+     * ファイルの長さを返す。
+     * 不定の場合は-1を返す。
+     * @return
+     */
+    long length();
+
+    /**
      * 入力ストリームを開く。
      * 
      * @return
