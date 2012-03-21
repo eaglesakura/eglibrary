@@ -11,6 +11,9 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.view.WindowManager;
 
@@ -201,4 +204,55 @@ public class ContextUtil {
             return false;
         }
     }
+
+    /**
+     * 文字幅を指定した幅に収まるように抑えて取得する。
+     * @param text
+     * @param fooder
+     * @param context
+     * @param textSizeDimenId
+     * @param textWidthDimenId
+     * @return
+     */
+    public static String getCompactString(String text, String fooder, Context context, int textSizeDimenId,
+            int textWidthDimenId) {
+        int textPixelSize = context.getResources().getDimensionPixelSize(textSizeDimenId);
+        int textWidthPixelSize = context.getResources().getDimensionPixelSize(textWidthDimenId);
+
+        return getCompactString(text, fooder, Typeface.DEFAULT, textPixelSize, textWidthPixelSize);
+    }
+
+    /**
+     * 文字列を指定した幅に収まるように抑えて取得する。
+     * @param origin
+     * @return
+     */
+    public static String getCompactString(String origin, String fooder, Typeface type, int textSize, int maxWidth) {
+        Paint paint = new Paint();
+        paint.setTypeface(type);
+        paint.setTextSize(textSize);
+        Rect area = new Rect();
+
+        paint.getTextBounds(origin, 0, origin.length(), area);
+
+        //! 通常状態で指定フォント幅よりも狭いから大丈夫
+        if (area.width() <= maxWidth) {
+            return origin;
+        }
+
+        paint.getTextBounds(fooder, 0, fooder.length(), area);
+        //! ケツにつける"..."の幅を事前計算
+        final int FOODER_WIDTH = area.width();
+
+        int length = origin.length();
+        do {
+            --length;
+            paint.getTextBounds(origin, 0, length, area);
+        } while (area.width() > (maxWidth - FOODER_WIDTH));
+
+        origin = origin.substring(0, length);
+        origin += "...";
+        return origin;
+    }
+
 }
