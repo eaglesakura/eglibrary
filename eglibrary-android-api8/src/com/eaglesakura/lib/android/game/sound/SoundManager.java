@@ -19,11 +19,11 @@ import com.eaglesakura.lib.android.game.util.LogUtil;
  * @author Takeshi
  *
  */
-public class SoundEffectManager extends DisposableResource {
+public class SoundManager extends DisposableResource {
     Map<Object, MediaPlayer> medias = new HashMap<Object, MediaPlayer>();
     Context context = null;
 
-    public SoundEffectManager(Context context) {
+    public SoundManager(Context context) {
         this.context = context;
     }
 
@@ -125,7 +125,7 @@ public class SoundEffectManager extends DisposableResource {
     }
 
     /**
-     * 
+     * 握っているリソースを全て解放する
      */
     @Override
     public void dispose() {
