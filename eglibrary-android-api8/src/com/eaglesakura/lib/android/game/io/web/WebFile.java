@@ -20,10 +20,10 @@ import com.eaglesakura.lib.android.game.util.LogUtil;
  */
 public class WebFile implements IFile {
     String uri;
-    WebShareStreage strate;
+    WebShareStoreage strate;
     Boolean exist = null;
 
-    public WebFile(WebShareStreage strage, String uri) {
+    public WebFile(WebShareStoreage strage, String uri) {
         this.uri = uri;
         this.strate = strage;
     }
@@ -60,7 +60,7 @@ public class WebFile implements IFile {
 
     @Override
     public String getName() {
-        return WebShareStreage.toName(uri);
+        return WebShareStoreage.toName(uri);
     }
 
     @Override

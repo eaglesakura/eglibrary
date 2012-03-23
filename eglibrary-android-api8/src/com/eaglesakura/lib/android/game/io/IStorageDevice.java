@@ -7,7 +7,7 @@ package com.eaglesakura.lib.android.game.io;
  * @author Takeshi
  * 
  */
-public interface IStrageDevice {
+public interface IStorageDevice {
     /**
      * ルートディレクトリを取得する。
      * 

@@ -3,7 +3,7 @@ package com.eaglesakura.lib.android.game.io.fs;
 import java.io.File;
 
 import com.eaglesakura.lib.android.game.io.IFile;
-import com.eaglesakura.lib.android.game.io.IStrageDevice;
+import com.eaglesakura.lib.android.game.io.IStorageDevice;
 
 /**
  * ファイルシステムを利用したストレージ
@@ -11,14 +11,14 @@ import com.eaglesakura.lib.android.game.io.IStrageDevice;
  * @author Takeshi
  * 
  */
-public class ExternalStrage implements IStrageDevice {
+public class ExternalStorage implements IStorageDevice {
     File root;
 
     /**
      * 
      * @param root
      */
-    public ExternalStrage(File root) {
+    public ExternalStorage(File root) {
         this.root = root;
     }
 

@@ -1,7 +1,7 @@
 package com.eaglesakura.lib.android.game.io.web;
 
 import com.eaglesakura.lib.android.game.io.IFile;
-import com.eaglesakura.lib.android.game.io.IStrageDevice;
+import com.eaglesakura.lib.android.game.io.IStorageDevice;
 
 /**
  * MacのＷｅｂ共有（Apache）を利用したストレージ。 基本的にRead-Only
@@ -9,13 +9,13 @@ import com.eaglesakura.lib.android.game.io.IStrageDevice;
  * @author Takeshi
  * 
  */
-public class WebShareStreage implements IStrageDevice {
+public class WebShareStoreage implements IStorageDevice {
 
     int connectTimeout = 1000 * 10;
 
     String rootUrl;
 
-    public WebShareStreage(String rootUrl) {
+    public WebShareStoreage(String rootUrl) {
         this.rootUrl = rootUrl;
     }
 
