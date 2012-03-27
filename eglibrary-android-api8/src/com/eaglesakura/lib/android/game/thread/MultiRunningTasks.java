@@ -74,18 +74,11 @@ public class MultiRunningTasks {
     }
 
     /**
-     * 現在登録されているタスクでスレッドを停止し、待機させない。
-     */
-    public void notPoolThreads() {
-        this.exit = true;
-    }
-
-    /**
      * 全てのタスクが終わるのを明示的に待つ。<BR>
      * メソッドを抜けた次点で全てのタスクが完了している。
      */
     public void waitTaskFinished() {
-        notPoolThreads();
+        setThreadPoolMode(false);
 
         while (threads.size() > 0) {
             GameUtil.sleep(10);
@@ -93,16 +86,17 @@ public class MultiRunningTasks {
     }
 
     /**
-     * スレッドを待機モードにする。
+     * スレッドを常にプールする場合はtrue、不要なスレッドを廃棄する場合はfalse
+     * @param pool
      */
-    public void rebootWaitingThreads() {
-        exit = false;
+    public void setThreadPoolMode(boolean pool) {
+        this.exit = !pool;
     }
 
     /**
      * タスクを実行する。
      */
-    protected void runTask() {
+    protected void runTask(final Thread thread) {
         Task _task = null;
 
         //! 次のタスクを受け取る。
@@ -117,9 +111,14 @@ public class MultiRunningTasks {
 
         //! 実行中タスクを削除する
         synchronized (threads) {
-            threads.remove(this);
+            threads.remove(thread);
         }
     }
+
+    /**
+     * 一意のスレッド番号を設定する。
+     */
+    private static int threadId = 0;
 
     /**
      * スレッドを開始させる。<BR>
@@ -128,14 +127,14 @@ public class MultiRunningTasks {
     public void start() {
         synchronized (threads) {
             while (threads.size() < maxThreads) {
-                Thread thread = (new Thread() {
+                final Thread thread = (new Thread() {
                     @Override
                     public void run() {
-                        runTask();
+                        runTask(this);
                     };
                 });
                 threads.add(thread);
-                thread.setName(MultiRunningTasks.class.getName() + " :: ID " + threads.size());
+                thread.setName(MultiRunningTasks.class.getName() + " :: ID " + threadId++);
                 thread.start();
             }
         }
