@@ -23,6 +23,21 @@ public class IntentListFragment extends ListFragment {
     protected static String SAVE_INTENT = "SAVE_" + IntentListFragment.class.getName();
 
     /**
+     * 何も行わずに初期化する
+     */
+    public IntentListFragment() {
+        setIntent(new Intent());
+    }
+
+    /**
+     * 初期値を設定して初期化する
+     * @param intent
+     */
+    public IntentListFragment(Intent intent) {
+        setIntent(intent);
+    }
+
+    /**
      * Intentを取得する。
      * @return
      */
@@ -35,6 +50,9 @@ public class IntentListFragment extends ListFragment {
      * @param intent
      */
     public void setIntent(Intent intent) {
+        if (intent == null) {
+            intent = new Intent();
+        }
         this.intent = intent;
     }
 
