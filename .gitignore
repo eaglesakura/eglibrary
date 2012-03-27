@@ -7,3 +7,4 @@ local.properties
 */obj/**
 *.o
 *.o.d
+eglibrary-android-api8-splib/libs/**

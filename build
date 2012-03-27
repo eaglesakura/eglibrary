@@ -2,3 +2,8 @@
 cd eglibrary-android-api8/
 ./build
 cd ../
+
+cd eglibrary-android-api8-splib/
+./build
+cd ../
+

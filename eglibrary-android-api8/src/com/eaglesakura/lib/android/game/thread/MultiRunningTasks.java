@@ -57,7 +57,7 @@ public class MultiRunningTasks {
      * @param task
      */
     public synchronized void pushBack(Task task) {
-        synchronized (tasks) {
+        synchronized (this) {
             tasks.add(task);
         }
     }
@@ -68,7 +68,7 @@ public class MultiRunningTasks {
      * @param task
      */
     public synchronized void pushFront(Task task) {
-        synchronized (task) {
+        synchronized (this) {
             tasks.add(0, task);
         }
     }
@@ -76,7 +76,7 @@ public class MultiRunningTasks {
     /**
      * 現在登録されているタスクでスレッドを停止し、待機させない。
      */
-    public void exit() {
+    public void notPoolThreads() {
         this.exit = true;
     }
 
@@ -85,7 +85,7 @@ public class MultiRunningTasks {
      * メソッドを抜けた次点で全てのタスクが完了している。
      */
     public void waitTaskFinished() {
-        exit();
+        notPoolThreads();
 
         while (threads.size() > 0) {
             GameUtil.sleep(10);
@@ -135,6 +135,7 @@ public class MultiRunningTasks {
                     };
                 });
                 threads.add(thread);
+                thread.setName(MultiRunningTasks.class.getName() + " :: ID " + threads.size());
                 thread.start();
             }
         }
@@ -145,8 +146,8 @@ public class MultiRunningTasks {
      * 
      * @return
      */
-    synchronized Task nextTask() {
-        synchronized (tasks) {
+    private synchronized Task nextTask() {
+        synchronized (this) {
             do {
                 if (tasks.isEmpty()) {
                     return null;

@@ -1088,4 +1088,22 @@ public class OpenGLManager extends DisposableResource {
     public static float v2DeviceU(float v) {
         return -(v * 2 - 1.0f);
     }
+
+    /**
+     * float値を16bit固定小数へ変換する
+     * @param f
+     * @return
+     */
+    public static int float2fixed(float f) {
+        return (int) (f * 0x10000);
+    }
+
+    /**
+     * 16bit固定小数値をfloatへ変換する
+     * @param fixed
+     * @return
+     */
+    public static float fixed2float(int fixed) {
+        return (float) ((double) fixed / (double) (0x10000));
+    }
 }
