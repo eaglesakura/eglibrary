@@ -196,11 +196,12 @@ public abstract class GL11Fragment extends IntentFragment {
         // 廃棄済み
         if (getActivity() == null) {
             runnable.onError(Error.Disposed, this);
+            return;
         }
-
         // GL一時停止中
         if (glManager.isPaused()) {
             runnable.onError(Error.Paused, this);
+            return;
         }
 
         // 実行可能なため、実行を行わせる。
@@ -272,6 +273,8 @@ public abstract class GL11Fragment extends IntentFragment {
 
     /**
      * GLスレッドでの実行を行わせる。
+     * onErrorが呼び出された場合、
+     * {@link #run()}は実行されない。
      * @author TAKESHI YAMASHITA
      *
      */
