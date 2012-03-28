@@ -668,6 +668,8 @@ public class OpenGLManager extends DisposableResource {
             return;
         }
 
+        // gcを行わせる
+        garbageCollector.gc();
         try {
             // レンダリングコンテキストとの結びつけは解除
             egl.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT);
