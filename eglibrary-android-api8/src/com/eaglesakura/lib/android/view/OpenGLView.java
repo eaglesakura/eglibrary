@@ -86,10 +86,7 @@ public class OpenGLView extends LooperSurfaceView {
         this.pixelFormat = format;
         LogUtil.log("GL Pixel Format : " + pixelFormat);
         glManager.autoConfigSpec(format, true);
-        Vector2 v = ContextUtil.getDisplaySize(context, new Vector2());
-        v.set(width, height);
         glManager.setSurfaceHolder(holder);
-
         //! 廃棄済みだったら、明示的にレジュームを行う。
         super.surfaceChanged(holder, format, width, height);
     }

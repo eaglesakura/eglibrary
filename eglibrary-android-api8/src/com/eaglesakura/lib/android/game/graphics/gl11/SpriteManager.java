@@ -74,6 +74,16 @@ public class SpriteManager extends DisposableResource {
     }
 
     /**
+     * 描画用ポリゴンのDEPTHを指定する。
+     * デフォルトは1.0f。
+     * {@link #begin()}の度にリセットされる。
+     * @param polyDepth
+     */
+    public void setPolyDepth(float polyDepth) {
+        this.polyDepth = polyDepth;
+    }
+
+    /**
      * 描画エリアを指定位置に変更する。
      * @param x
      * @param y
@@ -133,6 +143,7 @@ public class SpriteManager extends DisposableResource {
             gl.glLoadIdentity();
             gl.glMatrixMode(GL10.GL_MODELVIEW);
         }
+        setPolyDepth(DEPTH_DEFAULT);
     }
 
     /**
