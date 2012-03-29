@@ -3,6 +3,11 @@ RELEASE_NAME=eglibrary-android-api8.jar
 RELEASE_DIR=release
 LICENSE_FILENAME=LICENSE_$RELEASE_NAME
 
+if [ -f "./javadoc.xml" ]; then
+# export javadoc
+    ant -f ./javadoc.xml
+fi
+
 ant clean
 ant release
 if [ $? -ne 0 ]; then
