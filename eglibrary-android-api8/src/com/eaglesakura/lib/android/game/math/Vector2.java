@@ -159,6 +159,11 @@ public final class Vector2 {
         return x == v.x && y == v.y;
     }
 
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
+
     /**
      * 文字列変換を行う。
      * 

@@ -255,6 +255,11 @@ public final class Vector3 {
         return x == v.x && y == v.y && z == v.z;
     }
 
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
+
     /**
      * 文字列変換を行う。
      * 
