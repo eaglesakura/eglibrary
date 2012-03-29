@@ -1,6 +1,5 @@
 package com.eaglesakura.lib.android.game.sound;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;

@@ -85,7 +85,7 @@ public abstract class GL11GameActivityBase extends Activity implements ILoopPare
     /**
      * Activity名称を取得する。<BR>
      * この返却値はサブクラス名がセットされる。
-     * @return
+     * @return クラス名（デフォルトの挙動をする場合のみ）
      */
     public String name() {
         String title = "" + this;

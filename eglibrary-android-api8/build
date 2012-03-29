@@ -16,7 +16,11 @@ if [ $? -ne 0 ]; then
 fi
 cd bin/
 zip -u -r classes.jar ../src/**
+zip -u -r classes.jar ../doc/**
 cp ../../LICENSE ./$LICENSE_FILENAME
 zip -u -r classes.jar ./$LICENSE_FILENAME
 rm ./$LICENSE_FILENAME
 mv classes.jar ../../$RELEASE_DIR/$RELEASE_NAME
+
+cd ../
+rm -rf ./doc

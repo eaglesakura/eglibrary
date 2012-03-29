@@ -45,7 +45,20 @@ public class VirtualDisplay {
      *
      */
     public enum FitType {
-        AUTO, HORIZONTAL, VERTICAL,
+        /**
+         * 縦横を自動で判断する
+         */
+        AUTO,
+
+        /**
+         * 水平方向をフィットさせる
+         */
+        HORIZONTAL,
+
+        /**
+         * 縦方向をフィットさせる
+         */
+        VERTICAL,
     }
 
     /**
@@ -59,8 +72,8 @@ public class VirtualDisplay {
     /**
      * 実ディスプレイサイズを設定する。
      * 
-     * @param width
-     * @param height
+     * @param width 幅
+     * @param height 高さ
      */
     public void setRealDisplaySize(float width, float height) {
         realDisplaySize.set(width, height);
@@ -69,8 +82,8 @@ public class VirtualDisplay {
     /**
      * 仮想ディスプレイのサイズを指定する。
      * 自動的に全画面が収まるようにフィットさせる。
-     * @param width
-     * @param height
+     * @param width 仮想ディスプレイ幅
+     * @param height 仮想ディスプレイ高さ
      */
     public void setVirtualDisplaySize(float width, float height) {
         setVirtualDisplaySize(width, height, FitType.AUTO);
@@ -79,9 +92,9 @@ public class VirtualDisplay {
     /**
      * 仮想ディスプレイサイズを設定する。
      * 
-     * @param width
-     * @param height
-     * @param type
+     * @param width 仮想ディスプレイ幅
+     * @param height 仮想ディスプレイ高さ
+     * @param type 画面をフィットさせる方法
      */
     public void setVirtualDisplaySize(float width, float height, FitType type) {
         virtualDisplaySize.set(width, height);
@@ -128,8 +141,8 @@ public class VirtualDisplay {
     /**
      * 実際の描画先の座標を取得する。
      * 
-     * @param result
-     * @return
+     * @param result 結果を格納するオブジェクト。この参照が戻り値となる。
+     * @return 実際の描画先の座標
      */
     public RectF getDrawingArea(RectF result) {
         result.set(drawingArea);
@@ -139,18 +152,26 @@ public class VirtualDisplay {
     /**
      * 実際の描画先座標を取得する。
      * 
-     * @param result
-     * @return
+     * @param result 結果を格納するオブジェクト。この参照が戻り値となる。
+     * @return 実際の描画先の座標
      */
     public Rect getDrawingArea(Rect result) {
         result.set((int) drawingArea.left, (int) drawingArea.top, (int) drawingArea.right, (int) drawingArea.bottom);
         return result;
     }
 
+    /**
+     * 描画エリアの幅を取得する
+     * @return 描画エリアの幅
+     */
     public int getDrawingAreaWidth() {
         return (int) drawingArea.width();
     }
 
+    /**
+     * 描画エリアの高さを取得する
+     * @return 描画エリアの高さ
+     */
     public int getDrawingAreaHeight() {
         return (int) drawingArea.height();
     }
@@ -158,8 +179,8 @@ public class VirtualDisplay {
     /**
      * 実際の物理的なディスプレイサイズを取得する。
      * 
-     * @param result
-     * @return
+     * @param result 結果を格納するオブジェクト
+     * @return resultと同じ参照
      */
     public Vector2 getRealDisplaySize(Vector2 result) {
         result.set(realDisplaySize);
@@ -169,8 +190,8 @@ public class VirtualDisplay {
     /**
      * 仮想ディスプレイサイズを取得する。
      * 
-     * @param result
-     * @return
+     * @param result 結果を格納するオブジェクト
+     * @return resultと同じ参照
      */
     public Vector2 getVirtualDisplaySize(Vector2 result) {
         result.set(virtualDisplaySize);
@@ -183,7 +204,7 @@ public class VirtualDisplay {
      * 実ディスプレイのほうが小さい場合、 < 1.0f<BR>
      * となる。
      * 
-     * @return
+     * @return　デバイスのスケーリング率
      */
     public float getDeviceScaling() {
         return scaling;
@@ -191,7 +212,7 @@ public class VirtualDisplay {
 
     /**
      * 仮想ディスプレイの横サイズの中央を取得する。
-     * @return
+     * @return 仮想ディスプレイのX中央値
      */
     public int getVirtualDisplayCenterX() {
         return (int) virtualDisplaySize.x / 2;
@@ -199,7 +220,7 @@ public class VirtualDisplay {
 
     /**
      * 仮想ディスプレイの縦サイズの中央を取得する。
-     * @return
+     * @return 仮想ディスプレイのX中央値
      */
     public int getVirtualDisplayCenterY() {
         return (int) virtualDisplaySize.y / 2;
@@ -207,7 +228,7 @@ public class VirtualDisplay {
 
     /**
      * 仮想ディスプレイの横サイズを取得する。
-     * @return
+     * @return 仮想ディスプレイの幅
      */
     public int getVirtualDisplayWidth() {
         return (int) virtualDisplaySize.x;
@@ -215,7 +236,7 @@ public class VirtualDisplay {
 
     /**
      * 仮想ディスプレイの縦サイズを取得する
-     * @return
+     * @return 仮想ディスプレイの高さ
      */
     public int getVirtualDisplayHeight() {
         return (int) virtualDisplaySize.y;
@@ -224,8 +245,8 @@ public class VirtualDisplay {
     /**
      * 指定した座標が画面外だったらtrueを返す。
      * 
-     * @param realPos
-     * @return
+     * @param realPos 実際のデバイス座標
+     * @return 画面外だったらtrue
      */
     public boolean isOutsideReal(Vector2 realPos) {
         return drawingArea.contains(realPos.x, realPos.y);
@@ -234,8 +255,11 @@ public class VirtualDisplay {
     /**
      * 指定した座標が画面外だったらtrueを返す。
      * 
-     * @param area
-     * @return
+     * @param left X座標
+     * @param top Y座標
+     * @param width 幅
+     * @param height 高さ
+     * @return 外側だったらtrue
      */
     public boolean isOutsideReal(int left, int top, int width, int height) {
         return !drawingArea.contains(left, top, left + width, top + height);
