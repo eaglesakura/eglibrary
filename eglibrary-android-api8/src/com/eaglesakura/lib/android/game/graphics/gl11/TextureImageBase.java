@@ -12,7 +12,7 @@ import com.eaglesakura.lib.android.game.math.Vector2;
 /**
  * GLES 1.1でのテクスチャを管理する。<BR>
  * GLのテクスチャサイズ制限を回避するため、画像サイズは2^nピクセルになるよう余白が追加される。
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  *
  */
 public abstract class TextureImageBase extends ImageBase {

@@ -1,9 +1,3 @@
-/**
- * OpenGL管理を行う。<BR>
- * 将来的にはデバイス非依存とする。
- * @author eagle.sakura
- * @version 2009/11/14 : 新規作成
- */
 package com.eaglesakura.lib.android.game.graphics.gl11;
 
 import java.nio.Buffer;
@@ -41,7 +35,8 @@ import com.eaglesakura.lib.android.game.math.Vector2;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
 /**
- * @author eagle.sakura
+ * OpenGL管理を行う。<BR>
+ * {@link #gc()}等のリソース管理も行う。
  */
 public class OpenGLManager extends DisposableResource {
     /**
@@ -84,7 +79,7 @@ public class OpenGLManager extends DisposableResource {
     /**
      * デバイスで利用可能なコンフィグ一覧
      */
-    private List<EGLConfig> deviceConfigs = new ArrayList<EGLConfig>();
+    private EGLConfig[] deviceConfigs = null;
 
     /**
      * GLを初期化したスレッドのハンドラ
@@ -94,7 +89,7 @@ public class OpenGLManager extends DisposableResource {
     /**
      * GL描画用スレッドを作成する。
      * 
-     * @author eagle.sakura
+     * 
      * @param holder
      */
     public OpenGLManager() {
@@ -103,7 +98,7 @@ public class OpenGLManager extends DisposableResource {
     /**
      * メインで使用するGLインターフェースを取得する。
      * 
-     * @author eagle.sakura
+     * 
      * @return
      */
     public GL11 getGL() {
@@ -171,7 +166,7 @@ public class OpenGLManager extends DisposableResource {
     /**
      * バッファの消去を行う。
      * 
-     * @author eagle.sakura
+     * 
      * @param mask
      */
     public void clear(int mask) {
@@ -182,7 +177,7 @@ public class OpenGLManager extends DisposableResource {
      * バッファの消去を行う。<BR>
      * color / depthの両方をクリアする。
      * 
-     * @author eagle.sakura
+     * 
      */
     public void clear() {
         gl11.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
@@ -191,7 +186,7 @@ public class OpenGLManager extends DisposableResource {
     /**
      * 消去色を設定する。
      * 
-     * @author eagle.sakura
+     * 
      * @param r
      * @param g
      * @param b
@@ -204,7 +199,7 @@ public class OpenGLManager extends DisposableResource {
     /**
      * 消去色を指定する。 値は0～255で指定。
      * 
-     * @author eagle.sakura
+     * 
      * @param r
      * @param g
      * @param b
@@ -229,7 +224,7 @@ public class OpenGLManager extends DisposableResource {
     /**
      * 指定した４ｘ４行列をプッシュする。
      * 
-     * @author eagle.sakura
+     * 
      * @param trans
      */
     public void pushMatrixF(Matrix4x4 trans) {
@@ -240,7 +235,7 @@ public class OpenGLManager extends DisposableResource {
     /**
      * 行列を取り出す。
      * 
-     * @author eagle.sakura
+     * 
      */
     public void popMatrix() {
         gl11.glPopMatrix();
@@ -369,8 +364,8 @@ public class OpenGLManager extends DisposableResource {
     /**
      * バックバッファをフロントバッファに送る。
      * 
-     * @author eagle.sakura
-     * @version 2009/11/14 : 新規作成
+     * 
+     * 
      */
     public void swapBuffers() {
         if (egl == null || eglDisplay == null || eglSurface == null) {
@@ -526,7 +521,6 @@ public class OpenGLManager extends DisposableResource {
      * @return
      */
     protected EGLSurface refreshRenderSurface() {
-
         if (eglSurface != null) {
             egl.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, eglContext);
             eglSurface = null;
@@ -544,11 +538,7 @@ public class OpenGLManager extends DisposableResource {
             }
 
             //! 必要なものを保存する
-            final int num = numConfigs[0];
-            for (int i = 0; i < num; ++i) {
-                deviceConfigs.add(configs[i]);
-            }
-            eglConfig = deviceConfigs.get(0);
+            eglConfig = chooseConfig(egl, eglDisplay, configs);
         }
 
         {
@@ -577,7 +567,7 @@ public class OpenGLManager extends DisposableResource {
             int b = findConfigAttrib(egl, display, config, EGL10.EGL_BLUE_SIZE, 0);
             int a = findConfigAttrib(egl, display, config, EGL10.EGL_ALPHA_SIZE, 0);
 
-            if (d == pixelSizeD && r == pixelSizeR && g == pixelSizeG && b == pixelSizeB && a == pixelSizeA) {
+            if (d >= pixelSizeD && r == pixelSizeR && g == pixelSizeG && b == pixelSizeB && a == pixelSizeA) {
                 LogUtil.log(String.format("config index :: %d", index));
                 return config;
             }
@@ -597,8 +587,8 @@ public class OpenGLManager extends DisposableResource {
     /**
      * GL系を初期化する。
      * 
-     * @author eagle.sakura
-     * @version 2009/11/14 : 新規作成
+     * 
+     * 
      */
     public void initGL(Handler handler) {
         if (egl != null) {
@@ -633,10 +623,6 @@ public class OpenGLManager extends DisposableResource {
             }
 
             //! 必要なものを保存する
-            final int num = numConfigs[0];
-            for (int i = 0; i < num; ++i) {
-                deviceConfigs.add(configs[i]);
-            }
             eglConfig = chooseConfig(egl, eglDisplay, configs);
             if (eglConfig == null) {
                 throw new IllegalStateException("Config not match!!");
@@ -734,7 +720,7 @@ public class OpenGLManager extends DisposableResource {
     /**
      * GLの終了処理を行う。
      * 
-     * @author eagle.sakura
+     * 
      */
     @Override
     public void dispose() {
@@ -784,9 +770,6 @@ public class OpenGLManager extends DisposableResource {
 
     /**
      * カメラ関連の行列をリセットし、単位行列化する。
-     * 
-     * @author eagle.sakura
-     * @version 2010/09/18 : 新規作成
      */
     public void resetCamera() {
         gl11.glMatrixMode(GL10.GL_PROJECTION);

@@ -15,7 +15,7 @@ import com.eaglesakura.lib.android.game.util.GameUtil;
  * 実際の描画を行うための解像度は必ず偶数になる。<BR>
  * 全ての入力が偶数である場合、上下の隙間のピクセル数は必ず一致する。<BR>
  * 
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  * 
  */
 public class VirtualDisplay {
@@ -41,7 +41,7 @@ public class VirtualDisplay {
 
     /**
      * 仮想ディスプレイのフィットタイプ。
-     * @author Takeshi
+     * @author TAKESHI YAMASHITA
      *
      */
     public enum FitType {

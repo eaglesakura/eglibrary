@@ -8,7 +8,7 @@ import com.eaglesakura.lib.android.game.io.IStorageDevice;
 /**
  * ファイルシステムを利用したストレージ
  * 
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  * 
  */
 public class ExternalStorage implements IStorageDevice {

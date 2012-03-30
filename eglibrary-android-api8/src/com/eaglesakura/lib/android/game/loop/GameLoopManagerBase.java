@@ -88,7 +88,7 @@ public abstract class GameLoopManagerBase {
     /**
      * ライフサイクルの状態を取得する。
      * 
-     * @author Takeshi
+     * @author TAKESHI YAMASHITA
      * 
      */
     protected enum LifeCycle {

@@ -14,7 +14,7 @@ import com.eaglesakura.lib.android.game.graphics.Sprite;
 /**
  * スプライト描画の管理を行う。
  * 
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  * 
  */
 public class SpriteManager extends DisposableResource {

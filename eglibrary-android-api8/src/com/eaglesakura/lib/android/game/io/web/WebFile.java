@@ -15,7 +15,7 @@ import com.eaglesakura.lib.android.game.util.LogUtil;
 /**
  * Web上の1ファイルを扱う。
  * 
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  * 
  */
 public class WebFile implements IFile {

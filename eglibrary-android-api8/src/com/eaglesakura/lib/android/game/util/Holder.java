@@ -3,7 +3,7 @@ package com.eaglesakura.lib.android.game.util;
 /**
  * 何らかの値を保持するためのホルダ。
  * マルチスレッドでデータ受け渡し等に利用する。
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  *
  * @param <T>
  */

@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * プロジェクト内で利用するファイルリソースを抽象化する。 接続先はデバッグ時・実行時の環境に属する。
  * 
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  * 
  */
 public interface IFile {

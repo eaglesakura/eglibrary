@@ -1,7 +1,7 @@
 /**
  * データの入力を補助する。
- * @author eagle.sakura
- * @version 2009/11/15 : 新規作成
+ * 
+ * 
  */
 package com.eaglesakura.lib.io;
 
@@ -14,8 +14,8 @@ import com.eaglesakura.lib.android.game.util.LogUtil;
 /**
  * データ入力を補助するクラス。
  *
- * @author eagle.sakura
- * @version 2009/11/15 : 新規作成
+ * 
+ * 
  */
 public final class DataInputStream extends DisposableResource {
     /**
@@ -25,9 +25,9 @@ public final class DataInputStream extends DisposableResource {
 
     /**
      *
-     * @author eagle.sakura
+     * 
      * @param is
-     * @version 2010/06/23 : 新規作成
+     * 
      */
     public DataInputStream(InputStream is) {
         reader = is;
@@ -36,9 +36,9 @@ public final class DataInputStream extends DisposableResource {
     /**
      * バッファから１バイト読み取る。
      *
-     * @author eagle.sakura
+     * 
      * @return
-     * @version 2009/11/15 : 新規作成
+     * 
      */
     public byte readS8() throws IOException {
         byte[] n = {
@@ -51,9 +51,9 @@ public final class DataInputStream extends DisposableResource {
     /**
      * バッファから2バイト読み取る。
      *
-     * @author eagle.sakura
+     * 
      * @return
-     * @version 2009/11/15 : 新規作成
+     * 
      */
     public short readS16() throws IOException {
         byte[] n = {
@@ -71,9 +71,9 @@ public final class DataInputStream extends DisposableResource {
      * バッファから3バイト読み取る。<BR>
      * 色情報等に利用可能。
      *
-     * @author eagle.sakura
+     * 
      * @return
-     * @version 2009/11/15 : 新規作成
+     * 
      */
     public int readS24() throws IOException {
         byte[] n = {
@@ -87,9 +87,9 @@ public final class DataInputStream extends DisposableResource {
     /**
      * １バイト整数を取得し、読み込み位置を１バイト進める。
      *
-     * @author eagle.sakura
+     * 
      * @return １バイト符号無整数。ただし、符号無を表現する関係上、戻りはint型となる。
-     * @version 2009/08/28 : 新規作成
+     * 
      */
     public int readU8() throws IOException {
         return (((int) readS8()) & 0xff);
@@ -98,9 +98,9 @@ public final class DataInputStream extends DisposableResource {
     /**
      * ２バイト整数を取得し、読み込み位置を２バイト進める。
      *
-     * @author eagle.sakura
+     * 
      * @return ２バイト符号無整数。ただし、符号無を表現する関係上、戻りはint型となる。
-     * @version 2009/09/20 : 新規作成
+     * 
      */
     public int readU16() throws IOException {
         return (((int) readS16()) & 0xffff);
@@ -109,9 +109,9 @@ public final class DataInputStream extends DisposableResource {
     /**
      * バッファから4バイト読み取る。
      *
-     * @author eagle.sakura
+     * 
      * @return
-     * @version 2009/11/15 : 新規作成
+     * 
      */
     public int readS32() throws IOException {
         byte[] n = {
@@ -130,9 +130,9 @@ public final class DataInputStream extends DisposableResource {
     /**
      * バッファから８バイト整数を読み取る。
      *
-     * @author eagle.sakura
+     * 
      * @return
-     * @version 2010/03/24 : 新規作成
+     * 
      */
     public long readS64() throws IOException {
         byte[] n = {
@@ -184,9 +184,9 @@ public final class DataInputStream extends DisposableResource {
      * 固定小数をfloat変換して取得する。<BR>
      * GL仕様のため、符号1 整数15 小数16の固定小数を使用する。
      *
-     * @author eagle.sakura
+     * 
      * @return
-     * @version 2009/11/23 : 新規作成
+     * 
      */
     public float readGLFixedFloat() throws IOException {
         return ((float) readS32()) / (float) 0x10000;
@@ -196,9 +196,9 @@ public final class DataInputStream extends DisposableResource {
      * 固定小数をdouble変換して取得する。<BR>
      * GL仕様のため、符号1 整数47 小数16の固定小数を使用する。
      *
-     * @author eagle.sakura
+     * 
      * @return
-     * @version 2010/03/24 : 新規作成
+     * 
      */
     public double readGLFixedDouble() throws IOException {
         return ((double) readS64()) / (double) 0x10000;
@@ -207,10 +207,10 @@ public final class DataInputStream extends DisposableResource {
     /**
      * IEEE754形式のビット列をfloatに変換し、取得する。
      *
-     * @author eagle.sakura
+     * 
      * @return
      * @throws IOException
-     * @version 2010/04/19 : 新規作成
+     * 
      */
     public float readFloat() throws IOException {
         return Float.intBitsToFloat(readS32());
@@ -219,10 +219,10 @@ public final class DataInputStream extends DisposableResource {
     /**
      * IEEE754形式のビット列をdoubleに変換し、取得する。
      *
-     * @author eagle.sakura
+     * 
      * @return
      * @throws IOException
-     * @version 2010/04/19 : 新規作成
+     * 
      */
     public double readDouble() throws IOException {
         return Double.longBitsToDouble(readS64());
@@ -232,10 +232,10 @@ public final class DataInputStream extends DisposableResource {
      * 真偽の値を取得する。<BR>
      * 1byte読み取り、0ならfalse、それ以外ならtrueを返す。
      *
-     * @author eagle.sakura
+     * 
      * @return
      * @throws IOException
-     * @version 2010/05/28 : 新規作成
+     * 
      */
     public boolean readBoolean() throws IOException {
         return readS8() == 0 ? false : true;
@@ -246,9 +246,9 @@ public final class DataInputStream extends DisposableResource {
      * エンコードはShiftJISである必要がある。<BR>
      * 頭2byteが文字数、後に文字配列が続く。
      *
-     * @author eagle.sakura
+     * 
      * @return
-     * @version 2009/11/15 : 新規作成
+     * 
      */
     public String readString() throws IOException {
         int len = readS16();
@@ -264,10 +264,10 @@ public final class DataInputStream extends DisposableResource {
     /**
      * バッファを直接読み取る。
      *
-     * @author eagle.sakura
+     * 
      * @param length
      * @return
-     * @version 2009/11/15 : 新規作成
+     * 
      */
     public byte[] readBuffer(int length) throws IOException {
         byte[] ret = new byte[length];
@@ -278,9 +278,9 @@ public final class DataInputStream extends DisposableResource {
     /**
      * ファイルを作成する。
      *
-     * @author eagle.sakura
+     * 
      * @return
-     * @version 2010/02/22 : 新規作成
+     * 
      */
     public byte[] readFile() throws IOException {
         int len = readS32();
@@ -292,10 +292,10 @@ public final class DataInputStream extends DisposableResource {
     /**
      * バッファから必要な長さを読み取る。
      *
-     * @author eagle.sakura
+     * 
      * @param buf
      * @param length
-     * @version 2009/11/15 : 新規作成
+     * 
      */
     public void readBuffer(byte[] buf, int length) throws IOException {
         readBuffer(buf, 0, length);
@@ -303,11 +303,11 @@ public final class DataInputStream extends DisposableResource {
 
     /**
      *
-     * @author eagle.sakura
+     * 
      * @param buf
      * @param index
      * @param length
-     * @version 2009/11/15 : 新規作成
+     * 
      */
     public int readBuffer(byte[] buf, int index, int length) throws IOException {
         return reader.read(buf, index, length);
@@ -317,8 +317,8 @@ public final class DataInputStream extends DisposableResource {
      * 資源の解放を行う。<BR>
      * 内部管理する{@link #reader}のdispose()を行う。
      *
-     * @author eagle.sakura
-     * @version 2009/11/15 : 新規作成
+     * 
+     * 
      */
     public void dispose() {
         if (reader != null) {
@@ -333,9 +333,9 @@ public final class DataInputStream extends DisposableResource {
 
     /**
      *
-     * @author eagle.sakura
+     * 
      * @throws Throwable
-     * @version 2010/07/12 : 新規作成
+     * 
      */
     protected void finalize() throws Throwable {
         super.finalize();
@@ -345,10 +345,10 @@ public final class DataInputStream extends DisposableResource {
     /**
      * 読み取り位置を指定する。
      *
-     * @author eagle.sakura
+     * 
      * @param eSeekType
      * @param pos
-     * @version 2009/11/15 : 新規作成
+     * 
      */
     public void seek(SeekType type, int pos) throws IOException {
         type.set(reader, pos);
@@ -356,7 +356,7 @@ public final class DataInputStream extends DisposableResource {
 
     /**
      * シークの種類を定義する。
-     * @author Takeshi
+     * @author TAKESHI YAMASHITA
      *
      */
     public enum SeekType {

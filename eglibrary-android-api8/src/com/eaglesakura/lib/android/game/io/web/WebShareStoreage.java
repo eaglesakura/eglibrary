@@ -6,7 +6,7 @@ import com.eaglesakura.lib.android.game.io.IStorageDevice;
 /**
  * MacのＷｅｂ共有（Apache）を利用したストレージ。 基本的にRead-Only
  * 
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  * 
  */
 public class WebShareStoreage implements IStorageDevice {

@@ -15,7 +15,7 @@ import com.eaglesakura.lib.android.game.util.LogUtil;
 
 /**
  * SE管理クラス
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  *
  */
 public class SoundManager extends DisposableResource {

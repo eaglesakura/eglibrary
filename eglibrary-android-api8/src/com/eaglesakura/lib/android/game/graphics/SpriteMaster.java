@@ -9,7 +9,7 @@ import android.graphics.Rect;
  * スプライト表示用の1オブジェクトを示す。<BR>
  * スプライトはアニメーションを含み、1画像シートから複数の画像ブロックを切り出してアニメーション化することができる。
  * 
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  * 
  */
 public class SpriteMaster {

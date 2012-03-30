@@ -14,7 +14,7 @@ import com.eaglesakura.lib.android.game.util.LogUtil;
 /**
  * OpenGLES 1.1を利用したゲーム用のActivity 作成後すぐにループを開始する。
  * 
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  * 
  */
 public abstract class GL11GameActivityBase extends Activity implements ILoopParent {

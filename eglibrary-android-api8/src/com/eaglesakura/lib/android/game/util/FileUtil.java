@@ -12,6 +12,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * File関連の便利メソッドを提供する
+ * @author TAKESHI YAMASHITA
+ *
+ */
 public class FileUtil {
 
     /**
@@ -132,10 +137,10 @@ public class FileUtil {
     /**
      * ファイル拡張子を取得する。
      *
-     * @author eagle.sakura
+     * 
      * @param path
      * @return
-     * @version 2009/12/04 : 新規作成
+     * 
      */
     public static String getFileExt(String fileName) {
         if (fileName == null)
@@ -152,11 +157,11 @@ public class FileUtil {
     /**
      * 拡張子付のファイル名からファイル名のみを抜き出す
      *
-     * @author eagle.sakura
+     * 
      * @param fileName
      *            ファイル名
      * @return 拡張子を取り除いたファイル名
-     * @version 2009/05/27 : 新規作成
+     * 
      */
     public static String getFileName(final String fileName) {
         if (fileName == null)
@@ -173,9 +178,9 @@ public class FileUtil {
     /**
      * カレントディレクトリのパスを取得する。
      *
-     * @author eagle.sakura
+     * 
      * @return
-     * @version 2010/03/31 : 新規作成
+     * 
      */
     public static String getCurrentDirectoryPath() {
         return (new File(".").getAbsoluteFile().getParent());

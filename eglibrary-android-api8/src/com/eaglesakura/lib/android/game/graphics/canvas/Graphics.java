@@ -1,8 +1,3 @@
-/**
- * サーフェース内のCanvasを管理する。
- * @author eagle.sakura
- * @version 2009/11/29 : 新規作成
- */
 package com.eaglesakura.lib.android.game.graphics.canvas;
 
 import java.util.ArrayList;
@@ -18,16 +13,16 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 
 /**
- * プリミティブの描画を管理する。
- * 
- * @author eagle.sakura
+ * Canvas描画のサポート
+ * @author TAKESHI YAMASHITA
+ *
  */
 public class Graphics {
     Canvas canvas = null;
     Paint paint = new Paint();
 
     /**
-     * @author eagle.sakura
+     * 
      * @param target
      */
     public Graphics() {
@@ -38,7 +33,7 @@ public class Graphics {
     /**
      * 描画用のキャンバスを指定する。
      * 
-     * @author eagle.sakura
+     * 
      * @param canvas
      */
     public void setCanvas(Canvas canvas) {
@@ -75,12 +70,12 @@ public class Graphics {
     /**
      * 背景を特定色でクリアする。
      * 
-     * @author eagle.sakura
+     * 
      * @param r
      * @param g
      * @param b
      * @param a
-     * @version 2009/11/29 : 新規作成
+     * 
      */
     public void clearRGBA(int r, int g, int b, int a) {
         canvas.drawColor(toColorARGB(a, r, g, b), Mode.CLEAR);
@@ -89,8 +84,8 @@ public class Graphics {
     /**
      * 幅を取得する。
      * 
-     * @author eagle.sakura
-     * @version 2009/11/30 : 新規作成
+     * 
+     * 
      */
     public int getWidth() {
         return width;
@@ -99,9 +94,9 @@ public class Graphics {
     /**
      * 高さを取得する。
      * 
-     * @author eagle.sakura
+     * 
      * @return
-     * @version 2009/11/30 : 新規作成
+     * 
      */
     public int getHeight() {
         return height;
@@ -110,9 +105,9 @@ public class Graphics {
     /**
      * ロックされたキャンバスを取得する。
      * 
-     * @author eagle.sakura
+     * 
      * @return
-     * @version 2009/11/29 : 新規作成
+     * 
      */
     public Canvas getCanvas() {
         return canvas;
@@ -121,9 +116,9 @@ public class Graphics {
     /**
      * ペイントクラスを取得する。
      * 
-     * @author eagle.sakura
+     * 
      * @return
-     * @version 2009/11/29 : 新規作成
+     * 
      */
     public Paint getPaint() {
         return paint;
@@ -132,7 +127,7 @@ public class Graphics {
     /**
      * 描画色を指定する。
      * 
-     * @author eagle.sakura
+     * 
      * @param a
      * @param r
      * @param g
@@ -146,7 +141,7 @@ public class Graphics {
      * アンチエイリアスの有効・無効の指定を行う。<BR>
      * デフォルトは無効である。
      * 
-     * @author eagle.sakura
+     * 
      * @param set
      */
     public void setAntiAlias(boolean set) {
@@ -165,7 +160,7 @@ public class Graphics {
     /**
      * イメージの描画を行う。
      * 
-     * @author eagle.sakura
+     * 
      * @param bmp
      * @param src
      * @param dst
@@ -177,7 +172,7 @@ public class Graphics {
     /**
      * イメージ描画を行う。
      * 
-     * @author eagle.sakura
+     * 
      * @param bmp
      * @param x
      * @param y
@@ -189,7 +184,7 @@ public class Graphics {
     /**
      * イメージ描画を行う。
      * 
-     * @author eagle.sakura
+     * 
      * @param bmp
      * @param x
      * @param y
@@ -204,11 +199,11 @@ public class Graphics {
 
     /**
      * 
-     * @author eagle.sakura
+     * 
      * @param x
      * @param y
      * @param r
-     * @version 2010/05/26 : 新規作成
+     * 
      */
     public void drawCircle(int x, int y, float r) {
         paint.setStyle(Style.STROKE);
@@ -217,11 +212,11 @@ public class Graphics {
 
     /**
      * 
-     * @author eagle.sakura
+     * 
      * @param x
      * @param y
      * @param r
-     * @version 2010/05/26 : 新規作成
+     * 
      */
     public void fillCircle(int x, int y, float r) {
         paint.setStyle(Style.FILL);
@@ -231,12 +226,12 @@ public class Graphics {
     /**
      * 四角形の塗りつぶしを行う。
      * 
-     * @author eagle.sakura
+     * 
      * @param x
      * @param y
      * @param w
      * @param h
-     * @version 2009/11/29 : 新規作成
+     * 
      */
     public void fillRect(int x, int y, int w, int h) {
         paint.setStyle(Style.FILL);
@@ -246,12 +241,12 @@ public class Graphics {
     /**
      * 四角形の外枠を描画する。
      * 
-     * @author eagle.sakura
+     * 
      * @param x
      * @param y
      * @param w
      * @param h
-     * @version 2009/11/29 : 新規作成
+     * 
      */
     public void drawRect(int x, int y, int w, int h) {
         paint.setStyle(Style.STROKE);
@@ -290,14 +285,14 @@ public class Graphics {
     /**
      * 文字列を描画する。
      * 
-     * @author eagle.sakura
+     * 
      * @param str
      * @param x
      * @param y
      * @param start
      * @param end
      * @param flags
-     * @version 2009/12/13 : 新規作成
+     * 
      */
     public void drawString(String str, int x, int y, int start, int end, int flags) {
         if (start < 0 || end < 0) {
@@ -332,10 +327,10 @@ public class Graphics {
     /**
      * 文字列の高さを取得する。
      * 
-     * @author eagle.sakura
+     * 
      * @param str
      * @return
-     * @version 2009/12/13 : 新規作成
+     * 
      */
     public int getStringHeight(String str) {
         Rect r = srcRect;
@@ -346,12 +341,12 @@ public class Graphics {
     /**
      * 文字列の幅を取得する。
      * 
-     * @author eagle.sakura
+     * 
      * @param str
      * @param start
      * @param end
      * @return
-     * @version 2009/12/13 : 新規作成
+     * 
      */
     public int getStringWidth(String str, int start, int end) {
         Rect r = srcRect;
@@ -362,10 +357,10 @@ public class Graphics {
     /**
      * 文字列の幅を取得する。
      * 
-     * @author eagle.sakura
+     * 
      * @param str
      * @return
-     * @version 2009/12/13 : 新規作成
+     * 
      */
     public int getStringWidth(String str) {
         Rect r = srcRect;
@@ -376,12 +371,12 @@ public class Graphics {
     /**
      * 線を描画する。
      * 
-     * @author eagle.sakura
+     * 
      * @param startX
      * @param startY
      * @param endX
      * @param endY
-     * @version 2009/12/02 : 新規作成
+     * 
      */
     public void drawLine(int startX, int startY, int endX, int endY) {
         paint.setStyle(Style.STROKE);
@@ -391,9 +386,9 @@ public class Graphics {
     /**
      * 描画テキストのサイズを指定する。
      * 
-     * @author eagle.sakura
+     * 
      * @param size
-     * @version 2009/11/14 : 新規作成
+     * 
      */
     public void setFontSize(int size) {
         paint.setTextSize((float) size);
@@ -402,13 +397,13 @@ public class Graphics {
     /**
      * ARGB色に変換する。
      * 
-     * @author eagle.sakura
+     * 
      * @param a
      * @param r
      * @param g
      * @param b
      * @return
-     * @version 2009/11/14 : 新規作成
+     * 
      */
     public static int toColorARGB(int a, int r, int g, int b) {
         return Color.argb(a, r, g, b);

@@ -3,23 +3,24 @@ package com.eaglesakura.lib.android.game.math;
 import android.opengl.Matrix;
 
 /**
- * 4x4の行列を管理する。
+ * OpenGL ESの挙動に合わせた4x4行列を管理する
  * 
- * @author eagle.sakura
+ * @author TAKESHI YAMASHITA
+ *
  */
 public final class Matrix4x4 {
     /**
      * 単位行列を作成する。
      * 
-     * @author eagle.sakura
-     * @version 2009/11/14 : 新規作成
+     * 
+     * 
      */
     public Matrix4x4() {
     }
 
     /**
      * 
-     * @author eagle.sakura
+     * 
      * @param origin
      */
     public Matrix4x4(Matrix4x4 origin) {
@@ -31,7 +32,7 @@ public final class Matrix4x4 {
     /**
      * 回転行列を作成する。
      * 
-     * @author eagle.sakura
+     * 
      * @param x
      * @param y
      * @param z
@@ -44,7 +45,7 @@ public final class Matrix4x4 {
     /**
      * 位置行列を作成する。
      * 
-     * @author eagle.sakura
+     * 
      * @param x
      * @param y
      * @param z
@@ -66,9 +67,9 @@ public final class Matrix4x4 {
     /**
      * 逆行列を作成する。
      * 
-     * @author eagle.sakura
+     * 
      * @param result
-     * @version 2009/11/15 : 新規作成
+     * 
      */
     public Matrix4x4 invert(Matrix4x4 result) {
         Matrix.invertM(result.m, 0, m, 0);
@@ -78,9 +79,9 @@ public final class Matrix4x4 {
     /**
      * this = this * transの計算を行う。
      * 
-     * @author eagle.sakura
+     * 
      * @param trans
-     * @version 2009/11/15 : 新規作成
+     * 
      */
     public void multiply(Matrix4x4 trans) {
         Matrix.multiplyMM(m, 0, trans.m, 0, m, 0);
@@ -89,11 +90,11 @@ public final class Matrix4x4 {
     /**
      * この行列を適用したベクトルをresultへ格納する。
      * 
-     * @author eagle.sakura
+     * 
      * @param v
      * @param result
      * @return resultの参照
-     * @version 2009/11/29 : 新規作成
+     * 
      */
     public Vector3 transVector(Vector3 v, Vector3 result) {
         //! Wを生成する
@@ -116,13 +117,13 @@ public final class Matrix4x4 {
      * scale -> rotateX -> rotateY -> rotateZ -> position<BR>
      * となる。
      * 
-     * @author eagle.sakura
+     * 
      * @param scale
      * @param rotate
      * @param position
      * @param result
      * @return resultの参照
-     * @version 2009/11/23 : 新規作成
+     * 
      */
     public static Matrix4x4 create(Vector3 scale, Vector3 rotate, Vector3 position, Matrix4x4 result) {
         result.identity();
@@ -166,11 +167,11 @@ public final class Matrix4x4 {
     /**
      * result = this * transの計算を行う。
      * 
-     * @author eagle.sakura
+     * 
      * @param trans
      * @param result
      * @return
-     * @version 2009/11/15 : 新規作成
+     * 
      */
     public Matrix4x4 multiply(Matrix4x4 trans, Matrix4x4 result) {
         Matrix.multiplyMM(result.m, 0, trans.m, 0, m, 0);
@@ -189,11 +190,11 @@ public final class Matrix4x4 {
     /**
      * 拡大行列を作成する。
      * 
-     * @author eagle.sakura
+     * 
      * @param x
      * @param y
      * @param z
-     * @version 2009/11/15 : 新規作成
+     * 
      */
     public void scale(float x, float y, float z) {
         m[4 * 0 + 0] = x;
@@ -204,9 +205,9 @@ public final class Matrix4x4 {
     /**
      * 値をコピーする。
      * 
-     * @author eagle.sakura
+     * 
      * @param origin
-     * @version 2009/11/23 : 新規作成
+     * 
      */
     public void set(Matrix4x4 origin) {
         for (int i = 0; i < 4 * 4; ++i) {
@@ -217,8 +218,8 @@ public final class Matrix4x4 {
     /**
      * 単位行列を作成する。
      * 
-     * @author eagle.sakura
-     * @version 2009/11/15 : 新規作成
+     * 
+     * 
      */
     public void identity() {
         for (int i = 0; i < 4; ++i) {
@@ -238,11 +239,11 @@ public final class Matrix4x4 {
     /**
      * 視線変更行列を生成する。
      * 
-     * @author eagle.sakura
+     * 
      * @param position
      * @param look
      * @param up
-     * @version 2010/09/17 : 新規作成
+     * 
      */
     public void lookAt(Vector3 position, Vector3 look, Vector3 up) {
         Vector3 zaxis = new Vector3(), xaxis = new Vector3(), yaxis = new Vector3();
@@ -290,12 +291,12 @@ public final class Matrix4x4 {
     /**
      * 射影行列を作成する。
      * 
-     * @author eagle.sakura
+     * 
      * @param near
      * @param far
      * @param fovY
      * @param aspect
-     * @version 2010/09/17 : 新規作成
+     * 
      */
     public void projection(float near, float far, float fovY, float aspect) {
         float h, w, Q;

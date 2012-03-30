@@ -12,7 +12,7 @@ import com.eaglesakura.lib.android.game.util.GameUtil;
 /**
  * ゲーム中でキー入力をサポートするためのクラス。
  * デフォルトは上下左右。
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  *
  */
 public class KeyInput {
@@ -57,7 +57,7 @@ public class KeyInput {
         /**
          * タッチされているかを調べる。
          * 
-         * @author eagle.sakura
+         * 
          * @return
          */
         public boolean isTouch() {
@@ -67,7 +67,7 @@ public class KeyInput {
         /**
          * ディスプレイから指が離れているか。
          * 
-         * @author eagle.sakura
+         * 
          * @return
          */
         public boolean isRelease() {
@@ -77,7 +77,7 @@ public class KeyInput {
         /**
          * ディスプレイから指が離れた瞬間か。
          * 
-         * @author eagle.sakura
+         * 
          * @return
          */
         public boolean isReleaseOnce() {
@@ -90,7 +90,7 @@ public class KeyInput {
         /**
          * タッチされているかを調べる。
          * 
-         * @author eagle.sakura
+         * 
          * @return
          */
         public boolean isTouchOnce() {
@@ -103,7 +103,7 @@ public class KeyInput {
         /**
          * 毎フレームの更新を行う。
          * 
-         * @author eagle.sakura
+         * 
          */
         void update() {
             attrOld = attrNow;

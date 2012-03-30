@@ -22,7 +22,7 @@ import javax.microedition.khronos.opengles.GL11;
  * 
  * 
  * データは左上、右上、左下、右下の順番に格納される。
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  * 
  */
 public class QuadPolygon extends DisposableGLResource {

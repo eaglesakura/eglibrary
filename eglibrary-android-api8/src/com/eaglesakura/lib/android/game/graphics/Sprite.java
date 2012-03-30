@@ -11,7 +11,7 @@ import com.eaglesakura.lib.android.game.util.GameUtil;
 /**
  * スプライト描画情報を記録する。
  * 
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  * 
  */
 public class Sprite {

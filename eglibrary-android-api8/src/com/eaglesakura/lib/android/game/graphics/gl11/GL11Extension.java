@@ -1,8 +1,3 @@
-/**
- *
- * @author eagle.sakura
- * @version 2010/07/10 : 新規作成
- */
 package com.eaglesakura.lib.android.game.graphics.gl11;
 
 import java.nio.Buffer;
@@ -12,6 +7,7 @@ import java.nio.Buffer;
  * GL11Ext は強制定期に未対応の例外を投げるため、このクラスにNDKを介した呼出を行わせる。<BR>
  * 主にスキンメッシュ実現に必要な関数を実装してある。<BR>
  * 端末が対応しているかは不明。
+ * @author TAKESHI YAMASHITA
  */
 public class GL11Extension {
     static {

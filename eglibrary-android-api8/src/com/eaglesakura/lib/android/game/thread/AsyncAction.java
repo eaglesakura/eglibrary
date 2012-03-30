@@ -6,7 +6,7 @@ import android.os.Handler;
  * 非同期の処理を行う。<BR>
  * こちらはAsyncTaskとは独立しているため、強制的な実行が可能。<BR>
  * Handlerの指定も可能。
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  *
  */
 public abstract class AsyncAction extends Thread {

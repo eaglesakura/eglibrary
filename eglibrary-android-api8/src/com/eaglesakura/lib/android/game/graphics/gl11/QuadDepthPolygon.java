@@ -20,7 +20,7 @@ import javax.microedition.khronos.opengles.GL11;
  * ------------------- <BR>
  * left bottom / right bottom <BR>
  * 
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  * 
  */
 public class QuadDepthPolygon extends DisposableGLResource {

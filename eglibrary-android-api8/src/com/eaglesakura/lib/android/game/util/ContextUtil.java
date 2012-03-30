@@ -19,11 +19,17 @@ import android.view.WindowManager;
 
 import com.eaglesakura.lib.android.game.math.Vector2;
 
+/**
+ * Context関連の便利メソッドを提供する
+ * 
+ * @author TAKESHI YAMASHITA
+ *
+ */
 public class ContextUtil {
 
     /**
      *
-     * @author eagle.sakura
+     * 
      * @param context
      * @return
      */
@@ -33,7 +39,7 @@ public class ContextUtil {
 
     /**
      *
-     * @author eagle.sakura
+     * 
      * @param context
      * @return
      */
@@ -43,7 +49,7 @@ public class ContextUtil {
 
     /**
      *
-     * @author eagle.sakura
+     * 
      * @param context
      * @return
      */
@@ -54,11 +60,11 @@ public class ContextUtil {
     /**
      * ディスプレイのXYサイズを取得する。
      * 
-     * @author eagle.sakura
+     * 
      * @param context
      * @param result
      * @return
-     * @version 2010/07/14 : 新規作成
+     * 
      */
     public static Vector2 getDisplaySize(Context context, Vector2 result) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -70,10 +76,10 @@ public class ContextUtil {
     /**
      * 指定方向に端末画面を固定する。
      * 
-     * @author eagle.sakura
+     * 
      * @param context
      * @param isVertical
-     * @version 2010/06/13 : 新規作成
+     * 
      */
     public static void setOrientation(Context context, boolean isVertical) {
         try {
@@ -91,9 +97,9 @@ public class ContextUtil {
     /**
      * 設定を反転する。
      * 
-     * @author eagle.sakura
+     * 
      * @param context
-     * @version 2010/06/16 : 新規作成
+     * 
      */
     public static void toggleOrientationFixed(Context context) {
         try {
@@ -111,10 +117,10 @@ public class ContextUtil {
 
     /**
      * 
-     * @author eagle.sakura
+     * 
      * @param context
      * @param is
-     * @version 2010/05/31 : 新規作成
+     * 
      */
     public static void setOrientationFixed(Context context, boolean is) {
         try {

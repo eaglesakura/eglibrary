@@ -12,7 +12,7 @@ import com.eaglesakura.lib.android.game.display.VirtualDisplay;
 /**
  * レンダリングターゲット用のテクスチャ。
  * 作成されたテクスチャは必ず上下が逆さになることに注意。
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  *
  */
 public class RenderTargetTexture extends TextureImageBase {

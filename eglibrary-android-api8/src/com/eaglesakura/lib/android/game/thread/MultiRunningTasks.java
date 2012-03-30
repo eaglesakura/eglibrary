@@ -10,7 +10,7 @@ import com.eaglesakura.lib.android.game.util.GameUtil;
  * タスク数に制限はないが、限界は考えて使ったほうがいい。<BR>
  * タスクが開始される順番は確定されるが、終了する順番は保証されない。
  * 
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  * 
  */
 public class MultiRunningTasks {

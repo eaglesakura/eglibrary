@@ -5,7 +5,7 @@ import android.util.Log;
 /**
  * ログ出力を制御する。
  * 
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  * 
  */
 public class LogUtil {

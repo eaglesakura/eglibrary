@@ -1,13 +1,7 @@
-/**
- * XYZの座標を管理する。
- * @author eagle.sakura
- * @version 2009/11/14 : 新規作成
- */
 package com.eaglesakura.lib.android.game.math;
 
 /**
- * @author eagle.sakura
- * @version 2009/11/14 : 新規作成
+ * XYZの3次元ベクトルを管理する
  */
 public final class Vector3 {
     /**
@@ -26,8 +20,8 @@ public final class Vector3 {
     /**
      * ゼロ初期化したベクトルを作成する。
      * 
-     * @author eagle.sakura
-     * @version 2009/11/14 : 新規作成
+     * 
+     * 
      */
     public Vector3() {
     }
@@ -35,11 +29,11 @@ public final class Vector3 {
     /**
      * 値を指定して初期化する。
      * 
-     * @author eagle.sakura
+     * 
      * @param x
      * @param y
      * @param z
-     * @version 2009/11/14 : 新規作成
+     * 
      */
     public Vector3(float x, float y, float z) {
         this.x = x;
@@ -50,9 +44,9 @@ public final class Vector3 {
     /**
      * コピーを行う。
      * 
-     * @author eagle.sakura
+     * 
      * @param origin
-     * @version 2009/11/14 : 新規作成
+     * 
      */
     public Vector3(Vector3 origin) {
         set(origin);
@@ -61,9 +55,9 @@ public final class Vector3 {
     /**
      * 値のコピーを行う。
      * 
-     * @author eagle.sakura
+     * 
      * @param origin
-     * @version 2009/11/14 : 新規作成
+     * 
      */
     public void set(Vector3 origin) {
         x = origin.x;
@@ -87,9 +81,9 @@ public final class Vector3 {
     /**
      * 値のコピーを行う。
      * 
-     * @author eagle.sakura
+     * 
      * @param origin
-     * @version 2009/11/14 : 新規作成
+     * 
      */
     public void set(float x, float y, float z) {
         this.x = x;
@@ -100,10 +94,10 @@ public final class Vector3 {
     /**
      * 内積を取得する。
      * 
-     * @author eagle.sakura
+     * 
      * @param v
      * @return
-     * @version 2009/11/29 : 新規作成
+     * 
      */
     public float dot(Vector3 v) {
         return (x * v.x) + (y * v.y) + (z * v.z);
@@ -112,12 +106,12 @@ public final class Vector3 {
     /**
      * 内積を取得する。
      * 
-     * @author eagle.sakura
+     * 
      * @param _x
      * @param _y
      * @param _z
      * @return
-     * @version 2009/11/29 : 新規作成
+     * 
      */
     public float dot(float _x, float _y, float _z) {
         return (x * _x) + (y * _y) + (z * _z);
@@ -126,11 +120,11 @@ public final class Vector3 {
     /**
      * 外積を取得する。
      * 
-     * @author eagle.sakura
+     * 
      * @param v
      * @param result
      * @return
-     * @version 2009/11/29 : 新規作成
+     * 
      */
     public Vector3 cross(Vector3 v, Vector3 result) {
         result.set((y * v.z) - (z * v.y), (z * v.x) - (x * v.z), (x * v.y) - (y * v.x));
@@ -140,11 +134,11 @@ public final class Vector3 {
     /**
      * 外積を求め、このインスタンスに格納する。
      * 
-     * @author eagle.sakura
+     * 
      * @param _x
      * @param _y
      * @param _z
-     * @version 2009/11/29 : 新規作成
+     * 
      */
     public void cross(float _x, float _y, float _z) {
         set((y * _z) - (z * _y), (z * _x) - (x * _z), (x * _y) - (y * _x));
@@ -153,10 +147,10 @@ public final class Vector3 {
     /**
      * v0 - v1を計算し、このインスタンスに格納する。
      * 
-     * @author eagle.sakura
+     * 
      * @param v0
      * @param v1
-     * @version 2010/09/17 : 新規作成
+     * 
      */
     public void sub(Vector3 v0, Vector3 v1) {
         x = v0.x - v1.x;
@@ -191,9 +185,9 @@ public final class Vector3 {
     /**
      * 長さを取得する。
      * 
-     * @author eagle.sakura
+     * 
      * @return
-     * @version 2009/11/29 : 新規作成
+     * 
      */
     public float length() {
         return (float) Math.sqrt((double) ((x * x) + (y * y) + (z * z)));
@@ -215,8 +209,8 @@ public final class Vector3 {
     /**
      * ベクトルの長さを正規化する。
      * 
-     * @author eagle.sakura
-     * @version 2009/11/29 : 新規作成
+     * 
+     * 
      */
     public void normalize() {
         final float len = length();
@@ -229,12 +223,12 @@ public final class Vector3 {
      * 2つのベクトルを保管する。<BR>
      * leapは０．０ｆ～１．０ｆである必要がある。
      * 
-     * @author eagle.sakura
+     * 
      * @param v0
      * @param v1
      * @param leap
      * @param result
-     * @version 2010/07/11 : 新規作成
+     * 
      */
     public static void leap(Vector3 v0, Vector3 v1, float leap, Vector3 result) {
         result.x = (v1.x * leap) + (v0.x * (1.0f - leap));
@@ -245,9 +239,9 @@ public final class Vector3 {
     /**
      * 整合性確認。
      * 
-     * @author eagle.sakura
+     * 
      * @param obj
-     * @version 2009/11/29 : 新規作成
+     * 
      */
     @Override
     public boolean equals(Object obj) {
@@ -263,9 +257,9 @@ public final class Vector3 {
     /**
      * 文字列変換を行う。
      * 
-     * @author eagle.sakura
+     * 
      * @return
-     * @version 2010/04/13 : 新規作成
+     * 
      */
     @Override
     public String toString() {

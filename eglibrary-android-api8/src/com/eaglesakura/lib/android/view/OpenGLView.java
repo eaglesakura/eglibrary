@@ -1,8 +1,3 @@
-/**
- *
- * @author eagle.sakura
- * @version 2010/05/30 : 新規作成
- */
 package com.eaglesakura.lib.android.view;
 
 import android.content.Context;
@@ -14,8 +9,8 @@ import com.eaglesakura.lib.android.game.util.ContextUtil;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
 /**
- * @author eagle.sakura
- * @version 2010/05/30 : 新規作成
+ * 
+ * 
  */
 public class OpenGLView extends LooperSurfaceView {
     /**
@@ -27,9 +22,9 @@ public class OpenGLView extends LooperSurfaceView {
 
     /**
      * 
-     * @author eagle.sakura
+     * 
      * @param context
-     * @version 2010/05/30 : 新規作成
+     * 
      */
     public OpenGLView(Context context) {
         super(context);
@@ -41,9 +36,9 @@ public class OpenGLView extends LooperSurfaceView {
     /**
      * サーフェイスが作成された。
      * 
-     * @author eagle.sakura
+     * 
      * @param holder
-     * @version 2010/05/30 : 新規作成
+     * 
      */
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
@@ -58,9 +53,9 @@ public class OpenGLView extends LooperSurfaceView {
     /**
      * GL管理クラスを取得する。
      * 
-     * @author eagle.sakura
+     * 
      * @return
-     * @version 2010/05/30 : 新規作成
+     * 
      */
     public OpenGLManager getGLManager() {
         return glManager;
@@ -74,12 +69,12 @@ public class OpenGLView extends LooperSurfaceView {
 
     /**
      * 
-     * @author eagle.sakura
+     * 
      * @param holder
      * @param format
      * @param width
      * @param height
-     * @version 2010/05/30 : 新規作成
+     * 
      */
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -107,9 +102,9 @@ public class OpenGLView extends LooperSurfaceView {
     /**
      * サーフェイスが破棄された。
      * 
-     * @author eagle.sakura
+     * 
      * @param holder
-     * @version 2010/05/30 : 新規作成
+     * 
      */
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {

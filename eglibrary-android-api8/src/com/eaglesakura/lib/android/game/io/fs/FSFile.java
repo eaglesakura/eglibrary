@@ -14,7 +14,7 @@ import com.eaglesakura.lib.android.game.io.IFile;
 /**
  * ファイルシステムを扱ったシステム
  * 
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  * 
  */
 public class FSFile implements IFile {

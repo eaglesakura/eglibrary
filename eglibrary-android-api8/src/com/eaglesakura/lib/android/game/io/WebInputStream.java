@@ -14,7 +14,7 @@ import com.eaglesakura.lib.android.game.util.LogUtil;
 /**
  * Webからストリームを得るために利用する。
  * 
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  * 
  */
 public class WebInputStream extends InputStream {

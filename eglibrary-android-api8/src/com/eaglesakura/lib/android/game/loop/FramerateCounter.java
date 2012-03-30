@@ -3,7 +3,7 @@ package com.eaglesakura.lib.android.game.loop;
 /**
  * フレームレートの実測を行うカウンタ。
  * 
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  * 
  */
 public class FramerateCounter {

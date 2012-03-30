@@ -1,8 +1,3 @@
-/**
- *
- * @author eagle.sakura
- * @version 2010/05/24 : 新規作成
- */
 package com.eaglesakura.lib.android.view;
 
 import android.content.Context;
@@ -15,15 +10,13 @@ import com.eaglesakura.lib.android.game.graphics.canvas.SurfaceCanvas;
 /**
  * Canvasによる描画が可能なビュー。
  * 
- * @author eagle.sakura
- * @version 2010/05/24 : 新規作成
  */
 public class CanvasView extends LooperSurfaceView {
     private SurfaceCanvas canvas = null;
 
     /**
      * 
-     * @author eagle.sakura
+     * 
      * @param context
      */
     public CanvasView(Context context) {
@@ -37,7 +30,7 @@ public class CanvasView extends LooperSurfaceView {
     /**
      * サーフェイスのロックを行う。
      * 
-     * @author eagle.sakura
+     * 
      * @return
      */
     public boolean lock(VirtualDisplay display) {
@@ -53,7 +46,7 @@ public class CanvasView extends LooperSurfaceView {
     /**
      * 描画用ラッパーを取得する。
      * 
-     * @author eagle.sakura
+     * 
      * @return
      */
     public SurfaceCanvas getGraphics() {
@@ -63,7 +56,7 @@ public class CanvasView extends LooperSurfaceView {
     /**
      * サーフェイスの描画終了と転送を行う。
      * 
-     * @author eagle.sakura
+     * 
      */
     public void unlock() {
         canvas.unlock();

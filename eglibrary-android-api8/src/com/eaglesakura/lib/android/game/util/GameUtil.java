@@ -133,7 +133,7 @@ public class GameUtil {
     /**
      * min <= result <= maxとなるようにnowを補正する。
      * 
-     * @author eagle.sakura
+     * 
      * @param min
      * @param max
      * @param now
@@ -150,7 +150,7 @@ public class GameUtil {
     /**
      * min <= result <= maxとなるようにnowを補正する。
      * 
-     * @author eagle.sakura
+     * 
      * @param min
      * @param max
      * @param now
@@ -167,10 +167,10 @@ public class GameUtil {
     /**
      * 360度系の正規化を行う。
      * 
-     * @author eagle.sakura
+     * 
      * @param now
      * @return
-     * @version 2009/11/29 : 新規作成
+     * 
      */
     public static final float normalizeDegree(float now) {
         while (now < 0.0f) {
@@ -187,7 +187,7 @@ public class GameUtil {
     /**
      * 特定のビットフラグが立っていることを検証する。
      * 
-     * @author eagle.sakura
+     * 
      * @param flg
      * @param check
      * @return
@@ -199,7 +199,7 @@ public class GameUtil {
     /**
      * 特定のビットフラグがすべて立っていることを検証する。
      * 
-     * @author eagle.sakura
+     * 
      * @param flg
      * @param check
      * @return
@@ -211,7 +211,7 @@ public class GameUtil {
     /**
      * フラグ情報を設定する。
      * 
-     * @author eagle.sakura
+     * 
      * @param flg
      * @param check
      * @param is
@@ -381,7 +381,7 @@ public class GameUtil {
     /**
      * 目標数値へ移動する。
      *
-     * @author eagle.sakura
+     * 
      * @param now
      * @param offset
      * @param target
@@ -401,7 +401,7 @@ public class GameUtil {
     /**
      * 目標数値へ移動する。
      *
-     * @author eagle.sakura
+     * 
      * @param now
      * @param offset
      * @param target

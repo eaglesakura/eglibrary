@@ -12,7 +12,7 @@ import com.eaglesakura.lib.android.game.graphics.canvas.Graphics;
 /**
  * Bitmap画像を利用してテクスチャを生成する。
  * 
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  * 
  */
 public class BitmapTextureImage extends TextureImageBase {

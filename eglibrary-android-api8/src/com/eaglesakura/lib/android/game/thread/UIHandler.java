@@ -7,7 +7,7 @@ import com.eaglesakura.lib.android.game.util.GameUtil;
 
 /**
  * UIスレッド専用のハンドラ
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  *
  */
 public class UIHandler extends Handler {

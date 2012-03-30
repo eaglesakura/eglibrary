@@ -2,7 +2,7 @@ package com.eaglesakura.lib.android.game.scene;
 
 /**
  * シーン遷移を管理する。
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  *
  */
 public class SceneManager {

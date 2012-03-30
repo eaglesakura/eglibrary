@@ -14,8 +14,8 @@ import com.eaglesakura.lib.android.game.util.LogUtil;
  * 毎フレームupdate()を呼ぶ必要がある。<BR>
  * 座標は仮想ディスプレイ位置に投影されるため、 {@link VirtualDisplay}が必要になる。
  * 
- * @author Takeshi
- * 
+ * @author TAKESHI YAMASHITA
+ *
  */
 public class MultiTouchInput {
     protected TouchPoint[] touchPoints;
@@ -53,8 +53,8 @@ public class MultiTouchInput {
     /**
      * ２箇所のタッチ管理を行う。
      * 
-     * @author eagle.sakura
-     * @version 2010/07/20 : 新規作成
+     * 
+     * 
      */
     public MultiTouchInput(VirtualDisplay display) {
         this(2, display);
@@ -62,9 +62,9 @@ public class MultiTouchInput {
 
     /**
      * 
-     * @author eagle.sakura
+     * 
      * @param nums
-     * @version 2010/07/20 : 新規作成
+     * 
      */
     protected MultiTouchInput(int nums, VirtualDisplay disp) {
         touchPoints = new TouchPoint[nums];
@@ -77,10 +77,10 @@ public class MultiTouchInput {
     /**
      * タッチ箇所を取得する。
      * 
-     * @author eagle.sakura
+     * 
      * @param index
      * @return
-     * @version 2010/07/20 : 新規作成
+     * 
      */
     public TouchPoint getTouchPoint(int index) {
         return touchPoints[index];
@@ -97,10 +97,10 @@ public class MultiTouchInput {
     /**
      * タッチイベントを管理する。
      * 
-     * @author eagle.sakura
+     * 
      * @param me
      * @return
-     * @version 2010/07/20 : 新規作成
+     * 
      */
     public boolean onTouchEvent(MotionEvent me) {
         try {
@@ -153,9 +153,9 @@ public class MultiTouchInput {
     /**
      * ドラッグされた距離を取得する。
      * 
-     * @author eagle.sakura
+     * 
      * @return
-     * @version 2009/11/19 : 新規作成
+     * 
      */
     public int getDrugVectorX() {
         return touchPoints[0].getDrugVectorX();
@@ -218,7 +218,7 @@ public class MultiTouchInput {
     /**
      * ディスプレイから指が離れているか。
      * 
-     * @author eagle.sakura
+     * 
      * @return
      */
     public boolean isRelease() {
@@ -343,7 +343,7 @@ public class MultiTouchInput {
         /**
          * タッチ一箇所の値に対応している。
          * 
-         * @author eagle.sakura
+         * 
          * @param id
          */
         public TouchPoint(int id) {
@@ -358,7 +358,7 @@ public class MultiTouchInput {
         /**
          * タッチされた。
          * 
-         * @author eagle.sakura
+         * 
          * @param me
          */
         protected boolean onActionDown(float x, float y) {
@@ -375,7 +375,7 @@ public class MultiTouchInput {
         /**
          * 移動された。
          * 
-         * @author eagle.sakura
+         * 
          * @param me
          */
         protected boolean onActionMove(float x, float y) {
@@ -389,7 +389,7 @@ public class MultiTouchInput {
         /**
          * 指が離された。
          * 
-         * @author eagle.sakura
+         * 
          * @param me
          * @return
          */
@@ -404,7 +404,7 @@ public class MultiTouchInput {
         /**
          * ディスプレイの外へ出た。
          * 
-         * @author eagle.sakura
+         * 
          * @param me
          * @return
          */
@@ -419,7 +419,7 @@ public class MultiTouchInput {
         /**
          * ドラッグされた距離を取得する。
          * 
-         * @author eagle.sakura
+         * 
          * @return
          */
         public int getDrugVectorX() {
@@ -429,7 +429,7 @@ public class MultiTouchInput {
         /**
          * 画面に触れた位置を取得する。
          * 
-         * @author eagle.sakura
+         * 
          * @return
          */
         public int getTouchPosX() {
@@ -439,7 +439,7 @@ public class MultiTouchInput {
         /**
          * 画面に触れた位置を取得する。
          * 
-         * @author eagle.sakura
+         * 
          * @return
          */
         public int getTouchPosY() {
@@ -449,7 +449,7 @@ public class MultiTouchInput {
         /**
          * 現在の指の位置、もしくは離した位置を取得する。
          * 
-         * @author eagle.sakura
+         * 
          * @return
          */
         public int getCurrentX() {
@@ -459,7 +459,7 @@ public class MultiTouchInput {
         /**
          * 現在の指の位置、もしくは離した位置を取得する。
          * 
-         * @author eagle.sakura
+         * 
          * @return
          */
         public int getCurrentY() {
@@ -469,7 +469,7 @@ public class MultiTouchInput {
         /**
          * 指定地点までの距離を取得する。
          * 
-         * @author eagle.sakura
+         * 
          * @param x
          * @param y
          * @return
@@ -493,7 +493,7 @@ public class MultiTouchInput {
         /**
          * ドラッグされた距離を取得する。
          * 
-         * @author eagle.sakura
+         * 
          * @return
          */
         public int getDrugVectorY() {
@@ -503,7 +503,7 @@ public class MultiTouchInput {
         /**
          * タッチされているかを調べる。
          * 
-         * @author eagle.sakura
+         * 
          * @return
          */
         public boolean isTouch() {
@@ -513,7 +513,7 @@ public class MultiTouchInput {
         /**
          * ディスプレイから指が離れているか。
          * 
-         * @author eagle.sakura
+         * 
          * @return
          */
         public boolean isRelease() {
@@ -523,7 +523,7 @@ public class MultiTouchInput {
         /**
          * ディスプレイから指が離れた瞬間か。
          * 
-         * @author eagle.sakura
+         * 
          * @return
          */
         public boolean isReleaseOnce() {
@@ -536,7 +536,7 @@ public class MultiTouchInput {
         /**
          * タッチされているかを調べる。
          * 
-         * @author eagle.sakura
+         * 
          * @return
          */
         public boolean isTouchOnce() {
@@ -549,7 +549,7 @@ public class MultiTouchInput {
         /**
          * 毎フレームの更新を行う。
          * 
-         * @author eagle.sakura
+         * 
          */
         protected void update() {
             attrOld = attrNow;
@@ -609,7 +609,7 @@ public class MultiTouchInput {
     /**
      * ピンチ・インの判定を行う。
      * 
-     * @author eagle.sakura
+     * 
      * @return
      */
     public boolean isPinchIn() {
@@ -649,7 +649,7 @@ public class MultiTouchInput {
     /**
      * ピンチ・アウトの判定を行う。
      * 
-     * @author eagle.sakura
+     * 
      * @return
      */
     public boolean isPinchOut() {

@@ -12,7 +12,7 @@ import com.eaglesakura.lib.android.game.util.GameUtil;
  * 画像を管理する。<BR>
  * 画像の管理方法についてはサブクラスに一任し、こちらでは関与しない。
  * 
- * @author Takeshi
+ * @author TAKESHI YAMASHITA
  */
 public abstract class ImageBase extends DisposableGLResource {
 
