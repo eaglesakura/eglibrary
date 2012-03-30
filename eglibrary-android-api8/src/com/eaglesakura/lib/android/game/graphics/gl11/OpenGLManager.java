@@ -428,6 +428,31 @@ public class OpenGLManager extends DisposableResource {
     };
 
     /**
+     * 赤のピクセルサイズ（bit）
+     */
+    int pixelSizeR = 5;
+
+    /**
+     * 緑のピクセルサイズ(bit)
+     */
+    int pixelSizeG = 6;
+
+    /**
+     * 青のピクセルサイズ(bit)
+     */
+    int pixelSizeB = 5;
+
+    /**
+     * 透過のピクセルサイズ(bit)
+     */
+    int pixelSizeA = 0;
+
+    /**
+     * Depthのピクセルサイズ(bit)
+     */
+    int pixelSizeD = 16;
+
+    /**
      * 自動でコンフィグを設定する。
      * 
      * @param pixelFormat
@@ -443,6 +468,11 @@ public class OpenGLManager extends DisposableResource {
             specs.add(6);
             specs.add(EGL10.EGL_BLUE_SIZE);
             specs.add(5);
+
+            pixelSizeR = 5;
+            pixelSizeG = 6;
+            pixelSizeB = 5;
+            pixelSizeA = 0;
         } else if (pixelFormat == PixelFormat.RGB_888) {
             specs.add(EGL10.EGL_RED_SIZE);
             specs.add(8);
@@ -450,6 +480,11 @@ public class OpenGLManager extends DisposableResource {
             specs.add(8);
             specs.add(EGL10.EGL_BLUE_SIZE);
             specs.add(8);
+
+            pixelSizeR = 8;
+            pixelSizeG = 8;
+            pixelSizeB = 8;
+            pixelSizeA = 0;
         } else if (pixelFormat == PixelFormat.RGBA_8888) {
             specs.add(EGL10.EGL_RED_SIZE);
             specs.add(8);
@@ -459,11 +494,20 @@ public class OpenGLManager extends DisposableResource {
             specs.add(8);
             specs.add(EGL10.EGL_ALPHA_SIZE);
             specs.add(8);
+
+            pixelSizeR = 8;
+            pixelSizeG = 8;
+            pixelSizeB = 8;
+            pixelSizeA = 8;
         }
 
         if (depth) {
             specs.add(EGL10.EGL_DEPTH_SIZE);
             specs.add(16);
+
+            pixelSizeD = 16;
+        } else {
+            pixelSizeD = 0;
         }
 
         specs.add(EGL10.EGL_SURFACE_TYPE);
@@ -507,20 +551,47 @@ public class OpenGLManager extends DisposableResource {
             eglConfig = deviceConfigs.get(0);
         }
 
-        /*
-         */
-        for (EGLConfig config : deviceConfigs) {
-            //            EGLConfig config = eglConfig;
-            EGLSurface surface = egl.eglCreateWindowSurface(eglDisplay, config, holder, null);
+        {
+            EGLSurface surface = egl.eglCreateWindowSurface(eglDisplay, eglConfig, holder, null);
             if (!printEglError()) {
-                LogUtil.log("match surface!! " + (deviceConfigs.indexOf(config) + 1) + " / " + deviceConfigs.size());
                 eglSurface = surface;
-                eglConfig = config;
                 egl.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext);
                 return eglSurface;
             }
         }
         throw new IllegalStateException("cerate surface error");
+    }
+
+    private EGLConfig chooseConfig(EGL10 egl, EGLDisplay display, EGLConfig[] configs) {
+        int index = 0;
+        for (EGLConfig config : configs) {
+            if (config == null) {
+                ++index;
+                continue;
+            }
+
+            int d = findConfigAttrib(egl, display, config, EGL10.EGL_DEPTH_SIZE, 0);
+            //            int s = findConfigAttrib(egl, display, config, EGL10.EGL_STENCIL_SIZE, 0);
+            int r = findConfigAttrib(egl, display, config, EGL10.EGL_RED_SIZE, 0);
+            int g = findConfigAttrib(egl, display, config, EGL10.EGL_GREEN_SIZE, 0);
+            int b = findConfigAttrib(egl, display, config, EGL10.EGL_BLUE_SIZE, 0);
+            int a = findConfigAttrib(egl, display, config, EGL10.EGL_ALPHA_SIZE, 0);
+
+            if (d == pixelSizeD && r == pixelSizeR && g == pixelSizeG && b == pixelSizeB && a == pixelSizeA) {
+                LogUtil.log(String.format("config index :: %d", index));
+                return config;
+            }
+            ++index;
+        }
+        return null;
+    }
+
+    private int findConfigAttrib(EGL10 egl, EGLDisplay display, EGLConfig config, int attribute, int defaultValue) {
+        int[] mValue = new int[1];
+        if (egl.eglGetConfigAttrib(display, config, attribute, mValue)) {
+            return mValue[0];
+        }
+        return defaultValue;
     }
 
     /**
@@ -566,7 +637,10 @@ public class OpenGLManager extends DisposableResource {
             for (int i = 0; i < num; ++i) {
                 deviceConfigs.add(configs[i]);
             }
-            eglConfig = deviceConfigs.get(0);
+            eglConfig = chooseConfig(egl, eglDisplay, configs);
+            if (eglConfig == null) {
+                throw new IllegalStateException("Config not match!!");
+            }
         }
 
         {
@@ -668,8 +742,10 @@ public class OpenGLManager extends DisposableResource {
             return;
         }
 
-        // gcを行わせる
-        garbageCollector.gc();
+        // 強制的な解放を行わせる
+        int gcItems = garbageCollector.delete();
+        LogUtil.log(String.format("Delete OpenGL GC Resources :: %d", gcItems));
+        LogUtil.log(String.format("Markers :: %d", garbageCollector.getGcTargetCount()));
         try {
             // レンダリングコンテキストとの結びつけは解除
             egl.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT);

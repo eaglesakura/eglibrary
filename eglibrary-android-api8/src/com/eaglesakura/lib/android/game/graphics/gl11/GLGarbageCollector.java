@@ -124,4 +124,23 @@ public class GLGarbageCollector {
         System.gc();
         return result;
     }
+
+    /**
+     * 管理リソースを強制的に解放する
+     */
+    public int delete() {
+        int result = 0;
+        Iterator<GCTarget> iterator = marks.iterator();
+        while (iterator.hasNext()) {
+            GCTarget gctarget = iterator.next();
+
+            // 強制的に解放を行う。
+            _remove(gctarget);
+            ++result;
+            iterator.remove();
+        }
+        System.gc();
+        return result;
+    }
+
 }

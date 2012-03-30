@@ -155,7 +155,6 @@ public abstract class GameLoopManagerBase {
     Runnable frameRunner = new Runnable() {
         @Override
         public void run() {
-
             final long frameTime = 1000 / frameRate;
             final long start = System.currentTimeMillis();
             debugTimeBegin();
@@ -212,7 +211,7 @@ public abstract class GameLoopManagerBase {
     /**
      * ゲームループ用ハンドラ。
      */
-    AsyncHandler gameHandle = null;
+    static AsyncHandler gameHandle = AsyncHandler.createInstance();
 
     /**
      * 
@@ -224,7 +223,6 @@ public abstract class GameLoopManagerBase {
         this.loopParent = loopParent;
         this.uiHandle = new UIHandler();
         this.multiTouchInput = new MultiTouchInput(virtualDisplay);
-        gameHandle = AsyncHandler.createInstance();
         gameHandle.getThread().setName(getThreadName());
         createViews();
     }
@@ -282,12 +280,13 @@ public abstract class GameLoopManagerBase {
                     (new ThreadSyncRunnerBase<Void>(gameHandle) {
                         @Override
                         public Void onOtherThreadRun() {
-                            if (loopParent.isFinished()) {
+                            if (loopParent.isFinished() || lifeCycle == LifeCycle.Finished) {
                                 onGamePause();
                                 onGameFinalize();
+                                System.gc();
                                 getGLManager().dispose();
                                 lifeCycle = LifeCycle.Finished;
-                                gameHandle.dispose();
+                                //                                gameHandle.dispose();
                             } else {
                                 onGamePause();
                                 getGLManager().onPause();
@@ -307,6 +306,10 @@ public abstract class GameLoopManagerBase {
                  */
                 @Override
                 public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+                    if (paused || lifeCycle == LifeCycle.Finished) {
+                        return;
+                    }
+                    LogUtil.log(String.format("Surface Size : %d x %d", width, height));
                     final OpenGLManager glManager = getGLManager();
                     if (glManager.isInitialized()) {
                         //! GLとゲームの復帰を行う
@@ -599,10 +602,15 @@ public abstract class GameLoopManagerBase {
     protected abstract void onGameResume();
 
     /**
+     * pauseされていたらtrue
+     */
+    boolean paused = true;
+
+    /**
      * Activity#onPause
      */
     public void onPause() {
-        LogUtil.log("GamePause");
+        paused = true;
     }
 
     public boolean isRunning() {
@@ -613,7 +621,14 @@ public abstract class GameLoopManagerBase {
      * Activity#onResume
      */
     public void onResume() {
-        LogUtil.log("GameResume");
+        paused = false;
+    }
+
+    /**
+     * Activityを閉じる
+     */
+    public void onDestroy() {
+        lifeCycle = LifeCycle.Finished;
     }
 
     /**
