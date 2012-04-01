@@ -77,11 +77,6 @@ public class OpenGLManager extends DisposableResource {
     private EGLConfig eglConfig = null;
 
     /**
-     * デバイスで利用可能なコンフィグ一覧
-     */
-    private EGLConfig[] deviceConfigs = null;
-
-    /**
      * GLを初期化したスレッドのハンドラ
      */
     private Handler glHandler = null;
