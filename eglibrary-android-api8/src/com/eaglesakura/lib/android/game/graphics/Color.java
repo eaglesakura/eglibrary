@@ -2,6 +2,12 @@ package com.eaglesakura.lib.android.game.graphics;
 
 import com.eaglesakura.lib.android.game.util.GameUtil;
 
+/**
+ * OpenGL向けRGBA色を扱う。
+ * Canvas向け{@link android.graphics.Color}クラスはARGB色であることに注意が必要。
+ * @author TAKESHI YAMASHITA
+ *
+ */
 public class Color {
 
     /**
