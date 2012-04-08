@@ -3,6 +3,7 @@ package com.eaglesakura.lib.android.game.loop;
 import java.io.IOException;
 import java.io.InputStream;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -654,5 +655,20 @@ public abstract class GameLoopManagerBase {
      */
     public UIHandler getUIHandler() {
         return uiHandle;
+    }
+
+    /**
+     * ゲームを終了させる
+     */
+    public void exit() {
+        uiHandle.post(new Runnable() {
+
+            @Override
+            public void run() {
+                if (context instanceof Activity) {
+                    ((Activity) context).finish();
+                }
+            }
+        });
     }
 }
