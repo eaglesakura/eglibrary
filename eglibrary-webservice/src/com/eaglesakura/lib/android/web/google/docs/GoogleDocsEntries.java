@@ -1,5 +1,6 @@
 package com.eaglesakura.lib.android.web.google.docs;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -485,6 +487,10 @@ public class GoogleDocsEntries {
         public Link getSelfLink() {
             return self;
         }
+
+        public Directory getDirectory() {
+            return directory;
+        }
     }
 
     /**
@@ -707,6 +713,50 @@ public class GoogleDocsEntries {
             for (Directory dir : childs) {
                 dir.sort();
             }
+        }
+
+        public List<Directory> listParents() {
+            List<Directory> result = new ArrayList<GoogleDocsEntries.Directory>();
+            Directory _parent = parentDirectory;
+
+            while (_parent != null) {
+                if (_parent.parentDirectory != null) {
+                    result.add(0, _parent);
+                }
+                _parent = _parent.parentDirectory;
+            }
+
+            if (parentDirectory != null) {
+                result.add(this);
+            }
+
+            return result;
+        }
+
+        /**
+         * rootから見て階層構造的にフォルダを作成・取得する。
+         * @param root
+         * @return
+         */
+        public File mkdir(File root) {
+
+            List<Directory> parents = listParents();
+            File result = root;
+
+            Iterator<Directory> iterator = parents.iterator();
+            while (iterator.hasNext()) {
+                Directory nextDirectory = iterator.next();
+                result = new File(result, nextDirectory.getTitle());
+                if (!result.exists()) {
+                    result.mkdir();
+                }
+            }
+
+            return result;
+        }
+
+        public Directory getParentDirectory() {
+            return parentDirectory;
         }
     }
 }
