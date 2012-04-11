@@ -21,6 +21,20 @@ public abstract class AsyncAction extends Thread {
     }
 
     /**
+     * UIハンドラにpostする
+     */
+    public AsyncAction() {
+        this.handler = UIHandler.getInstance();
+    }
+
+    /**
+     * {@link #onBackgroundAction()}の実行直前に呼び出される。
+     */
+    protected void onPreExecute() throws Exception {
+
+    }
+
+    /**
      * バックグラウンドスレッドで呼び出される。
      */
     protected abstract Object onBackgroundAction() throws Exception;
@@ -37,23 +51,49 @@ public abstract class AsyncAction extends Thread {
      */
     protected abstract void onFailure(Exception exception);
 
+    /**
+     * 終了作業を行わせる。
+     */
+    protected void onFinalize() {
+
+    }
+
     @Override
     public void run() {
         try {
+            (new ThreadSyncRunnerBase<Void>(handler) {
+                @Override
+                public Void onOtherThreadRun() throws Exception {
+                    onPreExecute();
+                    return null;
+                }
+            }).run();
+
             final Object obj = onBackgroundAction();
-            handler.post(new Runnable() {
+
+            (new ThreadSyncRunnerBase<Void>(handler) {
                 @Override
-                public void run() {
+                public Void onOtherThreadRun() throws Exception {
                     onSuccess(obj);
+                    return null;
                 }
-            });
+            }).run();
         } catch (final Exception e) {
-            handler.post(new Runnable() {
+            (new ThreadSyncRunnerBase<Void>(handler) {
                 @Override
-                public void run() {
+                public Void onOtherThreadRun() throws Exception {
                     onFailure(e);
+                    return null;
                 }
-            });
+            }).run();
         }
+
+        (new ThreadSyncRunnerBase<Void>(handler) {
+            @Override
+            public Void onOtherThreadRun() throws Exception {
+                onFinalize();
+                return null;
+            }
+        }).run();
     }
 }
