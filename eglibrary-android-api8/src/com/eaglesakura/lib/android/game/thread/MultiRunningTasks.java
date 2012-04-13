@@ -180,4 +180,12 @@ public class MultiRunningTasks {
     public int getTaskCount() {
         return tasks.size() + threads.size();
     }
+
+    /**
+     * 残タスクを全て終了する。
+     */
+    public synchronized void clear() {
+        tasks.clear();
+        setThreadPoolMode(false);
+    }
 }

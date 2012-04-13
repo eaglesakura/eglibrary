@@ -260,6 +260,16 @@ public class ImageCorrector {
     }
 
     /**
+     * レンダリング領域を取得する
+     * @param result
+     * @return
+     */
+    public Rect getRenderArea(Rect result) {
+        result.set((int) renderArea.left, (int) renderArea.top, (int) renderArea.right, (int) renderArea.bottom);
+        return result;
+    }
+
+    /**
      * スクロールを行う。
      * @param x
      * @param y
