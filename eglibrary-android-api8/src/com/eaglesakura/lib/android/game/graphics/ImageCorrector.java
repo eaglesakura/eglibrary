@@ -270,15 +270,6 @@ public class ImageCorrector {
     }
 
     /**
-     * スクロールを行う。
-     * @param x
-     * @param y
-     */
-    public void offsetImageArea(float x, float y) {
-        imageArea.offset(x, y);
-    }
-
-    /**
      * ピクセル座標からU座標に変換する。
      * @param x
      * @return
