@@ -203,7 +203,7 @@ public class ContextUtil {
      * @param context
      * @return
      */
-    public static boolean isActionBarEnable(Context context) {
+    public static boolean isActionBarEnable() {
         try {
             return Build.VERSION.SDK_INT >= 11;
         } catch (Exception e) {
@@ -261,4 +261,7 @@ public class ContextUtil {
         return origin;
     }
 
+    public static boolean isAndroid3_xOrLater() {
+        return Build.VERSION.SDK_INT >= 12;
+    }
 }
