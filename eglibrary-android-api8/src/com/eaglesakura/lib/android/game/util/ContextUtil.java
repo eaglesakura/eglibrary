@@ -1,5 +1,7 @@
 package com.eaglesakura.lib.android.game.util;
 
+import java.util.UUID;
+
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -15,6 +17,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.os.SystemClock;
 import android.view.WindowManager;
 
 import com.eaglesakura.lib.android.game.math.Vector2;
@@ -263,5 +266,21 @@ public class ContextUtil {
 
     public static boolean isAndroid3_xOrLater() {
         return Build.VERSION.SDK_INT >= 12;
+    }
+
+    /**
+     * おそらく重複することが無いであろうユニークな文字列を吐き出す。
+     * @return
+     */
+    public static String genUUID() {
+        String result = null;
+        result = String.format("%s-%s-%s",
+        // 通常のUUID
+                UUID.randomUUID().toString(),
+                // 現在時刻
+                GameUtil.genSHA1(Long.valueOf(System.currentTimeMillis()).toString().getBytes()),
+                // 端末起動からの経過時間
+                GameUtil.genSHA1(Long.valueOf(SystemClock.elapsedRealtime()).toString().getBytes()));
+        return result;
     }
 }

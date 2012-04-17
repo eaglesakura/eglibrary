@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
 import com.eaglesakura.lib.android.game.thread.AsyncHandler;
@@ -83,7 +85,10 @@ public abstract class GL11Fragment extends IntentFragment {
         glView = new OpenGLView(getActivity());
         glView.getHolder().addCallback(surfaceCallback);
         glManager = glView.getGLManager();
-        return glView;
+
+        FrameLayout layout = new FrameLayout(getActivity());
+        layout.addView(glView);
+        return layout;
     }
 
     @Override
@@ -97,7 +102,7 @@ public abstract class GL11Fragment extends IntentFragment {
      * {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}が呼び出されるまではnullを返す。
      * @return
      */
-    public OpenGLView getGLView() {
+    public SurfaceView getGLView() {
         return glView;
     }
 
