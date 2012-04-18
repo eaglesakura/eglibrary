@@ -17,6 +17,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.view.WindowManager;
 
@@ -282,5 +283,14 @@ public class ContextUtil {
                 // 端末起動からの経過時間
                 GameUtil.genSHA1(Long.valueOf(SystemClock.elapsedRealtime()).toString().getBytes()));
         return result;
+    }
+
+    /**
+     * Handlerに関連付けられていたThreadで動作している場合はtrueを返す。
+     * @param handler
+     * @return
+     */
+    public static boolean isHandlerThread(Handler handler) {
+        return Thread.currentThread().equals(handler.getLooper().getThread());
     }
 }
