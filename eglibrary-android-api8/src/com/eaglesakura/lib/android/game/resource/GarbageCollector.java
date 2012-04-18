@@ -110,7 +110,7 @@ public class GarbageCollector {
                 GCTarget gcTarget = iterator.next();
                 GCResourceBase check = gcTarget.parent.get();
                 if (check == null || check == resource) {
-                    gcTarget.rawResource.dispose();
+                    _remove(gcTarget, true);
                     iterator.remove();
                 }
             }
@@ -139,9 +139,11 @@ public class GarbageCollector {
 
     /**
      * 死んでいる参照を削除する。
+     * @param target 解放対象
+     * @param forcing 参照有無にかかわらず強制削除する場合はtrue
      */
-    private void _remove(GCTarget target) {
-        if (target.parent.get() != null) {
+    private void _remove(GCTarget target, boolean forcing) {
+        if (!forcing && target.parent.get() != null) {
             return;
         }
 
@@ -171,12 +173,16 @@ public class GarbageCollector {
                 GCTarget gctarget = iterator.next();
                 // 参照が死んでるため、解放を行う。
                 if (gctarget.parent.get() == null) {
-                    _remove(gctarget);
+                    _remove(gctarget, false);
                     ++result;
                     iterator.remove();
                 }
             }
-            System.gc();
+
+            if (result > 0) {
+                System.gc();
+            }
+
             return result;
         }
     }
@@ -193,11 +199,14 @@ public class GarbageCollector {
                 GCTarget gctarget = iterator.next();
 
                 // 強制的に解放を行う。
-                _remove(gctarget);
+                _remove(gctarget, true);
                 ++result;
                 iterator.remove();
             }
-            System.gc();
+
+            if (result > 0) {
+                System.gc();
+            }
             return result;
         }
     }

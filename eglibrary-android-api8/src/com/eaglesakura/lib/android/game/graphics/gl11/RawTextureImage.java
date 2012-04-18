@@ -2,6 +2,11 @@ package com.eaglesakura.lib.android.game.graphics.gl11;
 
 import javax.microedition.khronos.opengles.GL10;
 
+/**
+ * RGBAの適当な色配列からテクスチャを作成する。
+ * @author TAKESHI YAMASHITA
+ *
+ */
 public class RawTextureImage extends TextureImageBase {
 
     public RawTextureImage(OpenGLManager glManager, final int texWidth, final int texHeight) {
