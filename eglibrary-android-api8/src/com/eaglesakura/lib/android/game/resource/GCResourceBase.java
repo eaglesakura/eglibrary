@@ -17,6 +17,11 @@ public abstract class GCResourceBase {
     private GarbageCollector garbageCollector;
 
     /**
+     * テクスチャ識別のためのタグ
+     */
+    protected Object tag = null;
+
+    /**
      * 
      * @param garbageCollector
      */
@@ -26,6 +31,14 @@ public abstract class GCResourceBase {
         if (garbageCollector == null) {
             this.garbageCollector = new GarbageCollector(UIHandler.getInstance());
         }
+    }
+
+    /**
+     * finalizeは確実性が低いため、オーバーライドを許さない。
+     */
+    @Override
+    protected final void finalize() throws Throwable {
+        super.finalize();
     }
 
     /**
@@ -40,6 +53,22 @@ public abstract class GCResourceBase {
      */
     public GarbageCollector getGarbageCollector() {
         return garbageCollector;
+    }
+
+    /**
+     * 管理タグを指定する
+     * @param tag
+     */
+    public void setTag(Object tag) {
+        this.tag = tag;
+    }
+
+    /**
+     * 管理タグを取得する
+     * @return
+     */
+    public Object getTag() {
+        return tag;
     }
 
     /**
@@ -62,5 +91,14 @@ public abstract class GCResourceBase {
     public final void dispose() {
         onDispose();
         garbageCollector.dispose(this);
+    }
+
+    @Override
+    public String toString() {
+        if (tag == null) {
+            return super.toString();
+        } else {
+            return tag.toString();
+        }
     }
 }

@@ -8,6 +8,7 @@ import javax.microedition.khronos.opengles.GL11;
 import javax.microedition.khronos.opengles.GL11ExtensionPack;
 
 import com.eaglesakura.lib.android.game.display.VirtualDisplay;
+import com.eaglesakura.lib.android.game.resource.IRawResource;
 
 /**
  * レンダリングターゲット用のテクスチャ。
@@ -130,7 +131,7 @@ public class RenderTargetTexture extends TextureImageBase {
         //! フレームバッファ関連付け解除
         gl.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, 0);
 
-        syncGC();
+        register();
     }
 
     @Override
@@ -189,16 +190,16 @@ public class RenderTargetTexture extends TextureImageBase {
      * 利用しているリソースの一覧を追加する。
      */
     @Override
-    public List<GLResource> getRawResources() {
-        List<GLResource> result = super.getRawResources();
+    public List<IRawResource> getRawResources() {
+        List<IRawResource> result = super.getRawResources();
         if (frameBuffer != GL_NULL) {
-            result.add(new GLResource(Type.FrameBuffer, frameBuffer));
+            result.add(new GLResource(getGL(), Type.FrameBuffer, frameBuffer));
         }
         if (colorBuffer != GL_NULL) {
-            result.add(new GLResource(Type.RenderBuffer, colorBuffer));
+            result.add(new GLResource(getGL(), Type.RenderBuffer, colorBuffer));
         }
         if (depthBuffer != GL_NULL) {
-            result.add(new GLResource(Type.RenderBuffer, depthBuffer));
+            result.add(new GLResource(getGL(), Type.RenderBuffer, depthBuffer));
         }
         return result;
     }

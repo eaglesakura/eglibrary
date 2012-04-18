@@ -9,6 +9,8 @@ import java.util.List;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
+import com.eaglesakura.lib.android.game.resource.IRawResource;
+
 /**
  * 四角形ポリゴンを扱うクラス。 <BR>
  * left,top / right top <BR>
@@ -27,11 +29,6 @@ import javax.microedition.khronos.opengles.GL11;
  */
 public class QuadPolygon extends DisposableGLResource {
     /**
-     * OpenGL管理
-     */
-    OpenGLManager glManager;
-
-    /**
      * オブジェクト
      */
     int vbo = GL_NULL;
@@ -41,8 +38,7 @@ public class QuadPolygon extends DisposableGLResource {
     }
 
     public QuadPolygon(OpenGLManager glManager, float left, float top, float right, float bottom) {
-        super(glManager.getGarbageCollector());
-        this.glManager = glManager;
+        super(glManager);
 
         vbo = glManager.genVertexBufferObject();
         GL11 gl = glManager.getGL();
@@ -75,14 +71,14 @@ public class QuadPolygon extends DisposableGLResource {
             gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
         }
 
-        syncGC();
+        register();
     }
 
     @Override
-    public List<GLResource> getRawResources() {
-        List<GLResource> result = new ArrayList<DisposableGLResource.GLResource>();
+    public List<IRawResource> getRawResources() {
+        List<IRawResource> result = new ArrayList<IRawResource>();
         if (vbo != GL_NULL) {
-            result.add(new GLResource(Type.VertexBufferObject, vbo));
+            result.add(new GLResource(getGL(), Type.VertexBufferObject, vbo));
         }
         return result;
     }

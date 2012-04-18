@@ -32,6 +32,7 @@ import com.eaglesakura.lib.android.game.graphics.Color;
 import com.eaglesakura.lib.android.game.graphics.DisposableResource;
 import com.eaglesakura.lib.android.game.math.Matrix4x4;
 import com.eaglesakura.lib.android.game.math.Vector2;
+import com.eaglesakura.lib.android.game.resource.GarbageCollector;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
 /**
@@ -591,6 +592,8 @@ public class OpenGLManager extends DisposableResource {
         }
         this.glHandler = handler;
 
+        garbageCollector = new GarbageCollector(handler);
+
         // GL ES操作モジュール取得
         egl = (EGL10) EGLContext.getEGL();
         {
@@ -1065,13 +1068,13 @@ public class OpenGLManager extends DisposableResource {
     /**
      * GC対象管理クラス
      */
-    private GLGarbageCollector garbageCollector = new GLGarbageCollector(this);
+    private GarbageCollector garbageCollector = null;
 
     /**
      * GC管理クラスを取得する。
      * @return
      */
-    public GLGarbageCollector getGarbageCollector() {
+    public GarbageCollector getGarbageCollector() {
         return garbageCollector;
     }
 

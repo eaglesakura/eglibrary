@@ -78,7 +78,7 @@ public class BitmapTextureImage extends TextureImageBase {
         }
         unbind();
 
-        syncGC();
+        register();
     }
 
     /**

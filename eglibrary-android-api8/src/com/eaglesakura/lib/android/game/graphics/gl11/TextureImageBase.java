@@ -8,6 +8,7 @@ import javax.microedition.khronos.opengles.GL11;
 
 import com.eaglesakura.lib.android.game.graphics.ImageBase;
 import com.eaglesakura.lib.android.game.math.Vector2;
+import com.eaglesakura.lib.android.game.resource.IRawResource;
 
 /**
  * GLES 1.1でのテクスチャを管理する。<BR>
@@ -16,13 +17,6 @@ import com.eaglesakura.lib.android.game.math.Vector2;
  *
  */
 public abstract class TextureImageBase extends ImageBase {
-
-    static final boolean DEBUG = false;
-
-    /**
-     * 関連付けるGL
-     */
-    protected OpenGLManager glManager;
 
     /**
      * バインド対象
@@ -46,8 +40,7 @@ public abstract class TextureImageBase extends ImageBase {
     protected Vector2 textureScale = new Vector2(1, 1);
 
     protected TextureImageBase(OpenGLManager glManager) {
-        super(glManager.getGarbageCollector());
-        this.glManager = glManager;
+        super(glManager);
     }
 
     @Override
@@ -61,10 +54,10 @@ public abstract class TextureImageBase extends ImageBase {
     }
 
     @Override
-    public List<GLResource> getRawResources() {
-        List<GLResource> result = new LinkedList<DisposableGLResource.GLResource>();
+    public List<IRawResource> getRawResources() {
+        List<IRawResource> result = new LinkedList<IRawResource>();
         if (textureId != GL_NULL) {
-            result.add(new GLResource(Type.Texture, textureId));
+            result.add(new GLResource(getGL(), Type.Texture, textureId));
         }
         return result;
     }

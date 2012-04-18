@@ -1,23 +1,27 @@
 package com.eaglesakura.lib.android.game.graphics.gl11;
 
-import java.util.List;
-
 import javax.microedition.khronos.opengles.GL11;
 import javax.microedition.khronos.opengles.GL11ExtensionPack;
 
-import com.eaglesakura.lib.android.game.graphics.DisposableResource;
+import com.eaglesakura.lib.android.game.resource.GCResourceBase;
+import com.eaglesakura.lib.android.game.resource.IRawResource;
 
 /**
  * 廃棄が必要なOpenGL ESの資源を管理。
  * @author TAKESHI YAMASHITA
  *
  */
-public abstract class DisposableGLResource extends DisposableResource {
+public abstract class DisposableGLResource extends GCResourceBase {
 
     /**
      * OpenGL資源の無効オブジェクト／NULLを示す。
      */
     public static final int GL_NULL = 0;
+
+    /**
+     * GL管理クラス
+     */
+    protected OpenGLManager glManager = null;
 
     /**
      * リソースの種類。
@@ -88,62 +92,29 @@ public abstract class DisposableGLResource extends DisposableResource {
      * @author TAKESHI YAMASHITA
      *
      */
-    public static class GLResource {
-        public Type type;
-        public int id;
+    protected static class GLResource implements IRawResource {
+        private Type type;
+        private int id;
+        private GL11 gl;
 
-        public GLResource(Type type, int id) {
+        public GLResource(GL11 gl, Type type, int id) {
             this.type = type;
             this.id = id;
+            this.gl = gl;
         }
 
-        public void delete(GL11 gl) {
+        @Override
+        public void dispose() {
             type.delete(gl, id);
         }
     }
 
-    /**
-     * GC制御クラス
-     */
-    private GLGarbageCollector garbageCollector;
-
-    public DisposableGLResource(GLGarbageCollector garbageCollector) {
-        this.garbageCollector = garbageCollector;
+    public DisposableGLResource(OpenGLManager glManager) {
+        super(glManager.getGarbageCollector());
+        this.glManager = glManager;
     }
 
-    /**
-     * finalizeは確実性が低いため、オーバーライドを許さない。
-     */
-    @Override
-    protected final void finalize() throws Throwable {
-        super.finalize();
-    }
-
-    /**
-     * GC対象のリソースを同期する。
-     */
-    protected void syncGC() {
-        garbageCollector.add(this);
-    }
-
-    /**
-     * 管理する資源を取得する。
-     * @return
-     */
-    public abstract List<GLResource> getRawResources();
-
-    /**
-     * 廃棄されるときに呼び出される。
-     * finalizeを含め、2回呼ばれることがある。
-     */
-    public abstract void onDispose();
-
-    /**
-     * 明示的にdisposeしたときは自動的にコレクタから排除する。
-     */
-    @Override
-    public final void dispose() {
-        onDispose();
-        garbageCollector.remove(this);
+    public final GL11 getGL() {
+        return glManager.getGL();
     }
 }

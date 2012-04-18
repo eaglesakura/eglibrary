@@ -5,7 +5,7 @@ import java.security.MessageDigest;
 import android.graphics.Bitmap;
 
 import com.eaglesakura.lib.android.game.graphics.gl11.DisposableGLResource;
-import com.eaglesakura.lib.android.game.graphics.gl11.GLGarbageCollector;
+import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
 import com.eaglesakura.lib.android.game.util.GameUtil;
 
 /**
@@ -16,8 +16,8 @@ import com.eaglesakura.lib.android.game.util.GameUtil;
  */
 public abstract class ImageBase extends DisposableGLResource {
 
-    protected ImageBase(GLGarbageCollector garbageCollector) {
-        super(garbageCollector);
+    protected ImageBase(OpenGLManager glManager) {
+        super(glManager);
     }
 
     /**
