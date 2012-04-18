@@ -14,25 +14,11 @@ import com.eaglesakura.lib.android.game.util.GameUtil;
  * 
  * @author TAKESHI YAMASHITA
  */
-public abstract class ImageBase extends DisposableGLResource {
+public abstract class ImageBase extends DisposableGLResource implements IImage {
 
     protected ImageBase(OpenGLManager glManager) {
         super(glManager);
     }
-
-    /**
-     * 画像の幅を取得する。
-     * 
-     * @return
-     */
-    public abstract int getWidth();
-
-    /**
-     * 画像の高さを取得する。
-     * 
-     * @return
-     */
-    public abstract int getHeight();
 
     /**
      * 画像からSHA1指紋を作成する。
@@ -50,7 +36,6 @@ public abstract class ImageBase extends DisposableGLResource {
             for (int i = 0; i < height; ++i) {
                 bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, i, bitmap.getWidth(), 1);
                 md.update(GameUtil.toByteArray(pixels, src));
-
             }
 
             byte[] digest = md.digest();

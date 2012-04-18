@@ -3,7 +3,7 @@ package com.eaglesakura.lib.io;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import com.eaglesakura.lib.android.game.graphics.DisposableResource;
+import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
 /**

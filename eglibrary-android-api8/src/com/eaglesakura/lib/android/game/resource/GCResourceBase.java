@@ -10,16 +10,11 @@ import com.eaglesakura.lib.android.game.thread.UIHandler;
  * @author TAKESHI YAMASHITA
  *
  */
-public abstract class GCResourceBase {
+public abstract class GCResourceBase extends DisposableResource {
     /**
      * GC管理クラス
      */
     private GarbageCollector garbageCollector;
-
-    /**
-     * テクスチャ識別のためのタグ
-     */
-    protected Object tag = null;
 
     /**
      * 
@@ -56,22 +51,6 @@ public abstract class GCResourceBase {
     }
 
     /**
-     * 管理タグを指定する
-     * @param tag
-     */
-    public void setTag(Object tag) {
-        this.tag = tag;
-    }
-
-    /**
-     * 管理タグを取得する
-     * @return
-     */
-    public Object getTag() {
-        return tag;
-    }
-
-    /**
      * GCクラスへ登録する。
      * 通常、リソースを作成した後にこのメソッドを呼び出す。
      */
@@ -88,17 +67,9 @@ public abstract class GCResourceBase {
      * 管理している資源を明示的に解放する。
      * 解放自体は{@link IRawResource}を通して行われる。
      */
+    @Override
     public final void dispose() {
         onDispose();
         garbageCollector.dispose(this);
-    }
-
-    @Override
-    public String toString() {
-        if (tag == null) {
-            return super.toString();
-        } else {
-            return tag.toString();
-        }
     }
 }

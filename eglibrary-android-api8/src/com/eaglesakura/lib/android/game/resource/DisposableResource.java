@@ -1,4 +1,4 @@
-package com.eaglesakura.lib.android.game.graphics;
+package com.eaglesakura.lib.android.game.resource;
 
 /**
  * 資源開放を行う必要があるリソースを示す。<BR>
@@ -35,4 +35,13 @@ public abstract class DisposableResource {
      * 管理している画像資源を解放する。
      */
     public abstract void dispose();
+
+    @Override
+    public String toString() {
+        if (tag == null) {
+            return super.toString();
+        } else {
+            return tag.toString();
+        }
+    }
 }

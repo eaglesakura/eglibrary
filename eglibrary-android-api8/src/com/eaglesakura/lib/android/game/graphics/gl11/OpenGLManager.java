@@ -29,9 +29,9 @@ import android.view.SurfaceHolder;
 
 import com.eaglesakura.lib.android.game.display.VirtualDisplay;
 import com.eaglesakura.lib.android.game.graphics.Color;
-import com.eaglesakura.lib.android.game.graphics.DisposableResource;
 import com.eaglesakura.lib.android.game.math.Matrix4x4;
 import com.eaglesakura.lib.android.game.math.Vector2;
+import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.game.resource.GarbageCollector;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 

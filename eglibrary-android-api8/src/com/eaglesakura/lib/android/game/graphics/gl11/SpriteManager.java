@@ -7,9 +7,9 @@ import android.graphics.Rect;
 
 import com.eaglesakura.lib.android.game.display.VirtualDisplay;
 import com.eaglesakura.lib.android.game.graphics.Color;
-import com.eaglesakura.lib.android.game.graphics.DisposableResource;
 import com.eaglesakura.lib.android.game.graphics.ImageBase;
 import com.eaglesakura.lib.android.game.graphics.Sprite;
+import com.eaglesakura.lib.android.game.resource.DisposableResource;
 
 /**
  * スプライト描画の管理を行う。

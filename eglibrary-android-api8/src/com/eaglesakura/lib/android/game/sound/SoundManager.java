@@ -10,7 +10,7 @@ import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
-import com.eaglesakura.lib.android.game.graphics.DisposableResource;
+import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
 /**
