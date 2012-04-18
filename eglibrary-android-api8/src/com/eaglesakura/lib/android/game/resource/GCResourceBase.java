@@ -2,6 +2,8 @@ package com.eaglesakura.lib.android.game.resource;
 
 import java.util.List;
 
+import com.eaglesakura.lib.android.game.thread.UIHandler;
+
 /**
  * {@link System#gc()}による管理ができない大規模リソースを管理する。
  * OpenGL ESのテクスチャ、Bitmapクラス等の管理を行う。
@@ -9,10 +11,21 @@ import java.util.List;
  *
  */
 public abstract class GCResourceBase {
-    protected GarbageCollector garbageCollector;
+    /**
+     * GC管理クラス
+     */
+    private GarbageCollector garbageCollector;
 
+    /**
+     * 
+     * @param garbageCollector
+     */
     public GCResourceBase(GarbageCollector garbageCollector) {
         this.garbageCollector = garbageCollector;
+
+        if (garbageCollector == null) {
+            this.garbageCollector = new GarbageCollector(UIHandler.getInstance());
+        }
     }
 
     /**
@@ -30,6 +43,14 @@ public abstract class GCResourceBase {
     }
 
     /**
+     * GCクラスへ登録する。
+     * 通常、リソースを作成した後にこのメソッドを呼び出す。
+     */
+    protected final void register() {
+        garbageCollector.add(this);
+    }
+
+    /**
      * 解放メソッドが呼ばれたことを示す。
      */
     protected abstract void onDispose();
@@ -40,6 +61,6 @@ public abstract class GCResourceBase {
      */
     public final void dispose() {
         onDispose();
-        garbageCollector.remove(this);
+        garbageCollector.dispose(this);
     }
 }
