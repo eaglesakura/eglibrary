@@ -365,6 +365,15 @@ public class ImageCorrector {
     }
 
     /**
+     * デフォルトのスケーリング値の場合true
+     * @return
+     */
+    public boolean isDefaultPixelScale() {
+        final float scale = getPixelScale();
+        return scale >= 1.0f && scale <= 1.0001f;
+    }
+
+    /**
      * レンダリングエリアからイメージエリアが飛び出していたら、飛び出さないようにする。
      * レンダリングエリアよりイメージエリアのほうが狭かったら、中心寄せに補正する。
      */
