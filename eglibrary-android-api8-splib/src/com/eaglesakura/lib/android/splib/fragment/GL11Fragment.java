@@ -165,6 +165,14 @@ public abstract class GL11Fragment extends IntentFragment {
         }
     }
 
+    public int getRenderAreaWidth() {
+        return getGLView().getWidth();
+    }
+
+    public int getRenderAreaHeight() {
+        return getGLView().getHeight();
+    }
+
     /**
      * レンダリング実行用のランナー
      */
