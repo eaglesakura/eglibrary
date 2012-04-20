@@ -66,5 +66,4 @@ public abstract class ImageBase extends GCResourceBase {
             return null;
         }
     }
-
 }
