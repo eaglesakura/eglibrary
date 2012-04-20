@@ -8,6 +8,8 @@ import javax.microedition.khronos.opengles.GL11;
 import javax.microedition.khronos.opengles.GL11ExtensionPack;
 
 import com.eaglesakura.lib.android.game.display.VirtualDisplay;
+import com.eaglesakura.lib.android.game.graphics.gl11.DisposableGLResource.GLResource;
+import com.eaglesakura.lib.android.game.graphics.gl11.DisposableGLResource.Type;
 import com.eaglesakura.lib.android.game.resource.IRawResource;
 
 /**

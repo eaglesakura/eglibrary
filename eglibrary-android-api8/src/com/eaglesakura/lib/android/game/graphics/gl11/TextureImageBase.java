@@ -7,6 +7,8 @@ import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
 import com.eaglesakura.lib.android.game.graphics.ImageBase;
+import com.eaglesakura.lib.android.game.graphics.gl11.DisposableGLResource.GLResource;
+import com.eaglesakura.lib.android.game.graphics.gl11.DisposableGLResource.Type;
 import com.eaglesakura.lib.android.game.math.Vector2;
 import com.eaglesakura.lib.android.game.resource.IRawResource;
 
@@ -17,6 +19,16 @@ import com.eaglesakura.lib.android.game.resource.IRawResource;
  *
  */
 public abstract class TextureImageBase extends ImageBase {
+
+    /**
+     * OpenGL資源の無効オブジェクト／NULLを示す。
+     */
+    public static final int GL_NULL = 0;
+
+    /**
+     * GL管理クラス
+     */
+    protected OpenGLManager glManager = null;
 
     /**
      * バインド対象
@@ -40,7 +52,8 @@ public abstract class TextureImageBase extends ImageBase {
     protected Vector2 textureScale = new Vector2(1, 1);
 
     protected TextureImageBase(OpenGLManager glManager) {
-        super(glManager);
+        super(glManager.getGarbageCollector());
+        this.glManager = glManager;
     }
 
     @Override
@@ -163,8 +176,6 @@ public abstract class TextureImageBase extends ImageBase {
         {
             gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, type);
             gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, type);
-            gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, type);
-            gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, type);
         }
         unbind();
     }
@@ -183,5 +194,9 @@ public abstract class TextureImageBase extends ImageBase {
             result *= 2;
         }
         return result;
+    }
+
+    protected GL11 getGL() {
+        return glManager.getGL();
     }
 }

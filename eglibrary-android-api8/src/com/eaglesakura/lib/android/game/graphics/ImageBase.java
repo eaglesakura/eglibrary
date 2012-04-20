@@ -4,8 +4,8 @@ import java.security.MessageDigest;
 
 import android.graphics.Bitmap;
 
-import com.eaglesakura.lib.android.game.graphics.gl11.DisposableGLResource;
-import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
+import com.eaglesakura.lib.android.game.resource.GCResourceBase;
+import com.eaglesakura.lib.android.game.resource.GarbageCollector;
 import com.eaglesakura.lib.android.game.util.GameUtil;
 
 /**
@@ -14,14 +14,26 @@ import com.eaglesakura.lib.android.game.util.GameUtil;
  * 
  * @author TAKESHI YAMASHITA
  */
-public abstract class ImageBase extends DisposableGLResource implements IImage {
+public abstract class ImageBase extends GCResourceBase {
 
-    protected ImageBase(OpenGLManager glManager) {
-        super(glManager);
+    protected ImageBase(GarbageCollector garbageCollector) {
+        super(garbageCollector);
     }
 
     /**
-     * 画像からSHA1指紋を作成する。
+     * 画像幅を取得する
+     * @return
+     */
+    public abstract int getWidth();
+
+    /**
+     * 画像高を取得する
+     * @return
+     */
+    public abstract int getHeight();
+
+    /**
+     * 画像RGBA情報からSHA1指紋を作成する。
      * @param bitmap
      * @return
      */

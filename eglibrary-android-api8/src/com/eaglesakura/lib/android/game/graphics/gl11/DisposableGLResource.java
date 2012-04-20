@@ -92,7 +92,7 @@ public abstract class DisposableGLResource extends GCResourceBase {
      * @author TAKESHI YAMASHITA
      *
      */
-    protected static class GLResource implements IRawResource {
+    public static class GLResource implements IRawResource {
         private Type type;
         private int id;
         private GL11 gl;
