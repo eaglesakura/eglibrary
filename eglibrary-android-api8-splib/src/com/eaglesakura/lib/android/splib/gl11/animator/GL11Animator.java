@@ -11,6 +11,9 @@ public abstract class GL11Animator implements GLRunnable {
      */
     int delay = 1000 / 30;
 
+    /**
+     * 開始済みだったらtrueを設定する
+     */
     boolean started = false;
 
     public GL11Animator(GL11Fragment fragment) {
@@ -21,15 +24,30 @@ public abstract class GL11Animator implements GLRunnable {
      * アニメーションを開始する。
      */
     public final void start() {
+        if (started) {
+            return;
+        }
         started = true;
         fragment.post(this);
     }
 
+    /**
+     * 実行を行わせる。
+     * 外部からの呼び出し用で、直接は実行しない。
+     */
     @Override
     public final void run() {
         if (!doAnimation(fragment)) {
             fragment.postDelayed(this, delay);
         }
+    }
+
+    /**
+     * 開始済みの場合trueを返す。
+     * @return
+     */
+    public boolean isStarted() {
+        return started;
     }
 
     /**

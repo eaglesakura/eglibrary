@@ -1,5 +1,9 @@
 package com.eaglesakura.lib.android.splib.fragment;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,6 +29,11 @@ import com.eaglesakura.lib.android.view.OpenGLView;
 public abstract class GL11Fragment extends IntentFragment {
     private OpenGLView glView = null;
     private AsyncHandler handler = null;
+
+    /**
+     * 画面復帰した時に実行させるQueue
+     */
+    private List<GLRunnable> suspendQueue = new LinkedList<GL11Fragment.GLRunnable>();
 
     /**
      * GL管理クラス。
@@ -148,6 +157,9 @@ public abstract class GL11Fragment extends IntentFragment {
             }
             onGLSurfaceChanged(width, height);
         }
+
+        // 復帰用のQueueを実行する
+        runSuspendQueue();
     }
 
     /**
@@ -247,6 +259,50 @@ public abstract class GL11Fragment extends IntentFragment {
                 runGLRunnable(runnable);
             }
         }, delay);
+    }
+
+    /**
+     * 指定時刻に動作を行わせる
+     * @param runnable
+     * @param uptimeMS
+     */
+    public void postAtTime(final GLRunnable runnable, long uptimeMS) {
+        handler.postAtTime(new Runnable() {
+            @Override
+            public void run() {
+                runGLRunnable(runnable);
+            }
+        }, uptimeMS);
+    }
+
+    /**
+     * 復帰用のQueueへ追加する
+     * @param runnable
+     */
+    public void addSuspendQueue(final GLRunnable runnable) {
+        synchronized (suspendQueue) {
+            suspendQueue.add(runnable);
+        }
+    }
+
+    /**
+     * 待機列に入れていたキューを実行する。
+     */
+    public void runSuspendQueue() {
+        handler.post(new Runnable() {
+
+            @Override
+            public void run() {
+                synchronized (suspendQueue) {
+                    Iterator<GLRunnable> iterator = suspendQueue.iterator();
+                    while (iterator.hasNext()) {
+                        GLRunnable glRunnable = iterator.next();
+                        runGLRunnable(glRunnable);
+                    }
+                    suspendQueue.clear();
+                }
+            }
+        });
     }
 
     /**
