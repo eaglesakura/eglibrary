@@ -44,18 +44,35 @@ public class BitmapImage extends ImageBase {
             bitmapResource = null;
         }
 
+        if (image == null) {
+            throw new IllegalArgumentException("Bitmap File load Error!!");
+        }
+
         bitmapResource = new BitmapResource(image);
         sharedResource = new SharedRawResource(bitmapResource);
         sharedResource.addRef();
         register();
     }
 
+    /**
+     * ファイルシステム上のファイルから読み込む
+     * @param file
+     * @param option
+     * @return
+     */
     public BitmapImage loadFile(File file, LoadOption option) {
         Bitmap image = BitmapFactory.decodeFile(file.getAbsolutePath());
         onLoad(image);
         return this;
     }
 
+    /**
+     * Drawableから読み込む
+     * @param resources
+     * @param id
+     * @param option
+     * @return
+     */
     public BitmapImage loadDrawable(Resources resources, int id, LoadOption option) {
         Bitmap image = BitmapFactory.decodeResource(resources, id);
         onLoad(image);
@@ -110,6 +127,11 @@ public class BitmapImage extends ImageBase {
         }
     }
 
+    /**
+     * 読み込み時のオプション
+     * @author TAKESHI YAMASHITA
+     *
+     */
     public static class LoadOption {
         /**
          * 最大幅

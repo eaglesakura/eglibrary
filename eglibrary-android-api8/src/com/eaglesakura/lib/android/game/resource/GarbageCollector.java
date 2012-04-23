@@ -10,8 +10,13 @@ import android.os.Handler;
 import com.eaglesakura.lib.android.game.thread.UIHandler;
 import com.eaglesakura.lib.android.game.util.ContextUtil;
 
+/**
+ * GCターゲットとして扱えないリソース（GL系、Bitmap系）を一元管理する。
+ * @author TAKESHI YAMASHITA
+ *
+ */
 public class GarbageCollector {
-    protected class GCTarget {
+    protected static class GCTarget {
         /**
          * 解放対象のリソース
          */
