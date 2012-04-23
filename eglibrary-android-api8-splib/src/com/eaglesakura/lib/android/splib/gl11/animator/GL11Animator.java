@@ -2,9 +2,9 @@ package com.eaglesakura.lib.android.splib.gl11.animator;
 
 import com.eaglesakura.lib.android.game.util.Timer;
 import com.eaglesakura.lib.android.splib.fragment.GL11Fragment;
-import com.eaglesakura.lib.android.splib.fragment.GL11Fragment.GLRunnable;
+import com.eaglesakura.lib.android.splib.fragment.GL11Fragment.AutoRetryableGLRunnler;
 
-public abstract class GL11Animator implements GLRunnable {
+public abstract class GL11Animator extends AutoRetryableGLRunnler {
     GL11Fragment fragment;
 
     /**
@@ -76,21 +76,5 @@ public abstract class GL11Animator implements GLRunnable {
      * @return
      */
     protected abstract boolean doAnimation(GL11Fragment fragment);
-
-    @Override
-    public void onError(Error error, GL11Fragment fragment) {
-        switch (error) {
-            case Disposed:
-                break;
-            case NotInitialized:
-                fragment.addSuspendQueue(this);
-                break;
-            case Paused:
-                fragment.addSuspendQueue(this);
-                break;
-            default:
-                break;
-        }
-    }
 
 }

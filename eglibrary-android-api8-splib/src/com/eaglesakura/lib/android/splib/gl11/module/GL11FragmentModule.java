@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.view.SurfaceView;
 
 import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
+import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.splib.fragment.GL11Fragment;
 import com.eaglesakura.lib.android.splib.fragment.GL11Fragment.GLRunnable;
 
@@ -15,7 +16,7 @@ import com.eaglesakura.lib.android.splib.fragment.GL11Fragment.GLRunnable;
  * @author TAKESHI YAMASHITA
  *
  */
-public abstract class GL11FragmentModule {
+public abstract class GL11FragmentModule extends DisposableResource {
     GL11Fragment fragment;
 
     /**
@@ -44,7 +45,7 @@ public abstract class GL11FragmentModule {
      * モジュールをFragmentから切り離す
      */
     public void unbind() {
-
+        fragment.removeModule(getTag().toString());
     }
 
     /**

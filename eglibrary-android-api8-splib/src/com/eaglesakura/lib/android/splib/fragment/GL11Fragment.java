@@ -18,6 +18,7 @@ import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
 import com.eaglesakura.lib.android.game.thread.AsyncHandler;
 import com.eaglesakura.lib.android.game.thread.ThreadSyncRunnerBase;
 import com.eaglesakura.lib.android.splib.fragment.GL11Fragment.GLRunnable.Error;
+import com.eaglesakura.lib.android.splib.gl11.module.GL11FragmentModule;
 import com.eaglesakura.lib.android.view.OpenGLView;
 
 /**
@@ -34,6 +35,11 @@ public abstract class GL11Fragment extends IntentFragment {
      * 画面復帰した時に実行させるQueue
      */
     private List<GLRunnable> suspendQueue = new LinkedList<GL11Fragment.GLRunnable>();
+
+    /**
+     * 内部で利用しているモジュール一覧
+     */
+    private List<GL11FragmentModule> modules = new LinkedList<GL11FragmentModule>();
 
     /**
      * GL管理クラス。
@@ -184,6 +190,75 @@ public abstract class GL11Fragment extends IntentFragment {
 
     public int getRenderAreaHeight() {
         return getGLView().getHeight();
+    }
+
+    /**
+     * モジュールを追加する
+     * @param module
+     */
+    public void addModule(final GL11FragmentModule module, String tag) {
+        synchronized (modules) {
+            if (modules.contains(module) || findModuleByTag(tag) != null) {
+                return;
+            }
+            module.setTag(tag);
+            modules.add(module);
+        }
+
+        post(new AutoRetryableGLRunnler() {
+            @Override
+            public void run() {
+                module.onAttach(GL11Fragment.this);
+            }
+        });
+    }
+
+    /**
+     * tagからモジュールを検索する
+     * @param tag
+     * @return
+     */
+    public GL11FragmentModule findModuleByTag(String tag) {
+
+        synchronized (modules) {
+            Iterator<GL11FragmentModule> iterator = modules.iterator();
+            while (iterator.hasNext()) {
+                GL11FragmentModule module = iterator.next();
+                if (module.getTag().equals(tag)) {
+                    return module;
+                }
+            }
+            return null;
+        }
+    }
+
+    /**
+     * モジュールを分離する
+     * @param tag
+     * @return
+     */
+    public GL11FragmentModule removeModule(String tag) {
+
+        synchronized (modules) {
+            Iterator<GL11FragmentModule> iterator = modules.iterator();
+            while (iterator.hasNext()) {
+                final GL11FragmentModule module = iterator.next();
+                if (module.getTag().equals(tag)) {
+                    iterator.remove();
+
+                    // GLスレッドで動作させる
+                    post(new AutoRetryableGLRunnler() {
+                        @Override
+                        public void run() {
+                            module.onDetatch();
+                            module.dispose();
+                        }
+                    });
+                    return module;
+                }
+            }
+            return null;
+        }
     }
 
     /**
@@ -367,5 +442,29 @@ public abstract class GL11Fragment extends IntentFragment {
         }
 
         public void onError(Error error, GL11Fragment fragment);
+    }
+
+    /**
+     * 自動でリトライを行うGLランナー
+     * @author TAKESHI YAMASHITA
+     *
+     */
+    public static abstract class AutoRetryableGLRunnler implements GLRunnable {
+
+        @Override
+        public void onError(Error error, GL11Fragment fragment) {
+            switch (error) {
+                case Disposed:
+                    break;
+                case NotInitialized:
+                    fragment.addSuspendQueue(this);
+                    break;
+                case Paused:
+                    fragment.addSuspendQueue(this);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
