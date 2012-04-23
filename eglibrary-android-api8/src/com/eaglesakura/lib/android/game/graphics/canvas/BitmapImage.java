@@ -1,13 +1,20 @@
 package com.eaglesakura.lib.android.game.graphics.canvas;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.net.Uri;
 
 import com.eaglesakura.lib.android.game.graphics.ImageBase;
 import com.eaglesakura.lib.android.game.resource.GarbageCollector;
@@ -26,6 +33,10 @@ public class BitmapImage extends ImageBase {
 
     public BitmapImage(GarbageCollector garbageCollector) {
         super(garbageCollector);
+    }
+
+    public BitmapImage() {
+        this((GarbageCollector) null);
     }
 
     public BitmapImage(BitmapImage origin) {
@@ -60,7 +71,7 @@ public class BitmapImage extends ImageBase {
      * @param option
      * @return
      */
-    public BitmapImage loadFile(File file, LoadOption option) {
+    public BitmapImage loadFromFile(File file, LoadOption option) {
         Bitmap image = BitmapFactory.decodeFile(file.getAbsolutePath());
         onLoad(image);
         return this;
@@ -73,9 +84,61 @@ public class BitmapImage extends ImageBase {
      * @param option
      * @return
      */
-    public BitmapImage loadDrawable(Resources resources, int id, LoadOption option) {
+    public BitmapImage loadFromDrawable(Resources resources, int id, LoadOption option) {
         Bitmap image = BitmapFactory.decodeResource(resources, id);
         onLoad(image);
+        return this;
+    }
+
+    /**
+     * Uriを指定して読み込む
+     * @param context
+     * @param uri
+     * @param option
+     * @return
+     * @throws IOException
+     */
+    public BitmapImage loadFromUri(Context context, Uri uri, LoadOption option) throws IOException {
+        InputStream is = null;
+        try {
+            is = context.getContentResolver().openInputStream(uri);
+            Bitmap image = BitmapFactory.decodeStream(is);
+            onLoad(image);
+            return this;
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (Exception e) {
+
+                }
+            }
+        }
+    }
+
+    /**
+     * 空の画像を作成する
+     * @param width
+     * @param height
+     * @param config
+     * @return
+     */
+    public BitmapImage create(int width, int height, Config config) {
+        Bitmap image = Bitmap.createBitmap(width, height, config);
+        onLoad(image);
+        return this;
+    }
+
+    /**
+     * 単一食で塗りつぶす
+     * @param colorARGB
+     * @return
+     */
+    public BitmapImage clear(int colorARGB) {
+        Graphics g = getGraphics();
+        g.setColorRGBA(Color.red(colorARGB), Color.green(colorARGB), Color.blue(colorARGB), Color.alpha(colorARGB));
+        g.clearRGBA(Color.red(colorARGB), Color.green(colorARGB), Color.blue(colorARGB), Color.alpha(colorARGB));
+        g.fillRect(0, 0, g.getWidth(), g.getHeight());
         return this;
     }
 
@@ -87,6 +150,16 @@ public class BitmapImage extends ImageBase {
     @Override
     public int getHeight() {
         return bitmapResource.rawBitmap.getHeight();
+    }
+
+    /**
+     * 操作用のGraphicsを取得する。
+     * @return
+     */
+    public Graphics getGraphics() {
+        Graphics g = new Graphics();
+        g.setCanvas(new Canvas(getBitmap()));
+        return g;
     }
 
     /**

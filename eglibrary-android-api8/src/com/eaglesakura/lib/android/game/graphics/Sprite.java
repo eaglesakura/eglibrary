@@ -101,8 +101,9 @@ public class Sprite {
     /**
      * 次のフレームを描画する。
      */
-    public void nextFrame() {
+    public Sprite nextFrame() {
         setFrame(frame + master.frameOffset);
+        return this;
     }
 
     /**
@@ -110,7 +111,7 @@ public class Sprite {
      * 
      * @return
      */
-    AnimationFrame getCurrentFrame() {
+    protected AnimationFrame getCurrentFrame() {
         //! 画像が登録されていない場合、アニメーションをさせない。
         if (master.frames.size() == 0) {
             master.noAnimation();
@@ -126,7 +127,7 @@ public class Sprite {
      * @param onceHeight
      * @param index
      */
-    public void setSliceGrid(final int blockWidth, final int blockHeight, final int index) {
+    public Sprite setSliceGrid(final int blockWidth, final int blockHeight, final int index) {
         Rect src = getCurrentFrame().area;
 
         //! 並べられるシートの数を数える
@@ -140,12 +141,13 @@ public class Sprite {
         src.top = py * blockHeight;
         src.right = (src.left + blockWidth);
         src.bottom = (src.top + blockHeight);
+        return this;
     }
 
     /**
      * 描画フレームを設定する。
      */
-    public void setFrame(int newFrame) {
+    public Sprite setFrame(int newFrame) {
         frame = newFrame;
         int current = frame / master.komaFrame;
         if (current >= master.frames.size()) {
@@ -154,6 +156,7 @@ public class Sprite {
         }
         //! 上限・下限の指定する
         frame = GameUtil.minmax(0, (master.frames.size()) * master.komaFrame, frame);
+        return this;
     }
 
     /**
@@ -222,16 +225,18 @@ public class Sprite {
      * スプライトのスケーリング値をmul倍する。
      * @param mul
      */
-    public void mulScaling(float mul) {
+    public Sprite mulScaling(float mul) {
         scale *= mul;
+        return this;
     }
 
     /**
      * スプライトのスケーリング値を設定する
      * @param scale
      */
-    public void setScale(float scale) {
+    public Sprite setScale(float scale) {
         this.scale = scale;
+        return this;
     }
 
     /**
@@ -271,8 +276,8 @@ public class Sprite {
      * @param y
      * @param flags
      */
-    public void setSpritePosition(int x, int y) {
-        setSpritePosition(x, y, scale, scale, POSITION_CENTER_X | POSITION_CENTER_Y);
+    public Sprite setSpritePosition(int x, int y) {
+        return setSpritePosition(x, y, scale, scale, POSITION_CENTER_X | POSITION_CENTER_Y);
     }
 
     /**
@@ -281,8 +286,8 @@ public class Sprite {
      * @param y
      * @param flags
      */
-    public void setSpritePosition(int x, int y, int flags) {
-        setSpritePosition(x, y, scale, scale, flags);
+    public Sprite setSpritePosition(int x, int y, int flags) {
+        return setSpritePosition(x, y, scale, scale, flags);
     }
 
     /**
@@ -294,7 +299,7 @@ public class Sprite {
      * @param scaleY
      * @param flags
      */
-    public void setSpritePosition(int x, int y, float scaleX, float scaleY, int flags) {
+    public Sprite setSpritePosition(int x, int y, float scaleX, float scaleY, int flags) {
 
         Rect src = getCurrentFrame().area;
         int dstWidth = (int) (scaleX * src.width());
@@ -319,6 +324,8 @@ public class Sprite {
         }
 
         dstArea.set(x, y, x + dstWidth, y + dstHeight);
+
+        return this;
     }
 
     /**
@@ -330,7 +337,7 @@ public class Sprite {
      * @param scaleY
      * @param flags
      */
-    public void setSpritePosition(int x, int y, int dstWidth, int dstHeight, int flags) {
+    public Sprite setSpritePosition(int x, int y, int dstWidth, int dstHeight, int flags) {
         //! 横方向の補正を行う
         {
             if ((flags & POSITION_CENTER_X) != 0) {
@@ -350,6 +357,8 @@ public class Sprite {
         }
 
         dstArea.set(x, y, x + dstWidth, y + dstHeight);
+
+        return this;
     }
 
     /**
@@ -357,8 +366,9 @@ public class Sprite {
      * @param x
      * @param y
      */
-    public void offsetSpritePosition(int x, int y) {
+    public Sprite offsetSpritePosition(int x, int y) {
         dstArea.offset(x, y);
+        return this;
     }
 
     /**
@@ -384,8 +394,9 @@ public class Sprite {
      * Aの値は保たれる。
      * @param colorRGBX
      */
-    public void setColorRGB(int colorRGBX) {
+    public Sprite setColorRGB(int colorRGBX) {
         this.color = ((colorRGBX & 0xffffff00) | (this.color & 0xff));
+        return this;
     }
 
     /**
@@ -393,7 +404,7 @@ public class Sprite {
      * @param targetRGBA
      * @param offset
      */
-    public void moveColorRGBA(final int targetRGBA, final int offset) {
+    public Sprite moveColorRGBA(final int targetRGBA, final int offset) {
         final int nowR = Color.toColorR(color);
         final int nowG = Color.toColorG(color);
         final int nowB = Color.toColorB(color);
@@ -410,6 +421,7 @@ public class Sprite {
                 GameUtil.targetMove(nowB, offset, nextB), //
                 GameUtil.targetMove(nowA, offset, nextA) //
                 );
+        return this;
     }
 
     /**
@@ -418,8 +430,9 @@ public class Sprite {
      * @param targetA
      * @param offset
      */
-    public void moveColorA(int targetA, int offset) {
+    public Sprite moveColorA(int targetA, int offset) {
         moveColorRGBA((color & 0xffffff00) | (targetA & 0xff), offset);
+        return this;
     }
 
     /**
@@ -428,24 +441,27 @@ public class Sprite {
      * @param targetRGB
      * @param offset
      */
-    public void moveColorRGB(int targetRGB, int offset) {
+    public Sprite moveColorRGB(int targetRGB, int offset) {
         moveColorRGBA((targetRGB & 0xffffff00) | (color & 0xff), offset);
+        return this;
     }
 
     /**
      * 画像のαのみを変更する
      * @param alpha
      */
-    public void setColorA(int alpha) {
+    public Sprite setColorA(int alpha) {
         this.color = (color & 0xffffff00) | (alpha & 0xff);
+        return this;
     }
 
     /**
      * 画像のアルファのみを変更する。
      * @param alpha
      */
-    public void setColorA(float alpha) {
+    public Sprite setColorA(float alpha) {
         setColorA((int) (alpha * 255));
+        return this;
     }
 
     /**
@@ -465,9 +481,10 @@ public class Sprite {
      * @param b
      * @param a
      */
-    public void setColorRGBA(float r, float g, float b, float a) {
+    public Sprite setColorRGBA(float r, float g, float b, float a) {
         color = (((int) (r * 255)) << 24) | (((int) (g * 255)) << 16) | (((int) (b * 255)) << 8)
                 | (((int) (a * 255)) << 0);
+        return this;
     }
 
     /**
@@ -616,5 +633,18 @@ public class Sprite {
             }
         }
         return null;
+    }
+
+    /**
+     * スプライトのマスタ情報を変更する。
+     * 変更後は画像SRC/DSTを補正する。
+     * @param master
+     * @return
+     */
+    public Sprite changeMaster(SpriteMaster master) {
+        this.master = master;
+        setFrame(getFrame());
+        setSpritePosition(getDstCenterX(), getDstCenterY());
+        return this;
     }
 }

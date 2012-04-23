@@ -155,9 +155,10 @@ public abstract class GL11Fragment extends IntentFragment {
                 glManager.onResume();
                 onGLResume();
             }
-            onGLSurfaceChanged(width, height);
         }
 
+        // サーフェイスが変更された
+        onGLSurfaceChanged(width, height);
         // 復帰用のQueueを実行する
         runSuspendQueue();
     }

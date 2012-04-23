@@ -1,5 +1,6 @@
 package com.eaglesakura.lib.android.splib.gl11.animator;
 
+import com.eaglesakura.lib.android.game.util.Timer;
 import com.eaglesakura.lib.android.splib.fragment.GL11Fragment;
 import com.eaglesakura.lib.android.splib.fragment.GL11Fragment.GLRunnable;
 
@@ -15,6 +16,11 @@ public abstract class GL11Animator implements GLRunnable {
      * 開始済みだったらtrueを設定する
      */
     boolean started = false;
+
+    /**
+     * 
+     */
+    Timer timer = new Timer();
 
     public GL11Animator(GL11Fragment fragment) {
         this.fragment = fragment;
@@ -37,16 +43,30 @@ public abstract class GL11Animator implements GLRunnable {
      */
     @Override
     public final void run() {
-        if (!doAnimation(fragment)) {
-            fragment.postDelayed(this, delay);
+        if (!started) {
+            return;
         }
+        timer.start();
+        if (!doAnimation(fragment)) {
+            fragment.postDelayed(this, Math.max(1, delay - timer.end()));
+        } else {
+            started = false;
+        }
+    }
+
+    /**
+     * フレームレートを設定する
+     * @param fps
+     */
+    public void setFrameRate(int fps) {
+        delay = 1000 / fps;
     }
 
     /**
      * 開始済みの場合trueを返す。
      * @return
      */
-    public boolean isStarted() {
+    public boolean isAnimated() {
         return started;
     }
 
@@ -63,10 +83,10 @@ public abstract class GL11Animator implements GLRunnable {
             case Disposed:
                 break;
             case NotInitialized:
-                fragment.postDelayed(this, 500);
+                fragment.addSuspendQueue(this);
                 break;
             case Paused:
-                fragment.postDelayed(this, 500);
+                fragment.addSuspendQueue(this);
                 break;
             default:
                 break;
