@@ -32,11 +32,21 @@ public class BitmapImage extends ImageBase {
         this(origin.getGarbageCollector());
         bitmapResource = origin.bitmapResource;
         sharedResource = origin.sharedResource;
+        sharedResource.addRef();
     }
 
     protected void onLoad(Bitmap image) {
+        {
+            if (sharedResource != null) {
+                sharedResource.dispose();
+            }
+            sharedResource = null;
+            bitmapResource = null;
+        }
+
         bitmapResource = new BitmapResource(image);
         sharedResource = new SharedRawResource(bitmapResource);
+        sharedResource.addRef();
         register();
     }
 
