@@ -594,7 +594,7 @@ public abstract class GL11Fragment extends IntentFragment {
      * 呼び出さない場合は特に機能しない。
      * @param key
      */
-    public void dispatchKeyEvent(KeyEvent key) {
+    public void onDispatchKeyEvent(KeyEvent key) {
         final int keyCode = key.getKeyCode();
         final int action = key.getAction();
         synchronized (modules) {

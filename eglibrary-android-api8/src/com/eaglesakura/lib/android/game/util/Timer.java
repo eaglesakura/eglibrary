@@ -25,6 +25,7 @@ public class Timer {
      */
     public void start() {
         startTime = System.currentTimeMillis();
+        endTime = startTime;
     }
 
     /**
@@ -38,5 +39,22 @@ public class Timer {
 
     public void setEndTime(long endTime) {
         this.endTime = endTime;
+    }
+
+    /**
+     * {@link #start()}を呼び出した後、一度でも
+     * {@link #end()}を呼び出したらtrue
+     * @return
+     */
+    public boolean isEnd() {
+        return endTime != startTime;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public long getEndTime() {
+        return endTime;
     }
 }
