@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
@@ -586,5 +587,34 @@ public abstract class GL11Fragment extends IntentFragment {
                     break;
             }
         }
+    }
+
+    /**
+     * キーイベントを呼び出す。
+     * 呼び出さない場合は特に機能しない。
+     * @param key
+     */
+    public void dispatchKeyEvent(KeyEvent key) {
+        final int keyCode = key.getKeyCode();
+        final int action = key.getAction();
+        synchronized (modules) {
+            // サブモジュールにライフサイクルを伝える
+            Iterator<GL11FragmentModule> iterator = modules.iterator();
+            while (iterator.hasNext()) {
+                GL11FragmentModule module = iterator.next();
+                {
+                    module.onKeyEvent(key);
+                    switch (action) {
+                        case KeyEvent.ACTION_DOWN:
+                            module.onKeyDown(keyCode, key);
+                            break;
+                        case KeyEvent.ACTION_UP:
+                            module.onKeyUp(keyCode, key);
+                            break;
+                    }
+                }
+            }
+        }
+
     }
 }

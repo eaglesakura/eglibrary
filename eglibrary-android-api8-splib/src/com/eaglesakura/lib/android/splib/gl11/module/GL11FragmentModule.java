@@ -4,6 +4,7 @@ import javax.microedition.khronos.opengles.GL11;
 
 import android.app.Activity;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.SurfaceView;
 
 import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
@@ -227,6 +228,32 @@ public abstract class GL11FragmentModule extends DisposableResource {
      * Fragment自体がレジュームした
      */
     public void onFragmentResume() {
+
+    }
+
+    /**
+     * キーイベントが呼ばれると必ず呼び出される
+     * @param event
+     */
+    public void onKeyEvent(KeyEvent event) {
+
+    }
+
+    /**
+     * キーボードが押された
+     * @param keyCode
+     * @param event
+     */
+    public void onKeyDown(int keyCode, KeyEvent event) {
+
+    }
+
+    /**
+     * キーボードが離された
+     * @param keyCode
+     * @param event
+     */
+    public void onKeyUp(int keyCode, KeyEvent event) {
 
     }
 
