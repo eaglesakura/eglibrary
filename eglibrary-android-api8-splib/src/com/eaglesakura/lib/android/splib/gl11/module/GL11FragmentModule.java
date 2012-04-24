@@ -102,10 +102,18 @@ public abstract class GL11FragmentModule extends DisposableResource {
         return fragment.getActivity();
     }
 
+    /**
+     * レンダリングエリアの幅を取得する
+     * @return
+     */
     public int getRenderAreaWidth() {
         return fragment.getRenderAreaWidth();
     }
 
+    /**
+     * レンダリングエリアの高さを取得する
+     * @return
+     */
     public int getRenderAreaHeight() {
         return fragment.getRenderAreaHeight();
     }
@@ -145,15 +153,6 @@ public abstract class GL11FragmentModule extends DisposableResource {
     }
 
     /**
-     * GLの初期化を行った
-     * @param width
-     * @param height
-     */
-    public void onGLInitialized(int width, int height) {
-
-    }
-
-    /**
      * サーフェイスサイズが変更された
      * @param width
      * @param height
@@ -165,14 +164,14 @@ public abstract class GL11FragmentModule extends DisposableResource {
     /**
      * GLの一時停止を行った
      */
-    public void onGLSuspend() {
+    public void onGLPause() {
 
     }
 
     /**
      * GLの復帰を行った
      */
-    public void onGLResume(int width, int height) {
+    public void onGLResume() {
 
     }
 
@@ -200,7 +199,7 @@ public abstract class GL11FragmentModule extends DisposableResource {
     /**
      * OpenGLのGCを行わせる。
      */
-    public void glgc() {
+    public void gc() {
         getGLManager().gc();
     }
 }

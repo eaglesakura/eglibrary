@@ -162,11 +162,11 @@ public abstract class GL11Fragment extends IntentFragment {
                 onGLResume();
             }
         }
+        // 復帰用のQueueを実行する
+        runSuspendQueue();
 
         // サーフェイスが変更された
         onGLSurfaceChanged(width, height);
-        // 復帰用のQueueを実行する
-        runSuspendQueue();
     }
 
     /**
@@ -192,25 +192,46 @@ public abstract class GL11Fragment extends IntentFragment {
         return getGLView().getHeight();
     }
 
+    public boolean isGLThread() {
+        return handler.isHandlerThread();
+    }
+
+    /**
+     * モジュールを追加する。
+     * @param module
+     * @return
+     */
+    public boolean addModule(final GL11FragmentModule module) {
+        return addModule(module, module.getClass().toString());
+    }
+
     /**
      * モジュールを追加する
      * @param module
      */
-    public void addModule(final GL11FragmentModule module, String tag) {
+    public boolean addModule(final GL11FragmentModule module, String tag) {
         synchronized (modules) {
             if (modules.contains(module) || findModuleByTag(tag) != null) {
-                return;
+                return false;
             }
             module.setTag(tag);
             modules.add(module);
         }
 
-        post(new AutoRetryableGLRunnler() {
+        GLRunnable runnable = new AutoRetryableGLRunnler() {
             @Override
             public void run() {
                 module.onAttach(GL11Fragment.this);
             }
-        });
+        };
+
+        if (!isGLThread()) {
+            post(runnable);
+        } else {
+            runnable.run();
+        }
+
+        return true;
     }
 
     /**
@@ -219,7 +240,6 @@ public abstract class GL11Fragment extends IntentFragment {
      * @return
      */
     public GL11FragmentModule findModuleByTag(String tag) {
-
         synchronized (modules) {
             Iterator<GL11FragmentModule> iterator = modules.iterator();
             while (iterator.hasNext()) {
@@ -245,15 +265,20 @@ public abstract class GL11Fragment extends IntentFragment {
                 final GL11FragmentModule module = iterator.next();
                 if (module.getTag().equals(tag)) {
                     iterator.remove();
-
                     // GLスレッドで動作させる
-                    post(new AutoRetryableGLRunnler() {
+                    GLRunnable runnable = new AutoRetryableGLRunnler() {
                         @Override
                         public void run() {
                             module.onDetatch();
                             module.dispose();
                         }
-                    });
+                    };
+
+                    if (!isGLThread()) {
+                        post(runnable);
+                    } else {
+                        runnable.run();
+                    }
                     return module;
                 }
             }
@@ -267,7 +292,9 @@ public abstract class GL11Fragment extends IntentFragment {
     private final Runnable renderRunner = new Runnable() {
         @Override
         public void run() {
+            onRenderingBegin();
             onRendering();
+            onRenderingEnd();
         }
     };
 
@@ -385,12 +412,71 @@ public abstract class GL11Fragment extends IntentFragment {
      * レンダリング時に呼び出される。
      * このメソッドは必ずGLスレッドから呼び出される。
      */
-    protected abstract void onRendering();
+    protected void onRenderingBegin() {
+        synchronized (modules) {
+            // サブモジュールにライフサイクルを伝える
+            Iterator<GL11FragmentModule> iterator = modules.iterator();
+            while (iterator.hasNext()) {
+                GL11FragmentModule module = iterator.next();
+                {
+                    module.onRenderingBegin();
+                }
+            }
+        }
+    }
+
+    /**
+     * レンダリング時に呼び出される。
+     * このメソッドは必ずGLスレッドから呼び出される。
+     */
+    protected void onRendering() {
+        synchronized (modules) {
+            // サブモジュールにライフサイクルを伝える
+            Iterator<GL11FragmentModule> iterator = modules.iterator();
+            while (iterator.hasNext()) {
+                GL11FragmentModule module = iterator.next();
+                {
+                    module.onRendering();
+                }
+            }
+        }
+    }
+
+    /**
+     * レンダリング時に呼び出される。
+     * このメソッドは必ずGLスレッドから呼び出される。
+     */
+    protected void onRenderingEnd() {
+        synchronized (modules) {
+            // サブモジュールにライフサイクルを伝える
+            Iterator<GL11FragmentModule> iterator = modules.iterator();
+            while (iterator.hasNext()) {
+                GL11FragmentModule module = iterator.next();
+                {
+                    module.onRenderingEnd();
+                }
+            }
+        }
+    }
 
     /**
      * GLメモリの廃棄を行わせる。
      */
-    protected abstract void onGLDispose();
+    protected void onGLDispose() {
+        synchronized (modules) {
+            // サブモジュールにライフサイクルを伝える
+            Iterator<GL11FragmentModule> iterator = modules.iterator();
+            while (iterator.hasNext()) {
+                GL11FragmentModule module = iterator.next();
+                {
+                    module.onGLDispose();
+                    module.onDetatch();
+                    module.dispose();
+                }
+                iterator.remove();
+            }
+        }
+    }
 
     /**
      * GLの初期化を行わせる。
@@ -404,17 +490,51 @@ public abstract class GL11Fragment extends IntentFragment {
      * @param width
      * @param height
      */
-    protected abstract void onGLSurfaceChanged(int width, int height);
+    protected void onGLSurfaceChanged(int width, int height) {
+        synchronized (modules) {
+            // サブモジュールにライフサイクルを伝える
+            Iterator<GL11FragmentModule> iterator = modules.iterator();
+            while (iterator.hasNext()) {
+                GL11FragmentModule module = iterator.next();
+                {
+                    module.onGLSurfaceChanged(width, height);
+                }
+            }
+        }
+    }
 
     /**
      * GLを休止状態にする。
      */
-    protected abstract void onGLPause();
+    protected void onGLPause() {
+        synchronized (modules) {
+            // サブモジュールにライフサイクルを伝える
+            Iterator<GL11FragmentModule> iterator = modules.iterator();
+            while (iterator.hasNext()) {
+                GL11FragmentModule module = iterator.next();
+                {
+                    module.onGLPause();
+                }
+            }
+        }
+    }
 
     /**
      * GLの状態を再開させる。
      */
-    protected abstract void onGLResume();
+    protected void onGLResume() {
+
+        synchronized (modules) {
+            // サブモジュールにライフサイクルを伝える
+            Iterator<GL11FragmentModule> iterator = modules.iterator();
+            while (iterator.hasNext()) {
+                GL11FragmentModule module = iterator.next();
+                {
+                    module.onGLResume();
+                }
+            }
+        }
+    }
 
     /**
      * GLスレッドでの実行を行わせる。
