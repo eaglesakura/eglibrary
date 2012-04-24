@@ -35,9 +35,23 @@ public abstract class GL11FragmentModule extends DisposableResource {
     }
 
     /**
-     * レンダリングが行われた
+     * レンダリング開始を知らせる
+     */
+    public void onRenderingBegin() {
+
+    }
+
+    /**
+     * レンダリングを行わせる
      */
     public void onRendering() {
+
+    }
+
+    /**
+     * レンダリング完了を知らせる
+     */
+    public void onRenderingEnd() {
 
     }
 
@@ -72,10 +86,18 @@ public abstract class GL11FragmentModule extends DisposableResource {
         return getGLManager().getGL();
     }
 
+    /**
+     * GLを関連付けたViewを取得する
+     * @return
+     */
     public SurfaceView getView() {
         return fragment.getGLView();
     }
 
+    /**
+     * 関連付けられたActivityを取得する
+     * @return
+     */
     public Activity getActivity() {
         return fragment.getActivity();
     }
