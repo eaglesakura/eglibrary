@@ -222,6 +222,15 @@ public class Sprite {
     }
 
     /**
+     * デフォルトのスケーリング値ならtrueを返す。
+     * ある程度のブレは許容する。
+     * @return
+     */
+    public boolean isDefaultScale() {
+        return scale >= 0.99999 && scale < 1.00001;
+    }
+
+    /**
      * スプライトのスケーリング値をmul倍する。
      * @param mul
      */
@@ -323,6 +332,7 @@ public class Sprite {
             }
         }
 
+        scale = (float) Math.sqrt(scaleX * scaleY);
         dstArea.set(x, y, x + dstWidth, y + dstHeight);
 
         return this;
@@ -357,7 +367,7 @@ public class Sprite {
         }
 
         dstArea.set(x, y, x + dstWidth, y + dstHeight);
-
+        scale = 1;
         return this;
     }
 

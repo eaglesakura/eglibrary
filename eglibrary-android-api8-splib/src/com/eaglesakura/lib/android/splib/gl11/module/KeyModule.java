@@ -14,6 +14,41 @@ import com.eaglesakura.lib.android.game.util.Timer;
  */
 public class KeyModule extends GL11FragmentModule {
 
+    /**
+     * 上キーを押した
+     */
+    public static final int KEY_UP = KeyEvent.KEYCODE_DPAD_UP;
+
+    /**
+     * 下キーを押した
+     */
+    public static final int KEY_DOWN = KeyEvent.KEYCODE_DPAD_DOWN;
+
+    /**
+     * 左キーを押した
+     */
+    public static final int KEY_LEFT = KeyEvent.KEYCODE_DPAD_LEFT;
+
+    /**
+     * 右キーを押した
+     */
+    public static final int KEY_RIGHT = KeyEvent.KEYCODE_DPAD_RIGHT;
+
+    /**
+     * 中央ボタンを押した。
+     */
+    public static final int KEY_CENTER = KeyEvent.KEYCODE_DPAD_CENTER;
+
+    /**
+     * 決定ボタンを押した
+     */
+    public static final int KEY_ENTER = KeyEvent.KEYCODE_ENTER;
+
+    /**
+     * 戻るボタンを押した
+     */
+    public static final int KEY_BACK = KeyEvent.KEYCODE_BACK;
+
     public class KeyData {
         /**
          * 押しているキーコード

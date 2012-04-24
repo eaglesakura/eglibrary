@@ -55,6 +55,13 @@ public abstract class GL11Animator extends AutoRetryableGLRunnler {
     }
 
     /**
+     * アニメーションを停止する
+     */
+    public void stop() {
+        started = false;
+    }
+
+    /**
      * フレームレートを設定する
      * @param fps
      */
