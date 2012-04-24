@@ -17,6 +17,7 @@ import android.graphics.Color;
 import android.net.Uri;
 
 import com.eaglesakura.lib.android.game.graphics.ImageBase;
+import com.eaglesakura.lib.android.game.io.WebInputStream;
 import com.eaglesakura.lib.android.game.resource.GarbageCollector;
 import com.eaglesakura.lib.android.game.resource.IRawResource;
 import com.eaglesakura.lib.android.game.resource.SharedRawResource;
@@ -98,10 +99,14 @@ public class BitmapImage extends ImageBase {
      * @return
      * @throws IOException
      */
-    public BitmapImage loadFromUri(Context context, Uri uri, LoadOption option) throws IOException {
+    public BitmapImage loadFromUri(Context context, Uri uri, int timeout, LoadOption option) throws IOException {
         InputStream is = null;
         try {
-            is = context.getContentResolver().openInputStream(uri);
+            if (uri.toString().startsWith("http")) {
+                is = WebInputStream.get(uri.toString(), timeout);
+            } else {
+                is = context.getContentResolver().openInputStream(uri);
+            }
             Bitmap image = BitmapFactory.decodeStream(is);
             onLoad(image);
             return this;

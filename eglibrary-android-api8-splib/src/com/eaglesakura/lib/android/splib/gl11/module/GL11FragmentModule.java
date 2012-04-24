@@ -180,6 +180,13 @@ public abstract class GL11FragmentModule extends DisposableResource {
     }
 
     /**
+     * {@link GL11Fragment}へ、レンダリングを要求する
+     */
+    public void rendering() {
+        fragment.rendering();
+    }
+
+    /**
      * サーフェイスサイズが変更された
      * @param width
      * @param height
