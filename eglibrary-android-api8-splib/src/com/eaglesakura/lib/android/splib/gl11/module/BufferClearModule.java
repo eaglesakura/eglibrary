@@ -23,6 +23,14 @@ public class BufferClearModule extends GL11FragmentModule {
         this.color = clearColorRGBA;
     }
 
+    /**
+     * 背景色を指定する
+     * @param rgba
+     */
+    public void setClearColor(int rgba) {
+        this.color = rgba;
+    }
+
     @Override
     public void onRenderingBegin() {
         super.onRenderingBegin();
@@ -69,10 +77,4 @@ public class BufferClearModule extends GL11FragmentModule {
             }
         });
     }
-
-    @Override
-    public void dispose() {
-
-    }
-
 }

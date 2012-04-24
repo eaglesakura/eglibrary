@@ -8,6 +8,7 @@ import android.view.SurfaceView;
 
 import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
 import com.eaglesakura.lib.android.game.resource.DisposableResource;
+import com.eaglesakura.lib.android.game.util.GameUtil;
 import com.eaglesakura.lib.android.splib.fragment.GL11Fragment;
 import com.eaglesakura.lib.android.splib.fragment.GL11Fragment.GLRunnable;
 
@@ -56,10 +57,20 @@ public abstract class GL11FragmentModule extends DisposableResource {
     }
 
     /**
+     * Fragmentにattach済みだったらtrueを返す
+     * @return
+     */
+    public boolean isAttached() {
+        return fragment != null;
+    }
+
+    /**
      * モジュールをFragmentから切り離す
      */
     public void unbind() {
-        fragment.removeModule(getTag().toString());
+        if (isAttached()) {
+            fragment.removeModule(getTag().toString());
+        }
     }
 
     /**
@@ -116,6 +127,22 @@ public abstract class GL11FragmentModule extends DisposableResource {
      */
     public int getRenderAreaHeight() {
         return fragment.getRenderAreaHeight();
+    }
+
+    /**
+     * GLスレッドで動作していたらtrueを返す
+     * @return
+     */
+    public boolean isGLThread() {
+        return fragment.isGLThread();
+    }
+
+    /**
+     * UIスレッドで動作していたらtrueを返す
+     * @return
+     */
+    public boolean isUIThread() {
+        return GameUtil.isUIThread();
     }
 
     /**
@@ -194,6 +221,13 @@ public abstract class GL11FragmentModule extends DisposableResource {
      */
     public void onFragmentResume() {
 
+    }
+
+    /**
+     * メモリの解放を行う
+     */
+    @Override
+    public void dispose() {
     }
 
     /**

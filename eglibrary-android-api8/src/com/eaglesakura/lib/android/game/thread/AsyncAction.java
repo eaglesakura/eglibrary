@@ -12,9 +12,11 @@ import android.os.Handler;
 public abstract class AsyncAction extends Thread {
     Handler handler;
 
+    boolean canceled = false;
+
     /**
      * 
-     * @param handler
+     * @param handler 通知先のハンドラ
      */
     public AsyncAction(Handler handler) {
         this.handler = handler;
@@ -50,6 +52,21 @@ public abstract class AsyncAction extends Thread {
      * @param exception
      */
     protected abstract void onFailure(Exception exception);
+
+    /**
+     * キャンセルを行う
+     */
+    public void cancel() {
+        canceled = true;
+    }
+
+    /**
+     * キャンセル済みだったらtrue
+     * @return
+     */
+    public boolean isCanceled() {
+        return canceled;
+    }
 
     /**
      * 終了作業を行わせる。
