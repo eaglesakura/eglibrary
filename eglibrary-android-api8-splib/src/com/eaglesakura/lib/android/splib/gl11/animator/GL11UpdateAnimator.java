@@ -43,13 +43,14 @@ public class GL11UpdateAnimator extends GL11Animator {
      * 更新可能オブジェクトを追加する
      * @param updatable
      */
-    public void add(Updatable updatable) {
+    public GL11UpdateAnimator add(Updatable updatable) {
         synchronized (updateObjects) {
             if (updateObjects.contains(updatable)) {
-                return;
+                return this;
             }
 
             updateObjects.add(updatable);
+            return this;
         }
     }
 }

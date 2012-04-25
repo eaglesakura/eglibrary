@@ -3,6 +3,8 @@ package com.eaglesakura.lib.android.splib.gl11.module;
 import javax.microedition.khronos.opengles.GL11;
 
 import android.app.Activity;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.SurfaceView;
@@ -152,6 +154,22 @@ public abstract class GL11FragmentModule extends DisposableResource {
      */
     public Handler getGLHandler() {
         return getGLManager().getHandler();
+    }
+
+    /**
+     * リソースリストを取得する
+     * @return
+     */
+    public Resources getResources() {
+        return fragment.getResources();
+    }
+
+    /**
+     * アセットアクセスを行う。
+     * @return
+     */
+    public AssetManager getAssets() {
+        return fragment.getActivity().getAssets();
     }
 
     /**

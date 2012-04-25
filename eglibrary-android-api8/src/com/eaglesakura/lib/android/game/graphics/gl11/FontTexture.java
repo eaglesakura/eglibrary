@@ -50,14 +50,8 @@ public class FontTexture extends BitmapTextureImage {
         createFont(text, typeface, fontSize);
     }
 
-    /**
-     * フォントを作成する。古いフォントは削除される。
-     * @param text
-     * @param fontSize
-     */
-    public void createFont(String text, Typeface typeface, int fontSize) {
-        this.text = text;
-        this.fontSize = fontSize;
+    protected Bitmap createFontImage(String text, Typeface typeface, int fontSize) {
+
         paint.setTextSize(fontSize);
         paint.setTypeface(typeface);
         paint.getTextBounds(text, 0, text.length(), bounds);
@@ -76,6 +70,39 @@ public class FontTexture extends BitmapTextureImage {
         paint.setColor(0xffffffff);
         canvas.drawText(text, -bounds.left, -fontMetrics.top, paint);
 
+        return bitmap;
+    }
+
+    /**
+     * テクスチャのソースエリアを取得する。
+     * @param start
+     * @param end
+     * @return
+     */
+    public Rect getSrcArea(int start, int end) {
+        Rect result = new Rect();
+        paint.getTextBounds(text, 0, start, result);
+        final int headerWidth = result.width();
+        paint.getTextBounds(text, end, text.length(), result);
+        final int fooderWidth = result.width();
+
+        result.left = headerWidth;
+        result.right = getWidth() - fooderWidth;
+        result.top = 0;
+        result.bottom = getHeight();
+
+        return result;
+    }
+
+    /**
+     * フォントを作成する。古いフォントは削除される。
+     * @param text
+     * @param fontSize
+     */
+    public void createFont(String text, Typeface typeface, int fontSize) {
+        this.text = text;
+        this.fontSize = fontSize;
+        Bitmap bitmap = createFontImage(text, typeface, fontSize);
         initTexture(bitmap);
         bitmap.recycle();
     }

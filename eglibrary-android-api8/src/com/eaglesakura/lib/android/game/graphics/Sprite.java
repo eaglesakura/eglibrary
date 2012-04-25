@@ -483,6 +483,14 @@ public class Sprite {
         return color;
     }
 
+    public int getColorA() {
+        return Color.toColorA(color);
+    }
+
+    public float getColorAf() {
+        return Color.toColorAf(color);
+    }
+
     /**
      * 描画色RGBAを設定する。 値は0.0f〜1.0fである必要がある。
      * 

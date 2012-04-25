@@ -203,7 +203,13 @@ public abstract class GL11Fragment extends IntentFragment {
      * @return
      */
     public boolean addModule(final GL11FragmentModule module) {
-        return addModule(module, module.getClass().toString());
+        String tag = null;
+        if (module.getTag() == null) {
+            tag = module.getClass().getName();
+        } else {
+            tag = module.getTag().toString();
+        }
+        return addModule(module, tag);
     }
 
     /**
@@ -419,7 +425,7 @@ public abstract class GL11Fragment extends IntentFragment {
             Iterator<GL11FragmentModule> iterator = modules.iterator();
             while (iterator.hasNext()) {
                 GL11FragmentModule module = iterator.next();
-                {
+                if (module.isAttached()) {
                     module.onRenderingBegin();
                 }
             }
@@ -436,7 +442,7 @@ public abstract class GL11Fragment extends IntentFragment {
             Iterator<GL11FragmentModule> iterator = modules.iterator();
             while (iterator.hasNext()) {
                 GL11FragmentModule module = iterator.next();
-                {
+                if (module.isAttached()) {
                     module.onRendering();
                 }
             }
@@ -453,7 +459,7 @@ public abstract class GL11Fragment extends IntentFragment {
             Iterator<GL11FragmentModule> iterator = modules.iterator();
             while (iterator.hasNext()) {
                 GL11FragmentModule module = iterator.next();
-                {
+                if (module.isAttached()) {
                     module.onRenderingEnd();
                 }
             }
