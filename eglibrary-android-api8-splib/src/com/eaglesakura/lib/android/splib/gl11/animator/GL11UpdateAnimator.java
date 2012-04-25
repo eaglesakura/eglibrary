@@ -21,16 +21,16 @@ public class GL11UpdateAnimator extends GL11Animator {
     @Override
     protected boolean doAnimation(GL11Fragment fragment) {
         boolean finished = false;
-        synchronized (updateObjects) {
-            Iterator<Updatable> iterator = updateObjects.iterator();
-            while (iterator.hasNext()) {
-                Updatable updatable = iterator.next();
-                if (updatable.update()) {
-                    iterator.remove();
-                }
+
+        Iterator<Updatable> iterator = updateObjects.iterator();
+        while (iterator.hasNext()) {
+            Updatable updatable = iterator.next();
+            if (updatable.update()) {
+                iterator.remove();
             }
-            finished = updateObjects.isEmpty();
         }
+
+        finished = updateObjects.isEmpty();
         fragment.rendering();
         return finished;
     }
@@ -43,14 +43,17 @@ public class GL11UpdateAnimator extends GL11Animator {
      * 更新可能オブジェクトを追加する
      * @param updatable
      */
-    public GL11UpdateAnimator add(Updatable updatable) {
-        synchronized (updateObjects) {
-            if (updateObjects.contains(updatable)) {
-                return this;
-            }
+    public GL11UpdateAnimator add(final Updatable updatable) {
+        fragment.getHandler().post(new Runnable() {
+            @Override
+            public void run() {
+                if (updateObjects.contains(updatable)) {
+                    return;
+                }
 
-            updateObjects.add(updatable);
-            return this;
-        }
+                updateObjects.add(updatable);
+            }
+        });
+        return this;
     }
 }

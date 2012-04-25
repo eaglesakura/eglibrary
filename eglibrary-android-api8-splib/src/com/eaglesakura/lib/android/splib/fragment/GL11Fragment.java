@@ -217,27 +217,18 @@ public abstract class GL11Fragment extends IntentFragment {
      * @param module
      */
     public boolean addModule(final GL11FragmentModule module, String tag) {
-        synchronized (modules) {
-            if (modules.contains(module) || findModuleByTag(tag) != null) {
-                return false;
-            }
-            module.setTag(tag);
-            modules.add(module);
+        if (modules.contains(module) || findModuleByTag(tag) != null) {
+            return false;
         }
+        module.setTag(tag);
+        modules.add(module);
+        handler.post(new Runnable() {
 
-        GLRunnable runnable = new AutoRetryableGLRunnler() {
             @Override
             public void run() {
                 module.onAttach(GL11Fragment.this);
             }
-        };
-
-        if (!isGLThread()) {
-            post(runnable);
-        } else {
-            runnable.run();
-        }
-
+        });
         return true;
     }
 
@@ -264,33 +255,36 @@ public abstract class GL11Fragment extends IntentFragment {
      * @param tag
      * @return
      */
-    public GL11FragmentModule removeModule(String tag) {
+    public void removeModule(final String tag) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (modules) {
+                    Iterator<GL11FragmentModule> iterator = modules.iterator();
+                    while (iterator.hasNext()) {
+                        final GL11FragmentModule module = iterator.next();
+                        if (module.getTag().equals(tag)) {
+                            iterator.remove();
+                            // GLスレッドで動作させる
+                            GLRunnable runnable = new AutoRetryableGLRunnler() {
+                                @Override
+                                public void run() {
+                                    module.onDetatch();
+                                    module.dispose();
+                                }
+                            };
 
-        synchronized (modules) {
-            Iterator<GL11FragmentModule> iterator = modules.iterator();
-            while (iterator.hasNext()) {
-                final GL11FragmentModule module = iterator.next();
-                if (module.getTag().equals(tag)) {
-                    iterator.remove();
-                    // GLスレッドで動作させる
-                    GLRunnable runnable = new AutoRetryableGLRunnler() {
-                        @Override
-                        public void run() {
-                            module.onDetatch();
-                            module.dispose();
+                            if (!isGLThread()) {
+                                post(runnable);
+                            } else {
+                                runnable.run();
+                            }
+                            return;
                         }
-                    };
-
-                    if (!isGLThread()) {
-                        post(runnable);
-                    } else {
-                        runnable.run();
                     }
-                    return module;
                 }
             }
-            return null;
-        }
+        });
     }
 
     /**
