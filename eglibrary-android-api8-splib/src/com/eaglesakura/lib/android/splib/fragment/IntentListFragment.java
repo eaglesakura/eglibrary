@@ -10,6 +10,7 @@ import android.support.v4.app.ListFragment;
  * @author TAKESHI YAMASHITA
  *
  */
+@Deprecated
 public class IntentListFragment extends ListFragment {
     /**
      * 保持するIntent。

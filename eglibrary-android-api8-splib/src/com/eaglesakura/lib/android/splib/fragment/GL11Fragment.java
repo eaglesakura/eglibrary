@@ -4,8 +4,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -18,7 +18,9 @@ import android.widget.FrameLayout;
 import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
 import com.eaglesakura.lib.android.game.thread.AsyncHandler;
 import com.eaglesakura.lib.android.game.thread.ThreadSyncRunnerBase;
-import com.eaglesakura.lib.android.splib.fragment.GL11Fragment.GLRunnable.Error;
+import com.eaglesakura.lib.android.splib.fragment.gl11.AutoRetryableGLRunnler;
+import com.eaglesakura.lib.android.splib.fragment.gl11.GLRunnable;
+import com.eaglesakura.lib.android.splib.fragment.gl11.GLRunnable.GLError;
 import com.eaglesakura.lib.android.splib.gl11.module.GL11FragmentModule;
 import com.eaglesakura.lib.android.view.OpenGLView;
 
@@ -28,14 +30,14 @@ import com.eaglesakura.lib.android.view.OpenGLView;
  * @author TAKESHI YAMASHITA
  *
  */
-public abstract class GL11Fragment extends IntentFragment {
+public abstract class GL11Fragment extends Fragment {
     private OpenGLView glView = null;
     private AsyncHandler handler = null;
 
     /**
      * 画面復帰した時に実行させるQueue
      */
-    private List<GLRunnable> suspendQueue = new LinkedList<GL11Fragment.GLRunnable>();
+    private List<GLRunnable> suspendQueue = new LinkedList<GLRunnable>();
 
     /**
      * 内部で利用しているモジュール一覧
@@ -84,10 +86,6 @@ public abstract class GL11Fragment extends IntentFragment {
     };
 
     public GL11Fragment() {
-    }
-
-    public GL11Fragment(Intent intent) {
-        super(intent);
     }
 
     @Override
@@ -319,17 +317,17 @@ public abstract class GL11Fragment extends IntentFragment {
     protected void runGLRunnable(GLRunnable runnable) {
         // 初期化されていない
         if (glManager == null || !glManager.isInitialized()) {
-            runnable.onError(Error.NotInitialized, this);
+            runnable.onError(GLError.NotInitialized, this);
             return;
         }
         // 廃棄済み
         if (getActivity() == null) {
-            runnable.onError(Error.Disposed, this);
+            runnable.onError(GLError.Disposed, this);
             return;
         }
         // GL一時停止中
         if (glManager.isPaused()) {
-            runnable.onError(Error.Paused, this);
+            runnable.onError(GLError.Paused, this);
             return;
         }
 
@@ -533,58 +531,6 @@ public abstract class GL11Fragment extends IntentFragment {
                 {
                     module.onGLResume();
                 }
-            }
-        }
-    }
-
-    /**
-     * GLスレッドでの実行を行わせる。
-     * onErrorが呼び出された場合、
-     * {@link #run()}は実行されない。
-     * @author TAKESHI YAMASHITA
-     *
-     */
-    public interface GLRunnable extends Runnable {
-        public enum Error {
-            /**
-             * 初期化されていない
-             */
-            NotInitialized,
-
-            /**
-             * 既にGLが廃棄されている。
-             */
-            Disposed,
-
-            /**
-             * GLが休止状態にある。
-             */
-            Paused,
-        }
-
-        public void onError(Error error, GL11Fragment fragment);
-    }
-
-    /**
-     * 自動でリトライを行うGLランナー
-     * @author TAKESHI YAMASHITA
-     *
-     */
-    public static abstract class AutoRetryableGLRunnler implements GLRunnable {
-
-        @Override
-        public void onError(Error error, GL11Fragment fragment) {
-            switch (error) {
-                case Disposed:
-                    break;
-                case NotInitialized:
-                    fragment.addSuspendQueue(this);
-                    break;
-                case Paused:
-                    fragment.addSuspendQueue(this);
-                    break;
-                default:
-                    break;
             }
         }
     }

@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
  * @author TAKESHI YAMASHITA
  *
  */
+@Deprecated
 public class IntentFragment extends Fragment {
     /**
      * 保持するIntent。

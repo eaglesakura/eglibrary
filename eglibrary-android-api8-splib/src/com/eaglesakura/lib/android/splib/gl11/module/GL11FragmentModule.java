@@ -13,7 +13,7 @@ import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
 import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.game.util.GameUtil;
 import com.eaglesakura.lib.android.splib.fragment.GL11Fragment;
-import com.eaglesakura.lib.android.splib.fragment.GL11Fragment.GLRunnable;
+import com.eaglesakura.lib.android.splib.fragment.gl11.GLRunnable;
 
 /**
  * {@link GL11Fragment}内で利用する、更に細かいモジュールを定義する

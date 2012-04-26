@@ -2,7 +2,7 @@ package com.eaglesakura.lib.android.splib.gl11.animator;
 
 import com.eaglesakura.lib.android.game.util.Timer;
 import com.eaglesakura.lib.android.splib.fragment.GL11Fragment;
-import com.eaglesakura.lib.android.splib.fragment.GL11Fragment.AutoRetryableGLRunnler;
+import com.eaglesakura.lib.android.splib.fragment.gl11.AutoRetryableGLRunnler;
 
 public abstract class GL11Animator extends AutoRetryableGLRunnler {
     GL11Fragment fragment;
