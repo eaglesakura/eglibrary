@@ -219,11 +219,12 @@ public abstract class GL11Fragment extends Fragment {
             return false;
         }
         module.setTag(tag);
-        modules.add(module);
         handler.post(new Runnable() {
-
             @Override
             public void run() {
+                synchronized (modules) {
+                    modules.add(module);
+                }
                 module.onAttach(GL11Fragment.this);
             }
         });
@@ -237,9 +238,7 @@ public abstract class GL11Fragment extends Fragment {
      */
     public GL11FragmentModule findModuleByTag(String tag) {
         synchronized (modules) {
-            Iterator<GL11FragmentModule> iterator = modules.iterator();
-            while (iterator.hasNext()) {
-                GL11FragmentModule module = iterator.next();
+            for (GL11FragmentModule module : modules) {
                 if (module.getTag().equals(tag)) {
                     return module;
                 }
@@ -396,9 +395,7 @@ public abstract class GL11Fragment extends Fragment {
             @Override
             public void run() {
                 synchronized (suspendQueue) {
-                    Iterator<GLRunnable> iterator = suspendQueue.iterator();
-                    while (iterator.hasNext()) {
-                        GLRunnable glRunnable = iterator.next();
+                    for (GLRunnable glRunnable : suspendQueue) {
                         runGLRunnable(glRunnable);
                     }
                     suspendQueue.clear();
@@ -414,9 +411,7 @@ public abstract class GL11Fragment extends Fragment {
     protected void onRenderingBegin() {
         synchronized (modules) {
             // サブモジュールにライフサイクルを伝える
-            Iterator<GL11FragmentModule> iterator = modules.iterator();
-            while (iterator.hasNext()) {
-                GL11FragmentModule module = iterator.next();
+            for (GL11FragmentModule module : modules) {
                 if (module.isAttached()) {
                     module.onRenderingBegin();
                 }
@@ -431,9 +426,7 @@ public abstract class GL11Fragment extends Fragment {
     protected void onRendering() {
         synchronized (modules) {
             // サブモジュールにライフサイクルを伝える
-            Iterator<GL11FragmentModule> iterator = modules.iterator();
-            while (iterator.hasNext()) {
-                GL11FragmentModule module = iterator.next();
+            for (GL11FragmentModule module : modules) {
                 if (module.isAttached()) {
                     module.onRendering();
                 }
@@ -448,9 +441,7 @@ public abstract class GL11Fragment extends Fragment {
     protected void onRenderingEnd() {
         synchronized (modules) {
             // サブモジュールにライフサイクルを伝える
-            Iterator<GL11FragmentModule> iterator = modules.iterator();
-            while (iterator.hasNext()) {
-                GL11FragmentModule module = iterator.next();
+            for (GL11FragmentModule module : modules) {
                 if (module.isAttached()) {
                     module.onRenderingEnd();
                 }
@@ -492,12 +483,8 @@ public abstract class GL11Fragment extends Fragment {
     protected void onGLSurfaceChanged(int width, int height) {
         synchronized (modules) {
             // サブモジュールにライフサイクルを伝える
-            Iterator<GL11FragmentModule> iterator = modules.iterator();
-            while (iterator.hasNext()) {
-                GL11FragmentModule module = iterator.next();
-                {
-                    module.onGLSurfaceChanged(width, height);
-                }
+            for (GL11FragmentModule module : modules) {
+                module.onGLSurfaceChanged(width, height);
             }
         }
     }
@@ -508,12 +495,8 @@ public abstract class GL11Fragment extends Fragment {
     protected void onGLPause() {
         synchronized (modules) {
             // サブモジュールにライフサイクルを伝える
-            Iterator<GL11FragmentModule> iterator = modules.iterator();
-            while (iterator.hasNext()) {
-                GL11FragmentModule module = iterator.next();
-                {
-                    module.onGLPause();
-                }
+            for (GL11FragmentModule module : modules) {
+                module.onGLPause();
             }
         }
     }
@@ -525,12 +508,8 @@ public abstract class GL11Fragment extends Fragment {
 
         synchronized (modules) {
             // サブモジュールにライフサイクルを伝える
-            Iterator<GL11FragmentModule> iterator = modules.iterator();
-            while (iterator.hasNext()) {
-                GL11FragmentModule module = iterator.next();
-                {
-                    module.onGLResume();
-                }
+            for (GL11FragmentModule module : modules) {
+                module.onGLResume();
             }
         }
     }
@@ -545,22 +524,29 @@ public abstract class GL11Fragment extends Fragment {
         final int action = key.getAction();
         synchronized (modules) {
             // サブモジュールにライフサイクルを伝える
-            Iterator<GL11FragmentModule> iterator = modules.iterator();
-            while (iterator.hasNext()) {
-                GL11FragmentModule module = iterator.next();
-                {
-                    module.onKeyEvent(key);
-                    switch (action) {
-                        case KeyEvent.ACTION_DOWN:
-                            module.onKeyDown(keyCode, key);
-                            break;
-                        case KeyEvent.ACTION_UP:
-                            module.onKeyUp(keyCode, key);
-                            break;
-                    }
+            for (GL11FragmentModule module : modules) {
+                module.onKeyEvent(key);
+                switch (action) {
+                    case KeyEvent.ACTION_DOWN:
+                        module.onKeyDown(keyCode, key);
+                        break;
+                    case KeyEvent.ACTION_UP:
+                        module.onKeyUp(keyCode, key);
+                        break;
                 }
             }
         }
+    }
 
+    /**
+     * モジュール一覧を直接取得する。
+     * ライフサイクル無視の操作が可能なため、扱いには注意すること。
+     * 主にモジュールソート等に利用する。
+     * @return
+     */
+    public List<GL11FragmentModule> getModules() {
+        synchronized (modules) {
+            return modules;
+        }
     }
 }

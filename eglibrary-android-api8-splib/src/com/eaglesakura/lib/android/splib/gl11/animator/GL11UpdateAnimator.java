@@ -56,4 +56,12 @@ public class GL11UpdateAnimator extends GL11Animator {
         });
         return this;
     }
+
+    /**
+     * アップデート用オブジェクトを取得する。
+     * @return
+     */
+    public List<Updatable> getUpdateObjects() {
+        return updateObjects;
+    }
 }
