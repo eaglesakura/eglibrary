@@ -201,6 +201,9 @@ public abstract class GL11Fragment extends Fragment {
      * @return
      */
     public boolean addModule(final GL11FragmentModule module) {
+        if (module == null) {
+            return false;
+        }
         String tag = null;
         if (module.getTag() == null) {
             tag = module.getClass().getName();
@@ -215,6 +218,9 @@ public abstract class GL11Fragment extends Fragment {
      * @param module
      */
     public boolean addModule(final GL11FragmentModule module, String tag) {
+        if (module == null || tag == null) {
+            return false;
+        }
         if (modules.contains(module) || findModuleByTag(tag) != null) {
             return false;
         }
