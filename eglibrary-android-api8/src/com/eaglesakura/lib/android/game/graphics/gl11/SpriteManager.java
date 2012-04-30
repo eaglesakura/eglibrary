@@ -248,8 +248,8 @@ public class SpriteManager extends DisposableResource {
             final float translateX = -1.0f + sizeX / 2.0f + sx;
             final float translateY = 1.0f - sizeY / 2.0f - sy;
             gl.glTranslatef(translateX, translateY, polyDepth);
-            gl.glScalef(sizeX, sizeY, 1.0f);
             gl.glRotatef(degree, 0, 0, 1);
+            gl.glScalef(sizeX, sizeY, 1.0f);
         }
 
         //! テクスチャ位置を行列で操作する

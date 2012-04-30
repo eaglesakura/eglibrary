@@ -10,6 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.os.Looper;
 
+import com.eaglesakura.lib.android.game.math.Vector2;
+
 public class GameUtil {
 
     public static final String SHIT_JIS = "Shift_JIS";
@@ -25,6 +27,29 @@ public class GameUtil {
         } catch (Exception e) {
             LogUtil.log(e);
         }
+    }
+
+    /**
+     * centerから見たpositionが何度になるか360度系で返す。
+     * １２時の方向が0度で、反時計回りに角度を進ませる。
+     * @param center
+     * @param position
+     * @return
+     */
+    public static float getAngleDegree(Vector2 center, Vector2 position) {
+        float result = 0;
+
+        Vector2 temp = new Vector2(position.x - center.x, position.y - center.y);
+        if (temp.length() == 0) {
+            return 0;
+        }
+        temp.normalize();
+
+        result = (float) (Math.atan2(temp.y, temp.x) / Math.PI);
+        result /= 2;
+        result -= 0.25f;
+
+        return normalizeDegree(result * 360.0f);
     }
 
     /**
