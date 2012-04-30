@@ -239,6 +239,7 @@ public class SpriteManager extends DisposableResource {
 
         //! 描画位置を行列で操作する
         {
+            final float aspect = displayWidth / displayHeight;
             float sizeX = (float) dstWidth / (float) displayWidth * 2;
             float sizeY = (float) dstHeight / (float) displayHeight * 2;
             float sx = (float) dstX / (float) displayWidth * 2;
@@ -248,8 +249,11 @@ public class SpriteManager extends DisposableResource {
             final float translateX = -1.0f + sizeX / 2.0f + sx;
             final float translateY = 1.0f - sizeY / 2.0f - sy;
             gl.glTranslatef(translateX, translateY, polyDepth);
-            gl.glRotatef(degree, 0, 0, 1);
-            gl.glScalef(sizeX, sizeY, 1.0f);
+            {
+                gl.glScalef(1.0f / aspect, 1.0f, 1.0f);
+                gl.glRotatef(degree, 0, 0, 1);
+            }
+            gl.glScalef(sizeX * aspect, sizeY, 1.0f);
         }
 
         //! テクスチャ位置を行列で操作する
