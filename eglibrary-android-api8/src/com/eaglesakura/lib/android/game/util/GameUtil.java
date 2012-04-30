@@ -36,10 +36,10 @@ public class GameUtil {
      * @param position
      * @return
      */
-    public static float getAngleDegree(Vector2 center, Vector2 position) {
+    public static float getAngleDegree2D(Vector2 center, Vector2 position) {
         float result = 0;
 
-        Vector2 temp = new Vector2(position.x - center.x, position.y - center.y);
+        Vector2 temp = new Vector2(position.x - center.x, center.y - position.y);
         if (temp.length() == 0) {
             return 0;
         }
