@@ -308,6 +308,19 @@ public class Sprite {
      * @param scaleY
      * @param flags
      */
+    public Sprite setSpritePosition(int x, int y, float scale, int flags) {
+        return setSpritePosition(x, y, scale, scale, flags);
+    }
+
+    /**
+     * 描画位置を設定する。
+     * 
+     * @param x
+     * @param y
+     * @param scaleX
+     * @param scaleY
+     * @param flags
+     */
     public Sprite setSpritePosition(int x, int y, float scaleX, float scaleY, int flags) {
 
         Rect src = getCurrentFrame().area;
