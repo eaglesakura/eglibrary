@@ -288,6 +288,19 @@ public class SpriteManager extends DisposableResource {
     }
 
     /**
+     * 四角形を描画する
+     * @param area
+     * @param colorRGBA
+     */
+    public void fillRect(Rect area, int colorRGBA) {
+        if (area == null) {
+            return;
+        }
+
+        fillRect(area.left, area.top, area.width(), area.height(), colorRGBA);
+    }
+
+    /**
      * 四角形を描画する。
      * 
      * @param x
