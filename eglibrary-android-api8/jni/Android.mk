@@ -15,10 +15,17 @@
 LOCAL_PATH := $(call my-dir)
 
 
-# start so-1
+APP_MODULES := jpeg-8d
+# -------------------------------- start  -------------------------------- 
+include $(CLEAR_VARS)
+LOCAL_MODULE    := jpeg-8d
+LOCAL_SRC_FILES += $(shell find 'src/$(LOCAL_MODULE)/' -name '*.c')
+include $(BUILD_STATIC_LIBRARY)
+# -------------------------------- finish  -------------------------------- 
+
+# start gl11extension
 include $(CLEAR_VARS)
 LOCAL_MODULE    := gl11extension
-# LOCAL_SRC_FILES := src/gl11extension/com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension.c
 LOCAL_SRC_FILES += $(shell find 'src/$(LOCAL_MODULE)/' -name '*.c')
 LOCAL_SRC_FILES += $(shell find 'src/$(LOCAL_MODULE)/' -name '*.cpp')
 LOCAL_LDLIBS += -lGLESv1_CM
