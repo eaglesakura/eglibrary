@@ -20,6 +20,7 @@ class FileInputStream: public InputStream {
 public:
 	FileInputStream(const egl::String fileName);
 	FileInputStream(const charactor* fileName);
+	FileInputStream(FILE* fp);
 	virtual ~FileInputStream();
 
 	virtual u8 read();

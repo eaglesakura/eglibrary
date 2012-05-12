@@ -15,7 +15,7 @@
 
 namespace egl {
 
-struct JpegStream {
+struct JpegStreamSource {
 	jpeg_source_mgr pub; /* public fields */
 
 	/**
@@ -37,9 +37,10 @@ private:
 	/**
 	 * 通常のコンストラクタ
 	 */
-	JpegStream(InputStream *stream, s32 bufferlength);
+	JpegStreamSource(InputStream *stream, s32 bufferlength);
 public:
-	static JpegStream*	initialize( jpeg_decompress_struct *cInfo, InputStream *stream, s32 bufferLength);
+	~JpegStreamSource( );
+	static JpegStreamSource*	initialize( jpeg_decompress_struct *cInfo, InputStream *stream, s32 bufferLength);
 };
 
 }

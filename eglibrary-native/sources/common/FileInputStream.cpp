@@ -17,6 +17,9 @@ FileInputStream::FileInputStream(const egl::String fileName) {
 FileInputStream::FileInputStream(const charactor *fileName) {
 	file = fopen((char*) fileName, "rb");
 }
+FileInputStream::FileInputStream(FILE* fp) {
+	file = fp;
+}
 
 FileInputStream::~FileInputStream() {
 	if (file != NULL) {
