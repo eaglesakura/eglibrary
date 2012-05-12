@@ -8,6 +8,7 @@
 #ifndef EGLIBRARY_H_
 #define EGLIBRARY_H_
 
+#include "stdio.h"
 #include "egllog.h"
 #include "type.h"
 #include "new.h"
