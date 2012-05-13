@@ -34,6 +34,11 @@ public:
 	virtual s32 skip(s32 bytes) = 0;
 };
 
+/**
+ * ManagedPointer
+ */
+typedef egl::SmartPtr<InputStream>	MInputStream;
+
 }
 
 #endif /* INPUTSTREAM_H_ */

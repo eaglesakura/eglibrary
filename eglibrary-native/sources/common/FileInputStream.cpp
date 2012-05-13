@@ -12,13 +12,16 @@ namespace egl {
 
 FileInputStream::FileInputStream(const egl::String fileName) {
 	file = fopen((char*) fileName.toNative(), "rb");
+	setAutoClose(true);
 }
 
 FileInputStream::FileInputStream(const charactor *fileName) {
 	file = fopen((char*) fileName, "rb");
+	setAutoClose(true);
 }
 FileInputStream::FileInputStream(FILE* fp) {
 	file = fp;
+	setAutoClose(false);
 }
 
 FileInputStream::~FileInputStream() {

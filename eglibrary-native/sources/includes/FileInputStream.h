@@ -16,12 +16,26 @@ namespace egl {
 
 class FileInputStream: public InputStream {
 	FILE *file;
-
+	bool autoClose;
 public:
 	FileInputStream(const egl::String fileName);
 	FileInputStream(const charactor* fileName);
 	FileInputStream(FILE* fp);
 	virtual ~FileInputStream();
+
+	/**
+	 * 自動的にfclose()する場合はtrue
+	 */
+	virtual void setAutoClose(bool set) {
+		autoClose = set;
+	}
+
+	/**
+	 * 自動でfclose()する場合はtrue
+	 */
+	virtual bool isAutoClose() {
+		return autoClose;
+	}
 
 	virtual u8 read();
 	virtual s32 read(u8 *result, s32 size);
@@ -31,6 +45,11 @@ public:
 	 */
 	virtual s32 skip(s32 bytes);
 };
+
+/**
+ * Managed
+ */
+typedef egl::SmartPtr<FileInputStream> MFileInputStream;
 
 }
 
