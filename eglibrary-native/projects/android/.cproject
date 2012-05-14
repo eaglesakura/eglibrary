@@ -20,13 +20,13 @@
 					<folderInfo id="0.574140565." name="/" resourcePath="">
 						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.83117451" name="ツールチェーンなし" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
 							<targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.83117451.1596544070" name=""/>
-							<builder id="org.eclipse.cdt.build.core.settings.default.builder.2114067433" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make ビルダー" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
+							<builder command="${ANDROID_NDK_HOME}/ndk-build" id="org.eclipse.cdt.build.core.settings.default.builder.2114067433" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make ビルダー" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.libs.1370078939" name="ライブラリー設定フォルダー" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.2057822354" name="アセンブリー" superClass="org.eclipse.cdt.build.core.settings.holder">
 								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.1838907821" name="インクルード・パス" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${ANDROID_NDK_HOME}/platforms/android-8/arch-arm/usr/include&quot;"/>
 								</option>
-								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1218519664" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1218519664" name="シンボル" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="ANDROID=1"/>
 								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.867362601" languageId="org.eclipse.cdt.core.assembly" languageName="アセンブリー" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
@@ -35,7 +35,7 @@
 								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.470057102" name="インクルード・パス" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${ANDROID_NDK_HOME}/platforms/android-8/arch-arm/usr/include&quot;"/>
 								</option>
-								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.21948769" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.21948769" name="シンボル" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="ANDROID=1"/>
 								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.106695834" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
@@ -44,7 +44,7 @@
 								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.1675520360" name="インクルード・パス" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${ANDROID_NDK_HOME}/platforms/android-8/arch-arm/usr/include&quot;"/>
 								</option>
-								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1237120126" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1237120126" name="シンボル" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="ANDROID=1"/>
 								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1878566682" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
@@ -65,5 +65,7 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="1">
+		<resource resourceType="PROJECT" workspacePath="/eglibrary-android"/>
+	</storageModule>
 </cproject>

@@ -36,7 +36,7 @@ public:
 
 	//!	文字の長さを取得する。
 	s32 length() const {
-		(s32) strlen(str);
+		return (s32) strlen(str);
 	}
 
 	charactor* toCharArray() {
@@ -47,13 +47,6 @@ public:
 	}
 
 #ifdef	ANDROID
-	charactor* toNative() {
-		return (charactor*) str;
-	}
-
-	const charactor* toNative() const {
-		return (const charactor*) str;
-	}
 #endif
 
 	String operator+(const charactor *p) const {
@@ -70,7 +63,7 @@ public:
 
 	//!	pの文字列をコピーした文字列を作成する。
 	static charactor* copy(const charactor* p) {
-		charactor* temp = (charactor*)"";
+		charactor* temp = (charactor*) "";
 		if (!p) {
 			p = temp;
 		}

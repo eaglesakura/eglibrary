@@ -1140,6 +1140,8 @@ read_markers (j_decompress_ptr cinfo)
     /* Successfully processed marker, so reset state variable */
     cinfo->unread_marker = 0;
   } /* end loop */
+
+  return 0;
 }
 
 
@@ -1277,6 +1279,7 @@ jpeg_resync_to_restart (j_decompress_ptr cinfo, int desired)
       return TRUE;
     }
   } /* end loop */
+  return TRUE;
 }
 
 

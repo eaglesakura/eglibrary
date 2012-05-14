@@ -39,8 +39,10 @@ private:
 	 */
 	JpegStreamSource(InputStream *stream, s32 bufferlength);
 public:
-	~JpegStreamSource( );
-	static JpegStreamSource*	initialize( jpeg_decompress_struct *cInfo, InputStream *stream, s32 bufferLength);
+	~JpegStreamSource();
+
+	static JpegStreamSource* initialize(jpeg_decompress_struct *cInfo,
+			InputStream *stream, s32 bufferLength);
 };
 
 }

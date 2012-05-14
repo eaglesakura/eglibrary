@@ -11,7 +11,7 @@
 namespace egl {
 
 FileInputStream::FileInputStream(const egl::String fileName) {
-	file = fopen((char*) fileName.toNative(), "rb");
+	file = fopen((char*) fileName.toCharArray(), "rb");
 	setAutoClose(true);
 }
 

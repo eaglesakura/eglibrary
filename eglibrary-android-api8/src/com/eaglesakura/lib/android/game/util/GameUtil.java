@@ -390,6 +390,39 @@ public class GameUtil {
     }
 
     /**
+     * 
+     * @param str
+     * @return
+     */
+    public static String macStringToWinString(String str) {
+        final int indexOffsetDakuten = ('が' - 'か');
+        final int indexOffsetHandakuten = ('ぱ' - 'は');
+        final int dakuten = '゙';
+        final int handakuten = '゚';
+
+        StringBuffer sb = new StringBuffer(str.length());
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (i < (str.length() - 1)) {
+                char cNext = str.charAt(i + 1);
+                if (cNext == dakuten) {
+                    // 濁点補正を行う
+                    if (c != 'う' && c != 'ウ') {
+                        c += indexOffsetDakuten;
+                    }
+                } else if (cNext == handakuten) {
+                    c += indexOffsetHandakuten;
+                }
+            }
+
+            if (c != dakuten && c != handakuten) {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
      * 日本語を意識してJavaの辞書順に並び替える
      * @param a
      * @param b
@@ -398,8 +431,10 @@ public class GameUtil {
     public static int compareString(String a, String b) {
         a = zenkakuHiraganaToZenkakuKatakana(a.toLowerCase());
         a = zenkakuEngToHankakuEng(a);
+        a = macStringToWinString(a);
         b = zenkakuHiraganaToZenkakuKatakana(b.toLowerCase());
         b = zenkakuEngToHankakuEng(b);
+        b = macStringToWinString(b);
 
         return a.compareTo(b);
     }
