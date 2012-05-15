@@ -431,10 +431,8 @@ public class GameUtil {
     public static int compareString(String a, String b) {
         a = zenkakuHiraganaToZenkakuKatakana(a.toLowerCase());
         a = zenkakuEngToHankakuEng(a);
-        a = macStringToWinString(a);
         b = zenkakuHiraganaToZenkakuKatakana(b.toLowerCase());
         b = zenkakuEngToHankakuEng(b);
-        b = macStringToWinString(b);
 
         return a.compareTo(b);
     }

@@ -15,8 +15,23 @@
 namespace egl {
 
 class FileInputStream: public InputStream {
+
+	/**
+	 * 読み取り可能な残りサイズ
+	 */
+	s32 size;
+
+	/**
+	 * 読み取り対象のファイルポインタ
+	 */
 	FILE *file;
+
+	/**
+	 * 自動でファイルをcloseする場合はtrue
+	 */
 	bool autoClose;
+
+	void init();
 public:
 	FileInputStream(const egl::String fileName);
 	FileInputStream(const charactor* fileName);
@@ -37,13 +52,19 @@ public:
 		return autoClose;
 	}
 
-	virtual u8 read();
 	virtual s32 read(u8 *result, s32 size);
 
 	/**
 	 * 指定バイト数読み取りヘッダを飛ばす
 	 */
 	virtual s32 skip(s32 bytes);
+
+	/**
+	 * 読み取り可能な残容量を取得する。
+	 */
+	virtual s32 available() const {
+		return size;
+	}
 };
 
 /**

@@ -221,4 +221,14 @@ public class FileUtil {
         return files;
     }
 
+    /**
+     * 比較等の処理を行うために文字列を正規化する
+     * @param origin
+     * @return
+     */
+    public static String normalizeFileName(String origin) {
+        origin = GameUtil.zenkakuEngToHankakuEng(origin);
+        origin = GameUtil.macStringToWinString(origin);
+        return origin;
+    }
 }

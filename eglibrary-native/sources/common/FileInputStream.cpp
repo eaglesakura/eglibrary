@@ -25,18 +25,24 @@ FileInputStream::FileInputStream(FILE* fp) {
 }
 
 FileInputStream::~FileInputStream() {
-	if (file != NULL) {
+	if (file != NULL && isAutoClose() ) {
 		fclose(file);
 		file = NULL;
 	}
 }
 
-u8 FileInputStream::read() {
-	u8 result = 0;
-	if (read(&result, 1) == 1) {
-		return result;
-	}
-	return -1;
+void FileInputStream::init() {
+	fpos_t current = 0;
+	// 現在位置を保存
+	fgetpos(file, &current);
+
+	// ファイルの最後まで移動して位置を保存
+	fseek(file, 0, SEEK_END);
+	fpos_t size = 0;
+	fgetpos(file, &size);
+
+	// 現在位置から全体サイズを引いたら残量
+	this->size = (size - current);
 }
 
 s32 FileInputStream::read(u8 *result, s32 size) {
@@ -44,6 +50,7 @@ s32 FileInputStream::read(u8 *result, s32 size) {
 }
 
 s32 FileInputStream::skip(s32 bytes) {
+	bytes = egl::min(size, bytes);
 	return fseek(file, bytes, SEEK_CUR);
 }
 

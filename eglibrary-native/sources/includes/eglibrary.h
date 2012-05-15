@@ -9,6 +9,8 @@
 #define EGLIBRARY_H_
 
 #include "stdio.h"
+#include "math.h"
+#include "eglmath.h"
 #include "egllog.h"
 #include "type.h"
 #include "new.h"
