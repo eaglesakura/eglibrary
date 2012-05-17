@@ -406,9 +406,17 @@ public class GameUtil {
             if (i < (str.length() - 1)) {
                 char cNext = str.charAt(i + 1);
                 if (cNext == dakuten) {
-                    // 濁点補正を行う
-                    if (c != 'う' && c != 'ウ') {
-                        c += indexOffsetDakuten;
+                    // 特殊な濁点補正
+                    switch (c) {
+                        case 'う':
+                            c = 'ゔ';
+                            break;
+                        case 'ウ':
+                            c = 'ヴ';
+                            break;
+                        default:
+                            c += indexOffsetDakuten;
+                            break;
                     }
                 } else if (cNext == handakuten) {
                     c += indexOffsetHandakuten;
