@@ -19,6 +19,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 
 import com.eaglesakura.lib.android.game.math.Vector2;
@@ -292,5 +293,14 @@ public class ContextUtil {
      */
     public static boolean isHandlerThread(Handler handler) {
         return Thread.currentThread().equals(handler.getLooper().getThread());
+    }
+
+    /**
+     * 戻るキーの
+     * @param event
+     * @return
+     */
+    public static boolean isBackKeyEvent(KeyEvent event) {
+        return event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK;
     }
 }
