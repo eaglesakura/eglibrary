@@ -13,15 +13,13 @@
 #include "jpeglib.h"
 #include "jerror.h"
 
-namespace egl {
-
-struct JpegStreamSource {
+struct JCJpegStreamSource {
 	jpeg_source_mgr pub; /* public fields */
 
 	/**
 	 * 読み込みストリーム
 	 */
-	InputStream *stream;
+	JCInputStream *stream;
 
 	/**
 	 * 保持するバッファの長さ
@@ -31,20 +29,17 @@ struct JpegStreamSource {
 	/**
 	 * 一時的に保持しておくバッファ
 	 */
-	egl::SmartArray<u8> buffer;
+	JCSmartArray<u8> buffer;
 
 private:
 	/**
 	 * 通常のコンストラクタ
 	 */
-	JpegStreamSource(InputStream *stream, s32 bufferlength);
+	JCJpegStreamSource(JCInputStream *stream, s32 bufferlength);
 public:
-	~JpegStreamSource();
+	~JCJpegStreamSource();
 
-	static JpegStreamSource* initialize(jpeg_decompress_struct *cInfo,
-			InputStream *stream, s32 bufferLength);
+	static JCJpegStreamSource* initialize(jpeg_decompress_struct *cInfo,
+			JCInputStream *stream, s32 bufferLength);
 };
-
-}
-
 #endif /* JPEGSTREAMSOURCE_H_ */

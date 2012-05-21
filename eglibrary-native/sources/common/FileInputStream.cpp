@@ -8,30 +8,28 @@
 #include "eglibrary.h"
 #include "FileInputStream.h"
 
-namespace egl {
-
-FileInputStream::FileInputStream(const egl::String fileName) {
+JCFileInputStream::JCFileInputStream(const JCString fileName) {
 	file = fopen((char*) fileName.toCharArray(), "rb");
 	setAutoClose(true);
 }
 
-FileInputStream::FileInputStream(const charactor *fileName) {
+JCFileInputStream::JCFileInputStream(const charactor *fileName) {
 	file = fopen((char*) fileName, "rb");
 	setAutoClose(true);
 }
-FileInputStream::FileInputStream(FILE* fp) {
+JCFileInputStream::JCFileInputStream(FILE* fp) {
 	file = fp;
 	setAutoClose(false);
 }
 
-FileInputStream::~FileInputStream() {
-	if (file != NULL && isAutoClose() ) {
+JCFileInputStream::~JCFileInputStream() {
+	if (file != NULL && isAutoClose()) {
 		fclose(file);
 		file = NULL;
 	}
 }
 
-void FileInputStream::init() {
+void JCFileInputStream::init() {
 	fpos_t current = 0;
 	// 現在位置を保存
 	fgetpos(file, &current);
@@ -45,13 +43,11 @@ void FileInputStream::init() {
 	this->size = (size - current);
 }
 
-s32 FileInputStream::read(u8 *result, s32 size) {
+s32 JCFileInputStream::read(u8 *result, s32 size) {
 	return fread(result, 1, size, file);
 }
 
-s32 FileInputStream::skip(s32 bytes) {
+s32 JCFileInputStream::skip(s32 bytes) {
 	bytes = egl::min(size, bytes);
 	return fseek(file, bytes, SEEK_CUR);
-}
-
 }

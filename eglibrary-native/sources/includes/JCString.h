@@ -8,30 +8,26 @@
 #ifndef STRING_H_
 #define STRING_H_
 
-#include "string.h"
-
-namespace egl {
-
-class String {
-	SmartArray<charactor> str; //!<	文字配列
+class JCString {
+	JCSmartArray<charactor> str; //!<	文字配列
 public:
-	String(const charactor* p = NULL) {
+	JCString(const charactor* p = NULL) {
 		str = copy(p);
 	}
 
 	//!	コピーコンストラクタ。
-	String(const String &cpy) {
+	JCString(const JCString &cpy) {
 		str = cpy.str;
 	}
 	//!	文字結合。
-	String(const charactor *a, const charactor *b) {
+	JCString(const charactor *a, const charactor *b) {
 		str = new charactor[1 + strlen((char*) a) + strlen((char*) b)];
 
 		strcat(str, (char*) a);
 		strcat(str, (char*) b);
 	}
 
-	~String() {
+	~JCString() {
 	}
 
 	//!	文字の長さを取得する。
@@ -49,8 +45,8 @@ public:
 #ifdef	ANDROID
 #endif
 
-	String operator+(const charactor *p) const {
-		return String(str.getPtr(), p);
+	JCString operator+(const charactor *p) const {
+		return JCString(str.getPtr(), p);
 	}
 
 	bool operator==(const charactor* p) const {
@@ -72,7 +68,20 @@ public:
 		strcpy(ret, p);
 		return ret;
 	}
+
+	/**
+	 * pの文字列を指定範囲だけコピーして渡す
+	 */
+	static charactor* copy(const charactor* p, s32 start, s32 length) {
+		charactor* temp = (charactor*) "";
+		if (!p) {
+			p = temp;
+			temp += start;
+		}
+		charactor* ret = new charactor[length];
+		strncpy(ret, p, length);
+		return ret;
+	}
 };
 
-}
 #endif /* STRING_H_ */

@@ -12,9 +12,7 @@
 #include "stdio.h"
 #include "InputStream.h"
 
-namespace egl {
-
-class FileInputStream: public InputStream {
+class JCFileInputStream: public JCInputStream {
 
 	/**
 	 * 読み取り可能な残りサイズ
@@ -33,10 +31,10 @@ class FileInputStream: public InputStream {
 
 	void init();
 public:
-	FileInputStream(const egl::String fileName);
-	FileInputStream(const charactor* fileName);
-	FileInputStream(FILE* fp);
-	virtual ~FileInputStream();
+	JCFileInputStream(const JCString fileName);
+	JCFileInputStream(const charactor* fileName);
+	JCFileInputStream(FILE* fp);
+	virtual ~JCFileInputStream();
 
 	/**
 	 * 自動的にfclose()する場合はtrue
@@ -70,8 +68,6 @@ public:
 /**
  * Managed
  */
-typedef egl::SmartPtr<FileInputStream> MFileInputStream;
-
-}
+typedef JCSmartPtr<JCFileInputStream> MFileInputStream;
 
 #endif /* FILEINPUTSTREAM_H_ */

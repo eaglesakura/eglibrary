@@ -8,11 +8,9 @@
 #ifndef INPUTSTREAM_H_
 #define INPUTSTREAM_H_
 
-namespace egl {
-
-class InputStream {
+class JCInputStream {
 public:
-	virtual ~InputStream() {
+	virtual ~JCInputStream() {
 
 	}
 
@@ -48,8 +46,6 @@ public:
 /**
  * ManagedPointer
  */
-typedef egl::SmartPtr<InputStream> MInputStream;
-
-}
+typedef JCSmartPtr<JCInputStream> MInputStream;
 
 #endif /* INPUTSTREAM_H_ */

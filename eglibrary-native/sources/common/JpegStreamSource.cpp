@@ -13,7 +13,7 @@ void init_source(jpeg_decompress_struct *cInfo) {
 
 boolean fill_input_buffer(j_decompress_ptr cinfo) {
 
-	egl::JpegStreamSource *jStream = (egl::JpegStreamSource*) cinfo->src;
+	JCJpegStreamSource *jStream = (JCJpegStreamSource*) cinfo->src;
 	size_t nbytes;
 
 	nbytes = jStream->stream->read((u8*) jStream->buffer,
@@ -56,20 +56,20 @@ void skip_input_data(j_decompress_ptr cinfo, long num_bytes) {
 }
 
 void term_source(j_decompress_ptr cinfo) {
-	egl::JpegStreamSource *jStream = (egl::JpegStreamSource*) cinfo->src;
+	JCJpegStreamSource *jStream = (JCJpegStreamSource*) cinfo->src;
 	SAFE_DELETE(jStream);
 }
 
 void init(jpeg_decompress_struct *cInfo) {
-	egl::JpegStreamSource *jStream = NULL;
+	JCJpegStreamSource *jStream = NULL;
 
 }
-namespace egl {
 
 /**
  * 通常のコンストラクタ
  */
-JpegStreamSource::JpegStreamSource(InputStream *stream, s32 bufferLength) {
+JCJpegStreamSource::JCJpegStreamSource(JCInputStream *stream,
+		s32 bufferLength) {
 	this->stream = stream;
 	this->bufferLength = bufferLength;
 	this->buffer = new u8[bufferLength];
@@ -85,17 +85,16 @@ JpegStreamSource::JpegStreamSource(InputStream *stream, s32 bufferLength) {
 	pub.term_source = term_source;
 }
 
-JpegStreamSource* JpegStreamSource::initialize(jpeg_decompress_struct *cInfo,
-		InputStream *stream, s32 bufferLength) {
-	JpegStreamSource *result = new JpegStreamSource(stream, bufferLength);
+JCJpegStreamSource* JCJpegStreamSource::initialize(
+		jpeg_decompress_struct *cInfo, JCInputStream *stream,
+		s32 bufferLength) {
+	JCJpegStreamSource *result = new JCJpegStreamSource(stream, bufferLength);
 	cInfo->src = (jpeg_source_mgr*) result;
 	return result;
 }
 
-JpegStreamSource::~JpegStreamSource() {
+JCJpegStreamSource::~JCJpegStreamSource() {
 	buffer = NULL;
 	log("delete stream source");
-}
-
 }
 

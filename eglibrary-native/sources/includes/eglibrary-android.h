@@ -15,4 +15,7 @@
 	#define ANDROID 1
 #endif
 #include "eglibrary.h"
+
+// include jni file
+#include	"jni.h"
 #endif /* EGLIBRARY_ANDROID_H_ */

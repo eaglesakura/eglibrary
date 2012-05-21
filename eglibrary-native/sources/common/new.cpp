@@ -7,8 +7,6 @@
 #include "eglibrary.h"
 #include "string.h"
 
-namespace egl {
-
 /**
  * メモリを実際に保存する構造体
  */
@@ -21,7 +19,7 @@ struct sMemory {
 sMemory* getHeader(void* ptr, bool *isArray);
 sMemory* getHeader(void* ptr);
 
-void* Memory::alloc(const size_t size) {
+void* JCMemory::alloc(const size_t size) {
 	//! 合計容量に追加
 	sumAllocSize += size;
 	sMemory* mem = (sMemory*) malloc(size + sizeof(sMemory));
@@ -34,13 +32,13 @@ void* Memory::alloc(const size_t size) {
 	return (void*) (mem + 1);
 }
 
-sMemory* getHeader(void* ptr, bool *isArray) {
+ sMemory* getHeader(void* ptr, bool *isArray) {
 	sMemory *ret = (sMemory*) ptr;
 	--ret;
 
 	//!	配列の可能性
 	if (ret->reserve != ptr) {
-		ret = (sMemory*) Memory::offsetPtr(ptr, -(s32) sizeof(s32));
+		ret = (sMemory*) JCMemory::offsetPtr(ptr, -(s32) sizeof(s32));
 		--ret;
 
 		(*isArray) = true;
@@ -51,20 +49,20 @@ sMemory* getHeader(void* ptr, bool *isArray) {
 	return ret;
 }
 
-sMemory* getHeader(void* ptr) {
+ sMemory* getHeader(void* ptr) {
 	sMemory *ret = (sMemory*) ptr;
 	--ret;
 
 	//!	配列の可能性
 	if (ret->reserve != ptr) {
-		ret = (sMemory*) Memory::offsetPtr(ptr, -(s32) sizeof(s32));
+		ret = (sMemory*) JCMemory::offsetPtr(ptr, -(s32) sizeof(s32));
 		--ret;
 	}
 
 	return ret;
 }
 
-void Memory::free(void* ptr) {
+void JCMemory::free(void* ptr) {
 	if (!ptr) {
 		return;
 	}
@@ -73,7 +71,7 @@ void Memory::free(void* ptr) {
 	::free(mem);
 }
 
-size_t Memory::getSize(void* ptr) {
+size_t JCMemory::getSize(void* ptr) {
 	bool isArray = false;
 	sMemory* mem = getHeader(ptr, &isArray);
 
@@ -84,49 +82,46 @@ size_t Memory::getSize(void* ptr) {
 	}
 }
 
-void Memory::addRef(void* ptr) {
+void JCMemory::addRef(void* ptr) {
 	sMemory* mem = getHeader(ptr);
 	++mem->ref;
 }
 
-s32 Memory::release(void* ptr) {
+s32 JCMemory::release(void* ptr) {
 	sMemory* mem = getHeader(ptr);
 	--mem->ref;
 	s32 ret = mem->ref;
 	return ret;
 }
 
-size_t Memory::sumAllocSize = 0;
-size_t Memory::sumFreeSize = 0;
+size_t JCMemory::sumAllocSize = 0;
+size_t JCMemory::sumFreeSize = 0;
 
-size_t Memory::getSumFreeSize() {
+size_t JCMemory::getSumFreeSize() {
 	return sumFreeSize;
 }
 
-size_t Memory::getSumAllocSize() {
+size_t JCMemory::getSumAllocSize() {
 	return sumAllocSize;
 }
 
-size_t Memory::getExistsSize() {
+size_t JCMemory::getExistsSize() {
 	return sumAllocSize - sumFreeSize;
 }
 
-// end egl
-}
-
 void* operator new(const size_t size) {
-	return egl::Memory::alloc(size);
+	return JCMemory::alloc(size);
 }
 
 void* operator new[](const size_t size) {
-	void* ptr = egl::Memory::alloc(size);
+	void* ptr = JCMemory::alloc(size);
 	return ptr;
 }
 
 void operator delete(void* ptr) {
-	egl::Memory::free(ptr);
+	JCMemory::free(ptr);
 }
 
 void operator delete[](void* ptr) {
-	egl::Memory::free(ptr);
+	JCMemory::free(ptr);
 }

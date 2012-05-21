@@ -22,9 +22,10 @@ extern void* operator new[](const size_t size);
 extern void operator delete(void* ptr);
 extern void operator delete[](void* ptr);
 
-//!	メモリ管理を行う。
-namespace egl {
-class Memory {
+/**
+ * alloc/free系の処理を実装したクラス
+ */
+class JCMemory {
 public:
 	//!	指定サイズ分のメモリを確保する。
 	static void* alloc(const size_t size);
@@ -55,6 +56,4 @@ private:
 	//! 開放した合計メモリサイズ
 	static size_t sumFreeSize;
 };
-}
-
 #endif /* NEW_H_ */

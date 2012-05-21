@@ -8,16 +8,14 @@
 #ifndef SMARTARRAY_H_
 #define SMARTARRAY_H_
 
-namespace egl {
-
 template<typename T>
-class SmartArray {
+class JCSmartArray {
 	T* ptr;
 	//!	ポインタを入れ替える
 	void setPtr(T* p) {
 		//!	参照を追加する
 		if (p) {
-			Memory::addRef(p);
+			JCMemory::addRef(p);
 		}
 
 		//!	参照カウントを減らす
@@ -31,23 +29,23 @@ class SmartArray {
 		//!	ポインタが設定済み
 		if (ptr) {
 			//!	リリースし、参照が下回った時点で消去
-			if (Memory::release(ptr) <= 0) {
+			if (JCMemory::release(ptr) <= 0) {
 				SAFE_DELETE_ARRAY(ptr);
 			}
 		}
 	}
 public:
 	//!
-	SmartArray(T *p = NULL) {
+	JCSmartArray(T *p = NULL) {
 		ptr = NULL;
 		setPtr(p);
 	}
-	SmartArray(const SmartArray<T> &cpy) {
+	JCSmartArray(const JCSmartArray<T> &cpy) {
 		ptr = NULL;
 		setPtr((T*) cpy.ptr);
 	}
 	//!	デストラクタ
-	~SmartArray() {
+	~JCSmartArray() {
 		//!	参照カウントを減らす
 		releasePtr();
 	}
@@ -73,17 +71,17 @@ public:
 	const T* getPtr() const {
 		return ptr;
 	}
-	SmartArray<T>& operator=(const T* p) {
+	JCSmartArray<T>& operator=(const T* p) {
 		setPtr((T*) p);
 		return (*this);
 	}
-	SmartArray<T>& operator=(const SmartArray<T>& p) {
+	JCSmartArray<T>& operator=(const JCSmartArray<T>& p) {
 		setPtr((T*) p.ptr);
 		return (*this);
 	}
 
 	size_t length() const {
-		return ptr ? (Memory::getSize(ptr) / sizeof(T)) : 0;
+		return ptr ? (JCMemory::getSize(ptr) / sizeof(T)) : 0;
 	}
 	bool operator==(const T* p) const {
 		return ptr == p;
@@ -93,5 +91,4 @@ public:
 	}
 };
 
-}
 #endif /* SMARTARRAY_H_ */

@@ -55,19 +55,72 @@ public class TextKeyValueStore {
      */
     static final String DB_VALUE = "_value";
 
-    public TextKeyValueStore(File dbFile, Context context, String tableName) {
+    /**
+     * テーブル削除用のSQL
+     */
+    String DELETE_TBL_SQL;
+
+    /**
+     * テーブル作成用のSQL
+     */
+    String CREATE_TBL_SQL;
+
+    /**
+     * データベースの開き方を指定
+     */
+    DBType type;
+
+    public enum DBType {
+        /**
+         * 読み書きを行う
+         */
+        ReadWrite {
+            @Override
+            SQLiteDatabase open(TextKeyValueStore kvs) {
+                return kvs.helper.getWritableDatabase();
+            }
+        },
+        /**
+         * 書き込み専用
+         */
+        Write {
+            @Override
+            SQLiteDatabase open(TextKeyValueStore kvs) {
+                return kvs.helper.getWritableDatabase();
+            }
+        },
+
+        /**
+         * 読み込み専用
+         */
+        Read {
+            @Override
+            SQLiteDatabase open(TextKeyValueStore kvs) {
+                return kvs.helper.getReadableDatabase();
+            }
+        };
+
+        abstract SQLiteDatabase open(TextKeyValueStore kvs);
+    }
+
+    public TextKeyValueStore(File dbFile, Context context, String tableName, DBType type) {
         this.context = context;
         this.dbFile = dbFile;
         this.tableName = tableName;
 
         this.helper = new Helper();
+
+        this.type = type;
+
+        DELETE_TBL_SQL = "drop table if exists " + tableName;
+        CREATE_TBL_SQL = "create table " + tableName + " (" + DB_KEY + " text primary key, " + DB_VALUE + " text)";
+        db = type.open(this);
     }
 
     /**
      * 書き込みの準備を行う
      */
-    public void beginWrite() {
-        db = helper.getWritableDatabase();
+    public void beginTransaction() {
         db.beginTransaction();
     }
 
@@ -77,36 +130,57 @@ public class TextKeyValueStore {
      * @param key
      * @param value
      */
-    public void insertOrCreate(String key, String value) {
+    public void insertOrUpdate(String key, String value) {
         ContentValues values = new ContentValues();
         values.put(DB_KEY, key);
         values.put(DB_VALUE, value);
         try {
             db.insertOrThrow(tableName, null, values);
         } catch (Exception e) {
-            db.delete(tableName, DB_KEY + "='" + key + "'", null);
+            remove(key);
             db.insert(tableName, null, values);
+        }
+    }
+
+    /**
+     * DBに値を新規登録する。
+     * 失敗した場合は何も行わない。
+     * @param key
+     */
+    public void insert(String key, String value) {
+        ContentValues values = new ContentValues();
+        values.put(DB_KEY, key);
+        values.put(DB_VALUE, value);
+        try {
+            db.insert(tableName, null, values);
+        } catch (Exception e) {
+
+        }
+    }
+
+    /**
+     * DBに書き込み済みの値を削除する
+     * @param key
+     */
+    public void remove(String key) {
+        try {
+            db.delete(tableName, DB_KEY + "='" + key + "'", null);
+        } catch (Exception e) {
+
         }
     }
 
     /**
      * 書き込みの完了を行う
      */
-    public void endWrite() {
+    public void endTransaction() {
         try {
             db.setTransactionSuccessful();
+        } catch (Exception e) {
+
         } finally {
             db.endTransaction();
-            db.close();
-            db = null;
         }
-    }
-
-    /**
-     * 読み込み準備を行う
-     */
-    public void beginRead() {
-        db = helper.getReadableDatabase();
     }
 
     /**
@@ -130,13 +204,13 @@ public class TextKeyValueStore {
      * @return
      */
     public String getOrNull(String key) {
-        String selection = DB_KEY + "='" + key + "'";
-        Cursor cursor = db.query(tableName, new String[] {
-            DB_VALUE
-        }, selection, null, null, null, null);
-
-        cursor.moveToFirst();
         try {
+            String selection = DB_KEY + "='" + key + "'";
+            Cursor cursor = db.query(tableName, new String[] {
+                DB_VALUE
+            }, selection, null, null, null, null);
+
+            cursor.moveToFirst();
             return cursor.getString(0);
         } catch (Exception e) {
             return null;
@@ -144,11 +218,11 @@ public class TextKeyValueStore {
     }
 
     /**
-     * 読み込みを終了する
+     * テーブルの内容を破棄する
      */
-    public void endRead() {
-        db.close();
-        db = null;
+    public void dropTable() {
+        db.execSQL(DELETE_TBL_SQL);
+        db.execSQL(CREATE_TBL_SQL);
     }
 
     class Helper extends SQLiteOpenHelper {
@@ -158,12 +232,13 @@ public class TextKeyValueStore {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("create table " + tableName + " (" + DB_KEY + " text primary key, " + DB_VALUE + " text)");
+            db.execSQL(CREATE_TBL_SQL);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+            db.execSQL(DELETE_TBL_SQL);
+            db.execSQL(CREATE_TBL_SQL);
         }
     }
 }

@@ -9,17 +9,11 @@
 #define JAVAJOINTINPUTSTREAM_H_
 
 #include "eglibrary-android.h"
-#include	"jni.h"
 
 /**
  * Java部分との接続を行うInputStream
  */
-class JavaJointInputStream {
-	/**
-	 * テンポラリのサイズ
-	 */
-	static const s32	BUFFER_LENGTH = 1024 * 64;
-
+class JCaJavaJointInputStream {
 	/**
 	 * JNI接続
 	 */
@@ -40,6 +34,8 @@ class JavaJointInputStream {
 	 */
 	jbyteArray tempBuffer;
 public:
+	JCaJavaJointInputStream(JNIEnv *env, jobject inputstream);
+	virtual ~JCaJavaJointInputStream();
 };
 
 #endif /* JAVAJOINTINPUTSTREAM_H_ */

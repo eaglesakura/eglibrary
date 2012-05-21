@@ -8,17 +8,15 @@
 #ifndef SMARTPTR_H_
 #define SMARTPTR_H_
 
-namespace egl {
-
 //!	参照カウントの自動制御。
 template<typename T>
-class SmartPtr {
+class JCSmartPtr {
 	T* ptr;
 	//!	ポインタを入れ替える
 	void setPtr(T* p) {
 		//!	参照を追加する
 		if (p) {
-			Memory::addRef(p);
+			JCMemory::addRef(p);
 		}
 
 		//!	参照カウントを減らす
@@ -32,22 +30,22 @@ class SmartPtr {
 		//!	ポインタが設定済み
 		if (ptr) {
 			//!	リリースし、参照が下回った時点で消去
-			if (Memory::release(ptr) <= 0) {
+			if (JCMemory::release(ptr) <= 0) {
 				SAFE_DELETE(ptr);
 			}
 		}
 	}
 public:
-	SmartPtr(T *p = NULL) {
+	JCSmartPtr(T *p = NULL) {
 		ptr = NULL;
 		setPtr(p);
 	}
-	SmartPtr(const SmartPtr<T> &cpy) {
+	JCSmartPtr(const JCSmartPtr<T> &cpy) {
 		ptr = NULL;
 		setPtr((T*) cpy.ptr);
 	}
 	//!	デストラクタ
-	~SmartPtr() {
+	~JCSmartPtr() {
 		//!	参照カウントを減らす
 		releasePtr();
 	}
@@ -66,7 +64,7 @@ public:
 		return ptr;
 	}
 
-	SmartPtr<T>& operator=(const T* p) {
+	JCSmartPtr<T>& operator=(const T* p) {
 		setPtr((T*) p);
 		return (*this);
 	}
@@ -78,7 +76,4 @@ public:
 		return ptr != p;
 	}
 };
-
-}
-
 #endif /* SMARTPTR_H_ */
