@@ -20,6 +20,7 @@ import com.google.api.client.googleapis.GoogleTransport;
 import com.google.api.client.googleapis.GoogleUrl;
 import com.google.api.client.googleapis.auth.clientlogin.ClientLogin;
 import com.google.api.client.googleapis.auth.clientlogin.ClientLogin.Response;
+import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
@@ -104,7 +105,7 @@ public class GoogleDocsEntries {
      */
     public void getNextPage() throws DocsAPIException {
         if (hasNextResult()) {
-            accessURL(nextURL);
+            accessURL(nextURL, "GET");
         }
     }
 
@@ -114,7 +115,7 @@ public class GoogleDocsEntries {
      * @return
      * @throws IOException
      */
-    public byte[] getResult(String _url) throws DocsAPIException {
+    public byte[] getResult(String _url, String method) throws DocsAPIException {
         HttpTransport transport = GoogleTransport.create();
         GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
         headers.setApplicationName(applicationName);
@@ -132,10 +133,19 @@ public class GoogleDocsEntries {
         transport.addParser(parser);
 
         {
-            HttpRequest request = transport.buildGetRequest();
+            HttpRequest request = null;
+
+            method = method.toUpperCase();
+            if ("DELETE".equals(method)) {
+                request = transport.buildDeleteRequest();
+                request.headers.put("If-Match", "*");
+            } else {
+                request = transport.buildGetRequest();
+            }
             final String url = _url;
             LogUtil.log("search url : " + url);
-            request.url = new GoogleUrl(url);
+            //            request.url = new GoogleUrl(url);
+            request.url = new GenericUrl(url);
             HttpResponse responce = null;
             try {
                 responce = request.execute();
@@ -159,7 +169,7 @@ public class GoogleDocsEntries {
      * @param keyword 検索ワード。nullですべて取得。
      * @throws IOException
      */
-    public void accessURL(String _url) throws DocsAPIException {
+    public void accessURL(String _url, String method) throws DocsAPIException {
         HttpTransport transport = GoogleTransport.create();
         GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
         headers.setApplicationName(applicationName);
@@ -177,7 +187,17 @@ public class GoogleDocsEntries {
         transport.addParser(parser);
 
         try {
-            HttpRequest request = transport.buildGetRequest();
+            HttpRequest request = null;
+
+            method = method.toUpperCase();
+            if ("DELETE".equals(method)) {
+                request = transport.buildDeleteRequest();
+                request.headers.put("If-Match", "*");
+
+            } else {
+                request = transport.buildGetRequest();
+            }
+
             if (_url.startsWith("?")) {
                 _url = "https://docs.google.com/feeds/default/private/full" + _url;
             }
@@ -251,7 +271,7 @@ public class GoogleDocsEntries {
             }
             LogUtil.log("search url : " + url);
 
-            accessURL(url);
+            accessURL(url, "GET");
         } catch (UnsupportedEncodingException uee) {
             throw new DocsAPIException(Type.Unknown, uee);
         }
@@ -281,7 +301,7 @@ public class GoogleDocsEntries {
     public Directory getDocsDirectory() throws DocsAPIException {
 
         //! まずはデータを取得する。
-        accessURL("https://docs.google.com/feeds/default/private/full/-/folder");
+        accessURL("https://docs.google.com/feeds/default/private/full/-/folder", "GET");
         while (hasNextResult()) {
             getNextPage();
         }
@@ -491,6 +511,14 @@ public class GoogleDocsEntries {
         public Directory getDirectory() {
             return directory;
         }
+
+        /**
+         * このエントリを削除する。
+         */
+        public void delete() throws DocsAPIException {
+            String url = "https://docs.google.com/feeds/default/private/full/" + URLEncoder.encode(getResourceId());
+            getResult(url, "DELETE");
+        }
     }
 
     /**
@@ -551,6 +579,9 @@ public class GoogleDocsEntries {
 
         @Key("gd:resourceId")
         public String resourceId;
+
+        @Key("gd:revisionId")
+        public String revisionId;
     }
 
     /**
@@ -558,7 +589,7 @@ public class GoogleDocsEntries {
      * @author SAKURA
      *
      */
-    public static class Directory {
+    public class Directory {
         /**
          * フォルダ名
          */
