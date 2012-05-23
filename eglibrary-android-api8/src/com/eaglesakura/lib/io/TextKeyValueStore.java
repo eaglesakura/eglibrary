@@ -316,9 +316,10 @@ public class TextKeyValueStore extends DisposableResource {
     }
 
     public void print() {
+        String selection = null;
         Cursor cursor = db.query(tableName, new String[] {
                 DB_KEY, DB_VALUE
-        }, null, null, null, null, null);
+        }, selection, null, null, null, null);
 
         cursor.moveToFirst();
         do {

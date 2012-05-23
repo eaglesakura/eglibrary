@@ -176,6 +176,15 @@ public class FileUtil {
     }
 
     /**
+     * ファイルパスからSHA1を得る。
+     * @param file
+     * @return
+     */
+    public static String genPathSHA1(final File file) {
+        return GameUtil.genSHA1(file.getAbsolutePath().getBytes());
+    }
+
+    /**
      * カレントディレクトリのパスを取得する。
      *
      * 

@@ -57,6 +57,8 @@ public class GoogleDocsDownloader {
     long rangeStart = -1;
     long rangeLength = -1;
 
+    boolean canceled = false;
+
     public GoogleDocsDownloader(String token) {
         this.token = token;
     }
@@ -135,6 +137,9 @@ public class GoogleDocsDownloader {
         try {
             return downRequest.execute();
         } catch (HttpResponseException re) {
+            if (canceled) {
+                return null;
+            }
 
             if (re.response != null) {
                 switch (re.response.statusCode) {
@@ -145,6 +150,7 @@ public class GoogleDocsDownloader {
 
                 //! リダイレクト命令
                 if (re.response.headers != null && re.response.headers.get("Location") != null) {
+                    HttpTransport.setLowLevelHttpTransport(null);
                     try {
                         if (re.response.getContent() != null) {
                             LogUtil.log("close!");
@@ -226,6 +232,10 @@ public class GoogleDocsDownloader {
         } else {
             return false;
         }
+    }
+
+    public void setCanceled(boolean canceled) {
+        this.canceled = canceled;
     }
 
     /**
