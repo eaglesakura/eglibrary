@@ -91,6 +91,7 @@ public class TextKeyValueStore extends DisposableResource {
         CREATE_TBL_SQL = "create table if not exists " + tableName + " (" + DB_KEY + " text primary key, " + DB_VALUE
                 + " text, " + DB_DATE + " integer )";
         db = type.open(helper);
+        createTable();
     }
 
     /**
@@ -172,14 +173,21 @@ public class TextKeyValueStore extends DisposableResource {
      * @return
      */
     public Data get(String key) {
+        Cursor cursor = null;
         try {
             String selection = DB_KEY + "='" + key + "'";
-            Cursor cursor = db.query(tableName, cursorDatas, selection, null, null, null, null);
+            cursor = db.query(tableName, cursorDatas, selection, null, null, null, null);
 
             if (cursor.moveToFirst()) {
                 return new Data(cursor);
             }
+
+            cursor.close();
         } catch (Exception e) {
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
         return null;
     }
@@ -189,9 +197,10 @@ public class TextKeyValueStore extends DisposableResource {
      * @return
      */
     public List<Data> list() {
+        Cursor cursor = null;
         List<Data> result = new ArrayList<TextKeyValueStore.Data>();
         try {
-            Cursor cursor = db.query(tableName, cursorDatas, null, null, null, null, null);
+            cursor = db.query(tableName, cursorDatas, null, null, null, null, null);
 
             if (cursor.moveToFirst()) {
                 do {
@@ -200,6 +209,10 @@ public class TextKeyValueStore extends DisposableResource {
             }
         } catch (Exception e) {
 
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
         return result;
     }
@@ -210,10 +223,11 @@ public class TextKeyValueStore extends DisposableResource {
      * @return
      */
     public List<Data> listValues(String value) {
+        Cursor cursor = null;
         List<Data> result = new ArrayList<TextKeyValueStore.Data>();
         try {
             String selection = DB_VALUE + "='" + value + "'";
-            Cursor cursor = db.query(tableName, cursorDatas, selection, null, null, null, null);
+            cursor = db.query(tableName, cursorDatas, selection, null, null, null, null);
 
             if (cursor.moveToFirst()) {
                 do {
@@ -222,6 +236,10 @@ public class TextKeyValueStore extends DisposableResource {
             }
         } catch (Exception e) {
 
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
         return result;
     }
@@ -247,9 +265,10 @@ public class TextKeyValueStore extends DisposableResource {
      * @return
      */
     public String getOrNull(String key) {
+        Cursor cursor = null;
         try {
             String selection = DB_KEY + "='" + key + "'";
-            Cursor cursor = db.query(tableName, new String[] {
+            cursor = db.query(tableName, new String[] {
                 DB_VALUE
             }, selection, null, null, null, null);
 
@@ -257,6 +276,10 @@ public class TextKeyValueStore extends DisposableResource {
             return cursor.getString(0);
         } catch (Exception e) {
             return null;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
     }
 
@@ -306,18 +329,26 @@ public class TextKeyValueStore extends DisposableResource {
         Cursor cursor = db.query(tableName, new String[] {
                 DB_VALUE, DB_DATE,
         }, DB_KEY + "='" + key + "'", null, null, null, null);
-        cursor.moveToFirst();
 
-        final String currentValue = cursor.getString(0);
-        final long currentDate = cursor.getLong(1);
+        try {
+            cursor.moveToFirst();
 
-        // どちらを優先するかはフィルタに任せる
-        if (filter.isOverwrite(key, currentValue, currentDate, insertValue, insertDate)) {
-            // 上書きを行う
-            remove(key);
-            db.insert(tableName, null, values);
-        } else {
-            // 上書きを行わない。
+            final String currentValue = cursor.getString(0);
+            final long currentDate = cursor.getLong(1);
+
+            // どちらを優先するかはフィルタに任せる
+            if (filter.isOverwrite(key, currentValue, currentDate, insertValue, insertDate)) {
+                // 上書きを行う
+                remove(key);
+                db.insert(tableName, null, values);
+            } else {
+                // 上書きを行わない。
+            }
+
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
     }
 
@@ -331,19 +362,27 @@ public class TextKeyValueStore extends DisposableResource {
                 DB_KEY, DB_VALUE, DB_DATE,
         }, null, null, null, null, null);
 
-        cursor.moveToFirst();
-        do {
-            String key = cursor.getString(0);
-            String value = cursor.getString(1);
-            long date = cursor.getLong(2);
-            try {
-                _insert(key, value, date, filter);
-            } catch (Exception e) {
-                LogUtil.log(e);
+        try {
+            cursor.moveToFirst();
+            do {
+                String key = cursor.getString(0);
+                String value = cursor.getString(1);
+                long date = cursor.getLong(2);
+                try {
+                    _insert(key, value, date, filter);
+                } catch (Exception e) {
+                    LogUtil.log(e);
+                }
+            } while (cursor.moveToNext());
+
+        } finally {
+            if (cursor != null) {
+                cursor.close();
             }
-        } while (cursor.moveToNext());
+        }
     }
 
+    @Deprecated
     public void print() {
         String selection = null;
         Cursor cursor = db.query(tableName, new String[] {
@@ -360,10 +399,6 @@ public class TextKeyValueStore extends DisposableResource {
 
     @Override
     public void dispose() {
-        if (db != null) {
-            db.close();
-            db = null;
-        }
         if (helper != null) {
             helper.close();
         }
