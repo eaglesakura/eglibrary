@@ -92,6 +92,18 @@ public class BitmapImage extends ImageBase {
     }
 
     /**
+     * 画像ストリームから読み込む。
+     * @param is
+     * @return
+     * @throws IOException
+     */
+    public BitmapImage loadFromStream(InputStream is) throws IOException {
+        Bitmap image = BitmapFactory.decodeStream(is);
+        onLoad(image);
+        return this;
+    }
+
+    /**
      * Uriを指定して読み込む
      * @param context
      * @param uri
