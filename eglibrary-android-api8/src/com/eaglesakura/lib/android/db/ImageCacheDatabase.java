@@ -2,12 +2,14 @@ package com.eaglesakura.lib.android.db;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 
 import android.content.Context;
 
 import com.eaglesakura.lib.android.game.graphics.canvas.BitmapImage;
 import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.game.resource.GarbageCollector;
+import com.eaglesakura.lib.android.game.util.LogUtil;
 
 /**
  * On Memoryで済む程度の小さな画像キャッシュを提供する。
@@ -30,10 +32,10 @@ public class ImageCacheDatabase extends DisposableResource {
      */
     GarbageCollector garbageCollector = new GarbageCollector();
 
-    public ImageCacheDatabase(File dbFile, Context context) {
+    public ImageCacheDatabase(File dbFile, Context context, String tableName, int dbVersion) {
         this.file = dbFile;
         this.context = context.getApplicationContext();
-        store = new BlobKeyValueStore(dbFile, context, IMAGE_TABLE, DBType.ReadWrite, DB_VERSION);
+        store = new BlobKeyValueStore(dbFile, context, tableName, DBType.ReadWrite, dbVersion);
     }
 
     /**
@@ -48,10 +50,11 @@ public class ImageCacheDatabase extends DisposableResource {
             if (data == null) {
                 byte[] blob = loader.load(this, key);
                 BitmapImage bitmapImage = new BitmapImage().loadFromStream(new ByteArrayInputStream(blob));
-
-                store.insert(key, blob);
+                LogUtil.log("blob insert :: " + (blob.length / 1024) + " kb");
+                store.insertOrUpdate(key, blob);
                 return bitmapImage;
             } else {
+                LogUtil.log("blob cache :: " + (data.getValue().length / 1024) + " kb");
                 BitmapImage image = new BitmapImage().loadFromStream(new ByteArrayInputStream(data.getValue()));
                 if (loader.isExist(this, image, data.date)) {
                     // 利用を許可されたので、画像化して返す。
@@ -66,7 +69,7 @@ public class ImageCacheDatabase extends DisposableResource {
             }
 
         } catch (Exception e) {
-
+            LogUtil.log(e);
         }
         return null;
     }
@@ -78,7 +81,7 @@ public class ImageCacheDatabase extends DisposableResource {
          * @param key
          * @return
          */
-        public byte[] load(ImageCacheDatabase db, String key);
+        public byte[] load(ImageCacheDatabase db, String key) throws IOException;
 
         /**
          * 読み出された画像を利用するならtrueを返す。
