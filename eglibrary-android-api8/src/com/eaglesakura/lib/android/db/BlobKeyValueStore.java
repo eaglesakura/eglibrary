@@ -198,13 +198,18 @@ public class BlobKeyValueStore extends DisposableResource {
      * @return
      */
     public Data get(String key) {
+        Cursor cursor = null;
         try {
             String selection = DB_KEY + "='" + key + "'";
-            Cursor cursor = db.query(tableName, cursorDatas, selection, null, null, null, null);
+            cursor = db.query(tableName, cursorDatas, selection, null, null, null, null);
             cursor.moveToFirst();
             return new Data(cursor);
         } catch (Exception e) {
             return null;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
     }
 
@@ -213,9 +218,10 @@ public class BlobKeyValueStore extends DisposableResource {
      * @return
      */
     public List<Data> list() {
+        Cursor cursor = null;
         List<Data> result = new ArrayList<BlobKeyValueStore.Data>();
         try {
-            Cursor cursor = db.query(tableName, cursorDatas, null, null, null, null, null);
+            cursor = db.query(tableName, cursorDatas, null, null, null, null, null);
             if (cursor.moveToFirst()) {
                 do {
                     result.add(new Data(cursor));
@@ -224,6 +230,10 @@ public class BlobKeyValueStore extends DisposableResource {
 
         } catch (Exception e) {
 
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
         return result;
     }
@@ -234,9 +244,10 @@ public class BlobKeyValueStore extends DisposableResource {
      * @return
      */
     public byte[] getOrNull(String key) {
+        Cursor cursor = null;
         try {
             String selection = DB_KEY + "='" + key + "'";
-            Cursor cursor = db.query(tableName, new String[] {
+            cursor = db.query(tableName, new String[] {
                 DB_VALUE
             }, selection, null, null, null, null);
 
@@ -244,6 +255,10 @@ public class BlobKeyValueStore extends DisposableResource {
             return cursor.getBlob(0);
         } catch (Exception e) {
             return null;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
     }
 
@@ -253,9 +268,10 @@ public class BlobKeyValueStore extends DisposableResource {
      * @return
      */
     public boolean exists(String key) {
+        Cursor cursor = null;
         try {
             String selection = DB_KEY + "='" + key + "'";
-            Cursor cursor = db.query(tableName, new String[] {
+            cursor = db.query(tableName, new String[] {
                 DB_KEY
             }, selection, null, null, null, null);
 
@@ -265,6 +281,10 @@ public class BlobKeyValueStore extends DisposableResource {
             return cursor.getString(0) != null;
         } catch (Exception e) {
             return false;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
     }
 
@@ -305,19 +325,25 @@ public class BlobKeyValueStore extends DisposableResource {
         Cursor cursor = db.query(tableName, new String[] {
                 DB_VALUE, DB_DATE,
         }, DB_KEY + "='" + key + "'", null, null, null, null);
-        cursor.moveToFirst();
 
-        final byte[] currentValue = cursor.getBlob(0);
-        final long currentDate = cursor.getLong(1);
+        try {
+            cursor.moveToFirst();
 
-        // どちらを優先するかはフィルタに任せる
-        if (filter.isOverwrite(key, currentValue, currentDate, insertValue, insertDate)) {
-            // 上書きを行う
-            remove(key);
-            db.insert(tableName, null, values);
-        } else {
-            // 上書きを行わない。
+            final byte[] currentValue = cursor.getBlob(0);
+            final long currentDate = cursor.getLong(1);
+
+            // どちらを優先するかはフィルタに任せる
+            if (filter.isOverwrite(key, currentValue, currentDate, insertValue, insertDate)) {
+                // 上書きを行う
+                remove(key);
+                db.insert(tableName, null, values);
+            } else {
+                // 上書きを行わない。
+            }
+        } finally {
+            cursor.close();
         }
+
     }
 
     /**
@@ -329,18 +355,21 @@ public class BlobKeyValueStore extends DisposableResource {
         Cursor cursor = insertDB.db.query(tableName, new String[] {
                 DB_KEY, DB_VALUE, DB_DATE,
         }, null, null, null, null, null);
-
-        cursor.moveToFirst();
-        do {
-            String key = cursor.getString(0);
-            byte[] value = cursor.getBlob(1);
-            long date = cursor.getLong(2);
-            try {
-                _insert(key, value, date, filter);
-            } catch (Exception e) {
-                LogUtil.log(e);
-            }
-        } while (cursor.moveToNext());
+        try {
+            cursor.moveToFirst();
+            do {
+                String key = cursor.getString(0);
+                byte[] value = cursor.getBlob(1);
+                long date = cursor.getLong(2);
+                try {
+                    _insert(key, value, date, filter);
+                } catch (Exception e) {
+                    LogUtil.log(e);
+                }
+            } while (cursor.moveToNext());
+        } finally {
+            cursor.close();
+        }
     }
 
     public void print() {
