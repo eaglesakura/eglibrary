@@ -32,6 +32,11 @@ public class BitmapImage extends ImageBase {
     SharedRawResource sharedResource = null;
     BitmapResource bitmapResource = null;
 
+    /**
+     * 自動的にrecycleを呼び出す場合はtrue
+     */
+    boolean autoRecycle = true;
+
     public BitmapImage(GarbageCollector garbageCollector) {
         super(garbageCollector);
     }
@@ -47,6 +52,16 @@ public class BitmapImage extends ImageBase {
         sharedResource.addRef();
     }
 
+    /**
+     * 自動でrecycleを呼び出す場合はtrue
+     * デフォルトではTRUE
+     * @param set
+     */
+    public BitmapImage setAutoRecycle(boolean set) {
+        autoRecycle = set;
+        return this;
+    }
+
     protected void onLoad(Bitmap image) {
         {
             if (sharedResource != null) {
@@ -60,7 +75,7 @@ public class BitmapImage extends ImageBase {
             throw new IllegalArgumentException("Bitmap File load Error!!");
         }
 
-        bitmapResource = new BitmapResource(image);
+        bitmapResource = new BitmapResource(image, autoRecycle);
         sharedResource = new SharedRawResource(bitmapResource);
         sharedResource.addRef();
         register();
@@ -206,14 +221,19 @@ public class BitmapImage extends ImageBase {
     static class BitmapResource implements IRawResource {
         Bitmap rawBitmap = null;
 
-        public BitmapResource(Bitmap image) {
+        boolean autoRecycle = false;
+
+        public BitmapResource(Bitmap image, boolean autoRecycle) {
             this.rawBitmap = image;
+            this.autoRecycle = autoRecycle;
         }
 
         @Override
         public void dispose() {
-            rawBitmap.recycle();
-            rawBitmap = null;
+            if (rawBitmap != null && !rawBitmap.isRecycled()) {
+                rawBitmap.recycle();
+                rawBitmap = null;
+            }
         }
     }
 
