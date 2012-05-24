@@ -1,4 +1,4 @@
-package com.eaglesakura.lib.io;
+package com.eaglesakura.lib.android.db;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,9 +19,7 @@ import com.eaglesakura.lib.android.game.util.LogUtil;
  * @author TAKESHI YAMASHITA
  *
  */
-public class BlobKeyValueStore extends DisposableResource {
-
-    static final String CHARSET = "UTF-8";
+public class TextKeyValueStore extends DisposableResource {
 
     /**
      * ファイル名
@@ -73,9 +71,6 @@ public class BlobKeyValueStore extends DisposableResource {
      */
     String CREATE_TBL_SQL;
 
-    /**
-     * DBのバージョン
-     */
     int dbVersion = 0;
 
     /**
@@ -83,40 +78,7 @@ public class BlobKeyValueStore extends DisposableResource {
      */
     DBType type;
 
-    public enum DBType {
-        /**
-         * 読み書きを行う
-         */
-        ReadWrite {
-            @Override
-            SQLiteDatabase open(BlobKeyValueStore kvs) {
-                return kvs.helper.getWritableDatabase();
-            }
-        },
-        /**
-         * 書き込み専用
-         */
-        Write {
-            @Override
-            SQLiteDatabase open(BlobKeyValueStore kvs) {
-                return kvs.helper.getWritableDatabase();
-            }
-        },
-
-        /**
-         * 読み込み専用
-         */
-        Read {
-            @Override
-            SQLiteDatabase open(BlobKeyValueStore kvs) {
-                return kvs.helper.getReadableDatabase();
-            }
-        };
-
-        abstract SQLiteDatabase open(BlobKeyValueStore kvs);
-    }
-
-    public BlobKeyValueStore(File dbFile, Context context, String tableName, DBType type, int dbVersion) {
+    public TextKeyValueStore(File dbFile, Context context, String tableName, DBType type, int dbVersion) {
         this.context = context;
         this.dbFile = dbFile;
         this.tableName = tableName;
@@ -127,9 +89,8 @@ public class BlobKeyValueStore extends DisposableResource {
 
         DELETE_TBL_SQL = "drop table if exists " + tableName;
         CREATE_TBL_SQL = "create table if not exists " + tableName + " (" + DB_KEY + " text primary key, " + DB_VALUE
-                + " blob, " + DB_DATE + " integer )";
-        db = type.open(this);
-        createTable();
+                + " text, " + DB_DATE + " integer )";
+        db = type.open(helper);
     }
 
     /**
@@ -139,13 +100,10 @@ public class BlobKeyValueStore extends DisposableResource {
         db.beginTransaction();
     }
 
-    /**
-     * 
-     * @param key
-     * @param value
-     * @return
-     */
-    protected ContentValues createValues(String key, byte[] value) {
+    protected ContentValues createValues(String key, String value) {
+        if (value == null) {
+            value = "";
+        }
         ContentValues result = new ContentValues(3);
         result.put(DB_KEY, key);
         result.put(DB_VALUE, value);
@@ -159,7 +117,7 @@ public class BlobKeyValueStore extends DisposableResource {
      * @param key
      * @param value
      */
-    public void insertOrUpdate(String key, byte[] value) {
+    public void insertOrUpdate(String key, String value) {
         final ContentValues values = createValues(key, value);
         try {
             db.insertOrThrow(tableName, null, values);
@@ -173,9 +131,8 @@ public class BlobKeyValueStore extends DisposableResource {
      * DBに値を新規登録する。
      * 失敗した場合は何も行わない。
      * @param key
-     * @param value
      */
-    public void insert(String key, byte[] value) {
+    public void insert(String key, String value) {
         final ContentValues values = createValues(key, value);
         try {
             db.insert(tableName, null, values);
@@ -210,13 +167,73 @@ public class BlobKeyValueStore extends DisposableResource {
     }
 
     /**
+     * 詳細なデータを取得する。
+     * @param key
+     * @return
+     */
+    public Data get(String key) {
+        try {
+            String selection = DB_KEY + "='" + key + "'";
+            Cursor cursor = db.query(tableName, cursorDatas, selection, null, null, null, null);
+
+            if (cursor.moveToFirst()) {
+                return new Data(cursor);
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    /**
+     * 管理しているデータ一覧を返す。
+     * @return
+     */
+    public List<Data> list() {
+        List<Data> result = new ArrayList<TextKeyValueStore.Data>();
+        try {
+            Cursor cursor = db.query(tableName, cursorDatas, null, null, null, null, null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    result.add(new Data(cursor));
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+
+        }
+        return result;
+    }
+
+    /**
+     * 同じvalueを持つデータ一覧を返す。
+     * @param value
+     * @return
+     */
+    public List<Data> listValues(String value) {
+        List<Data> result = new ArrayList<TextKeyValueStore.Data>();
+        try {
+            String selection = DB_VALUE + "='" + value + "'";
+            Cursor cursor = db.query(tableName, cursorDatas, selection, null, null, null, null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    result.add(new Data(cursor));
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+
+        }
+        return result;
+    }
+
+    /**
      * 
      * @param key
      * @param _def
      * @return
      */
-    public byte[] get(String key, byte[] _def) {
-        byte[] result = getOrNull(key);
+    public String get(String key, String _def) {
+        String result = getOrNull(key);
         if (result == null) {
             return _def;
         } else {
@@ -225,48 +242,11 @@ public class BlobKeyValueStore extends DisposableResource {
     }
 
     /**
-     * キーに関連するデータを取得する。
-     * 取得に失敗した場合、nullを返す。
-     * @param key
-     * @return
-     */
-    public Data get(String key) {
-        try {
-            String selection = DB_KEY + "='" + key + "'";
-            Cursor cursor = db.query(tableName, cursorDatas, selection, null, null, null, null);
-            cursor.moveToFirst();
-            return new Data(cursor);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * 内部の管理データを全て返す。
-     * @return
-     */
-    public List<Data> list() {
-        List<Data> result = new ArrayList<BlobKeyValueStore.Data>();
-        try {
-            Cursor cursor = db.query(tableName, cursorDatas, null, null, null, null, null);
-            if (cursor.moveToFirst()) {
-                do {
-                    result.add(new Data(cursor));
-                } while (cursor.moveToNext());
-            }
-
-        } catch (Exception e) {
-
-        }
-        return result;
-    }
-
-    /**
      * 値を取得する
      * @param key
      * @return
      */
-    public byte[] getOrNull(String key) {
+    public String getOrNull(String key) {
         try {
             String selection = DB_KEY + "='" + key + "'";
             Cursor cursor = db.query(tableName, new String[] {
@@ -274,7 +254,7 @@ public class BlobKeyValueStore extends DisposableResource {
             }, selection, null, null, null, null);
 
             cursor.moveToFirst();
-            return cursor.getBlob(0);
+            return cursor.getString(0);
         } catch (Exception e) {
             return null;
         }
@@ -286,19 +266,7 @@ public class BlobKeyValueStore extends DisposableResource {
      * @return
      */
     public boolean exists(String key) {
-        try {
-            String selection = DB_KEY + "='" + key + "'";
-            Cursor cursor = db.query(tableName, new String[] {
-                DB_KEY
-            }, selection, null, null, null, null);
-
-            if (cursor.moveToFirst()) {
-                return false;
-            }
-            return cursor.getString(0) != null;
-        } catch (Exception e) {
-            return false;
-        }
+        return get(key, null) != null;
     }
 
     /**
@@ -323,7 +291,7 @@ public class BlobKeyValueStore extends DisposableResource {
      * @param date
      * @param filter
      */
-    private void _insert(String key, byte[] insertValue, long insertDate, InsertFilter filter) throws Exception {
+    private void _insert(String key, String insertValue, long insertDate, InsertFilter filter) throws Exception {
         // 存在しないから、挿入して終了
         final ContentValues values = createValues(key, insertValue);
         values.put(DB_DATE, insertDate);
@@ -340,7 +308,7 @@ public class BlobKeyValueStore extends DisposableResource {
         }, DB_KEY + "='" + key + "'", null, null, null, null);
         cursor.moveToFirst();
 
-        final byte[] currentValue = cursor.getBlob(0);
+        final String currentValue = cursor.getString(0);
         final long currentDate = cursor.getLong(1);
 
         // どちらを優先するかはフィルタに任せる
@@ -358,7 +326,7 @@ public class BlobKeyValueStore extends DisposableResource {
      * データが競合した場合、どちらを優先するかはfilterによって確定される。
      * @param insertDB
      */
-    public void insertTo(final BlobKeyValueStore insertDB, InsertFilter filter) {
+    public void insertTo(final TextKeyValueStore insertDB, InsertFilter filter) {
         Cursor cursor = insertDB.db.query(tableName, new String[] {
                 DB_KEY, DB_VALUE, DB_DATE,
         }, null, null, null, null, null);
@@ -366,7 +334,7 @@ public class BlobKeyValueStore extends DisposableResource {
         cursor.moveToFirst();
         do {
             String key = cursor.getString(0);
-            byte[] value = cursor.getBlob(1);
+            String value = cursor.getString(1);
             long date = cursor.getLong(2);
             try {
                 _insert(key, value, date, filter);
@@ -382,18 +350,14 @@ public class BlobKeyValueStore extends DisposableResource {
                 DB_KEY, DB_VALUE
         }, selection, null, null, null, null);
 
-        if (cursor.moveToFirst()) {
-            do {
-                String key = cursor.getString(0);
-                byte[] value = cursor.getBlob(1);
-                LogUtil.log(key + " :: " + value.length + "bytes");
-            } while (cursor.moveToNext());
-        }
+        cursor.moveToFirst();
+        do {
+            String key = cursor.getString(0);
+            String value = cursor.getString(1);
+            LogUtil.log(key + " :: " + value);
+        } while (cursor.moveToNext());
     }
 
-    /**
-     * 管理しているDBを解放する。
-     */
     @Override
     public void dispose() {
         if (db != null) {
@@ -438,64 +402,80 @@ public class BlobKeyValueStore extends DisposableResource {
          * @param insertDate
          * @return
          */
-        public boolean isOverwrite(String key, byte[] currentValue, long currentDate, byte[] insertValue,
+        public boolean isOverwrite(String key, String currentValue, long currentDate, String insertValue,
                 long insertDate);
     }
 
-    private static final String[] cursorDatas = {
-            DB_KEY, DB_VALUE, DB_DATE
+    /**
+     * 新しいデータを優先するフィルタ
+     */
+    public static final InsertFilter FILTER_NEWDATA = new InsertFilter() {
+        @Override
+        public boolean isOverwrite(String key, String currentValue, long currentDate, String insertValue,
+                long insertDate) {
+            return insertDate > currentDate;
+        }
     };
 
     /**
-     * KVS内の1データを管理する。
-     * @author TAKESHI YAMASHITA
-     *
+     * 古いデータを優先するフィルタ
      */
+    public static final InsertFilter FILTER_OLDDATA = new InsertFilter() {
+        @Override
+        public boolean isOverwrite(String key, String currentValue, long currentDate, String insertValue,
+                long insertDate) {
+            return insertDate < currentDate;
+        }
+    };
+
+    /**
+     * 常に上書きを行うフィルタ
+     */
+    public static final InsertFilter FILTER_ALWAYS_OVERWRITE = new InsertFilter() {
+        @Override
+        public boolean isOverwrite(String key, String currentValue, long currentDate, String insertValue,
+                long insertDate) {
+            return true;
+        }
+    };
+
+    /**
+     * 常に上書きを行わないフィルタ
+     */
+    public static final InsertFilter FILTER_AYWAYS_NOT_OVERWRITE = new InsertFilter() {
+
+        @Override
+        public boolean isOverwrite(String key, String currentValue, long currentDate, String insertValue,
+                long insertDate) {
+            return false;
+        }
+    };
+
+    static final String[] cursorDatas = {
+            DB_KEY, DB_VALUE, DB_DATE
+    };
+
     public class Data {
-        long date = 0;
-        byte[] value = null;
-        String key = null;
+        String text;
+        long date;
+        String key;
 
         public Data(Cursor cursor) {
-            key = cursor.getString(0);
-            value = cursor.getBlob(1);
-            date = cursor.getLong(2);
+            this.key = cursor.getString(0);
+            this.text = cursor.getString(1);
+            this.date = cursor.getLong(2);
         }
 
-        /**
-         * 保存された日付を取得する。
-         * @return
-         */
+        public String getText() {
+            return text;
+        }
+
         public long getDate() {
             return date;
         }
 
-        /**
-         * key本体を取得する。
-         * @return
-         */
         public String getKey() {
             return key;
-        }
-
-        /**
-         * value本体を取得する。
-         * @return
-         */
-        public byte[] getValue() {
-            return value;
-        }
-
-        /**
-         * valueを文字列として取得する。
-         * @return
-         */
-        public String getValueText() {
-            try {
-                return new String(value, CHARSET);
-            } catch (Exception e) {
-                return null;
-            }
         }
     }
 }
