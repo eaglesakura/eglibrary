@@ -120,7 +120,7 @@ public class BlobKeyValueStore extends DisposableResource {
         this.context = context;
         this.dbFile = dbFile;
         this.tableName = tableName;
-
+        this.dbVersion = dbVersion;
         this.helper = new Helper();
 
         this.type = type;
