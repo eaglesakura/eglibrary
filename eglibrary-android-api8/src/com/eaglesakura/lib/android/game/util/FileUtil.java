@@ -181,7 +181,9 @@ public class FileUtil {
      * @return
      */
     public static String genPathSHA1(final File file) {
-        return GameUtil.genSHA1(file.getAbsolutePath().getBytes());
+        String path = file.getAbsolutePath();
+        path = normalizeFileName(path);
+        return GameUtil.genSHA1(path.getBytes());
     }
 
     /**

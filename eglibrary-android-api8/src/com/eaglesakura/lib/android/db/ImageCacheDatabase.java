@@ -74,6 +74,17 @@ public class ImageCacheDatabase extends DisposableResource {
         return null;
     }
 
+    public void remove(String key) {
+        store.remove(key);
+    }
+
+    /**
+     * テーブルの内容を消去する。
+     */
+    public void clear() {
+        store.dropTable();
+    }
+
     public interface Loader {
         /**
          * キャッシュがヒットしなかった場合、画像バイナリを読み込む。
