@@ -118,11 +118,15 @@ public class OrderAccessList<T> {
     }
 
     public T getFirst() {
-        return first.obj;
+        synchronized (lock) {
+            return first.obj;
+        }
     }
 
     public T getLast() {
-        return last.obj;
+        synchronized (lock) {
+            return last.obj;
+        }
     }
 
     /**
@@ -133,6 +137,51 @@ public class OrderAccessList<T> {
         return size;
     }
 
+    /**
+     * オブジェクトが含まれている場合はtrue
+     * @param object
+     * @return
+     */
+    public boolean contains(T object) {
+        return indexOf(object) >= 0;
+    }
+
+    /**
+     * 保持しているリストを全てクリアする。
+     */
+    public void clear() {
+        synchronized (lock) {
+            first = null;
+            last = null;
+            size = 0;
+        }
+    }
+
+    /**
+     * オブジェクトのインデックスを取得する。
+     * 
+     * @param object
+     * @return
+     */
+    public int indexOf(T object) {
+        synchronized (lock) {
+            Iterator<T> iterator = iterator();
+            int index = 0;
+            while (iterator.hasNext()) {
+                T t = iterator.next();
+                if (t.equals(object)) {
+                    return index;
+                }
+                ++index;
+            }
+            return -1;
+        }
+    }
+
+    /**
+     * 末尾から先頭へ向かってアクセスするイテレータを返す
+     * @return
+     */
     public Iterator<T> revertIterator() {
         return new Iterator<T>(last, this) {
 
@@ -232,48 +281,52 @@ public class OrderAccessList<T> {
          * @return
          */
         public T next() {
-            before = current;
-            removeTarget = current;
-            T result = current.obj;
-            moveNext();
-            return result;
+            synchronized (list.lock) {
+                before = current;
+                removeTarget = current;
+                T result = current.obj;
+                moveNext();
+                return result;
+            }
         }
 
         /**
          * 現在の要素を削除する
          */
         public void remove() {
-            Element<T> before = removeTarget.before;
-            Element<T> next = removeTarget.next;
+            synchronized (list.lock) {
+                Element<T> before = removeTarget.before;
+                Element<T> next = removeTarget.next;
 
-            // チェインを切断する
-            {
-                if (before != null) {
-                    before.next = null;
+                // チェインを切断する
+                {
+                    if (before != null) {
+                        before.next = null;
+                    }
+                    if (next != null) {
+                        next.before = null;
+                    }
                 }
-                if (next != null) {
-                    next.before = null;
+
+                // チェインを再構築する
+                {
+                    if (before != null && next != null) {
+                        before.next = next;
+                        next.before = before;
+                    }
                 }
-            }
 
-            // チェインを再構築する
-            {
-                if (before != null && next != null) {
-                    before.next = next;
-                    next.before = before;
+                // last/firstを再構築する
+                if (before == null) {
+                    list.first = next;
                 }
-            }
+                if (next == null) {
+                    list.last = before;
+                }
 
-            // last/firstを再構築する
-            if (before == null) {
-                list.first = next;
+                // サイズを減らす
+                --list.size;
             }
-            if (next == null) {
-                list.last = before;
-            }
-
-            // サイズを減らす
-            --list.size;
         }
 
         /**
