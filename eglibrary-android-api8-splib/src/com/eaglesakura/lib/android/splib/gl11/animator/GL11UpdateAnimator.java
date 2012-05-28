@@ -1,10 +1,7 @@
 package com.eaglesakura.lib.android.splib.gl11.animator;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.eaglesakura.lib.android.splib.fragment.GL11Fragment;
+import com.eaglesakura.lib.list.OrderAccessList;
 
 /**
  * GLオブジェクトの更新と描画を行わせる
@@ -12,7 +9,7 @@ import com.eaglesakura.lib.android.splib.fragment.GL11Fragment;
  *
  */
 public class GL11UpdateAnimator extends GL11Animator {
-    List<Updatable> updateObjects = new LinkedList<GL11UpdateAnimator.Updatable>();
+    OrderAccessList<Updatable> updateObjects = new OrderAccessList<GL11UpdateAnimator.Updatable>();
 
     public GL11UpdateAnimator(GL11Fragment fragment) {
         super(fragment);
@@ -22,7 +19,7 @@ public class GL11UpdateAnimator extends GL11Animator {
     protected boolean doAnimation(GL11Fragment fragment) {
         boolean finished = false;
 
-        Iterator<Updatable> iterator = updateObjects.iterator();
+        OrderAccessList.Iterator<Updatable> iterator = updateObjects.iterator();
         while (iterator.hasNext()) {
             Updatable updatable = iterator.next();
             if (updatable.update()) {
@@ -61,7 +58,7 @@ public class GL11UpdateAnimator extends GL11Animator {
      * アップデート用オブジェクトを取得する。
      * @return
      */
-    public List<Updatable> getUpdateObjects() {
+    public OrderAccessList<Updatable> getUpdateObjects() {
         return updateObjects;
     }
 }

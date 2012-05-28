@@ -10,10 +10,45 @@ public class GL11FragmentModuleGroup extends GL11FragmentModule {
 
     OrderAccessList<GL11FragmentModule> childs = new OrderAccessList<GL11FragmentModule>();
 
+    public void addModule(GL11FragmentModule module) {
+        childs.add(module);
+    }
+
+    public void addModule(GL11FragmentModule module, Object tag) {
+        module.setTag(tag);
+        childs.add(module);
+    }
+
+    public GL11FragmentModule findModuleByTag(Object tag) {
+        Iterator<GL11FragmentModule> iterator = childs.iterator();
+        while (iterator.hasNext()) {
+            GL11FragmentModule module = iterator.next();
+            if (tag.equals(module.getTag())) {
+                return module;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * モジュールを削除する
+     * @param module
+     */
+    public void remove(GL11FragmentModule module) {
+        childs.remove(module);
+    }
+
     @Override
     public void dispose() {
-        // TODO 自動生成されたメソッド・スタブ
         super.dispose();
+
+        Iterator<GL11FragmentModule> iterator = childs.iterator();
+        while (iterator.hasNext()) {
+            GL11FragmentModule module = iterator.next();
+            {
+                module.dispose();
+            }
+        }
     }
 
     @Override

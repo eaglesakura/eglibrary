@@ -158,6 +158,40 @@ public class OrderAccessList<T> {
     }
 
     /**
+     * 指定したオブジェクトを排除する
+     * @param obj
+     */
+    public void remove(T obj) {
+        synchronized (lock) {
+            Iterator<T> iterator = iterator();
+            while (iterator.hasNext()) {
+                T t = iterator.next();
+                if (t.equals(obj)) {
+                    iterator.remove();
+                    return;
+                }
+            }
+        }
+    }
+
+    /**
+     * 指定したオブジェクトを全て削除する
+     * @param obj
+     */
+    public void removeAll(T obj) {
+        synchronized (lock) {
+            Iterator<T> iterator = iterator();
+            while (iterator.hasNext()) {
+                T t = iterator.next();
+                if (t.equals(obj)) {
+                    iterator.remove();
+                    return;
+                }
+            }
+        }
+    }
+
+    /**
      * オブジェクトのインデックスを取得する。
      * 
      * @param object
@@ -176,6 +210,14 @@ public class OrderAccessList<T> {
             }
             return -1;
         }
+    }
+
+    /**
+     * 要素が空ならtrue
+     * @return
+     */
+    public boolean isEmpty() {
+        return size == 0;
     }
 
     /**
