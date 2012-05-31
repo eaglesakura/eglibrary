@@ -10,6 +10,7 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -26,6 +27,7 @@ public class FileUtil {
      * @return
      */
     public static final void copy(File src, File dst) throws IOException {
+        mkdir(dst.getParentFile());
         InputStream srcStream = new FileInputStream(src);
         OutputStream dstStream = new FileOutputStream(dst);
 
@@ -43,6 +45,28 @@ public class FileUtil {
 
         //! 最終変更日を修正する
         dst.setLastModified(src.lastModified());
+    }
+
+    /**
+     * コピー先が存在しない、もしくはMD5が一致しない場合のみコピーを行い、それ以外はコピーを行わない
+     * @param src
+     * @param dst
+     * @throws IOException
+     */
+    public static final void copyOrUpdate(File src, File dst) throws IOException {
+        if (!dst.isFile()) {
+            // ファイルが存在しないからコピーする
+            copy(src, dst);
+            return;
+        }
+
+        String srcSHA1 = genSHA1(src);
+        String dstSHA1 = genSHA1(dst);
+
+        // 2つのSHA1が一致しないため、コピーする
+        if (!srcSHA1.equals(dstSHA1)) {
+            copy(src, dst);
+        }
     }
 
     /**
@@ -241,5 +265,70 @@ public class FileUtil {
         origin = GameUtil.zenkakuEngToHankakuEng(origin);
         origin = GameUtil.macStringToWinString(origin);
         return origin;
+    }
+
+    /**
+     * そこまでの道を含めてディレクトリを作成する。
+     * @param dir
+     * @return
+     */
+    public static File mkdir(File dir) {
+        // 作成済みだったら何もしない
+        if (dir.isDirectory()) {
+            return dir;
+        }
+        File parent = dir.getAbsoluteFile().getParentFile();
+        if (parent.isDirectory()) {
+            dir.mkdir();
+        } else {
+            // 親が作られてなかったら作る
+            mkdir(parent);
+        }
+
+        return dir;
+    }
+
+    /**
+     * parentからtargetに到達するまでの全てのファイルを取得する。
+     * 戻り値にtargetとparentも含まれる。
+     * 階層が上にあるFileがindexの0に近くなる。
+     * @param target
+     * @param parent
+     * @return
+     */
+    public static List<File> getDirectoryRoute(File target, File parent) {
+        List<File> result = new LinkedList<File>();
+        File current = target;
+        while (!equals(current, parent)) {
+            result.add(0, current);
+            current = current.getParentFile();
+        }
+        result.add(0, parent);
+        return result;
+    }
+
+    /**
+     * ディレクトリの中身を完全削除する。
+     * dirフォルダ自体は残る。
+     * @param dir
+     * @return
+     */
+    public static File cleanDirectory(File dir) {
+        delete(dir);
+        mkdir(dir);
+        return dir;
+    }
+
+    /**
+     * 同じ内容を指していた場合はtrue
+     * @param a
+     * @param b
+     * @return
+     */
+    public static boolean equals(File a, File b) {
+        if (a == null || b == null) {
+            return false;
+        }
+        return a.getAbsolutePath().equals(b.getAbsolutePath());
     }
 }

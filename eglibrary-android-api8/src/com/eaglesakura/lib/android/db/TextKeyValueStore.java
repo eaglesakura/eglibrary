@@ -2,6 +2,7 @@ package com.eaglesakura.lib.android.db;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -228,6 +229,35 @@ public class TextKeyValueStore extends DisposableResource {
         try {
             String selection = DB_VALUE + "='" + value + "'";
             cursor = db.query(tableName, cursorDatas, selection, null, null, null, null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    result.add(new Data(cursor));
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 日付がdate以降で、上位max件を取得する。
+     * @param date
+     * @param max
+     * @return
+     */
+    public List<Data> listTimesUpToDate(long date, int max) {
+        List<Data> result = new LinkedList<TextKeyValueStore.Data>();
+        Cursor cursor = null;
+        try {
+            String selection = DB_DATE + ">=" + date;
+            String order = DB_DATE + " desc";
+            cursor = db.query(tableName, cursorDatas, selection, null, null, null, order, "" + max);
 
             if (cursor.moveToFirst()) {
                 do {
