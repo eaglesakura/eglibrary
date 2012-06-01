@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -422,6 +424,11 @@ public class GoogleDocsEntries {
          */
         Directory directory = null;
 
+        /**
+         * 更新日
+         */
+        Date updated = null;
+
         public Entry(EntryItem item) {
             title = item.title;
             if (item.content != null) {
@@ -445,6 +452,17 @@ public class GoogleDocsEntries {
             md5 = item.md5;
             id = item.id;
             resourceId = item.resourceId;
+
+            // 更新日をパース
+            {
+                try {
+                    SimpleDateFormat simpleDataFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SS");
+                    updated = simpleDataFormat.parse(item.updated);
+                } catch (Exception e) {
+                    updated = null;
+                }
+
+            }
         }
 
         public String getId() {
@@ -453,6 +471,14 @@ public class GoogleDocsEntries {
 
         public String getResourceId() {
             return resourceId;
+        }
+
+        /**
+         * 更新日を取得する
+         * @return
+         */
+        public Date getUpdated() {
+            return updated;
         }
 
         /**
