@@ -10,6 +10,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Base64;
 
 import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.game.util.LogUtil;
@@ -127,6 +128,28 @@ public class TextKeyValueStore extends DisposableResource {
             remove(key);
             db.insert(tableName, null, values);
         }
+    }
+
+    private String toString(byte[] buffer) {
+        return Base64.encodeToString(buffer, Base64.DEFAULT);
+    }
+
+    /**
+     * byte配列を書き込む。
+     * ただし、Base64エンコードされるため見た目上のデータは大きくなる。
+     * @param buffer
+     */
+    public void insert(String key, byte[] buffer) {
+        insert(key, toString(buffer));
+    }
+
+    /**
+     * byte配列を挿入もしくは更新する。
+     * @param key
+     * @param buffer
+     */
+    public void insertOrUpdate(String key, byte[] buffer) {
+        insertOrUpdate(key, toString(buffer));
     }
 
     /**
@@ -520,27 +543,48 @@ public class TextKeyValueStore extends DisposableResource {
             DB_KEY, DB_VALUE, DB_DATE
     };
 
-    public class Data {
+    public static class Data {
         String text;
         long date;
         String key;
 
-        public Data(Cursor cursor) {
+        protected Data(Cursor cursor) {
             this.key = cursor.getString(0);
             this.text = cursor.getString(1);
             this.date = cursor.getLong(2);
         }
 
+        /**
+         * データのテキストをそのまま取得する
+         * @return
+         */
         public String getText() {
             return text;
         }
 
+        /**
+         * データの日付を取得する
+         * @return
+         */
         public long getDate() {
             return date;
         }
 
+        /**
+         * データのキーを取得する
+         * @return
+         */
         public String getKey() {
             return key;
+        }
+
+        /**
+         * データをbyte配列として取得する
+         * ただし、insert()時にbyte[]で挿入したデータだけが対象。
+         * @return
+         */
+        public byte[] getBytes() {
+            return Base64.decode(text, Base64.DEFAULT);
         }
     }
 }

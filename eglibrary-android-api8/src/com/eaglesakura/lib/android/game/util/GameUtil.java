@@ -540,4 +540,26 @@ public class GameUtil {
             return null;
         }
     }
+
+    /**
+     * 文字列がnullか空文字だったらtrueを返す。
+     * @param str
+     * @return
+     */
+    public static boolean isEmpty(String str) {
+        if (str == null) {
+            return true;
+        }
+
+        return str.length() == 0;
+    }
+
+    /**
+     * strがnullかemptyだったらnullを返す。
+     * @param str
+     * @return
+     */
+    public static String emptyToNull(String str) {
+        return isEmpty(str) ? null : str;
+    }
 }

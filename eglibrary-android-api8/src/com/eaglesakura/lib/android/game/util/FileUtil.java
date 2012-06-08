@@ -264,6 +264,10 @@ public class FileUtil {
     public static String normalizeFileName(String origin) {
         origin = GameUtil.zenkakuEngToHankakuEng(origin);
         origin = GameUtil.macStringToWinString(origin);
+
+        while (origin.indexOf('?') >= 0) {
+            origin = origin.replace('?', '？');
+        }
         return origin;
     }
 
