@@ -3,6 +3,7 @@ package com.eaglesakura.lib.android.db;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -77,6 +78,46 @@ public class MultiValueDatabase extends DisposableResource {
             }
         }
         return null;
+    }
+
+    /**
+     * keyName = valueに一致する値を列挙する
+     * @param keyName
+     * @param value
+     * @return
+     */
+    public List<Data> list(String keyName, Object value) {
+        return list(keyName, value, valueList.fullColmnList());
+    }
+
+    /**
+     * keyName = valueに一致する値を列挙する
+     * colmnsに指定したカラムのみを取得する
+     * @param keyName
+     * @param value
+     * @param colmns
+     * @return
+     */
+    public List<Data> list(String keyName, Object value, String[] colmns) {
+        List<Data> result = new LinkedList<MultiValueDatabase.Data>();
+        Cursor cursor = null;
+        try {
+            final String selection = valueList.getColmun(keyName).createSelection(value);
+            cursor = db.query(valueList.tableName, colmns, selection, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    MultiValueDatabase.Data data = new Data(cursor, valueList);
+                    result.add(data);
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            LogUtil.log(e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return result;
     }
 
     /**

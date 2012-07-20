@@ -63,4 +63,35 @@ public class MultiValueDatabaseTest extends AndroidTestCase {
             assertEquals(data.getText("_bh", null), "bookhash-update");
         }
     }
+
+    public void insertTestNoBH() {
+        MultiValueDatabase db = new MultiValueDatabase(getContext(), DB_FILE, DBType.ReadWrite, valueList);
+
+        // データを新規追加する
+        {
+            Map<String, Object> values = new HashMap<String, Object>();
+            values.put("_shf", "shelf");
+
+            assertTrue(db.insertOrUpdate(values));
+
+            // データが正常に取得できなければならない
+            MultiValueDatabase.Data data = db.getOrNull("shelf");
+            assertNotNull(data);
+            assertEquals(data.getText("_bh", null), null);
+        }
+
+        // データを更新する
+        {
+            Map<String, Object> values = new HashMap<String, Object>();
+            values.put("_shf", "shelf");
+            values.put("_bh", "bookhash-update");
+
+            assertTrue(db.insertOrUpdate(values));
+
+            // データが正常に取得できなければならない
+            MultiValueDatabase.Data data = db.getOrNull("shelf");
+            assertNotNull(data);
+            assertEquals(data.getText("_bh", null), "bookhash-update");
+        }
+    }
 }
