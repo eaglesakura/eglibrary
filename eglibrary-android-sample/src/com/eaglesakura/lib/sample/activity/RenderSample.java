@@ -1,0 +1,91 @@
+package com.eaglesakura.lib.sample.activity;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+
+import com.eaglesakura.lib.android.game.graphics.canvas.BitmapImage;
+import com.eaglesakura.lib.android.game.graphics.gl11.BitmapTextureImage;
+import com.eaglesakura.lib.android.game.graphics.gl11.SpriteManager;
+import com.eaglesakura.lib.android.game.graphics.gl11.TextureImageBase;
+import com.eaglesakura.lib.android.game.thread.UIHandler;
+import com.eaglesakura.lib.android.game.util.LogUtil;
+import com.eaglesakura.lib.android.splib.fragment.GL11Fragment;
+import com.eaglesakura.lib.android.splib.gl11.module.GL11FragmentSpriteModule;
+import com.eaglesakura.lib.sample.R;
+
+public class RenderSample extends FragmentActivity {
+
+    @Override
+    protected void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        LogUtil.setTag("EGL-TEST");
+        LogUtil.setOutput(true);
+        setContentView(R.layout.gllayout);
+        if (bundle == null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            {
+                Fragment fragment = new SampleFragment();
+                transaction.add(R.id.gl_area, fragment, fragment.getClass().getName());
+            }
+            transaction.commit();
+        }
+    }
+
+    public static class SampleFragment extends GL11Fragment {
+
+        GL11FragmentSpriteModule renderModule = new GL11FragmentSpriteModule() {
+
+            TextureImageBase texture = null;
+
+            float rotate = 0;
+
+            @Override
+            public void onAttach(GL11Fragment fragment) {
+                super.onAttach(fragment);
+
+                BitmapImage image = new BitmapImage().loadFromDrawable(getResources(), R.drawable.ic_launcher, null);
+                texture = new BitmapTextureImage(image.getBitmap(), getGLManager());
+            }
+
+            @Override
+            public void onRendering() {
+                getGLManager().bind();
+                getGLManager().clearColorRGBA(0.0f, 1.0f, 1.0f, 1.0f);
+                getGLManager().clear();
+                SpriteManager spriteManager = getSpriteManager();
+
+                spriteManager.begin();
+                {
+                    float scale = 5;
+                    //    rotate = 45;//
+                    spriteManager.drawImage(texture,//
+                            0, 0, texture.getWidth(), texture.getHeight(), //
+                            50, 50, (int) (texture.getWidth() * scale), (int) (texture.getHeight() * scale), //
+                            rotate, 0xFFFFFFFF);
+
+                }
+                spriteManager.end();
+
+                rotate += 1;
+                getGL().glFinish();
+                getGLManager().unbind();
+//                getGLManager().swapBuffers();
+                UIHandler.postUI(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                });
+                //                rendering();
+            }
+        };
+
+        @Override
+        protected void onGLInitialize(int width, int height) {
+            //            addModule(new BufferClearModule(0x00ffffff));
+            addModule(renderModule);
+            rendering();
+        }
+    }
+}

@@ -76,21 +76,4 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>android</name>
-			<type>2</type>
-			<location>/Users/yamashitatakeshi/Workspaces/WorkspaceMac/github-public/eglibrary/eglibrary-native/sources/android</location>
-		</link>
-		<link>
-			<name>common</name>
-			<type>2</type>
-			<location>/Users/yamashitatakeshi/Workspaces/WorkspaceMac/github-public/eglibrary/eglibrary-native/sources/common</location>
-		</link>
-		<link>
-			<name>includes</name>
-			<type>2</type>
-			<location>/Users/yamashitatakeshi/Workspaces/WorkspaceMac/github-public/eglibrary/eglibrary-native/sources/includes</location>
-		</link>
-	</linkedResources>
 </projectDescription>

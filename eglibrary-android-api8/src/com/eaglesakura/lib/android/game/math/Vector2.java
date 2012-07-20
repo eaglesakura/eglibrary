@@ -1,9 +1,12 @@
 package com.eaglesakura.lib.android.game.math;
 
+import android.annotation.SuppressLint;
+
 /**
  * 
  * 
  */
+@SuppressLint("FloatMath")
 public final class Vector2 {
     /**
      * X成分。
@@ -92,7 +95,7 @@ public final class Vector2 {
      * @return
      */
     public float length() {
-        return (float) Math.sqrt((double) ((x * x) + (y * y)));
+        return (float) Math.sqrt(((double) x * (double) x) + ((double) y * (double) y));
     }
 
     /**
@@ -102,8 +105,8 @@ public final class Vector2 {
      * @return
      */
     public float length(Vector2 p) {
-        float tx = x - p.x, ty = y - p.y;
-        return (float) Math.sqrt((double) ((tx * tx) + (ty * ty)));
+        double tx = x - p.x, ty = y - p.y;
+        return (float) Math.sqrt((tx * tx) + (ty * ty));
     }
 
     /**
@@ -113,8 +116,8 @@ public final class Vector2 {
      * @return
      */
     public float length(final float px, final float py) {
-        float tx = x - px, ty = y - py;
-        return (float) Math.sqrt((double) ((tx * tx) + (ty * ty)));
+        double tx = x - px, ty = y - py;
+        return (float) Math.sqrt((tx * tx) + (ty * ty));
     }
 
     /**
@@ -141,6 +144,9 @@ public final class Vector2 {
      */
     @Override
     public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
         Vector2 v = (Vector2) obj;
         return x == v.x && y == v.y;
     }

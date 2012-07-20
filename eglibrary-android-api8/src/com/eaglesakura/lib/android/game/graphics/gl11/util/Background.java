@@ -327,8 +327,8 @@ public class Background extends DisposableResource {
 
     @Override
     public void dispose() {
-        synchronized (textures) {
-            if (textures != null) {
+        if (textures != null) {
+            synchronized (textures) {
                 for (TextureImageBase[] texArray : textures) {
                     if (texArray != null) {
                         for (int i = 0; i < texArray.length; ++i) {

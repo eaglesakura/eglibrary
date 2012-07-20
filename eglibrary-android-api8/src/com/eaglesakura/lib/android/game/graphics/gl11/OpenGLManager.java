@@ -159,6 +159,14 @@ public class OpenGLManager extends DisposableResource {
         }
     }
 
+    public void bind() {
+        egl.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext);
+    }
+
+    public void unbind() {
+        egl.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT);
+    }
+
     /**
      * バッファの消去を行う。
      * 

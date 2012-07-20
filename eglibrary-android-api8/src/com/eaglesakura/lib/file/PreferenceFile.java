@@ -20,6 +20,9 @@ public class PreferenceFile {
     Map<String, String> keyValue = new HashMap<String, String>();
 
     void parse(String line) {
+        if (line.startsWith("#")) {
+            return;
+        }
         line.replaceAll(" ", "");
 
         int eq = line.indexOf('=');

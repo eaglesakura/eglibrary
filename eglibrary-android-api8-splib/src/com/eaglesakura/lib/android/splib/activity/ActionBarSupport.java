@@ -1,5 +1,6 @@
 package com.eaglesakura.lib.android.splib.activity;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.view.MenuItem;
 import android.view.Window;
@@ -13,15 +14,28 @@ public class ActionBarSupport {
         this.activity = activity;
     }
 
+    /**
+     * アクションバーを表示する
+     */
     public void show() {
         if (ContextUtil.isActionBarEnable()) {
-            activity.getActionBar().show();
+            ActionBar actionBar = activity.getActionBar();
+            if (actionBar != null) {
+                actionBar.show();
+            }
         }
     }
 
+    /**
+     * アクションバーを隠す
+     */
     public void hide() {
         if (ContextUtil.isActionBarEnable()) {
-            activity.getActionBar().hide();
+            ActionBar actionBar = activity.getActionBar();
+            if (actionBar != null) {
+                actionBar.hide();
+            }
+
         }
     }
 

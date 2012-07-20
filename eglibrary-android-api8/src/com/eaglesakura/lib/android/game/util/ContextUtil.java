@@ -3,6 +3,7 @@ package com.eaglesakura.lib.android.game.util;
 import java.util.UUID;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -302,5 +303,24 @@ public class ContextUtil {
      */
     public static boolean isBackKeyEvent(KeyEvent event) {
         return event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK;
+    }
+
+    /**
+     * フルスクリーンに変更する
+     * @param activity
+     */
+    public static void fullScreen(Activity activity) {
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
+    /**
+     * 横方向をフルスクリーンにする
+     * @param activity
+     * @param dialog
+     */
+    public static void fullScreenX(Activity activity, Dialog dialog) {
+        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+        lp.width = activity.getWindow().getAttributes().width;
+        dialog.getWindow().setAttributes(lp);
     }
 }
