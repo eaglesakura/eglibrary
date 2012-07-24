@@ -64,7 +64,7 @@ public class MultiValueDatabase extends DisposableResource {
     public Data getOrNull(Object key) {
         Cursor cursor = null;
         try {
-            final String selection = valueList.primary.createSelection(key);
+            final String selection = valueList.primary.createSelection(key, SelectionType.Equal);
             cursor = db.query(valueList.tableName, valueList.fullColmnList(), selection, null, null, null, null);
             if (cursor.moveToFirst()) {
                 Data data = new Data(cursor, valueList);
@@ -87,7 +87,57 @@ public class MultiValueDatabase extends DisposableResource {
      * @return
      */
     public List<Data> list(String keyName, Object value) {
-        return list(keyName, value, valueList.fullColmnList());
+        return list(keyName, value, SelectionType.Equal, valueList.fullColmnList());
+    }
+
+    /**
+     * 
+     * @author TAKESHI YAMASHITA
+     *
+     */
+    public enum SelectionType {
+        Equal {
+            @Override
+            public String getSelection() {
+                return "=";
+            }
+        },
+
+        Large {
+            @Override
+            public String getSelection() {
+                return ">";
+            }
+        },
+
+        LargeEqual {
+            @Override
+            public String getSelection() {
+                return ">=";
+            }
+        },
+
+        SmallEqual {
+            @Override
+            public String getSelection() {
+                return "<=";
+            }
+        },
+        Small {
+            @Override
+            public String getSelection() {
+                return "<";
+            }
+        },
+        NotEqual {
+            @Override
+            public String getSelection() {
+                return "<>";
+            }
+        };
+
+        public abstract String getSelection();
+
     }
 
     /**
@@ -98,11 +148,14 @@ public class MultiValueDatabase extends DisposableResource {
      * @param colmns
      * @return
      */
-    public List<Data> list(String keyName, Object value, String[] colmns) {
+    public List<Data> list(String keyName, Object value, SelectionType selectType, String[] colmns) {
+        if (colmns == null) {
+            colmns = valueList.fullColmnList();
+        }
         List<Data> result = new LinkedList<MultiValueDatabase.Data>();
         Cursor cursor = null;
         try {
-            final String selection = valueList.getColmun(keyName).createSelection(value);
+            final String selection = valueList.getColmun(keyName).createSelection(value, selectType);
             cursor = db.query(valueList.tableName, colmns, selection, null, null, null, null);
             if (cursor.moveToFirst()) {
                 do {
@@ -118,6 +171,33 @@ public class MultiValueDatabase extends DisposableResource {
             }
         }
         return result;
+    }
+
+    /**
+     * データの更新を行い、失敗したら挿入を行う
+     * @param key
+     * @param values
+     */
+    public boolean updateOrInsert(Map<String, Object> values) {
+        try {
+            final ContentValues contentValues = valueList.toContentValues(values);
+
+            try {
+                int result = db.update(valueList.tableName, contentValues, null, null);
+                LogUtil.log("result = " + result);
+            } catch (Exception ee) {
+                try {
+                    db.insertOrThrow(valueList.tableName, null, contentValues);
+                } catch (Exception e) {
+                    LogUtil.log(e);
+                    return false;
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            LogUtil.log(e);
+        }
+        return false;
     }
 
     /**
@@ -247,11 +327,11 @@ public class MultiValueDatabase extends DisposableResource {
          * @param value
          * @return
          */
-        public String createSelection(Object value) {
+        public String createSelection(Object value, SelectionType select) {
             if (type == DBValueType.Text) {
-                return name + "='" + value.toString() + "'";
+                return name + select.getSelection() + "'" + value.toString() + "'";
             } else {
-                return name + "=" + value.toString();
+                return name + select.getSelection() + value.toString();
             }
         }
     }
@@ -318,7 +398,9 @@ public class MultiValueDatabase extends DisposableResource {
                 if (!columns.isEmpty()) {
                     buffer.append(", ");
                 }
+            }
 
+            {
                 int index = 0;
                 for (Column c : columns) {
                     buffer.append(c.sql());
@@ -421,6 +503,13 @@ public class MultiValueDatabase extends DisposableResource {
             return result;
         }
 
+        /**
+         * 登録されているカラムリストを削除する
+         */
+        public void clear() {
+            primary = null;
+            columns.clear();
+        }
     }
 
     class Helper extends SQLiteOpenHelper {

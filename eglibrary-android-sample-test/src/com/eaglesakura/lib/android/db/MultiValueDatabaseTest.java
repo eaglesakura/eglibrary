@@ -22,7 +22,8 @@ public class MultiValueDatabaseTest extends AndroidTestCase {
         LogUtil.setTag("gamelib");
         LogUtil.setOutput(true);
 
-        valueList.setPrimary(new Column(DBValueType.Text, "_shf"));
+        //      valueList.setPrimary(new Column(DBValueType.Text, "_shf"));
+        valueList.addColmn(new Column(DBValueType.Text, "_shf"));
         valueList.addColmn(new Column(DBValueType.Text, "_bh"));
         valueList.addColmn(new Column(DBValueType.Text, "_cmt"));
 
