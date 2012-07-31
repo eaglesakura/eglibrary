@@ -42,7 +42,8 @@ public class GoogleAPIException extends Exception {
      * @param baseException
      */
     public GoogleAPIException(int responce) {
-        super("responce :: " + responce);
+        super("responce :: " + responce + " :: " + toExceptionType(responce).name());
+        this.type = toExceptionType(responce);
     }
 
     /**
@@ -135,6 +136,8 @@ public class GoogleAPIException extends Exception {
         switch (resp) {
             case 500:
                 return Type.APIResponseError;
+            case 400:
+                return Type.APICallError;
             case 401:
             case 403:
                 return Type.AuthError;

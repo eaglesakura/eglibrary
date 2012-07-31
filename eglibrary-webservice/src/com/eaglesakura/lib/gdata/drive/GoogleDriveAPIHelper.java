@@ -80,6 +80,7 @@ public class GoogleDriveAPIHelper {
                     // 引数が設定されていない場合は"?"でつなげる
                     nextLink = (baseURL + "?pageToken=" + parsed.nextPageToken);
                 }
+                //                nextLink = parsed.nextLink;
             } else {
                 nextLink = null;
             }
@@ -96,12 +97,8 @@ public class GoogleDriveAPIHelper {
      * @param keyword
      * @return
      */
-    public static String createQueryTitleContains(String keyword) {
-        try {
-            return URLEncoder.encode("title contains '" + keyword + "'", "utf-8");
-        } catch (Exception e) {
-            throw new RuntimeException("encode fauled");
-        }
+    public static String createQueryFullTextContains(String keyword) {
+        return createQuery("fullText contains '" + keyword + "' and trashed = false");
     }
 
     /**
@@ -109,9 +106,19 @@ public class GoogleDriveAPIHelper {
      * @param keyword
      * @return
      */
-    public static String createQueryDirectories() {
+    public static String createQueryTitleContains(String keyword) {
+        return createQuery("fullText contains '" + keyword + "' and trashed = false");
+    }
+
+    /**
+     * キーワードを含んだ検索を行う
+     * @param keyword
+     * @return
+     */
+    public static String createQuery(String raw) {
+        // "mimeType = 'application/vnd.google-apps.folder'"
         try {
-            return URLEncoder.encode("mimeType = 'application/vnd.google-apps.folder'", "utf-8");
+            return URLEncoder.encode(raw, "utf-8");
         } catch (Exception e) {
             throw new RuntimeException("encode fauled");
         }
@@ -163,6 +170,15 @@ public class GoogleDriveAPIHelper {
     }
 
     /**
+     * MD5が存在したらファイル
+     * @param item
+     * @return
+     */
+    public static boolean isFile(DriveItem item) {
+        return item.md5Checksum != null;
+    }
+
+    /**
      * 親オブジェクトを取得する
      * @param connector
      * @return
@@ -173,6 +189,22 @@ public class GoogleDriveAPIHelper {
             throw new GoogleAPIException("item is root :: " + item.title, Type.FileNotFound);
         }
         return infoFromLink(connector, item.parents[0].parentLink);
+    }
+
+    /**
+     * 特定のディレクトリ配下を取得する
+     * @param item
+     * @param connector
+     * @return
+     * @throws GoogleAPIException
+     */
+    public static List<DriveItem> ls(DriveItem item, GoogleAPIConnector connector) throws GoogleAPIException {
+        if (isFile(item)) {
+            // ファイルに対してlsは行えない
+            throw new GoogleAPIException("item is file", Type.FileNotFound);
+        }
+        String query = createQuery("'" + item.id + "' in parents and trashed = false");
+        return search(connector, query);
     }
 
     /**
@@ -202,7 +234,7 @@ public class GoogleDriveAPIHelper {
      * @throws GoogleAPIException
      */
     public static List<DriveItem> search(GoogleAPIConnector connector, String query) throws GoogleAPIException {
-        String nextLink = "https://www.googleapis.com/drive/v2/files?projection=FULL&q=" + query;
+        String nextLink = "https://www.googleapis.com/drive/v2/files?q=" + query;
         return listup(connector, nextLink, -1);
     }
 
@@ -213,7 +245,7 @@ public class GoogleDriveAPIHelper {
      * @throws GoogleAPIException
      */
     public static List<DriveItem> list(GoogleAPIConnector connector) throws GoogleAPIException {
-        String nextLink = "https://www.googleapis.com/drive/v2/files?projection=FULL";
+        String nextLink = "https://www.googleapis.com/drive/v2/files";
         return listup(connector, nextLink, -1);
     }
 

@@ -129,7 +129,7 @@ public class GoogleAPIConnector {
      * @param argments
      * @throws GoogleAPIException
      */
-    private GoogleConnection _get(String url, Map<String, String> argments, int rangeBegin, int rangeEnd)
+    private GoogleConnection _get(String url, Map<String, String> argments, long rangeBegin, long rangeEnd)
             throws GoogleAPIException {
         url = createURL(url, argments);
         HttpURLConnection connection = null;
@@ -148,7 +148,6 @@ public class GoogleAPIConnector {
             LogUtil.log("ResponseCode = " + responseCode);
             switch (responseCode) {
             // 認証エラーには例外を返す
-                case 400:
                 case 401:
                 case 403: {
                     throw new GoogleAPIException("Responce Error", Type.AuthError);
@@ -193,6 +192,37 @@ public class GoogleAPIConnector {
             try {
                 GoogleConnection conn = _get(url, argments, -1, -1);
                 return conn;
+            } catch (GoogleAPIException e) {
+                if (e.getType() == Type.AuthError) {
+                    // 認証エラーだったら、再度トークンを発行する
+                    LogUtil.log("token refresh");
+                    refreshAccessToken();
+                } else {
+                    throw e;
+                }
+            }
+        }
+
+        throw new GoogleAPIException("connection failed...", Type.Unknown);
+    }
+
+    /**
+     * GET操作を行う
+     * @param url
+     * @param argments
+     * @return
+     * @throws GoogleAPIException
+     */
+    public GoogleConnection download(String url, long rangeBegin, long rangeEnd) throws GoogleAPIException {
+        for (int i = 0; i < maxRetry; ++i) {
+            try {
+                GoogleConnection conn = _get(url, null, rangeBegin, rangeEnd);
+                if (conn.getResponceCode() == 200 || conn.getResponceCode() == 206) {
+                    return conn;
+                } else {
+                    conn.dispose();
+                    throw new GoogleAPIException(conn.getResponceCode());
+                }
             } catch (GoogleAPIException e) {
                 if (e.getType() == Type.AuthError) {
                     // 認証エラーだったら、再度トークンを発行する
