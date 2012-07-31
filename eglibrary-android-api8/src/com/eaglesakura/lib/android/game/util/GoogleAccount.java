@@ -67,4 +67,5 @@ public class GoogleAccount {
             OperationCanceledException {
         manager.invalidateAuthToken(accounts[accountNumber].type, token);
     }
+
 }

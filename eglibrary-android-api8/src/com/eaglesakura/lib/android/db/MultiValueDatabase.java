@@ -141,22 +141,19 @@ public class MultiValueDatabase extends DisposableResource {
     }
 
     /**
-     * keyName = valueに一致する値を列挙する
-     * colmnsに指定したカラムのみを取得する
-     * @param keyName
-     * @param value
+     * selectionを直接指定して取得する
+     * @param rawSelection
      * @param colmns
      * @return
      */
-    public List<Data> list(String keyName, Object value, SelectionType selectType, String[] colmns) {
+    public List<Data> list(String rawSelection, String[] colmns) {
         if (colmns == null) {
             colmns = valueList.fullColmnList();
         }
         List<Data> result = new LinkedList<MultiValueDatabase.Data>();
         Cursor cursor = null;
         try {
-            final String selection = valueList.getColmun(keyName).createSelection(value, selectType);
-            cursor = db.query(valueList.tableName, colmns, selection, null, null, null, null);
+            cursor = db.query(valueList.tableName, colmns, rawSelection, null, null, null, null);
             if (cursor.moveToFirst()) {
                 do {
                     MultiValueDatabase.Data data = new Data(cursor, valueList);
@@ -171,6 +168,20 @@ public class MultiValueDatabase extends DisposableResource {
             }
         }
         return result;
+    }
+
+    /**
+     * keyName = valueに一致する値を列挙する
+     * colmnsに指定したカラムのみを取得する
+     * @param keyName
+     * @param value
+     * @param colmns
+     * @return
+     */
+    public List<Data> list(String keyName, Object value, SelectionType selectType, String[] colmns) {
+        final String selection = valueList.getColmun(keyName).createSelection(value, selectType);
+
+        return list(selection, colmns);
     }
 
     /**
@@ -212,7 +223,9 @@ public class MultiValueDatabase extends DisposableResource {
                 db.insertOrThrow(valueList.tableName, null, contentValues);
             } catch (Exception e) {
                 try {
-                    db.update(valueList.tableName, contentValues, null, null);
+                    Column c = valueList.primary;
+                    db.update(valueList.tableName, contentValues,
+                            c.createSelection(values.get(c.name), SelectionType.Equal), null);
                 } catch (Exception ee) {
                     LogUtil.log(ee);
                     return false;
@@ -224,6 +237,39 @@ public class MultiValueDatabase extends DisposableResource {
             LogUtil.log(e);
         }
         return false;
+    }
+
+    /**
+     * トランザクションを開始する
+     */
+    public void beginTransaction() {
+        db.beginTransaction();
+    }
+
+    /**
+     * トランザクションを終了する
+     */
+    public void endTransaction() {
+        try {
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    /**
+     * 主キーが一致する項目を削除する
+     * @param key
+     */
+    public void remove(String key) {
+        try {
+            String selection = valueList.primary.createSelection(key, SelectionType.Equal);
+            db.delete(valueList.tableName, selection, null);
+        } catch (Exception e) {
+            LogUtil.log(e);
+        }
     }
 
     /**

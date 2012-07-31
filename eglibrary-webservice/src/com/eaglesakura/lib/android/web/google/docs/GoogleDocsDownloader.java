@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.apache.http.conn.ConnectionPoolTimeoutException;
-
 import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.android.web.google.docs.DocsAPIException.Type;
 import com.google.api.client.googleapis.GoogleHeaders;
@@ -166,10 +164,9 @@ public class GoogleDocsDownloader {
             } else {
                 LogUtil.log(re);
             }
-        } catch (ConnectionPoolTimeoutException cpe) {
-            throw new DocsAPIException(Type.ConnectPoolError, cpe);
         } catch (Exception e) {
-            throw new DocsAPIException(Type.Unknown, e);
+            LogUtil.log(e);
+            throw new DocsAPIException(DocsAPIException.toExceptionType(e), e);
         }
         throw new DocsAPIException(Type.FileNotFound, url);
     }
@@ -203,7 +200,7 @@ public class GoogleDocsDownloader {
             }
             throw new DocsAPIException(Type.APIResponseError, hre);
         } catch (Exception e) {
-            throw new DocsAPIException(Type.ConnectErrorUnknown, e);
+            throw new DocsAPIException(DocsAPIException.toExceptionType(e), e);
         }
     }
 

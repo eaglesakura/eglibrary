@@ -46,16 +46,19 @@ public class ImageCacheDatabase extends DisposableResource {
      */
     public BitmapImage get(String key, Loader loader) {
         try {
+            //            getGarbageCollector().gc();
             BlobKeyValueStore.Data data = store.get(key);
             if (data == null) {
                 byte[] blob = loader.load(this, key);
                 BitmapImage bitmapImage = new BitmapImage().loadFromStream(new ByteArrayInputStream(blob));
                 LogUtil.log("blob insert :: " + (blob.length / 1024) + " kb");
                 store.insertOrUpdate(key, blob);
+
                 return bitmapImage;
             } else {
                 LogUtil.log("blob cache :: " + (data.getValue().length / 1024) + " kb");
                 BitmapImage image = new BitmapImage().loadFromStream(new ByteArrayInputStream(data.getValue()));
+
                 if (loader.isExist(this, image, data.date)) {
                     // 利用を許可されたので、画像化して返す。
                     return image;

@@ -452,9 +452,17 @@ public class TextKeyValueStore extends DisposableResource {
 
     @Override
     public void dispose() {
+
         if (helper != null) {
             helper.close();
+            helper = null;
         }
+
+        try {
+            db.close();
+        } catch (Exception e) {
+        }
+
     }
 
     class Helper extends SQLiteOpenHelper {

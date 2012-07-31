@@ -154,6 +154,7 @@ public class GoogleDocsEntries {
                 byte[] buffer = GameUtil.toByteArray(responce.getContent());
                 return buffer;
             } catch (IOException ioe) {
+                LogUtil.log(ioe);
                 throw new DocsAPIException(Type.APIResponseError, ioe);
             } finally {
                 try {
@@ -245,9 +246,11 @@ public class GoogleDocsEntries {
                 case 403:
                     throw new DocsAPIException(Type.AuthError, hre);
             }
+            LogUtil.log(hre);
             throw new DocsAPIException(Type.APIResponseError, hre);
-        } catch (IOException ioe) {
-            throw new DocsAPIException(Type.APIResponseError, ioe);
+        } catch (Exception e) {
+            LogUtil.log(e);
+            throw new DocsAPIException(DocsAPIException.toExceptionType(e), e);
         }
     }
 
@@ -275,6 +278,7 @@ public class GoogleDocsEntries {
 
             accessURL(url, "GET");
         } catch (UnsupportedEncodingException uee) {
+            LogUtil.log(uee);
             throw new DocsAPIException(Type.Unknown, uee);
         }
     }
@@ -288,6 +292,7 @@ public class GoogleDocsEntries {
     public void searchFullPage(String keyword, boolean isQuery, boolean sort) throws DocsAPIException {
         search(keyword, isQuery);
         while (hasNextResult()) {
+            GameUtil.sleep(1000 + (int) (Math.random() * 1000));
             getNextPage();
         }
 
