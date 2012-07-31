@@ -23,6 +23,8 @@ public class GoogleOAuth2Activity extends FragmentActivity implements GoogleOAut
         if (saved == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             {
+                final String CLIENT_ID = "1070146671174.apps.googleusercontent.com";
+                final String CLIENT_SECRET = "9jyKa-TX7z_L9fpthLJfjAlr";
                 Fragment fragment = new GoogleOAuth2Fragment(CLIENT_ID, CLIENT_SECRET, new String[] {
                         //
                         GoogleOAuth2Helper.SCOPE_GDRIVE,// gdrive

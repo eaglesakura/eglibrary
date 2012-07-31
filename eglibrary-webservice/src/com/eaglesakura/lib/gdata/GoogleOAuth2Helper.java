@@ -123,7 +123,7 @@ public class GoogleOAuth2Helper {
                 ErrorCode error = JSON.decode(json, ErrorCode.class);
                 LogUtil.log("error = " + json);
                 c.disconnect();
-                throw new GoogleAPIException(error);
+                throw new GoogleAPIException(error, GoogleAPIException.Type.AuthError);
             }
         } catch (IOException e) {
             LogUtil.log(e);
@@ -176,6 +176,9 @@ public class GoogleOAuth2Helper {
                 AuthToken token = JSON.decode(json, AuthToken.class);
 
                 c.disconnect();
+                if (token == null || token.access_token == null) {
+                    throw new GoogleAPIException("token == null", GoogleAPIException.Type.APIResponseError);
+                }
                 return token;
             } else {
                 InputStream is = c.getErrorStream();
@@ -183,7 +186,7 @@ public class GoogleOAuth2Helper {
                 ErrorCode error = JSON.decode(json, ErrorCode.class);
                 LogUtil.log("error = " + json);
                 c.disconnect();
-                throw new GoogleAPIException(error);
+                throw new GoogleAPIException(error, GoogleAPIException.Type.AuthError);
             }
         } catch (IOException e) {
             LogUtil.log(e);
