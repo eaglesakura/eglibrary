@@ -217,6 +217,20 @@ public class DriveFile {
     }
 
     /**
+     * ファイルの内容をサーバーへアップロードし、内部データを更新する。
+     * @param conn
+     * @param buffer
+     * @throws GoogleAPIException
+     */
+    public void upload(GoogleAPIConnector conn, byte[] buffer) throws GoogleAPIException {
+        if (!isFile()) {
+            throw new GoogleAPIException("this is not file...", Type.APICallError);
+        }
+
+        item = GoogleDriveAPIHelper.upload(conn, item, buffer);
+    }
+
+    /**
      * 絶対パスを取得する
      * @return
      */
@@ -270,6 +284,42 @@ public class DriveFile {
             }
         }
         throw new GoogleAPIException(fileName + " not found", Type.FileNotFound);
+    }
+
+    /**
+     * Google Driveからファイルを検索して取得する。
+     * もしファイルが見つからなかった場合、新しい空ファイルを作成して返す。
+     * @param connector
+     * @param fileName
+     * @param mimeType
+     * @return
+     * @throws GoogleAPIException
+     */
+    public static DriveFile getOrNewfile(GoogleAPIConnector connector, String fileName, String mimeType)
+            throws GoogleAPIException {
+        DriveFile result = null;
+
+        try {
+            // まずは通常ファイルを検索する
+            result = get(connector, fileName);
+        } catch (GoogleAPIException e) {
+            if (e.getType() == Type.FileNotFound) {
+                // ファイルが見つからなかったら、新規ファイルを作成してしまう
+                DriveItem item = new DriveItem();
+                item.title = fileName;
+                item.mimeType = mimeType;
+
+                // 新しいファイルに入れ替える
+                item = GoogleDriveAPIHelper.newFile(connector, item);
+
+                result = new DriveFile(item);
+            } else {
+                // それ以外のエラーは死んでもらう
+                throw e;
+            }
+        }
+
+        return result;
     }
 
     /**
