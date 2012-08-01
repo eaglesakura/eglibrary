@@ -102,6 +102,11 @@ public class GoogleAPIException extends Exception {
         APIResponseError,
 
         /**
+         * ファイルのレンジがおかしい
+         */
+        OutOfFileRange,
+
+        /**
          * 接続にタイムアウトした
          */
         ConnectErrorTimeout,
@@ -141,6 +146,8 @@ public class GoogleAPIException extends Exception {
             case 401:
             case 403:
                 return Type.AuthError;
+            case 416:
+                return Type.OutOfFileRange;
         }
 
         return Type.Unknown;
