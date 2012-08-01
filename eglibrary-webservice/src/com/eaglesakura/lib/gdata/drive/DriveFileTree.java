@@ -95,6 +95,20 @@ public class DriveFileTree {
     }
 
     /**
+     * 子も含めた全ファイルのリストを作成する
+     * @return
+     */
+    public List<DriveFile> listFiles(List<DriveFile> result) {
+        result.addAll(files);
+
+        for (DriveFileTree child : children) {
+            child.listFiles(result);
+        }
+
+        return result;
+    }
+
+    /**
      * ファイルのツリー構造を構築する
      * @param files
      * @param connector
@@ -163,6 +177,9 @@ public class DriveFileTree {
                     // IDから親を取得する
                     String parentId = current.directory.getParentId();
                     DriveFileTree parentTree = treeMap.get(parentId);
+                    if (root == parentTree) {
+                        LogUtil.log("isRoot");
+                    }
                     if (parentTree != null) {
                         // 親ディレクトリに登録する
                         parentTree.children.add(current);

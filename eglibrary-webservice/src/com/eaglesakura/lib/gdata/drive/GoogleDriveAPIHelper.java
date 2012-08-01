@@ -222,17 +222,9 @@ public class GoogleDriveAPIHelper {
      * @return
      */
     public static DriveItem rootDirectory(GoogleAPIConnector connector) throws GoogleAPIException {
-        DriveItem item = pick(connector);
-        if (item == null) {
-            throw new GoogleAPIException("root not found", Type.FileNotFound);
-        }
+        DriveAbout aboutData = about(connector);
 
-        // 親があるなら親をたどる
-        while (hasParent(item)) {
-            item = getParent(item, connector);
-        }
-
-        return item;
+        return infoFromLink(connector, "https://www.googleapis.com/drive/v2/files/" + aboutData.rootFolderId);
 
     }
 
@@ -283,6 +275,68 @@ public class GoogleDriveAPIHelper {
         } else {
             return null;
         }
+    }
+
+    /**
+     * 基本情報を取得する
+     * @param connector
+     * @return
+     * @throws GoogleAPIException
+     */
+    public static DriveAbout about(GoogleAPIConnector connector) throws GoogleAPIException {
+        final String url = "https://www.googleapis.com/drive/v2/about";
+
+        GoogleConnection connection = connector.get(url, null);
+        try {
+            if (connection.getResponceCode() == 200) {
+                DriveAbout result = JSON.decode(connection.getInput(), DriveAbout.class);
+                return result;
+            }
+            throw new GoogleAPIException(connection.getResponceCode());
+        } catch (IOException e) {
+            throw new GoogleAPIException(e);
+        } finally {
+            connection.dispose();
+        }
+    }
+
+    /**
+     * Driveの情報を取得する
+     * @author TAKESHI YAMASHITA
+     *
+     */
+    public static class DriveAbout {
+        public String kind = null;
+        public String etag = null;
+        public String selfLink = null;
+        public String name = null;
+        /**
+         * 最大容量
+         */
+        public Long quotaBytesTotal = null;
+
+        /**
+         * 使用容量
+         */
+        public Long quotaBytesUsed = null;
+
+        /**
+         * ゴミ箱使用量
+         */
+        public Long quotaBytesUsedInTrash = null;
+
+        public Long largestChangeId = null;
+
+        public Long remainingChangeIds = null;
+
+        /**
+         * 
+         */
+        public String rootFolderId = null;
+
+        public String domainSharingPolicy = null;
+
+        public String permissionId = null;
     }
 
     /**

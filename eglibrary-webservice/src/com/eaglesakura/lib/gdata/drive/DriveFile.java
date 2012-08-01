@@ -72,6 +72,9 @@ public class DriveFile {
      * @throws GoogleAPIException
      */
     public DriveFile getParent(GoogleAPIConnector connector) throws GoogleAPIException {
+        if (isRoot()) {
+            return null;
+        }
         // 親を持っていなかったら問い合わせる
         if (parent == null && GoogleDriveAPIHelper.hasParent(item)) {
             DriveItem raw = GoogleDriveAPIHelper.getParent(item, connector);

@@ -82,7 +82,7 @@ public class DriveFileDownloader extends DisposableResource {
                     os.write(buffer, 0, readed);
                     // 書き込んだサイズだけ必要サイズを減らす
                     length -= readed;
-                } else {
+                } else /* if (readed < 0) */{
                     // 読み込むべきサイズが無くなった
                     return true;
                 }

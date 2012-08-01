@@ -68,11 +68,11 @@ public class GoogleAPIConnector {
      * アクセストークンをリセットする
      * @return 新しいトークン
      */
-    public String refreshAccessToken() throws GoogleAPIException {
+    public synchronized String refreshAccessToken() throws GoogleAPIException {
         GoogleOAuth2Helper.AuthToken token = GoogleOAuth2Helper.refreshAuthToken(clientId, clientSecret, refreshToken);
         LogUtil.log("refreshed token = " + token.access_token);
         accessToken = token.access_token;
-        listener.onAccessTokenReset(token.access_token);
+        listener.onAccessTokenReset(this, token.access_token);
         return accessToken;
     }
 
@@ -152,12 +152,17 @@ public class GoogleAPIConnector {
                 case 403: {
                     throw new GoogleAPIException("Responce Error", Type.AuthError);
                 }
+                case 503:
+                case 500: {
+                    throw new GoogleAPIException("Server Error", Type.APIResponseError);
+                }
             }
 
             // 正常にコネクションを開いた
             GoogleConnection result = new GoogleConnection(responseCode, connection);
             return result;
         } catch (Exception e) {
+            // コネクションを閉じておく
             if (connection != null) {
                 try {
                     InputStream is = connection.getErrorStream();
@@ -193,16 +198,25 @@ public class GoogleAPIConnector {
                 GoogleConnection conn = _get(url, argments, -1, -1);
                 return conn;
             } catch (GoogleAPIException e) {
+                if (i == (maxRetry - 1)) {
+                    throw e;
+                }
+
                 if (e.getType() == Type.AuthError) {
                     // 認証エラーだったら、再度トークンを発行する
                     LogUtil.log("token refresh");
                     refreshAccessToken();
+                } else if (e.getType() == Type.APIResponseError) {
+                    // 適当なウェイトをかけてもう一度コールする
+                    LogUtil.log("APIError");
+                    GameUtil.sleep(1000 + 500 * (i + 1));
                 } else {
                     throw e;
                 }
             }
         }
 
+        LogUtil.log("retry > maxRetry...");
         throw new GoogleAPIException("connection failed...", Type.Unknown);
     }
 
@@ -224,10 +238,18 @@ public class GoogleAPIConnector {
                     throw new GoogleAPIException(conn.getResponceCode());
                 }
             } catch (GoogleAPIException e) {
+                if (i == (maxRetry - 1)) {
+                    throw e;
+                }
+
                 if (e.getType() == Type.AuthError) {
                     // 認証エラーだったら、再度トークンを発行する
                     LogUtil.log("token refresh");
                     refreshAccessToken();
+                } else if (e.getType() == Type.APIResponseError) {
+                    // 適当なウェイトをかけてもう一度コールする
+                    LogUtil.log("APIError");
+                    GameUtil.sleep(500 * (i + 1));
                 } else {
                     throw e;
                 }
@@ -245,7 +267,7 @@ public class GoogleAPIConnector {
          * トークンがリセットされた場合に呼び出される。
          * @param newToken
          */
-        void onAccessTokenReset(String newToken);
+        void onAccessTokenReset(GoogleAPIConnector connector, String newToken);
     }
 
     /**
