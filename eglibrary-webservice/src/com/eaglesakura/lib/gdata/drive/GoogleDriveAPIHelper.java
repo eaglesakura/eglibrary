@@ -179,6 +179,15 @@ public class GoogleDriveAPIHelper {
     }
 
     /**
+     * ディレクトリオブジェクトの場合はtrue
+     * @param item
+     * @return
+     */
+    public static boolean isDirectory(DriveItem item) {
+        return item.mimeType.equals("application/vnd.google-apps.folder");
+    }
+
+    /**
      * 親オブジェクトを取得する
      * @param connector
      * @return
@@ -247,6 +256,16 @@ public class GoogleDriveAPIHelper {
     public static List<DriveItem> list(GoogleAPIConnector connector) throws GoogleAPIException {
         String nextLink = "https://www.googleapis.com/drive/v2/files";
         return listup(connector, nextLink, -1);
+    }
+
+    /**
+     * ディレクトリ一覧を取得する
+     * @param connector
+     * @return
+     * @throws GoogleAPIException
+     */
+    public static List<DriveItem> listDirectories(GoogleAPIConnector connector) throws GoogleAPIException {
+        return search(connector, createQuery("mimeType = 'application/vnd.google-apps.folder'"));
     }
 
     /**
