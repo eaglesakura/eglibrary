@@ -138,7 +138,7 @@ public class GoogleAPIConnector {
             connection.setDoInput(true);
 
             // Rangeヘッダが必要
-            if (rangeBegin >= 0 && rangeEnd >= 0 && rangeBegin > rangeEnd) {
+            if (rangeBegin >= 0 && rangeEnd >= 0 && rangeBegin < rangeEnd) {
                 connection.setRequestProperty("Range", "bytes=" + rangeBegin + "-" + rangeEnd);
             }
 

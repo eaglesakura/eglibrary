@@ -1,6 +1,8 @@
 package com.eaglesakura.lib.gdata.drive;
 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -243,13 +245,31 @@ public class DriveFile {
      * @param connector
      * @return
      */
-    public static DriveFile root(GoogleAPIConnector connector) {
-        try {
-            DriveItem raw = GoogleDriveAPIHelper.rootDirectory(connector);
-            return new DriveFile(raw);
-        } catch (Exception e) {
-            return null;
+    public static DriveFile root(GoogleAPIConnector connector) throws GoogleAPIException {
+        DriveItem raw = GoogleDriveAPIHelper.rootDirectory(connector);
+        return new DriveFile(raw);
+    }
+
+    /**
+     * Google Driveからファイルを検索して取得する。
+     * ただし、ファイル名が一意に決まることが前提となる。
+     * @param connector
+     * @param fileName
+     * @return
+     * @throws GoogleAPIException
+     */
+    public static DriveFile get(GoogleAPIConnector connector, String fileName) throws GoogleAPIException {
+        List<DriveItem> search = GoogleDriveAPIHelper.search(connector,
+                GoogleDriveAPIHelper.createQueryFullTextContains(fileName));
+        if (search.isEmpty()) {
+            throw new GoogleAPIException(fileName + " not found", Type.FileNotFound);
         }
+        for (DriveItem item : search) {
+            if (item.title.equals(fileName)) {
+                return new DriveFile(item);
+            }
+        }
+        throw new GoogleAPIException(fileName + " not found", Type.FileNotFound);
     }
 
     /**
@@ -263,5 +283,28 @@ public class DriveFile {
             result.add(new DriveFile(item));
         }
         return result;
+    }
+
+    public enum Sorter {
+        /**
+         * 名前順にソートする
+         */
+        Name {
+            @Override
+            public void sort(List<DriveFile> files) {
+                Collections.sort(files, new Comparator<DriveFile>() {
+                    @Override
+                    public int compare(DriveFile lhs, DriveFile rhs) {
+                        return lhs.getTitle().compareTo(rhs.getTitle());
+                    }
+                });
+            }
+        };
+
+        /**
+         * 指定の順番でソートする
+         * @param files
+         */
+        public abstract void sort(List<DriveFile> files);
     }
 }
