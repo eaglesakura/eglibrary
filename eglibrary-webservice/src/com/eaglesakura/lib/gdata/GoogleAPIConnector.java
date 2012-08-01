@@ -70,7 +70,8 @@ public class GoogleAPIConnector {
      */
     public synchronized String refreshAccessToken() throws GoogleAPIException {
         GoogleOAuth2Helper.AuthToken token = GoogleOAuth2Helper.refreshAuthToken(clientId, clientSecret, refreshToken);
-        LogUtil.log("refreshed token = " + token.access_token);
+        //        LogUtil.log("refreshed token = " + token.access_token);
+        LogUtil.log("refreshed token sha1 :: " + GameUtil.genSHA1(token.access_token.getBytes()));
         accessToken = token.access_token;
         listener.onAccessTokenReset(this, token.access_token);
         return accessToken;
