@@ -3,8 +3,10 @@ package com.eaglesakura.lib.gdata.drive;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import net.arnx.jsonic.JSON;
 
@@ -274,6 +276,100 @@ public class GoogleDriveAPIHelper {
             return result.get(0);
         } else {
             return null;
+        }
+    }
+
+    /**
+     * サーバー上に新しいファイルを作成する。
+     * @param item
+     * @return
+     * @throws GoogleAPIException
+     * @see {@link DriveItem#title}
+     * @see {@link DriveItem#mimeType}
+     */
+    public static DriveItem newFile(GoogleAPIConnector connector, DriveItem item) throws GoogleAPIException {
+        if (item.id != null) {
+            throw new GoogleAPIException("newfile id error :: " + item.id, Type.APICallError);
+        }
+
+        // 送信するJSONを作成する
+        String json = JSON.encode(item);
+
+        Map<String, String> prop = new HashMap<String, String>();
+        prop.put("Content-Type", "application/json");
+        GoogleConnection connection = connector.postOrPut("https://www.googleapis.com/drive/v2/files", "POST", prop,
+                json.getBytes());
+        try {
+            if (connection.getResponceCode() != 200) {
+                throw new GoogleAPIException(connection.getResponceCode());
+            }
+            return JSON.decode(connection.getInput(), DriveItem.class);
+        } catch (IOException e) {
+            throw new GoogleAPIException(e);
+        } finally {
+            connection.dispose();
+        }
+    }
+
+    /**
+     * バッファを転送する。
+     * バッファに載せきれないほどの大きさのファイルは別な方法でアップロードする
+     * @param connector
+     * @param item
+     * @param buffer
+     * @return
+     * @throws GoogleAPIException
+     */
+    public static DriveItem upload(GoogleAPIConnector connector, DriveItem item, byte[] buffer)
+            throws GoogleAPIException {
+        if (item.id == null) {
+            throw new GoogleAPIException("newfile id error :: " + item.id, Type.APICallError);
+        }
+
+        Map<String, String> prop = new HashMap<String, String>();
+        prop.put("Content-Type", item.mimeType);
+        GoogleConnection connection = connector.postOrPut(
+                "https://www.googleapis.com/upload/drive/v2/files/" + item.id, "PUT", prop, buffer);
+        try {
+            if (connection.getResponceCode() != 200) {
+                throw new GoogleAPIException(connection.getResponceCode());
+            }
+            return JSON.decode(connection.getInput(), DriveItem.class);
+        } catch (IOException e) {
+            throw new GoogleAPIException(e);
+        } finally {
+            connection.dispose();
+        }
+    }
+
+    /**
+     * ファイルの基本情報を更新する
+     * @param connector
+     * @param item
+     * @return
+     * @throws GoogleAPIException
+     */
+    public static DriveItem updateFileInfo(GoogleAPIConnector connector, DriveItem item) throws GoogleAPIException {
+        if (item.id == null) {
+            throw new GoogleAPIException("newfile id error :: " + item.id, Type.APICallError);
+        }
+
+        // 送信するJSONを作成する
+        String json = JSON.encode(item);
+
+        Map<String, String> prop = new HashMap<String, String>();
+        prop.put("Content-Type", "application/json");
+        GoogleConnection connection = connector.postOrPut("https://www.googleapis.com/drive/v2/files/" + item.id,
+                "PUT", prop, json.getBytes());
+        try {
+            if (connection.getResponceCode() != 200) {
+                throw new GoogleAPIException(connection.getResponceCode());
+            }
+            return JSON.decode(connection.getInput(), DriveItem.class);
+        } catch (IOException e) {
+            throw new GoogleAPIException(e);
+        } finally {
+            connection.dispose();
         }
     }
 

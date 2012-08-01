@@ -2,6 +2,7 @@ package com.eaglesakura.lib.gdata;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -125,6 +126,25 @@ public class GoogleAPIConnector {
     }
 
     /**
+     * レスポンスをチェックして内容を確認する
+     * @param responseCode
+     * @throws GoogleAPIException
+     */
+    private void _checkResponse(int responseCode) throws GoogleAPIException {
+        switch (responseCode) {
+        // 認証エラーには例外を返す
+            case 401:
+            case 403: {
+                throw new GoogleAPIException("Responce Error", Type.AuthError);
+            }
+            case 503:
+            case 500: {
+                throw new GoogleAPIException("Server Error", Type.APIResponseError);
+            }
+        }
+    }
+
+    /**
      * 実際のGET操作を行う
      * @param url
      * @param argments
@@ -147,17 +167,7 @@ public class GoogleAPIConnector {
             int responseCode = connection.getResponseCode();
 
             LogUtil.log("ResponseCode = " + responseCode);
-            switch (responseCode) {
-            // 認証エラーには例外を返す
-                case 401:
-                case 403: {
-                    throw new GoogleAPIException("Responce Error", Type.AuthError);
-                }
-                case 503:
-                case 500: {
-                    throw new GoogleAPIException("Server Error", Type.APIResponseError);
-                }
-            }
+            _checkResponse(responseCode);
 
             // 正常にコネクションを開いた
             GoogleConnection result = new GoogleConnection(responseCode, connection);
@@ -184,6 +194,112 @@ public class GoogleAPIConnector {
                 throw new GoogleAPIException(e);
             }
         }
+    }
+
+    /**
+     * 実際のGET操作を行う
+     * @param url
+     * @param argments
+     * @throws GoogleAPIException
+     */
+    private GoogleConnection _postOrPut(String url, String method, Map<String, String> property, long rangeBegin,
+            long rangeEnd, byte[] body) throws GoogleAPIException {
+        HttpURLConnection connection = null;
+        try {
+            connection = createConnection(url, method);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+
+            if (property != null) {
+                Iterator<Entry<String, String>> iterator = property.entrySet().iterator();
+                while (iterator.hasNext()) {
+                    Entry<String, String> entry = iterator.next();
+                    connection.setRequestProperty(entry.getKey(), entry.getValue());
+                }
+            }
+            connection.setRequestProperty("Content-Length", String.valueOf(body.length));
+
+            // Rangeヘッダが必要
+            /*
+            if (rangeBegin >= 0 && rangeEnd >= 0 && rangeBegin < rangeEnd) {
+                connection.setRequestProperty("Range", "bytes=" + rangeBegin + "-" + rangeEnd);
+            }
+            */
+
+            connection.connect();
+
+            // データを転送する
+            {
+                OutputStream stream = connection.getOutputStream();
+                stream.write(body);
+                stream.flush();
+            }
+
+            // 結果受け取る
+            int responseCode = connection.getResponseCode();
+            LogUtil.log("ResponseCode = " + responseCode);
+            _checkResponse(responseCode);
+
+            // 正常にコネクションを開いた
+            GoogleConnection result = new GoogleConnection(responseCode, connection);
+            return result;
+        } catch (Exception e) {
+            // コネクションを閉じておく
+            if (connection != null) {
+                try {
+                    InputStream is = connection.getErrorStream();
+                    LogUtil.log("connect error = " + new String(GameUtil.toByteArray(is)));
+                } catch (Exception ee) {
+
+                }
+                try {
+                    connection.disconnect();
+                    connection = null;
+                } catch (Exception __e) {
+
+                }
+            }
+            if (e instanceof GoogleAPIException) {
+                throw (GoogleAPIException) e;
+            } else {
+                throw new GoogleAPIException(e);
+            }
+        }
+    }
+
+    /**
+     * インメモリの内容を全て送信する
+     * @param url
+     * @param properties
+     * @param buffer
+     * @return
+     * @throws GoogleAPIException
+     */
+    public GoogleConnection postOrPut(String url, String method, Map<String, String> properties, byte[] buffer)
+            throws GoogleAPIException {
+        for (int i = 0; i < maxRetry; ++i) {
+            try {
+                GoogleConnection conn = _postOrPut(url, method, properties, -1, -1, buffer);
+                return conn;
+            } catch (GoogleAPIException e) {
+                if (i == (maxRetry - 1)) {
+                    throw e;
+                }
+
+                if (e.getType() == Type.AuthError) {
+                    // 認証エラーだったら、再度トークンを発行する
+                    LogUtil.log("token refresh");
+                    refreshAccessToken();
+                } else if (e.getType() == Type.APIResponseError) {
+                    // 適当なウェイトをかけてもう一度コールする
+                    LogUtil.log("APIError sleep...");
+                    GameUtil.sleep(1000 + 500 * (i + 1));
+                } else {
+                    throw e;
+                }
+            }
+        }
+        throw new GoogleAPIException("connection failed...", Type.Unknown);
     }
 
     /**
@@ -222,7 +338,7 @@ public class GoogleAPIConnector {
     }
 
     /**
-     * GET操作を行う
+     * ダウンロード用のGET操作を行う
      * @param url
      * @param argments
      * @return
