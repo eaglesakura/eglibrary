@@ -138,6 +138,7 @@ public class GoogleAPIConnector {
                 throw new GoogleAPIException("Responce Error", Type.AuthError);
             }
             case 503:
+            case 502:
             case 500: {
                 throw new GoogleAPIException("Server Error", Type.APIResponseError);
             }
