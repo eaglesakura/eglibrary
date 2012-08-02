@@ -147,6 +147,8 @@ public class GoogleAPIException extends Exception {
             case 401:
             case 403:
                 return Type.AuthError;
+            case 404:
+                return Type.FileNotFound;
             case 416:
                 return Type.OutOfFileRange;
         }

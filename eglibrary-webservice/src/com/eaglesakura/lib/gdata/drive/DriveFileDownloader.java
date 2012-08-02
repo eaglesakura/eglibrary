@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import com.eaglesakura.lib.android.game.resource.DisposableResource;
+import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.gdata.GoogleAPIConnector;
 import com.eaglesakura.lib.gdata.GoogleAPIException;
 import com.eaglesakura.lib.gdata.GoogleAPIException.Type;
@@ -91,6 +92,7 @@ public class DriveFileDownloader extends DisposableResource {
             // まだ多分読み込める
             return false;
         } catch (IOException e) {
+            LogUtil.log(e);
             throw new GoogleAPIException(e);
         }
     }

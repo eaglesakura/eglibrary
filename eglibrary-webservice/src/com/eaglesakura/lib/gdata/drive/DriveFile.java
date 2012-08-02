@@ -99,17 +99,17 @@ public class DriveFile {
     }
 
     /**
-     * ファイルにダウンロードを行う。
-     * ダウンロード中の制御はコールバックを通じて行う。
-     * dstFileのサイズが0より大きい場合、自動的にレジュームが行われる
+     * dstFileに対し、rangeBegin-rangeEndの範囲をダウンロードする。
+     * dstFileは常に上書きが行われるため、レジュームは期待しないこと。
      * @param connector
      * @param dstFile
+     * @param rangeBegin
+     * @param rangeEnd
      * @param callback
      * @return
-     * @throws GoogleAPIException
      */
-    public boolean download(GoogleAPIConnector connector, File dstFile, DownloadCallback callback)
-            throws GoogleAPIException {
+    public boolean downloadRange(GoogleAPIConnector connector, File dstFile, int rangeBegin, int rangeEnd,
+            DownloadCallback callback) throws GoogleAPIException {
         if (!isFile()) {
             return false;
         }
@@ -119,17 +119,13 @@ public class DriveFile {
         // 親ディレクトリを作成する
         FileUtil.mkdir(dstFile.getParentFile());
 
-        if (dstFile.length() > 0) {
-            downloader.resume(dstFile);
-        } else {
-            downloader.start();
-        }
+        downloader.start(rangeBegin, rangeEnd);
 
         callback.onStart(this);
 
         try {
             BufferTargetOutputStream tempStream = new BufferTargetOutputStream(new byte[1024 * 16]);
-            FileOutputStream output = new FileOutputStream(dstFile);
+            FileOutputStream output = new FileOutputStream(dstFile, dstFile.length() > 0);
             try {
 
                 while (!downloader.nextDownload(tempStream, tempStream.getBufferSize())) {
@@ -162,7 +158,73 @@ public class DriveFile {
         } catch (IOException e) {
             throw new GoogleAPIException(e);
         }
+    }
 
+    /**
+     * ファイルにダウンロードを行う。
+     * ダウンロード中の制御はコールバックを通じて行う。
+     * dstFileのサイズが0より大きい場合、自動的にレジュームが行われる
+     * @param connector
+     * @param dstFile
+     * @param callback
+     * @return
+     * @throws GoogleAPIException
+     */
+    public boolean download(GoogleAPIConnector connector, File dstFile, DownloadCallback callback)
+            throws GoogleAPIException {
+
+        if (!isFile()) {
+            return false;
+        }
+
+        DriveFileDownloader downloader = createDownloader(connector);
+
+        // 親ディレクトリを作成する
+        FileUtil.mkdir(dstFile.getParentFile());
+
+        if (dstFile.length() > 0) {
+            downloader.resume(dstFile);
+        } else {
+            downloader.start();
+        }
+
+        callback.onStart(this);
+
+        try {
+            BufferTargetOutputStream tempStream = new BufferTargetOutputStream(new byte[1024 * 16]);
+            FileOutputStream output = new FileOutputStream(dstFile, dstFile.length() > 0);
+            try {
+
+                while (!downloader.nextDownload(tempStream, tempStream.getBufferSize())) {
+                    if (callback.isCanceled()) {
+                        // キャンセルされているなら書き込まずに終了する
+                        return false;
+                    } else {
+                        // 実ファイルへ書き込む
+                        output.write(tempStream.getBuffer(), 0, tempStream.getWriteIndex());
+                        output.flush();
+                        callback.onUpdate(this, dstFile.length());
+                    }
+
+                    // 書き込み位置を戻す
+                    tempStream.reset();
+                }
+
+                if (!callback.isCanceled()) {
+                    // 実ファイルへ書き込む
+                    output.write(tempStream.getBuffer(), 0, tempStream.getWriteIndex());
+                }
+
+                // 正常に完了した
+                return true;
+            } finally {
+                tempStream.close();
+                output.close();
+            }
+
+        } catch (IOException e) {
+            throw new GoogleAPIException(e);
+        }
     }
 
     /**

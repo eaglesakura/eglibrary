@@ -411,6 +411,7 @@ public class TextKeyValueStore extends DisposableResource {
      * @param insertDB
      */
     public void insertTo(final TextKeyValueStore insertDB, InsertFilter filter) {
+        beginTransaction();
         Cursor cursor = insertDB.db.query(tableName, new String[] {
                 DB_KEY, DB_VALUE, DB_DATE,
         }, null, null, null, null, null);
@@ -432,6 +433,7 @@ public class TextKeyValueStore extends DisposableResource {
             if (cursor != null) {
                 cursor.close();
             }
+            endTransaction();
         }
     }
 

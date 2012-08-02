@@ -51,12 +51,12 @@ public class ImageCacheDatabase extends DisposableResource {
             if (data == null) {
                 byte[] blob = loader.load(this, key);
                 BitmapImage bitmapImage = new BitmapImage().loadFromStream(new ByteArrayInputStream(blob));
-                LogUtil.log("blob insert :: " + (blob.length / 1024) + " kb");
+                //                LogUtil.log("blob insert :: " + (blob.length / 1024) + " kb");
                 store.insertOrUpdate(key, blob);
 
                 return bitmapImage;
             } else {
-                LogUtil.log("blob cache :: " + (data.getValue().length / 1024) + " kb");
+                //                LogUtil.log("blob cache :: " + (data.getValue().length / 1024) + " kb");
                 BitmapImage image = new BitmapImage().loadFromStream(new ByteArrayInputStream(data.getValue()));
 
                 if (loader.isExist(this, image, data.date)) {
