@@ -1,5 +1,8 @@
 package com.eaglesakura.lib.gdata.drive;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
@@ -7,6 +10,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.eaglesakura.lib.android.game.io.BufferTargetOutputStream;
+import com.eaglesakura.lib.android.game.util.FileUtil;
 import com.eaglesakura.lib.gdata.GoogleAPIConnector;
 import com.eaglesakura.lib.gdata.GoogleAPIException;
 import com.eaglesakura.lib.gdata.GoogleAPIException.Type;
@@ -65,6 +70,99 @@ public class DriveFile {
             throw new GoogleAPIException("item is not file :: " + item.title, Type.FileNotFound);
         }
         return new DriveFileDownloader(connector, item);
+    }
+
+    /**
+     * ダウンロード中の制御を行わせる。
+     *
+     */
+    public interface DownloadCallback {
+        /**
+         * ダウンロードをキャンセルする場合はtrueを返す
+         * @return
+         */
+        boolean isCanceled();
+
+        /**
+         * ダウンロードを開始するタイミングで呼び出される
+         * @param file
+         */
+        void onStart(DriveFile file);
+
+        /**
+         * ダウンロードの進捗が進むごとに呼び出される。
+         * ファイルが小さい場合は呼び出されない場合もある
+         * @param file
+         * @param downloaded
+         */
+        void onUpdate(DriveFile file, long downloaded);
+    }
+
+    /**
+     * ファイルにダウンロードを行う。
+     * ダウンロード中の制御はコールバックを通じて行う。
+     * dstFileのサイズが0より大きい場合、自動的にレジュームが行われる
+     * @param connector
+     * @param dstFile
+     * @param callback
+     * @return
+     * @throws GoogleAPIException
+     */
+    public boolean download(GoogleAPIConnector connector, File dstFile, DownloadCallback callback)
+            throws GoogleAPIException {
+        if (!isFile()) {
+            return false;
+        }
+
+        DriveFileDownloader downloader = createDownloader(connector);
+
+        // 親ディレクトリを作成する
+        FileUtil.mkdir(dstFile.getParentFile());
+
+        if (dstFile.length() > 0) {
+            downloader.resume(dstFile);
+        } else {
+            downloader.start();
+        }
+
+        callback.onStart(this);
+
+        try {
+            BufferTargetOutputStream tempStream = new BufferTargetOutputStream(new byte[1024 * 16]);
+            FileOutputStream output = new FileOutputStream(dstFile);
+            try {
+
+                while (!downloader.nextDownload(tempStream, tempStream.getBufferSize())) {
+                    if (callback.isCanceled()) {
+                        // キャンセルされているなら書き込まずに終了する
+                        return false;
+                    } else {
+                        // 実ファイルへ書き込む
+                        output.write(tempStream.getBuffer(), 0, tempStream.getWriteIndex());
+                        output.flush();
+                        callback.onUpdate(this, dstFile.length());
+                    }
+
+                    // 書き込み位置を戻す
+                    tempStream.reset();
+                }
+
+                if (!callback.isCanceled()) {
+                    // 実ファイルへ書き込む
+                    output.write(tempStream.getBuffer(), 0, tempStream.getWriteIndex());
+                }
+
+                // 正常に完了した
+                return true;
+            } finally {
+                tempStream.close();
+                output.close();
+            }
+
+        } catch (IOException e) {
+            throw new GoogleAPIException(e);
+        }
+
     }
 
     /**
@@ -148,6 +246,14 @@ public class DriveFile {
      */
     public boolean isFile() {
         return GoogleDriveAPIHelper.isFile(item);
+    }
+
+    /**
+     * 空ファイルの場合trueを設定する
+     * @return
+     */
+    public boolean isEmptyFile() {
+        return isFile() && getFileSize() == 0;
     }
 
     /**

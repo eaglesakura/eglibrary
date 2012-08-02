@@ -15,9 +15,9 @@ import com.google.api.client.http.HttpResponseException;
 public class GoogleAPIException extends Exception {
     static final long serialVersionUID = 0x01;
 
-    Exception base;
+    Exception base = null;
 
-    Type type;
+    Type type = Type.Unknown;
 
     /**
      * 
@@ -25,6 +25,7 @@ public class GoogleAPIException extends Exception {
      */
     public GoogleAPIException(Exception baseException) {
         super(toMessage(baseException));
+        this.type = toExceptionType(baseException);
         this.base = baseException;
     }
 

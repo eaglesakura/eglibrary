@@ -191,6 +191,7 @@ public class GoogleAPIConnector {
             if (e instanceof GoogleAPIException) {
                 throw (GoogleAPIException) e;
             } else {
+                LogUtil.log(e);
                 throw new GoogleAPIException(e);
             }
         }
@@ -388,7 +389,36 @@ public class GoogleAPIConnector {
     }
 
     /**
-     * 
+     * アップロード中の制御を行う
+     * @author TAKESHI YAMASHITA
+     *
+     */
+    public interface UploadCallback {
+        /**
+         * 指定した範囲の内容をdstに書き込む
+         * @param buffer
+         * @param startIndex 読み込みたい開始index {@link InputStream#skip(long)}を行える。
+         * @param requestLength 読み込みたいバイト数
+         * @return 読み込めたバイト数
+         * @throws IOException
+         */
+        int getUploadSource(byte[] dst, long startIndex, long requestLength) throws IOException;
+
+        /**
+         * アップロードサイズを取得する
+         * @return
+         */
+        int getUploadSize();
+
+        /**
+         * キャンセルを行う場合はtrueを返す
+         * @return
+         */
+        int isCanceled();
+    }
+
+    /**
+     * サーバーからのInputStreamを管理する。
      * @author TAKESHI YAMASHITA
      *
      */
