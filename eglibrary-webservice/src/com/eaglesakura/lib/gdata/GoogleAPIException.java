@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
+import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLPeerUnverifiedException;
 
 import org.apache.http.conn.ConnectTimeoutException;
@@ -196,6 +197,9 @@ public class GoogleAPIException extends Exception {
         }
         if (base instanceof SSLPeerUnverifiedException) {
             return Type.ConnectErrorUnknown;
+        }
+        if (base instanceof SSLException) {
+            return Type.APIResponseError;
         }
 
         return Type.Unknown;
