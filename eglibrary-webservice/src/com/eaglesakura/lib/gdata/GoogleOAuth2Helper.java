@@ -59,6 +59,7 @@ public class GoogleOAuth2Helper {
             HttpURLConnection.setFollowRedirects(false);
             // GET メソッドでリクエストする
             HttpURLConnection c = (HttpURLConnection) new URL(ENDPOINT + "/auth?" + b.toString()).openConnection();
+            c.setConnectTimeout(1000 * 10);
             final String resultURL = c.getHeaderField("Location");
             c.disconnect();
 

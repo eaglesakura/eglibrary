@@ -1,5 +1,7 @@
 package com.eaglesakura.lib.gdata.fragment;
 
+import java.io.File;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -9,12 +11,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.WebViewDatabase;
 
 import com.eaglesakura.lib.android.game.thread.AsyncAction;
 import com.eaglesakura.lib.android.game.thread.UIHandler;
+import com.eaglesakura.lib.android.game.util.FileUtil;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.gdata.GoogleAPIException;
 import com.eaglesakura.lib.gdata.GoogleOAuth2Helper;
@@ -88,6 +94,20 @@ public class GoogleOAuth2Fragment extends Fragment {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setAppCacheEnabled(false);
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        {
+            String cachePath = "/data/data/" + getActivity().getPackageName() + "/files/__es_auth_cache__";
+            File cacheDirectory = new File(cachePath);
+
+            FileUtil.mkdir(cacheDirectory).isDirectory();
+            FileUtil.cleanDirectory(cacheDirectory);
+            webView.getSettings().setAppCachePath(cacheDirectory.getAbsolutePath());
+            CookieSyncManager.createInstance(getActivity());
+            CookieManager.getInstance().removeAllCookie();
+
+            WebViewDatabase.getInstance(getActivity()).clearFormData();
+            WebViewDatabase.getInstance(getActivity()).clearHttpAuthUsernamePassword();
+            WebViewDatabase.getInstance(getActivity()).clearUsernamePassword();
+        }
         webView.clearCache(true);
         webView.clearFormData();
         webView.clearSslPreferences();
@@ -284,6 +304,10 @@ public class GoogleOAuth2Fragment extends Fragment {
 
             @Override
             protected void onFailure(Exception exception) {
+                LogUtil.log(exception);
+                if (!(exception instanceof GoogleAPIException)) {
+                    exception = new GoogleAPIException(exception);
+                }
                 listener.onErrorMakeAuthURL(get_this(), (GoogleAPIException) exception);
             }
 
@@ -302,7 +326,7 @@ public class GoogleOAuth2Fragment extends Fragment {
             protected Object onBackgroundAction() throws Exception {
                 authUrl = GoogleOAuth2Helper.getAuthorizationUrl(getClientId(), getRedirectURL(), getScopeUrls());
                 if (authUrl == null) {
-                    return null;
+                    throw new NullPointerException("Auth URL is null");
                 }
                 return authUrl;
             }

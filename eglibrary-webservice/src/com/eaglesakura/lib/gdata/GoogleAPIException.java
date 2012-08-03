@@ -83,6 +83,11 @@ public class GoogleAPIException extends Exception {
      */
     public enum Type {
         /**
+         * MD5の検証に失敗した
+         */
+        MD5ChecksumError,
+
+        /**
          * ファイルが見つからなかった。
          */
         FileNotFound,
