@@ -2,6 +2,7 @@ package com.eaglesakura.lib.gdata;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
@@ -200,6 +201,9 @@ public class GoogleAPIException extends Exception {
         }
         if (base instanceof SSLException) {
             return Type.APIResponseError;
+        }
+        if (base instanceof ConnectException) {
+            return Type.ConnectErrorUnknown;
         }
 
         return Type.Unknown;

@@ -191,7 +191,7 @@ public class DriveFile {
         callback.onStart(this);
 
         try {
-            BufferTargetOutputStream tempStream = new BufferTargetOutputStream(new byte[1024 * 16]);
+            BufferTargetOutputStream tempStream = new BufferTargetOutputStream(new byte[1024 * 256]);
             FileOutputStream output = new FileOutputStream(dstFile, dstFile.length() > 0);
             try {
 
