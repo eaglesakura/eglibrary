@@ -89,7 +89,7 @@ public abstract class GL11Fragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        handler = AsyncHandler.createInstance();
+        handler = AsyncHandler.createInstance("EGLThread");
     }
 
     @Override

@@ -212,7 +212,7 @@ public abstract class GameLoopManagerBase {
     /**
      * ゲームループ用ハンドラ。
      */
-    static AsyncHandler gameHandle = AsyncHandler.createInstance();
+    static AsyncHandler gameHandle = AsyncHandler.createInstance("gameloop");
 
     /**
      * 

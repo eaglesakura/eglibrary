@@ -1,7 +1,5 @@
 package com.eaglesakura.lib.android.game.thread;
 
-import java.util.concurrent.TimeoutException;
-
 import android.os.Handler;
 
 import com.eaglesakura.lib.android.game.util.GameUtil;
@@ -32,14 +30,11 @@ public abstract class ThreadSyncRunnerBase<T> {
     Exception exception = null;
 
     /**
-     * 別スレッドでの処理が終了したらtrueとなる。
-     */
-    boolean finish = false;
-
-    /**
      * 処理にかけていい最大時間
      */
     long maxTime = -1;
+
+    Object lock = new Object();
 
     /**
      * 
@@ -70,14 +65,28 @@ public abstract class ThreadSyncRunnerBase<T> {
                 } catch (Exception e) {
                     exception = e;
                 }
-                finish = true;
+                synchronized (lock) {
+                    lock.notifyAll();
+                }
             }
         });
 
         final Timer timer = new Timer();
+
+        synchronized (lock) {
+            try {
+                lock.wait(maxTime);
+            } catch (Exception e) {
+
+            }
+        }
+        if (timer.end() >= maxTime) {
+            timeout = true;
+        }
         /**
          * 終了まで待つ
          */
+        /*
         while (!finish) {
             GameUtil.sleep(1);
 
@@ -89,6 +98,7 @@ public abstract class ThreadSyncRunnerBase<T> {
                 return result;
             }
         }
+        */
 
         if (exception != null && exception instanceof RuntimeException) {
             throw (RuntimeException) exception;

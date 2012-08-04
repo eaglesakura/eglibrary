@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -230,14 +231,18 @@ public class GoogleOAuth2Fragment extends Fragment {
         }
         webView.loadUrl(url);
         webView.setWebViewClient(new WebViewClient() {
+            boolean checked = false;
 
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String startUrl) {
-                if (startUrl.startsWith(getRedirectURL())) {
+            synchronized boolean checkURL(final String checkUrl) {
+                if (checked) {
+                    return false;
+                }
+
+                if (checkUrl.startsWith(getRedirectURL())) {
                     // 正常にリダイレクトが動いた場合 
-                    int index = startUrl.indexOf('=');
-                    final String authCode = startUrl.substring(index + 1);
-
+                    int index = checkUrl.indexOf('=');
+                    final String authCode = checkUrl.substring(index + 1);
+                    LogUtil.log("debug::" + authCode);
                     //
                     LogUtil.log("auth code / complete");
                     UIHandler.postUI(new Runnable() {
@@ -248,7 +253,22 @@ public class GoogleOAuth2Fragment extends Fragment {
                             onReceiveAuthCode(authCode);
                         }
                     });
-                    // 制御をcatch
+                    checked = true;
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public void onPageStarted(WebView view, String startUrl, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+
+                checkURL(startUrl);
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String startUrl) {
+                if (checkURL(startUrl)) {
                     return true;
                 }
 

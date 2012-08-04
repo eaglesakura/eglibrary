@@ -417,17 +417,18 @@ public class TextKeyValueStore extends DisposableResource {
         }, null, null, null, null, null);
 
         try {
-            cursor.moveToFirst();
-            do {
-                String key = cursor.getString(0);
-                String value = cursor.getString(1);
-                long date = cursor.getLong(2);
-                try {
-                    _insert(key, value, date, filter);
-                } catch (Exception e) {
-                    LogUtil.log(e);
-                }
-            } while (cursor.moveToNext());
+            if (cursor.moveToFirst()) {
+                do {
+                    String key = cursor.getString(0);
+                    String value = cursor.getString(1);
+                    long date = cursor.getLong(2);
+                    try {
+                        _insert(key, value, date, filter);
+                    } catch (Exception e) {
+                        LogUtil.log(e);
+                    }
+                } while (cursor.moveToNext());
+            }
 
         } finally {
             if (cursor != null) {

@@ -30,6 +30,8 @@ public class GoogleOAuth2Helper {
      */
     public static final String SCOPE_USERINFO_EMAIL = "https://www.googleapis.com/auth/userinfo.email";
 
+    static final int TIMEOUT_MS = 1000 * 15;
+
     /**
      * 認証コードを取得する
      * 各コードは"https://code.google.com/apis/console"から作成
@@ -95,14 +97,16 @@ public class GoogleOAuth2Helper {
             c.setRequestMethod("POST");
             c.setDoOutput(true);
             c.setDoInput(true);
-            c.setConnectTimeout(1000 * 30);
+            c.setConnectTimeout(TIMEOUT_MS);
             c.setRequestProperty("Content-Length", String.valueOf(payload.length));
+            c.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             c.connect();
 
             {
                 OutputStream os = c.getOutputStream();
                 os.write(payload);
                 os.flush();
+                os.close();
             }
 
             int response = c.getResponseCode();
@@ -155,8 +159,9 @@ public class GoogleOAuth2Helper {
             c.setRequestMethod("POST");
             c.setDoOutput(true);
             c.setDoInput(true);
-            c.setConnectTimeout(1000 * 30);
+            c.setConnectTimeout(TIMEOUT_MS);
             c.setRequestProperty("Content-Length", String.valueOf(payload.length));
+            c.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             c.connect();
 
             {
