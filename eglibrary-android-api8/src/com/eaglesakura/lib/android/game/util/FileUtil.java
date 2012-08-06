@@ -149,6 +149,10 @@ public class FileUtil {
      * @param root
      */
     public static void delete(File root) {
+        if (root.isFile()) {
+            root.delete();
+            return;
+        }
         File[] files = root.listFiles();
         if (files != null) {
             for (File file : files) {
@@ -318,6 +322,9 @@ public class FileUtil {
      * @return
      */
     public static File cleanDirectory(File dir) {
+        if (dir.isFile()) {
+            return null;
+        }
         delete(dir);
         mkdir(dir);
         return dir;

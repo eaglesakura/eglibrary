@@ -95,27 +95,41 @@ public class GoogleOAuth2Fragment extends Fragment {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setAppCacheEnabled(false);
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        {
-            String cachePath = "/data/data/" + getActivity().getPackageName() + "/files/__es_auth_cache__";
-            File cacheDirectory = new File(cachePath);
-
-            FileUtil.mkdir(cacheDirectory).isDirectory();
-            FileUtil.cleanDirectory(cacheDirectory);
-            webView.getSettings().setAppCachePath(cacheDirectory.getAbsolutePath());
-            CookieSyncManager.createInstance(getActivity());
-            CookieManager.getInstance().removeAllCookie();
-
-            WebViewDatabase.getInstance(getActivity()).clearFormData();
-            WebViewDatabase.getInstance(getActivity()).clearHttpAuthUsernamePassword();
-            WebViewDatabase.getInstance(getActivity()).clearUsernamePassword();
-        }
         webView.clearCache(true);
         webView.clearFormData();
         webView.clearSslPreferences();
         webView.clearHistory();
         webView.clearMatches();
         webView.clearView();
-        startAuthorization();
+
+        (new Thread() {
+            @Override
+            public void run() {
+                {
+                    String cachePath = "/data/data/" + getActivity().getPackageName() + "/files/__es_auth_cache__";
+                    File cacheDirectory = new File(cachePath);
+
+                    FileUtil.mkdir(cacheDirectory);
+                    FileUtil.cleanDirectory(cacheDirectory);
+                    webView.getSettings().setAppCachePath(cacheDirectory.getAbsolutePath());
+                    CookieSyncManager.createInstance(getActivity());
+                    CookieManager.getInstance().removeAllCookie();
+
+                    WebViewDatabase.getInstance(getActivity()).clearFormData();
+                    WebViewDatabase.getInstance(getActivity()).clearHttpAuthUsernamePassword();
+                    WebViewDatabase.getInstance(getActivity()).clearUsernamePassword();
+                }
+
+                UIHandler.postUI(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        startAuthorization();
+                    }
+                });
+            }
+        }).start();
+
         return webView;
     }
 
