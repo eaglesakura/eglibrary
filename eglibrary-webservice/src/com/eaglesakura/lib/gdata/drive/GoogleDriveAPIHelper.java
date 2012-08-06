@@ -11,8 +11,8 @@ import java.util.Map;
 import net.arnx.jsonic.JSON;
 
 import com.eaglesakura.lib.android.game.util.LogUtil;
-import com.eaglesakura.lib.gdata.GoogleAPIConnector;
 import com.eaglesakura.lib.net.WebAPIConnection;
+import com.eaglesakura.lib.net.WebAPIConnectorBase;
 import com.eaglesakura.lib.net.WebAPIException;
 import com.eaglesakura.lib.net.WebAPIException.Type;
 
@@ -29,7 +29,7 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    private static List<DriveItem> listup(GoogleAPIConnector connector, String baseURL, int maxResults)
+    private static List<DriveItem> listup(WebAPIConnectorBase connector, String baseURL, int maxResults)
             throws WebAPIException {
 
         if (maxResults < 1) {
@@ -132,7 +132,7 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    public static DriveItem infoFromLink(GoogleAPIConnector connector, String url) throws WebAPIException {
+    public static DriveItem infoFromLink(WebAPIConnectorBase connector, String url) throws WebAPIException {
         WebAPIConnection connection = connector.get(url, null);
 
         try {
@@ -195,7 +195,7 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws IOException
      */
-    public static DriveItem getParent(DriveItem item, GoogleAPIConnector connector) throws WebAPIException {
+    public static DriveItem getParent(DriveItem item, WebAPIConnectorBase connector) throws WebAPIException {
         if (!hasParent(item)) {
             throw new WebAPIException("item is root :: " + item.title, Type.FileNotFound);
         }
@@ -209,7 +209,7 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    public static List<DriveItem> ls(DriveItem item, GoogleAPIConnector connector) throws WebAPIException {
+    public static List<DriveItem> ls(DriveItem item, WebAPIConnectorBase connector) throws WebAPIException {
         if (isFile(item)) {
             // ファイルに対してlsは行えない
             throw new WebAPIException("item is file", Type.FileNotFound);
@@ -223,7 +223,7 @@ public class GoogleDriveAPIHelper {
      * @param connector
      * @return
      */
-    public static DriveItem rootDirectory(GoogleAPIConnector connector) throws WebAPIException {
+    public static DriveItem rootDirectory(WebAPIConnectorBase connector) throws WebAPIException {
         DriveAbout aboutData = about(connector);
 
         return infoFromLink(connector, "https://www.googleapis.com/drive/v2/files/" + aboutData.rootFolderId);
@@ -236,7 +236,7 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    public static List<DriveItem> search(GoogleAPIConnector connector, String query) throws WebAPIException {
+    public static List<DriveItem> search(WebAPIConnectorBase connector, String query) throws WebAPIException {
         String nextLink = "https://www.googleapis.com/drive/v2/files?q=" + query;
         return listup(connector, nextLink, -1);
     }
@@ -247,7 +247,7 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    public static List<DriveItem> list(GoogleAPIConnector connector) throws WebAPIException {
+    public static List<DriveItem> list(WebAPIConnectorBase connector) throws WebAPIException {
         String nextLink = "https://www.googleapis.com/drive/v2/files";
         return listup(connector, nextLink, -1);
     }
@@ -258,7 +258,7 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    public static List<DriveItem> listDirectories(GoogleAPIConnector connector) throws WebAPIException {
+    public static List<DriveItem> listDirectories(WebAPIConnectorBase connector) throws WebAPIException {
         return search(connector, createQuery("mimeType = 'application/vnd.google-apps.folder'"));
     }
 
@@ -268,7 +268,7 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    public static DriveItem pick(GoogleAPIConnector connector) throws WebAPIException {
+    public static DriveItem pick(WebAPIConnectorBase connector) throws WebAPIException {
         String nextLink = "https://www.googleapis.com/drive/v2/files?maxResults=1";
         List<DriveItem> result = listup(connector, nextLink, 1);
 
@@ -287,7 +287,7 @@ public class GoogleDriveAPIHelper {
      * @see {@link DriveItem#title}
      * @see {@link DriveItem#mimeType}
      */
-    public static DriveItem newFile(GoogleAPIConnector connector, DriveItem item) throws WebAPIException {
+    public static DriveItem newFile(WebAPIConnectorBase connector, DriveItem item) throws WebAPIException {
         if (item.id != null) {
             throw new WebAPIException("newfile id error :: " + item.id, Type.APICallError);
         }
@@ -320,7 +320,7 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    public static DriveItem upload(GoogleAPIConnector connector, DriveItem item, byte[] buffer) throws WebAPIException {
+    public static DriveItem upload(WebAPIConnectorBase connector, DriveItem item, byte[] buffer) throws WebAPIException {
         if (item.id == null) {
             throw new WebAPIException("newfile id error :: " + item.id, Type.APICallError);
         }
@@ -348,7 +348,7 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    public static DriveItem updateFileInfo(GoogleAPIConnector connector, DriveItem item) throws WebAPIException {
+    public static DriveItem updateFileInfo(WebAPIConnectorBase connector, DriveItem item) throws WebAPIException {
         if (item.id == null) {
             throw new WebAPIException("newfile id error :: " + item.id, Type.APICallError);
         }
@@ -378,7 +378,7 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    public static DriveAbout about(GoogleAPIConnector connector) throws WebAPIException {
+    public static DriveAbout about(WebAPIConnectorBase connector) throws WebAPIException {
         final String url = "https://www.googleapis.com/drive/v2/about";
 
         WebAPIConnection connection = connector.get(url, null);

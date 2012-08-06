@@ -5,6 +5,7 @@ import java.io.IOException;
 import net.arnx.jsonic.JSON;
 
 import com.eaglesakura.lib.net.WebAPIConnection;
+import com.eaglesakura.lib.net.WebAPIConnectorBase;
 import com.eaglesakura.lib.net.WebAPIException;
 import com.eaglesakura.lib.net.WebAPIException.Type;
 
@@ -22,7 +23,7 @@ public class GoogleUserInfoAPIHelper {
      * @throws GoogleAPIException
      * @see {@link GoogleOAuth2Helper#SCOPE_USERINFO_EMAIL}
      */
-    public static String getUserEmail(GoogleAPIConnector connector) throws WebAPIException {
+    public static String getUserEmail(WebAPIConnectorBase connector) throws WebAPIException {
 
         WebAPIConnection connect = null;
         try {

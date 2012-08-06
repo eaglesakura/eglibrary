@@ -6,8 +6,8 @@ import java.io.OutputStream;
 
 import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.game.util.LogUtil;
-import com.eaglesakura.lib.gdata.GoogleAPIConnector;
 import com.eaglesakura.lib.net.WebAPIConnection;
+import com.eaglesakura.lib.net.WebAPIConnectorBase;
 import com.eaglesakura.lib.net.WebAPIException;
 import com.eaglesakura.lib.net.WebAPIException.Type;
 
@@ -18,7 +18,7 @@ import com.eaglesakura.lib.net.WebAPIException.Type;
  */
 public class DriveFileDownloader extends DisposableResource {
 
-    GoogleAPIConnector connector = null;
+    WebAPIConnectorBase connector = null;
     WebAPIConnection connection = null;
 
     GoogleDriveAPIHelper.DriveItem item;
@@ -31,7 +31,7 @@ public class DriveFileDownloader extends DisposableResource {
      * @param item
      * @throws GoogleAPIException
      */
-    public DriveFileDownloader(GoogleAPIConnector connector, GoogleDriveAPIHelper.DriveItem item)
+    public DriveFileDownloader(WebAPIConnectorBase connector, GoogleDriveAPIHelper.DriveItem item)
             throws WebAPIException {
 
         if (!GoogleDriveAPIHelper.isFile(item) || item.downloadUrl == null) {

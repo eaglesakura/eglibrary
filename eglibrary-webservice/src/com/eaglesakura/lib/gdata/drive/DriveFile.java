@@ -12,9 +12,9 @@ import java.util.List;
 
 import com.eaglesakura.lib.android.game.io.BufferTargetOutputStream;
 import com.eaglesakura.lib.android.game.util.FileUtil;
-import com.eaglesakura.lib.gdata.GoogleAPIConnector;
 import com.eaglesakura.lib.gdata.drive.GoogleDriveAPIHelper.DriveItem;
 import com.eaglesakura.lib.gdata.drive.GoogleDriveAPIHelper.ParentData;
+import com.eaglesakura.lib.net.WebAPIConnectorBase;
 import com.eaglesakura.lib.net.WebAPIException;
 import com.eaglesakura.lib.net.WebAPIException.Type;
 
@@ -41,7 +41,7 @@ public class DriveFile {
      * @return
      * @throws GoogleAPIException
      */
-    public List<DriveFile> list(GoogleAPIConnector connector) throws WebAPIException {
+    public List<DriveFile> list(WebAPIConnectorBase connector) throws WebAPIException {
         if (!isDirectory()) {
             throw new WebAPIException("item is not direcotry :: " + item.title, Type.FileNotFound);
         }
@@ -65,7 +65,7 @@ public class DriveFile {
      * @return
      * @throws GoogleAPIException
      */
-    public DriveFileDownloader createDownloader(GoogleAPIConnector connector) throws WebAPIException {
+    public DriveFileDownloader createDownloader(WebAPIConnectorBase connector) throws WebAPIException {
         if (!isFile()) {
             throw new WebAPIException("item is not file :: " + item.title, Type.FileNotFound);
         }
@@ -108,7 +108,7 @@ public class DriveFile {
      * @param callback
      * @return
      */
-    public boolean downloadRange(GoogleAPIConnector connector, File dstFile, int rangeBegin, int rangeEnd,
+    public boolean downloadRange(WebAPIConnectorBase connector, File dstFile, int rangeBegin, int rangeEnd,
             DownloadCallback callback) throws WebAPIException {
         if (!isFile()) {
             return false;
@@ -170,7 +170,7 @@ public class DriveFile {
      * @return
      * @throws GoogleAPIException
      */
-    public boolean download(GoogleAPIConnector connector, File dstFile, DownloadCallback callback)
+    public boolean download(WebAPIConnectorBase connector, File dstFile, DownloadCallback callback)
             throws WebAPIException {
 
         if (!isFile()) {
@@ -234,7 +234,7 @@ public class DriveFile {
      * @return
      * @throws GoogleAPIException
      */
-    public DriveFile getParent(GoogleAPIConnector connector) throws WebAPIException {
+    public DriveFile getParent(WebAPIConnectorBase connector) throws WebAPIException {
         if (isRoot()) {
             return null;
         }
@@ -391,7 +391,7 @@ public class DriveFile {
      * @param buffer
      * @throws GoogleAPIException
      */
-    public void upload(GoogleAPIConnector conn, byte[] buffer) throws WebAPIException {
+    public void upload(WebAPIConnectorBase conn, byte[] buffer) throws WebAPIException {
         if (!isFile()) {
             throw new WebAPIException("this is not file...", Type.APICallError);
         }
@@ -403,7 +403,7 @@ public class DriveFile {
      * 絶対パスを取得する
      * @return
      */
-    public String getAbsolutePath(GoogleAPIConnector conn) throws WebAPIException {
+    public String getAbsolutePath(WebAPIConnectorBase conn) throws WebAPIException {
         if (isRoot()) {
             return "/";
         }
@@ -428,7 +428,7 @@ public class DriveFile {
      * @param connector
      * @return
      */
-    public static DriveFile root(GoogleAPIConnector connector) throws WebAPIException {
+    public static DriveFile root(WebAPIConnectorBase connector) throws WebAPIException {
         DriveItem raw = GoogleDriveAPIHelper.rootDirectory(connector);
         return new DriveFile(raw);
     }
@@ -441,7 +441,7 @@ public class DriveFile {
      * @return
      * @throws GoogleAPIException
      */
-    public static DriveFile get(GoogleAPIConnector connector, String fileName) throws WebAPIException {
+    public static DriveFile get(WebAPIConnectorBase connector, String fileName) throws WebAPIException {
         List<DriveItem> search = GoogleDriveAPIHelper.search(connector,
                 GoogleDriveAPIHelper.createQueryFullTextContains(fileName));
         if (search.isEmpty()) {
@@ -464,7 +464,7 @@ public class DriveFile {
      * @return
      * @throws GoogleAPIException
      */
-    public static DriveFile getOrNewfile(GoogleAPIConnector connector, String fileName, String mimeType)
+    public static DriveFile getOrNewfile(WebAPIConnectorBase connector, String fileName, String mimeType)
             throws WebAPIException {
         DriveFile result = null;
 
