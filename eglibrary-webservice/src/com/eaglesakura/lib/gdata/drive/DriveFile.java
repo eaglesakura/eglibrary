@@ -219,6 +219,7 @@ public class DriveFile {
                 return true;
             } finally {
                 tempStream.close();
+                output.flush();
                 output.close();
             }
 
