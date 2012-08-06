@@ -1,4 +1,4 @@
-package com.eaglesakura.lib.gdata;
+package com.eaglesakura.lib.net;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
@@ -14,7 +14,7 @@ import org.apache.http.conn.ConnectionPoolTimeoutException;
 
 import com.google.api.client.http.HttpResponseException;
 
-public class GoogleAPIException extends Exception {
+public class WebAPIException extends Exception {
     static final long serialVersionUID = 0x01;
 
     Exception base = null;
@@ -25,7 +25,7 @@ public class GoogleAPIException extends Exception {
      * 
      * @param baseException
      */
-    public GoogleAPIException(Exception baseException) {
+    public WebAPIException(Exception baseException) {
         super(toMessage(baseException));
         this.type = toExceptionType(baseException);
         this.base = baseException;
@@ -35,16 +35,7 @@ public class GoogleAPIException extends Exception {
      * 
      * @param baseException
      */
-    public GoogleAPIException(GoogleOAuth2Helper.ErrorCode error, GoogleAPIException.Type type) {
-        super(error.error);
-        this.type = type;
-    }
-
-    /**
-     * 
-     * @param baseException
-     */
-    public GoogleAPIException(int responce) {
+    public WebAPIException(int responce) {
         super("responce :: " + responce + " :: " + toExceptionType(responce).name());
         this.type = toExceptionType(responce);
     }
@@ -53,7 +44,7 @@ public class GoogleAPIException extends Exception {
      * 
      * @param baseException
      */
-    public GoogleAPIException(String message, GoogleAPIException.Type type) {
+    public WebAPIException(String message, WebAPIException.Type type) {
         super(message);
         this.type = type;
     }
@@ -145,7 +136,7 @@ public class GoogleAPIException extends Exception {
         Unknown,
     }
 
-    public static GoogleAPIException.Type toExceptionType(int resp) {
+    public static WebAPIException.Type toExceptionType(int resp) {
         switch (resp) {
             case 500:
                 return Type.APIResponseError;
@@ -168,7 +159,7 @@ public class GoogleAPIException extends Exception {
      * @param base
      * @return
      */
-    public static GoogleAPIException.Type toExceptionType(Exception base) {
+    public static WebAPIException.Type toExceptionType(Exception base) {
         if (base instanceof HttpResponseException) {
             HttpResponseException hre = (HttpResponseException) base;
             switch (hre.response.statusCode) {

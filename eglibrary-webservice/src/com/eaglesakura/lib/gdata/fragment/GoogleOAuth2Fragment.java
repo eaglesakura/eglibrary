@@ -23,9 +23,9 @@ import com.eaglesakura.lib.android.game.thread.AsyncAction;
 import com.eaglesakura.lib.android.game.thread.UIHandler;
 import com.eaglesakura.lib.android.game.util.FileUtil;
 import com.eaglesakura.lib.android.game.util.LogUtil;
-import com.eaglesakura.lib.gdata.GoogleAPIException;
 import com.eaglesakura.lib.gdata.GoogleOAuth2Helper;
 import com.eaglesakura.lib.gdata.GoogleOAuth2Helper.AuthToken;
+import com.eaglesakura.lib.net.WebAPIException;
 
 /**
  * GData認証を行うためのFragment
@@ -212,7 +212,7 @@ public class GoogleOAuth2Fragment extends Fragment {
 
             @Override
             protected void onFailure(Exception exception) {
-                listener.onErrorMakeAuthToken(get_this(), (GoogleAPIException) exception);
+                listener.onErrorMakeAuthToken(get_this(), (WebAPIException) exception);
             }
 
             @Override
@@ -339,10 +339,10 @@ public class GoogleOAuth2Fragment extends Fragment {
             @Override
             protected void onFailure(Exception exception) {
                 LogUtil.log(exception);
-                if (!(exception instanceof GoogleAPIException)) {
-                    exception = new GoogleAPIException(exception);
+                if (!(exception instanceof WebAPIException)) {
+                    exception = new WebAPIException(exception);
                 }
-                listener.onErrorMakeAuthURL(get_this(), (GoogleAPIException) exception);
+                listener.onErrorMakeAuthURL(get_this(), (WebAPIException) exception);
             }
 
             @Override
@@ -381,12 +381,12 @@ public class GoogleOAuth2Fragment extends Fragment {
         /**
          * トークンのURL作成に失敗した
          */
-        public void onErrorMakeAuthURL(GoogleOAuth2Fragment fragment, GoogleAPIException e);
+        public void onErrorMakeAuthURL(GoogleOAuth2Fragment fragment, WebAPIException e);
 
         /**
          * トークンの取得に失敗した
          */
-        public void onErrorMakeAuthToken(GoogleOAuth2Fragment fragment, GoogleAPIException e);
+        public void onErrorMakeAuthToken(GoogleOAuth2Fragment fragment, WebAPIException e);
 
         /**
          * キャンセルされた

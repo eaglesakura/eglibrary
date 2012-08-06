@@ -7,8 +7,9 @@ import java.io.OutputStream;
 import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.gdata.GoogleAPIConnector;
-import com.eaglesakura.lib.gdata.GoogleAPIException;
-import com.eaglesakura.lib.gdata.GoogleAPIException.Type;
+import com.eaglesakura.lib.net.WebAPIConnection;
+import com.eaglesakura.lib.net.WebAPIException;
+import com.eaglesakura.lib.net.WebAPIException.Type;
 
 /**
  * ファイル用のダウンローダー
@@ -18,7 +19,7 @@ import com.eaglesakura.lib.gdata.GoogleAPIException.Type;
 public class DriveFileDownloader extends DisposableResource {
 
     GoogleAPIConnector connector = null;
-    GoogleAPIConnector.GoogleConnection connection;
+    WebAPIConnection connection = null;
 
     GoogleDriveAPIHelper.DriveItem item;
 
@@ -31,10 +32,10 @@ public class DriveFileDownloader extends DisposableResource {
      * @throws GoogleAPIException
      */
     public DriveFileDownloader(GoogleAPIConnector connector, GoogleDriveAPIHelper.DriveItem item)
-            throws GoogleAPIException {
+            throws WebAPIException {
 
         if (!GoogleDriveAPIHelper.isFile(item) || item.downloadUrl == null) {
-            throw new GoogleAPIException("item is not file :: " + item.title, Type.FileNotFound);
+            throw new WebAPIException("item is not file :: " + item.title, Type.FileNotFound);
         }
 
         this.connector = connector;
@@ -45,7 +46,7 @@ public class DriveFileDownloader extends DisposableResource {
      * レジュームを開始する
      * @param dstFile
      */
-    public void resume(File dstFile) throws GoogleAPIException {
+    public void resume(File dstFile) throws WebAPIException {
         connection = connector.download(item.downloadUrl, dstFile.length(), item.fileSize);
     }
 
@@ -54,14 +55,14 @@ public class DriveFileDownloader extends DisposableResource {
      * @param rangeStart
      * @param rangeEnd
      */
-    public void start(long rangeStart, long rangeEnd) throws GoogleAPIException {
+    public void start(long rangeStart, long rangeEnd) throws WebAPIException {
         connection = connector.download(item.downloadUrl, rangeStart, rangeEnd);
     }
 
     /**
      * 先頭から開始する
      */
-    public void start() throws GoogleAPIException {
+    public void start() throws WebAPIException {
         start(-1, -1);
     }
 
@@ -72,7 +73,7 @@ public class DriveFileDownloader extends DisposableResource {
      * @return 読み込みが終了したらtrue
      * @throws GoogleAPIException
      */
-    public boolean nextDownload(OutputStream os, int length) throws GoogleAPIException {
+    public boolean nextDownload(OutputStream os, int length) throws WebAPIException {
         try {
             while (length > 0) {
                 // 必要なサイズだけ読み込む
@@ -93,7 +94,7 @@ public class DriveFileDownloader extends DisposableResource {
             return false;
         } catch (IOException e) {
             LogUtil.log(e);
-            throw new GoogleAPIException(e);
+            throw new WebAPIException(e);
         }
     }
 

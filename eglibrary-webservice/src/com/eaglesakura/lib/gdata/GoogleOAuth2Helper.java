@@ -11,6 +11,7 @@ import net.arnx.jsonic.JSON;
 
 import com.eaglesakura.lib.android.game.util.GameUtil;
 import com.eaglesakura.lib.android.game.util.LogUtil;
+import com.eaglesakura.lib.net.WebAPIException;
 
 /**
  * Googleの認証用ヘルパ
@@ -38,7 +39,7 @@ public class GoogleOAuth2Helper {
      * @throws GDataException
      */
     public static String getAuthorizationUrl(final String clientId, final String redirectUri, final String[] scopeUrls)
-            throws GoogleAPIException {
+            throws WebAPIException {
         try {
             String SCOPES = "";
             {
@@ -68,7 +69,7 @@ public class GoogleOAuth2Helper {
             return resultURL;
 
         } catch (IOException e) {
-            throw new GoogleAPIException(e);
+            throw new WebAPIException(e);
         }
     }
 
@@ -77,7 +78,7 @@ public class GoogleOAuth2Helper {
      * @param authCode
      */
     public static AuthToken getAuthToken(final String clientId, final String clientSecret, final String redirectUri,
-            final String authCode) throws GoogleAPIException {
+            final String authCode) throws WebAPIException {
 
         try {
             // パラメータを組み立てる
@@ -125,14 +126,13 @@ public class GoogleOAuth2Helper {
             } else {
                 InputStream is = c.getErrorStream();
                 String json = new String(GameUtil.toByteArray(is));
-                ErrorCode error = JSON.decode(json, ErrorCode.class);
                 LogUtil.log("error = " + json);
                 c.disconnect();
-                throw new GoogleAPIException(error, GoogleAPIException.Type.AuthError);
+                throw new WebAPIException(response);
             }
         } catch (IOException e) {
             LogUtil.log(e);
-            throw new GoogleAPIException(e);
+            throw new WebAPIException(e);
         }
     }
 
@@ -141,7 +141,7 @@ public class GoogleOAuth2Helper {
      * @param authCode
      */
     public static AuthToken refreshAuthToken(final String clientId, final String clientSecret,
-            final String refreshTocken) throws GoogleAPIException {
+            final String refreshTocken) throws WebAPIException {
 
         try {
             // パラメータを組み立てる
@@ -183,20 +183,19 @@ public class GoogleOAuth2Helper {
 
                 c.disconnect();
                 if (token == null || token.access_token == null) {
-                    throw new GoogleAPIException("token == null", GoogleAPIException.Type.APIResponseError);
+                    throw new WebAPIException("token == null", WebAPIException.Type.APIResponseError);
                 }
                 return token;
             } else {
                 InputStream is = c.getErrorStream();
                 String json = new String(GameUtil.toByteArray(is));
-                ErrorCode error = JSON.decode(json, ErrorCode.class);
                 LogUtil.log("error = " + json);
                 c.disconnect();
-                throw new GoogleAPIException(error, GoogleAPIException.Type.AuthError);
+                throw new WebAPIException(response);
             }
         } catch (IOException e) {
             LogUtil.log(e);
-            throw new GoogleAPIException(e);
+            throw new WebAPIException(e);
         }
     }
 

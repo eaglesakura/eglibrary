@@ -10,10 +10,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.game.util.GameUtil;
 import com.eaglesakura.lib.android.game.util.LogUtil;
-import com.eaglesakura.lib.gdata.GoogleAPIException.Type;
+import com.eaglesakura.lib.net.WebAPIConnection;
+import com.eaglesakura.lib.net.WebAPIException;
+import com.eaglesakura.lib.net.WebAPIException.Type;
 
 /**
  * GoogleのOAuth2で接続を行うためのヘルパ
@@ -69,7 +70,7 @@ public class GoogleAPIConnector {
      * アクセストークンをリセットする
      * @return 新しいトークン
      */
-    public synchronized String refreshAccessToken() throws GoogleAPIException {
+    public synchronized String refreshAccessToken() throws WebAPIException {
         GoogleOAuth2Helper.AuthToken token = GoogleOAuth2Helper.refreshAuthToken(clientId, clientSecret, refreshToken);
         //        LogUtil.log("refreshed token = " + token.access_token);
         LogUtil.log("refreshed token sha1 :: " + GameUtil.genSHA1(token.access_token.getBytes()));
@@ -130,17 +131,17 @@ public class GoogleAPIConnector {
      * @param responseCode
      * @throws GoogleAPIException
      */
-    private void _checkResponse(int responseCode) throws GoogleAPIException {
+    private void _checkResponse(int responseCode) throws WebAPIException {
         switch (responseCode) {
         // 認証エラーには例外を返す
             case 401:
             case 403: {
-                throw new GoogleAPIException("Responce Error", Type.AuthError);
+                throw new WebAPIException("Responce Error", Type.AuthError);
             }
             case 503:
             case 502:
             case 500: {
-                throw new GoogleAPIException("Server Error", Type.APIResponseError);
+                throw new WebAPIException("Server Error", Type.APIResponseError);
             }
         }
     }
@@ -151,8 +152,8 @@ public class GoogleAPIConnector {
      * @param argments
      * @throws GoogleAPIException
      */
-    private GoogleConnection _get(String url, Map<String, String> argments, long rangeBegin, long rangeEnd)
-            throws GoogleAPIException {
+    private WebAPIConnection _get(String url, Map<String, String> argments, long rangeBegin, long rangeEnd)
+            throws WebAPIException {
         url = createURL(url, argments);
         HttpURLConnection connection = null;
         try {
@@ -171,7 +172,7 @@ public class GoogleAPIConnector {
             _checkResponse(responseCode);
 
             // 正常にコネクションを開いた
-            GoogleConnection result = new GoogleConnection(responseCode, connection);
+            WebAPIConnection result = new WebAPIConnection(responseCode, connection);
             return result;
         } catch (Exception e) {
             // コネクションを閉じておく
@@ -189,11 +190,11 @@ public class GoogleAPIConnector {
 
                 }
             }
-            if (e instanceof GoogleAPIException) {
-                throw (GoogleAPIException) e;
+            if (e instanceof WebAPIException) {
+                throw (WebAPIException) e;
             } else {
                 LogUtil.log(e);
-                throw new GoogleAPIException(e);
+                throw new WebAPIException(e);
             }
         }
     }
@@ -204,8 +205,8 @@ public class GoogleAPIConnector {
      * @param argments
      * @throws GoogleAPIException
      */
-    private GoogleConnection _postOrPut(String url, String method, Map<String, String> property, long rangeBegin,
-            long rangeEnd, byte[] body) throws GoogleAPIException {
+    private WebAPIConnection _postOrPut(String url, String method, Map<String, String> property, long rangeBegin,
+            long rangeEnd, byte[] body) throws WebAPIException {
         HttpURLConnection connection = null;
         try {
             connection = createConnection(url, method);
@@ -243,7 +244,7 @@ public class GoogleAPIConnector {
             _checkResponse(responseCode);
 
             // 正常にコネクションを開いた
-            GoogleConnection result = new GoogleConnection(responseCode, connection);
+            WebAPIConnection result = new WebAPIConnection(responseCode, connection);
             return result;
         } catch (Exception e) {
             // コネクションを閉じておく
@@ -261,10 +262,10 @@ public class GoogleAPIConnector {
 
                 }
             }
-            if (e instanceof GoogleAPIException) {
-                throw (GoogleAPIException) e;
+            if (e instanceof WebAPIException) {
+                throw (WebAPIException) e;
             } else {
-                throw new GoogleAPIException(e);
+                throw new WebAPIException(e);
             }
         }
     }
@@ -277,13 +278,13 @@ public class GoogleAPIConnector {
      * @return
      * @throws GoogleAPIException
      */
-    public GoogleConnection postOrPut(String url, String method, Map<String, String> properties, byte[] buffer)
-            throws GoogleAPIException {
+    public WebAPIConnection postOrPut(String url, String method, Map<String, String> properties, byte[] buffer)
+            throws WebAPIException {
         for (int i = 0; i < maxRetry; ++i) {
             try {
-                GoogleConnection conn = _postOrPut(url, method, properties, -1, -1, buffer);
+                WebAPIConnection conn = _postOrPut(url, method, properties, -1, -1, buffer);
                 return conn;
-            } catch (GoogleAPIException e) {
+            } catch (WebAPIException e) {
                 if (i == (maxRetry - 1)) {
                     throw e;
                 }
@@ -301,7 +302,7 @@ public class GoogleAPIConnector {
                 }
             }
         }
-        throw new GoogleAPIException("connection failed...", Type.Unknown);
+        throw new WebAPIException("connection failed...", Type.Unknown);
     }
 
     /**
@@ -311,12 +312,12 @@ public class GoogleAPIConnector {
      * @return
      * @throws GoogleAPIException
      */
-    public GoogleConnection get(String url, Map<String, String> argments) throws GoogleAPIException {
+    public WebAPIConnection get(String url, Map<String, String> argments) throws WebAPIException {
         for (int i = 0; i < maxRetry; ++i) {
             try {
-                GoogleConnection conn = _get(url, argments, -1, -1);
+                WebAPIConnection conn = _get(url, argments, -1, -1);
                 return conn;
-            } catch (GoogleAPIException e) {
+            } catch (WebAPIException e) {
                 if (i == (maxRetry - 1)) {
                     throw e;
                 }
@@ -336,7 +337,7 @@ public class GoogleAPIConnector {
         }
 
         LogUtil.log("retry > maxRetry...");
-        throw new GoogleAPIException("connection failed...", Type.Unknown);
+        throw new WebAPIException("connection failed...", Type.Unknown);
     }
 
     /**
@@ -346,17 +347,17 @@ public class GoogleAPIConnector {
      * @return
      * @throws GoogleAPIException
      */
-    public GoogleConnection download(String url, long rangeBegin, long rangeEnd) throws GoogleAPIException {
+    public WebAPIConnection download(String url, long rangeBegin, long rangeEnd) throws WebAPIException {
         for (int i = 0; i < maxRetry; ++i) {
             try {
-                GoogleConnection conn = _get(url, null, rangeBegin, rangeEnd);
+                WebAPIConnection conn = _get(url, null, rangeBegin, rangeEnd);
                 if (conn.getResponceCode() == 200 || conn.getResponceCode() == 206) {
                     return conn;
                 } else {
                     conn.dispose();
-                    throw new GoogleAPIException(conn.getResponceCode());
+                    throw new WebAPIException(conn.getResponceCode());
                 }
-            } catch (GoogleAPIException e) {
+            } catch (WebAPIException e) {
                 if (i == (maxRetry - 1)) {
                     throw e;
                 }
@@ -375,7 +376,7 @@ public class GoogleAPIConnector {
             }
         }
 
-        throw new GoogleAPIException("connection failed...", Type.Unknown);
+        throw new WebAPIException("connection failed...", Type.Unknown);
     }
 
     /**
@@ -416,85 +417,5 @@ public class GoogleAPIConnector {
          * @return
          */
         int isCanceled();
-    }
-
-    /**
-     * サーバーからのInputStreamを管理する。
-     * @author TAKESHI YAMASHITA
-     *
-     */
-    public class GoogleConnection extends DisposableResource {
-        HttpURLConnection connection;
-
-        /**
-         * 正常系ストリーム
-         */
-        InputStream input;
-
-        /**
-         * エラーストリーム
-         */
-        InputStream error;
-
-        /**
-         * ステータスコード
-         */
-        int responceCode;
-
-        /**
-         * 
-         * @param connection
-         */
-        GoogleConnection(int status, HttpURLConnection connection) {
-            this.connection = connection;
-            this.responceCode = status;
-        }
-
-        /**
-         * HTTPのレスポンスコードを取得する
-         * @return
-         */
-        public int getResponceCode() {
-            return responceCode;
-        }
-
-        /**
-         * 入力ストリームを取得する
-         * @return
-         * @throws IOException
-         */
-        public InputStream getInput() throws IOException {
-            if (input == null) {
-                input = connection.getInputStream();
-            }
-            return input;
-        }
-
-        @Override
-        public void dispose() {
-            try {
-                if (input != null) {
-                    input.close();
-                }
-            } catch (Exception e) {
-            }
-            try {
-                if (error != null) {
-                    error.close();
-                }
-            } catch (Exception e) {
-            }
-
-            try {
-                if (connection != null) {
-                    connection.disconnect();
-                }
-            } catch (Exception e) {
-            }
-
-            input = null;
-            error = null;
-            connection = null;
-        }
     }
 }

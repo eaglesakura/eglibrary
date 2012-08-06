@@ -12,9 +12,9 @@ import net.arnx.jsonic.JSON;
 
 import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.gdata.GoogleAPIConnector;
-import com.eaglesakura.lib.gdata.GoogleAPIConnector.GoogleConnection;
-import com.eaglesakura.lib.gdata.GoogleAPIException;
-import com.eaglesakura.lib.gdata.GoogleAPIException.Type;
+import com.eaglesakura.lib.net.WebAPIConnection;
+import com.eaglesakura.lib.net.WebAPIException;
+import com.eaglesakura.lib.net.WebAPIException.Type;
 
 /**
  * Google DriveのAPI呼び出しを行う
@@ -30,7 +30,7 @@ public class GoogleDriveAPIHelper {
      * @throws GoogleAPIException
      */
     private static List<DriveItem> listup(GoogleAPIConnector connector, String baseURL, int maxResults)
-            throws GoogleAPIException {
+            throws WebAPIException {
 
         if (maxResults < 1) {
             maxResults = 999999;
@@ -41,10 +41,10 @@ public class GoogleDriveAPIHelper {
         do {
             DriveItemList parsed = null;
             // 次のURLからダウンロードする
-            GoogleConnection connection = connector.get(nextLink, null);
+            WebAPIConnection connection = connector.get(nextLink, null);
             try {
                 if (connection.getResponceCode() != 200) {
-                    throw new GoogleAPIException(connection.getResponceCode());
+                    throw new WebAPIException(connection.getResponceCode());
                 }
 
                 // パースを行う
@@ -69,7 +69,7 @@ public class GoogleDriveAPIHelper {
                 }
 
             } catch (IOException e) {
-                throw new GoogleAPIException(e);
+                throw new WebAPIException(e);
             } finally {
                 connection.dispose();
             }
@@ -132,12 +132,12 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    public static DriveItem infoFromLink(GoogleAPIConnector connector, String url) throws GoogleAPIException {
-        GoogleConnection connection = connector.get(url, null);
+    public static DriveItem infoFromLink(GoogleAPIConnector connector, String url) throws WebAPIException {
+        WebAPIConnection connection = connector.get(url, null);
 
         try {
             if (connection.getResponceCode() != 200) {
-                throw new GoogleAPIException(connection.getResponceCode());
+                throw new WebAPIException(connection.getResponceCode());
             }
 
             InputStream is = connection.getInput();
@@ -145,12 +145,12 @@ public class GoogleDriveAPIHelper {
             DriveItem item = JSON.decode(is, DriveItem.class);
 
             if (item == null) {
-                throw new GoogleAPIException("item == null", Type.APIResponseError);
+                throw new WebAPIException("item == null", Type.APIResponseError);
             }
 
             return item;
         } catch (IOException e) {
-            throw new GoogleAPIException(e);
+            throw new WebAPIException(e);
         } finally {
             if (connection != null) {
                 connection.dispose();
@@ -195,9 +195,9 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws IOException
      */
-    public static DriveItem getParent(DriveItem item, GoogleAPIConnector connector) throws GoogleAPIException {
+    public static DriveItem getParent(DriveItem item, GoogleAPIConnector connector) throws WebAPIException {
         if (!hasParent(item)) {
-            throw new GoogleAPIException("item is root :: " + item.title, Type.FileNotFound);
+            throw new WebAPIException("item is root :: " + item.title, Type.FileNotFound);
         }
         return infoFromLink(connector, item.parents[0].parentLink);
     }
@@ -209,10 +209,10 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    public static List<DriveItem> ls(DriveItem item, GoogleAPIConnector connector) throws GoogleAPIException {
+    public static List<DriveItem> ls(DriveItem item, GoogleAPIConnector connector) throws WebAPIException {
         if (isFile(item)) {
             // ファイルに対してlsは行えない
-            throw new GoogleAPIException("item is file", Type.FileNotFound);
+            throw new WebAPIException("item is file", Type.FileNotFound);
         }
         String query = createQuery("'" + item.id + "' in parents and trashed = false");
         return search(connector, query);
@@ -223,7 +223,7 @@ public class GoogleDriveAPIHelper {
      * @param connector
      * @return
      */
-    public static DriveItem rootDirectory(GoogleAPIConnector connector) throws GoogleAPIException {
+    public static DriveItem rootDirectory(GoogleAPIConnector connector) throws WebAPIException {
         DriveAbout aboutData = about(connector);
 
         return infoFromLink(connector, "https://www.googleapis.com/drive/v2/files/" + aboutData.rootFolderId);
@@ -236,7 +236,7 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    public static List<DriveItem> search(GoogleAPIConnector connector, String query) throws GoogleAPIException {
+    public static List<DriveItem> search(GoogleAPIConnector connector, String query) throws WebAPIException {
         String nextLink = "https://www.googleapis.com/drive/v2/files?q=" + query;
         return listup(connector, nextLink, -1);
     }
@@ -247,7 +247,7 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    public static List<DriveItem> list(GoogleAPIConnector connector) throws GoogleAPIException {
+    public static List<DriveItem> list(GoogleAPIConnector connector) throws WebAPIException {
         String nextLink = "https://www.googleapis.com/drive/v2/files";
         return listup(connector, nextLink, -1);
     }
@@ -258,7 +258,7 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    public static List<DriveItem> listDirectories(GoogleAPIConnector connector) throws GoogleAPIException {
+    public static List<DriveItem> listDirectories(GoogleAPIConnector connector) throws WebAPIException {
         return search(connector, createQuery("mimeType = 'application/vnd.google-apps.folder'"));
     }
 
@@ -268,7 +268,7 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    public static DriveItem pick(GoogleAPIConnector connector) throws GoogleAPIException {
+    public static DriveItem pick(GoogleAPIConnector connector) throws WebAPIException {
         String nextLink = "https://www.googleapis.com/drive/v2/files?maxResults=1";
         List<DriveItem> result = listup(connector, nextLink, 1);
 
@@ -287,9 +287,9 @@ public class GoogleDriveAPIHelper {
      * @see {@link DriveItem#title}
      * @see {@link DriveItem#mimeType}
      */
-    public static DriveItem newFile(GoogleAPIConnector connector, DriveItem item) throws GoogleAPIException {
+    public static DriveItem newFile(GoogleAPIConnector connector, DriveItem item) throws WebAPIException {
         if (item.id != null) {
-            throw new GoogleAPIException("newfile id error :: " + item.id, Type.APICallError);
+            throw new WebAPIException("newfile id error :: " + item.id, Type.APICallError);
         }
 
         // 送信するJSONを作成する
@@ -297,15 +297,15 @@ public class GoogleDriveAPIHelper {
 
         Map<String, String> prop = new HashMap<String, String>();
         prop.put("Content-Type", "application/json");
-        GoogleConnection connection = connector.postOrPut("https://www.googleapis.com/drive/v2/files", "POST", prop,
+        WebAPIConnection connection = connector.postOrPut("https://www.googleapis.com/drive/v2/files", "POST", prop,
                 json.getBytes());
         try {
             if (connection.getResponceCode() != 200) {
-                throw new GoogleAPIException(connection.getResponceCode());
+                throw new WebAPIException(connection.getResponceCode());
             }
             return JSON.decode(connection.getInput(), DriveItem.class);
         } catch (IOException e) {
-            throw new GoogleAPIException(e);
+            throw new WebAPIException(e);
         } finally {
             connection.dispose();
         }
@@ -320,23 +320,22 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    public static DriveItem upload(GoogleAPIConnector connector, DriveItem item, byte[] buffer)
-            throws GoogleAPIException {
+    public static DriveItem upload(GoogleAPIConnector connector, DriveItem item, byte[] buffer) throws WebAPIException {
         if (item.id == null) {
-            throw new GoogleAPIException("newfile id error :: " + item.id, Type.APICallError);
+            throw new WebAPIException("newfile id error :: " + item.id, Type.APICallError);
         }
 
         Map<String, String> prop = new HashMap<String, String>();
         prop.put("Content-Type", item.mimeType);
-        GoogleConnection connection = connector.postOrPut(
+        WebAPIConnection connection = connector.postOrPut(
                 "https://www.googleapis.com/upload/drive/v2/files/" + item.id, "PUT", prop, buffer);
         try {
             if (connection.getResponceCode() != 200) {
-                throw new GoogleAPIException(connection.getResponceCode());
+                throw new WebAPIException(connection.getResponceCode());
             }
             return JSON.decode(connection.getInput(), DriveItem.class);
         } catch (IOException e) {
-            throw new GoogleAPIException(e);
+            throw new WebAPIException(e);
         } finally {
             connection.dispose();
         }
@@ -349,9 +348,9 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    public static DriveItem updateFileInfo(GoogleAPIConnector connector, DriveItem item) throws GoogleAPIException {
+    public static DriveItem updateFileInfo(GoogleAPIConnector connector, DriveItem item) throws WebAPIException {
         if (item.id == null) {
-            throw new GoogleAPIException("newfile id error :: " + item.id, Type.APICallError);
+            throw new WebAPIException("newfile id error :: " + item.id, Type.APICallError);
         }
 
         // 送信するJSONを作成する
@@ -359,15 +358,15 @@ public class GoogleDriveAPIHelper {
 
         Map<String, String> prop = new HashMap<String, String>();
         prop.put("Content-Type", "application/json");
-        GoogleConnection connection = connector.postOrPut("https://www.googleapis.com/drive/v2/files/" + item.id,
+        WebAPIConnection connection = connector.postOrPut("https://www.googleapis.com/drive/v2/files/" + item.id,
                 "PUT", prop, json.getBytes());
         try {
             if (connection.getResponceCode() != 200) {
-                throw new GoogleAPIException(connection.getResponceCode());
+                throw new WebAPIException(connection.getResponceCode());
             }
             return JSON.decode(connection.getInput(), DriveItem.class);
         } catch (IOException e) {
-            throw new GoogleAPIException(e);
+            throw new WebAPIException(e);
         } finally {
             connection.dispose();
         }
@@ -379,18 +378,18 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    public static DriveAbout about(GoogleAPIConnector connector) throws GoogleAPIException {
+    public static DriveAbout about(GoogleAPIConnector connector) throws WebAPIException {
         final String url = "https://www.googleapis.com/drive/v2/about";
 
-        GoogleConnection connection = connector.get(url, null);
+        WebAPIConnection connection = connector.get(url, null);
         try {
             if (connection.getResponceCode() == 200) {
                 DriveAbout result = JSON.decode(connection.getInput(), DriveAbout.class);
                 return result;
             }
-            throw new GoogleAPIException(connection.getResponceCode());
+            throw new WebAPIException(connection.getResponceCode());
         } catch (IOException e) {
-            throw new GoogleAPIException(e);
+            throw new WebAPIException(e);
         } finally {
             connection.dispose();
         }

@@ -9,8 +9,8 @@ import java.util.Map.Entry;
 
 import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.gdata.GoogleAPIConnector;
-import com.eaglesakura.lib.gdata.GoogleAPIException;
 import com.eaglesakura.lib.gdata.drive.GoogleDriveAPIHelper.DriveItem;
+import com.eaglesakura.lib.net.WebAPIException;
 
 /**
  * GDriveのファイルを利用してツリーを構築する。
@@ -114,7 +114,7 @@ public class DriveFileTree {
      * @param connector
      * @return
      */
-    public static DriveFileTree build(List<DriveFile> files, GoogleAPIConnector connector) throws GoogleAPIException {
+    public static DriveFileTree build(List<DriveFile> files, GoogleAPIConnector connector) throws WebAPIException {
         // フォルダのマッピング
         Map<String, DriveFile> dirMap = new HashMap<String, DriveFile>();
 

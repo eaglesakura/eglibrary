@@ -13,10 +13,10 @@ import java.util.List;
 import com.eaglesakura.lib.android.game.io.BufferTargetOutputStream;
 import com.eaglesakura.lib.android.game.util.FileUtil;
 import com.eaglesakura.lib.gdata.GoogleAPIConnector;
-import com.eaglesakura.lib.gdata.GoogleAPIException;
-import com.eaglesakura.lib.gdata.GoogleAPIException.Type;
 import com.eaglesakura.lib.gdata.drive.GoogleDriveAPIHelper.DriveItem;
 import com.eaglesakura.lib.gdata.drive.GoogleDriveAPIHelper.ParentData;
+import com.eaglesakura.lib.net.WebAPIException;
+import com.eaglesakura.lib.net.WebAPIException.Type;
 
 /**
  * GDrive上のファイルを扱う。
@@ -41,9 +41,9 @@ public class DriveFile {
      * @return
      * @throws GoogleAPIException
      */
-    public List<DriveFile> list(GoogleAPIConnector connector) throws GoogleAPIException {
+    public List<DriveFile> list(GoogleAPIConnector connector) throws WebAPIException {
         if (!isDirectory()) {
-            throw new GoogleAPIException("item is not direcotry :: " + item.title, Type.FileNotFound);
+            throw new WebAPIException("item is not direcotry :: " + item.title, Type.FileNotFound);
         }
 
         List<DriveFile> result = new LinkedList<DriveFile>();
@@ -65,9 +65,9 @@ public class DriveFile {
      * @return
      * @throws GoogleAPIException
      */
-    public DriveFileDownloader createDownloader(GoogleAPIConnector connector) throws GoogleAPIException {
+    public DriveFileDownloader createDownloader(GoogleAPIConnector connector) throws WebAPIException {
         if (!isFile()) {
-            throw new GoogleAPIException("item is not file :: " + item.title, Type.FileNotFound);
+            throw new WebAPIException("item is not file :: " + item.title, Type.FileNotFound);
         }
         return new DriveFileDownloader(connector, item);
     }
@@ -109,7 +109,7 @@ public class DriveFile {
      * @return
      */
     public boolean downloadRange(GoogleAPIConnector connector, File dstFile, int rangeBegin, int rangeEnd,
-            DownloadCallback callback) throws GoogleAPIException {
+            DownloadCallback callback) throws WebAPIException {
         if (!isFile()) {
             return false;
         }
@@ -156,7 +156,7 @@ public class DriveFile {
             }
 
         } catch (IOException e) {
-            throw new GoogleAPIException(e);
+            throw new WebAPIException(e);
         }
     }
 
@@ -171,7 +171,7 @@ public class DriveFile {
      * @throws GoogleAPIException
      */
     public boolean download(GoogleAPIConnector connector, File dstFile, DownloadCallback callback)
-            throws GoogleAPIException {
+            throws WebAPIException {
 
         if (!isFile()) {
             return false;
@@ -224,7 +224,7 @@ public class DriveFile {
             }
 
         } catch (IOException e) {
-            throw new GoogleAPIException(e);
+            throw new WebAPIException(e);
         }
     }
 
@@ -234,7 +234,7 @@ public class DriveFile {
      * @return
      * @throws GoogleAPIException
      */
-    public DriveFile getParent(GoogleAPIConnector connector) throws GoogleAPIException {
+    public DriveFile getParent(GoogleAPIConnector connector) throws WebAPIException {
         if (isRoot()) {
             return null;
         }
@@ -391,9 +391,9 @@ public class DriveFile {
      * @param buffer
      * @throws GoogleAPIException
      */
-    public void upload(GoogleAPIConnector conn, byte[] buffer) throws GoogleAPIException {
+    public void upload(GoogleAPIConnector conn, byte[] buffer) throws WebAPIException {
         if (!isFile()) {
-            throw new GoogleAPIException("this is not file...", Type.APICallError);
+            throw new WebAPIException("this is not file...", Type.APICallError);
         }
 
         item = GoogleDriveAPIHelper.upload(conn, item, buffer);
@@ -403,7 +403,7 @@ public class DriveFile {
      * 絶対パスを取得する
      * @return
      */
-    public String getAbsolutePath(GoogleAPIConnector conn) throws GoogleAPIException {
+    public String getAbsolutePath(GoogleAPIConnector conn) throws WebAPIException {
         if (isRoot()) {
             return "/";
         }
@@ -428,7 +428,7 @@ public class DriveFile {
      * @param connector
      * @return
      */
-    public static DriveFile root(GoogleAPIConnector connector) throws GoogleAPIException {
+    public static DriveFile root(GoogleAPIConnector connector) throws WebAPIException {
         DriveItem raw = GoogleDriveAPIHelper.rootDirectory(connector);
         return new DriveFile(raw);
     }
@@ -441,18 +441,18 @@ public class DriveFile {
      * @return
      * @throws GoogleAPIException
      */
-    public static DriveFile get(GoogleAPIConnector connector, String fileName) throws GoogleAPIException {
+    public static DriveFile get(GoogleAPIConnector connector, String fileName) throws WebAPIException {
         List<DriveItem> search = GoogleDriveAPIHelper.search(connector,
                 GoogleDriveAPIHelper.createQueryFullTextContains(fileName));
         if (search.isEmpty()) {
-            throw new GoogleAPIException(fileName + " not found", Type.FileNotFound);
+            throw new WebAPIException(fileName + " not found", Type.FileNotFound);
         }
         for (DriveItem item : search) {
             if (item.title.equals(fileName)) {
                 return new DriveFile(item);
             }
         }
-        throw new GoogleAPIException(fileName + " not found", Type.FileNotFound);
+        throw new WebAPIException(fileName + " not found", Type.FileNotFound);
     }
 
     /**
@@ -465,13 +465,13 @@ public class DriveFile {
      * @throws GoogleAPIException
      */
     public static DriveFile getOrNewfile(GoogleAPIConnector connector, String fileName, String mimeType)
-            throws GoogleAPIException {
+            throws WebAPIException {
         DriveFile result = null;
 
         try {
             // まずは通常ファイルを検索する
             result = get(connector, fileName);
-        } catch (GoogleAPIException e) {
+        } catch (WebAPIException e) {
             if (e.getType() == Type.FileNotFound) {
                 // ファイルが見つからなかったら、新規ファイルを作成してしまう
                 DriveItem item = new DriveItem();

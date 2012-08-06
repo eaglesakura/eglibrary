@@ -4,7 +4,9 @@ import java.io.IOException;
 
 import net.arnx.jsonic.JSON;
 
-import com.eaglesakura.lib.gdata.GoogleAPIException.Type;
+import com.eaglesakura.lib.net.WebAPIConnection;
+import com.eaglesakura.lib.net.WebAPIException;
+import com.eaglesakura.lib.net.WebAPIException.Type;
 
 /**
  * ユーザー情報を得るためのヘルパクラス
@@ -20,9 +22,9 @@ public class GoogleUserInfoAPIHelper {
      * @throws GoogleAPIException
      * @see {@link GoogleOAuth2Helper#SCOPE_USERINFO_EMAIL}
      */
-    public static String getUserEmail(GoogleAPIConnector connector) throws GoogleAPIException {
+    public static String getUserEmail(GoogleAPIConnector connector) throws WebAPIException {
 
-        GoogleAPIConnector.GoogleConnection connect = null;
+        WebAPIConnection connect = null;
         try {
             connect = connector.get("https://www.googleapis.com/oauth2/v1/userinfo", null);
 
@@ -31,16 +33,16 @@ public class GoogleUserInfoAPIHelper {
                     UserInfoResponce resp = JSON.decode(connect.getInput(), UserInfoResponce.class);
 
                     if (resp == null || resp.email == null) {
-                        throw new GoogleAPIException("email not found", Type.APIResponseError);
+                        throw new WebAPIException("email not found", Type.APIResponseError);
                     }
 
                     return resp.email;
                 } catch (IOException e) {
-                    throw new GoogleAPIException(e);
+                    throw new WebAPIException(e);
                 }
             }
 
-            throw new GoogleAPIException(connect.getResponceCode());
+            throw new WebAPIException(connect.getResponceCode());
         } finally {
             if (connect != null) {
                 connect.dispose();
