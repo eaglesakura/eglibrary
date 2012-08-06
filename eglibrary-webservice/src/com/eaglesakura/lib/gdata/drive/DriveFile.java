@@ -16,6 +16,7 @@ import com.eaglesakura.lib.gdata.drive.GoogleDriveAPIHelper.DriveItem;
 import com.eaglesakura.lib.gdata.drive.GoogleDriveAPIHelper.ParentData;
 import com.eaglesakura.lib.net.WebAPIConnectorBase;
 import com.eaglesakura.lib.net.WebAPIException;
+import com.eaglesakura.lib.net.WebFileDownloader;
 import com.eaglesakura.lib.net.WebAPIException.Type;
 
 /**
@@ -65,11 +66,11 @@ public class DriveFile {
      * @return
      * @throws GoogleAPIException
      */
-    public DriveFileDownloader createDownloader(WebAPIConnectorBase connector) throws WebAPIException {
-        if (!isFile()) {
+    public WebFileDownloader createDownloader(WebAPIConnectorBase connector) throws WebAPIException {
+        if (!isFile() || item.downloadUrl == null) {
             throw new WebAPIException("item is not file :: " + item.title, Type.FileNotFound);
         }
-        return new DriveFileDownloader(connector, item);
+        return new WebFileDownloader(connector, item.downloadUrl, getFileSize());
     }
 
     /**
@@ -114,7 +115,7 @@ public class DriveFile {
             return false;
         }
 
-        DriveFileDownloader downloader = createDownloader(connector);
+        WebFileDownloader downloader = createDownloader(connector);
 
         // 親ディレクトリを作成する
         FileUtil.mkdir(dstFile.getParentFile());
@@ -177,7 +178,7 @@ public class DriveFile {
             return false;
         }
 
-        DriveFileDownloader downloader = createDownloader(connector);
+        WebFileDownloader downloader = createDownloader(connector);
 
         // 親ディレクトリを作成する
         FileUtil.mkdir(dstFile.getParentFile());

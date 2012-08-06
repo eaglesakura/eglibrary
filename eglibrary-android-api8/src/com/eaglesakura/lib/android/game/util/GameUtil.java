@@ -145,6 +145,28 @@ public class GameUtil {
     }
 
     /**
+     * inputのバッファを全てoutputへコピーする。 
+     * close=trueの場合、完了した時点でストリームはcloseされる。
+     * 
+     * @param input
+     * @param output
+     * @throws IOException
+     */
+    public static void copyTo(InputStream input, OutputStream output, boolean close) throws IOException {
+        byte[] buffer = new byte[1024 * 128];
+        int length = 0;
+
+        while ((length = input.read(buffer)) > 0) {
+            output.write(buffer, 0, length);
+        }
+
+        if (close) {
+            input.close();
+            output.close();
+        }
+    }
+
+    /**
      * RectFを四捨五入で丸める。
      * 
      * @param rect
