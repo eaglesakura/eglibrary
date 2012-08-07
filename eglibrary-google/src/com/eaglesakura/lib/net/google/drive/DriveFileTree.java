@@ -1,4 +1,4 @@
-package com.eaglesakura.lib.gdata.drive;
+package com.eaglesakura.lib.net.google.drive;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.eaglesakura.lib.android.game.util.LogUtil;
-import com.eaglesakura.lib.gdata.drive.GoogleDriveAPIHelper.DriveItem;
 import com.eaglesakura.lib.net.WebAPIConnectorBase;
 import com.eaglesakura.lib.net.WebAPIException;
+import com.eaglesakura.lib.net.google.drive.GoogleDriveAPIHelper.DriveItem;
 
 /**
  * GDriveのファイルを利用してツリーを構築する。

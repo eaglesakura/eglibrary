@@ -1,4 +1,4 @@
-package com.eaglesakura.lib.gdata;
+package com.eaglesakura.lib.net.google;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

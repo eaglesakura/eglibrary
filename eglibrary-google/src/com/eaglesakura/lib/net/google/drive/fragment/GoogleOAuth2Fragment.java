@@ -1,4 +1,4 @@
-package com.eaglesakura.lib.gdata.fragment;
+package com.eaglesakura.lib.net.google.drive.fragment;
 
 import java.io.File;
 
@@ -23,9 +23,9 @@ import com.eaglesakura.lib.android.game.thread.AsyncAction;
 import com.eaglesakura.lib.android.game.thread.UIHandler;
 import com.eaglesakura.lib.android.game.util.FileUtil;
 import com.eaglesakura.lib.android.game.util.LogUtil;
-import com.eaglesakura.lib.gdata.GoogleOAuth2Helper;
-import com.eaglesakura.lib.gdata.GoogleOAuth2Helper.AuthToken;
 import com.eaglesakura.lib.net.WebAPIException;
+import com.eaglesakura.lib.net.google.GoogleOAuth2Helper;
+import com.eaglesakura.lib.net.google.GoogleOAuth2Helper.AuthToken;
 
 /**
  * GData認証を行うためのFragment

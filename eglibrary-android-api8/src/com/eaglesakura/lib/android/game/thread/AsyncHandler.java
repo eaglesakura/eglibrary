@@ -49,24 +49,6 @@ public class AsyncHandler extends Handler {
      * ハンドラを生成する。
      * @return
      */
-    private static AsyncHandler createInstance() {
-        final Holder<AsyncHandler> holder = new Holder<AsyncHandler>();
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                Looper.prepare();
-                holder.set(new AsyncHandler());
-                Looper.loop();
-            }
-        };
-        thread.start();
-        return holder.getWithWait();
-    }
-
-    /**
-     * ハンドラを生成する。
-     * @return
-     */
     public static AsyncHandler createInstance(String name) {
         final Holder<AsyncHandler> holder = new Holder<AsyncHandler>();
         Thread thread = new Thread() {

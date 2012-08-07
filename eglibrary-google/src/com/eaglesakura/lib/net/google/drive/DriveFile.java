@@ -1,4 +1,4 @@
-package com.eaglesakura.lib.gdata.drive;
+package com.eaglesakura.lib.net.google.drive;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,12 +12,13 @@ import java.util.List;
 
 import com.eaglesakura.lib.android.game.io.BufferTargetOutputStream;
 import com.eaglesakura.lib.android.game.util.FileUtil;
-import com.eaglesakura.lib.gdata.drive.GoogleDriveAPIHelper.DriveItem;
-import com.eaglesakura.lib.gdata.drive.GoogleDriveAPIHelper.ParentData;
+import com.eaglesakura.lib.android.game.util.GameUtil;
 import com.eaglesakura.lib.net.WebAPIConnectorBase;
 import com.eaglesakura.lib.net.WebAPIException;
-import com.eaglesakura.lib.net.WebFileDownloader;
 import com.eaglesakura.lib.net.WebAPIException.Type;
+import com.eaglesakura.lib.net.google.drive.GoogleDriveAPIHelper.DriveItem;
+import com.eaglesakura.lib.net.google.drive.GoogleDriveAPIHelper.ParentData;
+import com.eaglesakura.lib.net.WebFileDownloader;
 
 /**
  * GDrive上のファイルを扱う。
@@ -412,7 +413,7 @@ public class DriveFile {
         String result = "";
 
         do {
-            if (result.isEmpty()) {
+            if (GameUtil.isEmpty(result)) {
                 result = current.getTitle();
             } else {
                 result = current.getTitle() + "/" + result;

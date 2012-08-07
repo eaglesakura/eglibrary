@@ -1,4 +1,4 @@
-package com.eaglesakura.lib.gdata.drive;
+package com.eaglesakura.lib.net.google.drive;
 
 import java.io.IOException;
 import java.io.InputStream;

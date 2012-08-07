@@ -12,8 +12,6 @@ import javax.net.ssl.SSLPeerUnverifiedException;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.ConnectionPoolTimeoutException;
 
-import com.google.api.client.http.HttpResponseException;
-
 public class WebAPIException extends Exception {
     static final long serialVersionUID = 0x01;
 
@@ -160,15 +158,6 @@ public class WebAPIException extends Exception {
      * @return
      */
     public static WebAPIException.Type toExceptionType(Exception base) {
-        if (base instanceof HttpResponseException) {
-            HttpResponseException hre = (HttpResponseException) base;
-            switch (hre.response.statusCode) {
-                case 401:
-                case 403:
-                    return Type.AuthError;
-            }
-            return Type.APIResponseError;
-        }
         if (base instanceof ConnectTimeoutException) {
             return Type.ConnectErrorTimeout;
         }
