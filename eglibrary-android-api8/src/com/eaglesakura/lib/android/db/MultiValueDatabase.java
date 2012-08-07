@@ -90,6 +90,10 @@ public class MultiValueDatabase extends DisposableResource {
         return list(keyName, value, SelectionType.Equal, valueList.fullColmnList());
     }
 
+    public SQLiteDatabase getDb() {
+        return db;
+    }
+
     /**
      * 
      * @author TAKESHI YAMASHITA
