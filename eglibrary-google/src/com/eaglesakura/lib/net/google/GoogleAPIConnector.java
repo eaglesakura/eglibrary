@@ -79,6 +79,15 @@ public class GoogleAPIConnector extends WebAPIConnectorBase {
         return true;
     }
 
+    @Override
+    protected boolean handleException(WebAPIException e, int tryCount) throws WebAPIException {
+        // 何回かのリトライを行った上で、 503ハンドリングはしない
+        if (tryCount > 4 && e.getResponceCode() == 503) {
+            return false;
+        }
+        return super.handleException(e, tryCount);
+    }
+
     /**
      * APIの制御を受け取る
      */

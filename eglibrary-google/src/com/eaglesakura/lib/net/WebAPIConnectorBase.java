@@ -83,12 +83,12 @@ public abstract class WebAPIConnectorBase {
         // 認証エラーには例外を返す
             case 401:
             case 403: {
-                throw new WebAPIException("Responce Error", Type.AuthError);
+                throw new WebAPIException("Responce Error", responseCode, Type.AuthError);
             }
             case 503:
             case 502:
             case 500: {
-                throw new WebAPIException("Server Error", Type.APIResponseError);
+                throw new WebAPIException("Server Error", responseCode, Type.APIResponseError);
             }
         }
     }

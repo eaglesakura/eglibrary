@@ -19,6 +19,8 @@ public class WebAPIException extends Exception {
 
     Type type = Type.Unknown;
 
+    int responce = -1;
+
     /**
      * 
      * @param baseException
@@ -36,6 +38,7 @@ public class WebAPIException extends Exception {
     public WebAPIException(int responce) {
         super("responce :: " + responce + " :: " + toExceptionType(responce).name());
         this.type = toExceptionType(responce);
+        this.responce = responce;
     }
 
     /**
@@ -45,6 +48,24 @@ public class WebAPIException extends Exception {
     public WebAPIException(String message, WebAPIException.Type type) {
         super(message);
         this.type = type;
+    }
+
+    /**
+     * 
+     * @param baseException
+     */
+    public WebAPIException(String message, int responce, WebAPIException.Type type) {
+        super(message);
+        this.type = type;
+        this.responce = responce;
+    }
+
+    /**
+     * HTTP戻り値
+     * @return
+     */
+    public int getResponceCode() {
+        return responce;
     }
 
     /**

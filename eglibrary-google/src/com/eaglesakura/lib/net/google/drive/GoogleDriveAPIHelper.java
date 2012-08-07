@@ -209,12 +209,12 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    public static List<DriveItem> ls(DriveItem item, WebAPIConnectorBase connector) throws WebAPIException {
-        if (isFile(item)) {
+    public static List<DriveItem> ls(DriveItem driveDirectory, WebAPIConnectorBase connector) throws WebAPIException {
+        if (isFile(driveDirectory)) {
             // ファイルに対してlsは行えない
             throw new WebAPIException("item is file", Type.FileNotFound);
         }
-        String query = createQuery("'" + item.id + "' in parents and trashed = false");
+        String query = createQuery("'" + driveDirectory.id + "' in parents and trashed = false");
         return search(connector, query);
     }
 

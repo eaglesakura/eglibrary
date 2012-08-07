@@ -16,9 +16,9 @@ import com.eaglesakura.lib.android.game.util.GameUtil;
 import com.eaglesakura.lib.net.WebAPIConnectorBase;
 import com.eaglesakura.lib.net.WebAPIException;
 import com.eaglesakura.lib.net.WebAPIException.Type;
+import com.eaglesakura.lib.net.WebFileDownloader;
 import com.eaglesakura.lib.net.google.drive.GoogleDriveAPIHelper.DriveItem;
 import com.eaglesakura.lib.net.google.drive.GoogleDriveAPIHelper.ParentData;
-import com.eaglesakura.lib.net.WebFileDownloader;
 
 /**
  * GDrive上のファイルを扱う。
