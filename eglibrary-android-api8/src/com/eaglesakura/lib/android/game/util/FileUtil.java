@@ -107,6 +107,50 @@ public class FileUtil {
     }
 
     /**
+     * 末尾・先端のバイト列を用いた単純なハッシュを生成する
+     * ファイルフォーマットによっては衝突の可能性が非常に高いため、利用する場合は十分に検討を行うこと。
+     * @param file
+     * @return
+     */
+    public static String genShortHash(File file, int checkLength) {
+        if (!file.isFile()) {
+            return null;
+        }
+
+        // 十分に小さいファイルの場合は検証を行わずに返す
+        if (file.length() < (checkLength * 2)) {
+            return FileUtil.genSHA1(file);
+        }
+
+        try {
+            String start = null;
+            String end = null;
+            // 先頭の任意バイトを読み込む
+            {
+                byte[] buffer = new byte[checkLength];
+                FileInputStream is = new FileInputStream(file);
+                is.read(buffer);
+                is.close();
+                start = GameUtil.genMD5(buffer);
+            }
+            // 末尾の任意バイトを読み込む
+            {
+                byte[] buffer = new byte[checkLength];
+                FileInputStream is = new FileInputStream(file);
+                is.skip(file.length() - checkLength);
+                is.read(buffer);
+                is.close();
+                end = GameUtil.genMD5(buffer);
+            }
+
+            return start + end;
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
      * ファイルからMD5を求める。
      * 
      * @param file
