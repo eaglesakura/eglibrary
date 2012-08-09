@@ -13,6 +13,7 @@ import java.util.List;
 import com.eaglesakura.lib.android.game.io.BufferTargetOutputStream;
 import com.eaglesakura.lib.android.game.util.FileUtil;
 import com.eaglesakura.lib.android.game.util.GameUtil;
+import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.net.WebAPIConnectorBase;
 import com.eaglesakura.lib.net.WebAPIException;
 import com.eaglesakura.lib.net.WebAPIException.Type;
@@ -226,6 +227,7 @@ public class DriveFile {
             }
 
         } catch (IOException e) {
+            LogUtil.log(e);
             throw new WebAPIException(e);
         }
     }

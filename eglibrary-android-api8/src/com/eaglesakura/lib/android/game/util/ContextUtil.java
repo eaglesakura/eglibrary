@@ -323,4 +323,15 @@ public class ContextUtil {
         lp.width = activity.getWindow().getAttributes().width;
         dialog.getWindow().setAttributes(lp);
     }
+
+    /**
+     * 横方向をフルスクリーンにする
+     * @param activity
+     * @param dialog
+     */
+    public static void fullScreenY(Activity activity, Dialog dialog) {
+        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+        lp.height = activity.getWindow().getAttributes().height;
+        dialog.getWindow().setAttributes(lp);
+    }
 }
