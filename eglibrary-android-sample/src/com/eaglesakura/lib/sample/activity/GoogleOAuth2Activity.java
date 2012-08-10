@@ -6,10 +6,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
 import com.eaglesakura.lib.android.game.util.LogUtil;
-import com.eaglesakura.lib.gdata.GoogleAPIException;
-import com.eaglesakura.lib.gdata.GoogleOAuth2Helper;
-import com.eaglesakura.lib.gdata.GoogleOAuth2Helper.AuthToken;
-import com.eaglesakura.lib.gdata.fragment.GoogleOAuth2Fragment;
+import com.eaglesakura.lib.net.WebAPIException;
+import com.eaglesakura.lib.net.google.GoogleOAuth2Helper;
+import com.eaglesakura.lib.net.google.GoogleOAuth2Helper.AuthToken;
+import com.eaglesakura.lib.net.google.drive.fragment.GoogleOAuth2Fragment;
 import com.eaglesakura.lib.sample.R;
 
 public class GoogleOAuth2Activity extends FragmentActivity implements GoogleOAuth2Fragment.OAuth2Listener {
@@ -42,14 +42,14 @@ public class GoogleOAuth2Activity extends FragmentActivity implements GoogleOAut
     }
 
     @Override
-    public void onErrorMakeAuthURL(GoogleOAuth2Fragment fragment, GoogleAPIException e) {
+    public void onErrorMakeAuthURL(GoogleOAuth2Fragment fragment, WebAPIException e) {
         LogUtil.log(e);
         LogUtil.log("onErrorMakeAuthURL :: " + e.getMessage());
         finish();
     }
 
     @Override
-    public void onErrorMakeAuthToken(GoogleOAuth2Fragment fragment, GoogleAPIException e) {
+    public void onErrorMakeAuthToken(GoogleOAuth2Fragment fragment, WebAPIException e) {
         LogUtil.log(e);
         LogUtil.log("onErrorMakeAuthToken :: " + e.getMessage());
         finish();
