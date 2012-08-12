@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import net.arnx.jsonic.JSON;
 
+import com.eaglesakura.lib.android.game.util.JsonModel;
 import com.eaglesakura.lib.net.WebAPIConnection;
 import com.eaglesakura.lib.net.WebAPIConnectorBase;
 import com.eaglesakura.lib.net.WebAPIException;
@@ -56,7 +57,7 @@ public class GoogleUserInfoAPIHelper {
      * @author TAKESHI YAMASHITA
      *
      */
-    public static class UserInfoResponce {
+    public static class UserInfoResponce extends JsonModel {
 
         /**
          * メールアドレス

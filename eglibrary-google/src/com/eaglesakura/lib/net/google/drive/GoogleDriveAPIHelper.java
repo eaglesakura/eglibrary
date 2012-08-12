@@ -10,6 +10,7 @@ import java.util.Map;
 
 import net.arnx.jsonic.JSON;
 
+import com.eaglesakura.lib.android.game.util.JsonModel;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.net.WebAPIConnection;
 import com.eaglesakura.lib.net.WebAPIConnectorBase;
@@ -400,7 +401,7 @@ public class GoogleDriveAPIHelper {
      * @author TAKESHI YAMASHITA
      *
      */
-    public static class DriveAbout {
+    public static class DriveAbout extends JsonModel {
         public String kind = null;
         public String etag = null;
         public String selfLink = null;
@@ -439,7 +440,7 @@ public class GoogleDriveAPIHelper {
      * @author TAKESHI YAMASHITA
      *
      */
-    public static class DriveItemList {
+    public static class DriveItemList extends JsonModel {
         public String kind = null;
         public String etag = null;
         public String selfLink = null;
@@ -462,7 +463,7 @@ public class GoogleDriveAPIHelper {
      * @author TAKESHI YAMASHITA
      *
      */
-    public static class DriveItem {
+    public static class DriveItem extends JsonModel {
         /**
          * 種類
          */
@@ -549,7 +550,7 @@ public class GoogleDriveAPIHelper {
      * @author TAKESHI YAMASHITA
      *
      */
-    public static class LabelData {
+    public static class LabelData extends JsonModel {
         public Boolean starred = null;
         public Boolean hidden = null;
         public Boolean trashed = null;
@@ -560,7 +561,7 @@ public class GoogleDriveAPIHelper {
     /**
      * 親情報
      */
-    public static class ParentData {
+    public static class ParentData extends JsonModel {
         public String kind = null;
         public String id = null;
         public String selfLink = null;
