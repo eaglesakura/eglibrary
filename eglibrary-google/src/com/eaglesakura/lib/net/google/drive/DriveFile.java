@@ -344,6 +344,25 @@ public class DriveFile {
     }
 
     /**
+     * 強制的に親として認識させる
+     * @param parent
+     */
+    public void setParentForcing(DriveFile parent) {
+        this.parent = parent;
+        ParentData data = new ParentData();
+        data.id = parent.getId();
+        data.isRoot = parent.isRoot();
+        data.kind = parent.item.kind;
+        data.parentLink = parent.item.selfLink;
+        data.selfLink = parent.item.selfLink;
+
+        this.item.parents = new ParentData[] {
+            data
+        };
+
+    }
+
+    /**
      * 親との接続情報を設定する
      * @param parent
      * @return

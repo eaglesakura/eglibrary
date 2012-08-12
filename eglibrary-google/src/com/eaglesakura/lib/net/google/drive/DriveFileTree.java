@@ -156,7 +156,7 @@ public class DriveFileTree {
                     dir.setParent(parent);
                 } else {
                     // 親を強制的に問い合わせる
-                    dir.getParent(connector);
+                    dir.setParentForcing(root.directory);
                 }
 
                 // マップに登録する
@@ -180,6 +180,13 @@ public class DriveFileTree {
                     if (root == parentTree) {
                         LogUtil.log("isRoot");
                     }
+
+                    if (parentTree == null) {
+                        // 親がいなければ、共有とみなしてROOTに接続させる
+                        parentTree = root;
+                    }
+
+                    LogUtil.log("parent :: " + parentTree.directory.getTitle());
                     if (parentTree != null) {
                         // 親ディレクトリに登録する
                         parentTree.children.add(current);
@@ -193,6 +200,11 @@ public class DriveFileTree {
             for (DriveFile file : files) {
                 if (file.isFile()) {
                     DriveFileTree parent = treeMap.get(file.getParentId());
+
+                    if (parent == null) {
+                        parent = root;
+                    }
+
                     if (parent != null) {
                         parent.files.add(file);
                         file.setParent(parent.getDirectory());

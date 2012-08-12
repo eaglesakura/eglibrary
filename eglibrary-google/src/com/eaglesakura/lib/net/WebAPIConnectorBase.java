@@ -43,6 +43,7 @@ public abstract class WebAPIConnectorBase {
         HttpURLConnection result = (HttpURLConnection) new URL(url).openConnection();
         result.setRequestMethod(method);
         result.setConnectTimeout(connectTimeoutMs);
+        result.setReadTimeout(connectTimeoutMs);
         return result;
     }
 
