@@ -125,9 +125,20 @@ public class TextKeyValueStore extends DisposableResource {
         try {
             db.insertOrThrow(tableName, null, values);
         } catch (Exception e) {
-            remove(key);
-            db.insert(tableName, null, values);
+            //            remove(key);
+            //            db.insert(tableName, null, values);
+            db.update(tableName, values, DB_KEY + "='" + key + "'", null);
         }
+    }
+
+    /**
+     * 値の更新を行う
+     * @param key
+     * @param value
+     */
+    public void update(String key, String value) {
+        final ContentValues values = createValues(key, value);
+        db.update(tableName, values, DB_KEY + "='" + key + "'", null);
     }
 
     private String toString(byte[] buffer) {
