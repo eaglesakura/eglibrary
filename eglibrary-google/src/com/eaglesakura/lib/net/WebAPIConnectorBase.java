@@ -35,7 +35,7 @@ public abstract class WebAPIConnectorBase {
     }
 
     public void setConnectTimeoutMs(int connectTimeoutMs) {
-        this.connectTimeoutMs = connectTimeoutMs;
+        //        this.connectTimeoutMs = connectTimeoutMs;
         this.connectTimeoutMs = Math.max(1, connectTimeoutMs);
     }
 

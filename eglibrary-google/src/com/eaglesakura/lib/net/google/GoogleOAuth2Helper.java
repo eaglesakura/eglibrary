@@ -10,6 +10,7 @@ import java.net.URLEncoder;
 import net.arnx.jsonic.JSON;
 
 import com.eaglesakura.lib.android.game.util.GameUtil;
+import com.eaglesakura.lib.android.game.util.JsonModel;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.net.WebAPIException;
 
@@ -208,11 +209,11 @@ public class GoogleOAuth2Helper {
      * @author TAKESHI YAMASHITA
      *
      */
-    public static class ErrorCode {
+    public static class ErrorCode extends JsonModel {
         public String error = null;
     }
 
-    public static class AuthToken {
+    public static class AuthToken extends JsonModel {
         /**
          * アクセス用のトークン
          */

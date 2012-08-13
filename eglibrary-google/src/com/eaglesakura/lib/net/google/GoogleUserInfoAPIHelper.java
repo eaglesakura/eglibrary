@@ -5,6 +5,7 @@ import java.io.IOException;
 import net.arnx.jsonic.JSON;
 
 import com.eaglesakura.lib.android.game.util.JsonModel;
+import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.net.WebAPIConnection;
 import com.eaglesakura.lib.net.WebAPIConnectorBase;
 import com.eaglesakura.lib.net.WebAPIException;
@@ -28,11 +29,14 @@ public class GoogleUserInfoAPIHelper {
 
         WebAPIConnection connect = null;
         try {
+            LogUtil.log("mail connect start");
             connect = connector.get("https://www.googleapis.com/oauth2/v1/userinfo", null);
-
+            LogUtil.log("mail connected");
             if (connect.getResponceCode() == 200) {
                 try {
+                    LogUtil.log("mail decode start");
                     UserInfoResponce resp = JSON.decode(connect.getInput(), UserInfoResponce.class);
+                    LogUtil.log("mail decoded :: " + resp.email);
 
                     if (resp == null || resp.email == null) {
                         throw new WebAPIException("email not found", Type.APIResponseError);

@@ -297,6 +297,15 @@ public class ContextUtil {
     }
 
     /**
+     * ハニカムだったらtrue
+     * @return
+     */
+    public static boolean isHoneycomb() {
+        final int sdk_int = Build.VERSION.SDK_INT;
+        return sdk_int >= 11 && sdk_int <= 13;
+    }
+
+    /**
      * 戻るキーの
      * @param event
      * @return
