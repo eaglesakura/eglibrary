@@ -72,6 +72,83 @@ public class DropboxAPITest extends AndroidTestCase {
     }
 
     /**
+     * レジュームダウンロードを行う
+     * @throws Exception
+     */
+    public void resumeTest() throws Exception {
+        final String FILE_NAME = "41944677344765568030.jdc";
+        final String MD5 = "c0a1d404363be0ae923655e44e02192c";
+
+        final File dstFile = new File(Environment.getExternalStorageDirectory(), FILE_NAME);
+        final DropboxFile file = DropboxFile.getSearchedItem(helper, FILE_NAME);
+
+        assertNotNull(file);
+        LogUtil.log("file = " + file.getAbsolutePath());
+
+        dstFile.delete();
+
+        boolean completed = false;
+        {
+            completed = file.download(helper, dstFile, new DownloadCallback() {
+                boolean canceled = false;
+
+                @Override
+                public void onUpdate(DropboxFile file, long downloaded) {
+                    LogUtil.log("update :: "
+                            + String.format("update :: %.2f MB", (double) downloaded / 1024.0 / 1024.0));
+                    canceled = downloaded > (file.getFileSize() / 2);
+
+                    if (canceled) {
+                        LogUtil.log("abort download");
+                    }
+                }
+
+                @Override
+                public void onStart(DropboxFile file) {
+
+                }
+
+                @Override
+                public boolean isCanceled(DropboxFile file) {
+                    return canceled;
+                }
+            });
+        }
+        LogUtil.log("download abort");
+        // ダウンロードを中断した
+        assertFalse(completed);
+        {
+            completed = file.download(helper, dstFile, new DownloadCallback() {
+
+                @Override
+                public void onUpdate(DropboxFile file, long downloaded) {
+                    LogUtil.log("update :: "
+                            + String.format("update :: %.2f MB", (double) downloaded / 1024.0 / 1024.0));
+                }
+
+                @Override
+                public void onStart(DropboxFile file) {
+
+                }
+
+                @Override
+                public boolean isCanceled(DropboxFile file) {
+                    return false;
+                }
+            });
+        }
+        // ダウンロードを完了した
+        assertTrue(completed);
+
+        // ファイル検証
+        assertEquals(dstFile.length(), file.getFileSize());
+        final String localMD5 = FileUtil.genMD5(dstFile);
+        LogUtil.log("local md5   :: " + localMD5);
+        LogUtil.log("server md5 :: " + MD5);
+        assertEquals(localMD5, MD5);
+    }
+
+    /**
      * ダウンロードを行う
      * @throws Exception
      */

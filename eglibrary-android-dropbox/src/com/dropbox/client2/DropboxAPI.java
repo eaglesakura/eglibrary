@@ -971,6 +971,40 @@ public class DropboxAPI<SESS_T extends Session> {
     }
 
     /**
+     * Rangeヘッダを指定する
+     * @param path
+     * @param rev
+     * @param rangeBegin
+     * @param rangeEnd
+     * @return
+     * @throws DropboxException
+     */
+    public DropboxInputStream getFileStream(String path, String rev, long rangeBegin, long rangeEnd)
+            throws DropboxException {
+        assertAuthenticated();
+
+        if (!path.startsWith("/")) {
+            path = "/" + path;
+        }
+
+        String url = "/files/" + session.getAccessType() + path;
+        String[] args = new String[] {
+                "rev", rev, "locale", session.getLocale().toString(),
+        };
+        String target = RESTUtility.buildURL(session.getContentServer(), VERSION, url, args);
+        HttpGet req = new HttpGet(target);
+        if (rangeBegin >= 0 && rangeEnd > 0 && rangeEnd > rangeBegin) {
+            // rangeヘッダを指定する
+            req.addHeader("Range", "bytes=" + rangeBegin + "-" + rangeEnd);
+        }
+        session.sign(req);
+
+        HttpResponse response = RESTUtility.execute(session, req);
+
+        return new DropboxInputStream(req, response);
+    }
+
+    /**
      * Uploads a file to Dropbox. The upload will not overwrite any existing
      * version of the file, unless the latest version on the Dropbox server
      * has the same rev as the parentRev given. Pass in null if you're expecting

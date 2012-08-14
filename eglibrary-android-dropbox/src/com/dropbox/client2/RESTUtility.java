@@ -20,7 +20,6 @@
  * SOFTWARE.
  */
 
-
 package com.dropbox.client2;
 
 import java.io.BufferedReader;
@@ -76,7 +75,8 @@ import com.dropbox.client2.session.Session.ProxyInfo;
  */
 public class RESTUtility {
 
-    private RESTUtility() {}
+    private RESTUtility() {
+    }
 
     private static final DateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy kk:mm:ss ZZZZZ", Locale.US);
 
@@ -114,11 +114,9 @@ public class RESTUtility {
      *         only catch this exception which signals that some kind of error
      *         occurred.
      */
-    static public Object request(RequestMethod method, String host,
-            String path, int apiVersion, String[] params, Session session)
-            throws DropboxException {
-        HttpResponse resp = streamRequest(method, host, path, apiVersion,
-                params, session).response;
+    static public Object request(RequestMethod method, String host, String path, int apiVersion, String[] params,
+            Session session) throws DropboxException {
+        HttpResponse resp = streamRequest(method, host, path, apiVersion, params, session).response;
         return parseAsJSON(resp);
     }
 
@@ -151,9 +149,8 @@ public class RESTUtility {
     *         only catch this exception which signals that some kind of error
     *         occurred.
     */
-    static public RequestAndResponse streamRequest(RequestMethod method,
-            String host, String path, int apiVersion, String params[],
-            Session session) throws DropboxException {
+    static public RequestAndResponse streamRequest(RequestMethod method, String host, String path, int apiVersion,
+            String params[], Session session) throws DropboxException {
         HttpUriRequest req = null;
         String target = null;
 
@@ -212,8 +209,7 @@ public class RESTUtility {
      *         only catch this exception which signals that some kind of error
      *         occurred.
      */
-    public static Object parseAsJSON(HttpResponse response)
-            throws DropboxException {
+    public static Object parseAsJSON(HttpResponse response) throws DropboxException {
         Object result = null;
 
         BufferedReader bin = null;
@@ -226,7 +222,7 @@ public class RESTUtility {
                 // Has to be at least 16384, because this is defined as the buffer size in
                 //     org.json.simple.parser.Yylex.java
                 // and otherwise the reset() call won't work
-                bin  = new BufferedReader(in, 16384);
+                bin = new BufferedReader(in, 16384);
                 bin.mark(16384);
 
                 JSONParser parser = new JSONParser();
@@ -282,8 +278,7 @@ public class RESTUtility {
      *         only catch this exception which signals that some kind of error
      *         occurred.
      */
-    public static Map<String, String> parseAsQueryString(HttpResponse response)
-            throws DropboxException {
+    public static Map<String, String> parseAsQueryString(HttpResponse response) throws DropboxException {
         HttpEntity entity = response.getEntity();
 
         if (entity == null) {
@@ -330,8 +325,7 @@ public class RESTUtility {
      *         only catch this exception which signals that some kind of error
      *         occurred.
      */
-    public static HttpResponse execute(Session session, HttpUriRequest req)
-            throws DropboxException {
+    public static HttpResponse execute(Session session, HttpUriRequest req) throws DropboxException {
         return execute(session, req, -1);
     }
 
@@ -356,8 +350,8 @@ public class RESTUtility {
      *         only catch this exception which signals that some kind of error
      *         occurred.
      */
-    public static HttpResponse execute(Session session, HttpUriRequest req,
-            int socketTimeoutOverrideMs) throws DropboxException {
+    public static HttpResponse execute(Session session, HttpUriRequest req, int socketTimeoutOverrideMs)
+            throws DropboxException {
         HttpClient client = updatedHttpClient(session);
 
         // Set request timeouts.
@@ -395,7 +389,9 @@ public class RESTUtility {
             if (response == null) {
                 // This is from that bug, and retrying hasn't fixed it.
                 throw new DropboxIOException("Apache HTTPClient encountered an error. No response, try again.");
-            } else if (response.getStatusLine().getStatusCode() != DropboxServerException._200_OK) {
+            } else if (response.getStatusLine().getStatusCode() != DropboxServerException._200_OK
+            // support resume
+                    && response.getStatusLine().getStatusCode() != 206) {
                 // This will throw the right thing: either a DropboxServerException or a DropboxProxyException
                 parseAsJSON(response);
             }
@@ -427,8 +423,7 @@ public class RESTUtility {
      *
      * @return a full URL for making a request.
      */
-    public static String buildURL(String host, int apiVersion,
-            String target, String[] params) {
+    public static String buildURL(String host, int apiVersion, String target, String[] params) {
         if (!target.startsWith("/")) {
             target = "/" + target;
         }
@@ -513,8 +508,7 @@ public class RESTUtility {
                     } else {
                         result += "&";
                     }
-                    result += URLEncoder.encode(params[i], "UTF-8") + "="
-                    + URLEncoder.encode(params[i + 1], "UTF-8");
+                    result += URLEncoder.encode(params[i], "UTF-8") + "=" + URLEncoder.encode(params[i + 1], "UTF-8");
                 }
             }
             result.replace("*", "%2A");

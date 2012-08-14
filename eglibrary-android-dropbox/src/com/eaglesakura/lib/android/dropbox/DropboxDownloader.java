@@ -1,5 +1,6 @@
 package com.eaglesakura.lib.android.dropbox;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -39,16 +40,34 @@ public class DropboxDownloader extends DisposableResource {
     }
 
     /**
-     * ダウンロードを開始する
-     * @throws DropboxAPIException
+     * レジュームを開始する
+     * @param dstFile
+     * @return レジューム操作を開始したらtrue
      */
-    public void start() throws DropboxAPIException {
+    public boolean resume(File dstFile) throws DropboxAPIException {
+        start(dstFile.length(), file.getFileSize());
+        return true;
+    }
+
+    /**
+     * レンジを指定して開始する
+     * @param rangeStart
+     * @param rangeEnd
+     */
+    public void start(long rangeStart, long rangeEnd) throws DropboxAPIException {
         try {
-            stream = helper.getAPI().getFileStream(file.getAbsolutePath(), file.getRev());
+            stream = helper.getAPI().getFileStream(file.getAbsolutePath(), file.getRev(), rangeStart, rangeEnd);
         } catch (Exception e) {
             LogUtil.log(e);
             throw new DropboxAPIException(e);
         }
+    }
+
+    /**
+     * 先頭から開始する
+     */
+    public void start() throws DropboxAPIException {
+        start(-1, -1);
     }
 
     /**

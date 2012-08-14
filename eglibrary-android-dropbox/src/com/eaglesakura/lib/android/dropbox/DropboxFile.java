@@ -10,6 +10,7 @@ import com.dropbox.client2.DropboxAPI.Entry;
 import com.eaglesakura.lib.android.dropbox.DropboxAPIException.Type;
 import com.eaglesakura.lib.android.game.io.BufferTargetOutputStream;
 import com.eaglesakura.lib.android.game.util.FileUtil;
+import com.eaglesakura.lib.android.game.util.GameUtil;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
 /**
@@ -93,6 +94,15 @@ public class DropboxFile {
     }
 
     /**
+     * ファイル絶対パスとリビジョンによる唯一の識別子を取得する。
+     * 内部的にはMD5を利用する
+     * @return
+     */
+    public String getUniqueId() {
+        return GameUtil.genMD5((getRev() + "::" + getAbsolutePath()).getBytes());
+    }
+
+    /**
      * ファイルサイズを取得する
      * @return
      */
@@ -128,8 +138,7 @@ public class DropboxFile {
         FileUtil.mkdir(dstFile.getParentFile());
 
         if (dstFile.length() > 0) {
-            //            downloader.resume(dstFile);
-            throw new UnsupportedOperationException("resume not support");
+            downloader.resume(dstFile);
         } else {
             downloader.start();
         }
@@ -188,6 +197,21 @@ public class DropboxFile {
             throw new DropboxAPIException(path + " not found", Type.FileNotFound);
         }
         return new DropboxFile(entry);
+    }
+
+    /**
+     * Dropboxからファイルを取得する
+     * @param helper
+     * @param path
+     * @return
+     * @throws DropboxAPIException
+     */
+    public static DropboxFile getSearchedItem(DropboxAPIHelper helper, String fileName) throws DropboxAPIException {
+        List<DropboxFile> search = search(helper, "/", fileName);
+        if (search.isEmpty()) {
+            throw new DropboxAPIException(fileName + " not found", Type.FileNotFound);
+        }
+        return search.get(0);
     }
 
     /**
