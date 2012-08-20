@@ -159,10 +159,16 @@ public class OpenGLManager extends DisposableResource {
         }
     }
 
+    /**
+     * EGLとContextの関連付けを行う
+     */
     public void bind() {
         egl.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext);
     }
 
+    /**
+     * EGLとContextの関連付けを解除する
+     */
     public void unbind() {
         egl.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT);
     }
