@@ -13,8 +13,7 @@ import android.graphics.PixelFormat;
 import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
-public class EGLContextManager extends DisposableResource {
-
+class EGLContextManager extends DisposableResource {
     /**
      * 初期化時のコンフィグスペック。
      */

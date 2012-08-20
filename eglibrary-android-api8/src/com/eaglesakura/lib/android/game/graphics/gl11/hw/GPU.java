@@ -6,4 +6,5 @@ public class GPU {
      * GPUは単一資源のため、すべての処理は排他的に行われなければならない。
      */
     static Object gpu_lock = new Object();
+
 }

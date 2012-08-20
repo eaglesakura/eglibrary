@@ -13,7 +13,7 @@ import com.eaglesakura.lib.android.game.resource.DisposableResource;
  * @author TAKESHI YAMASHITA
  *
  */
-public class EGLDisplaySurfaceManager extends DisposableResource {
+class EGLDisplaySurfaceManager extends DisposableResource {
 
     EGLSurface surface;
 
@@ -44,6 +44,7 @@ public class EGLDisplaySurfaceManager extends DisposableResource {
         final EGLDisplay eglDisplay = eglManager.display;
         egl.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT);
         egl.eglDestroySurface(eglDisplay, surface);
+
         surface = null;
     }
 }

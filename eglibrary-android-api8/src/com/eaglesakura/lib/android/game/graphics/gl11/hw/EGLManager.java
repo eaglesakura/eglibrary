@@ -8,7 +8,6 @@ import javax.microedition.khronos.opengles.GL11;
 import android.view.SurfaceHolder;
 
 import com.eaglesakura.lib.android.game.resource.DisposableResource;
-import com.eaglesakura.lib.android.game.resource.GarbageCollector;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
 /**
@@ -112,6 +111,11 @@ public class EGLManager extends DisposableResource {
      * GLを関連付けているスレッド
      */
     Thread glThread = null;
+
+    /**
+     * VRAMに確保されたオブジェクトを管理する
+     */
+    VRAM vram = null;
 
     /**
      * GL描画用スレッドを作成する。
@@ -397,8 +401,6 @@ public class EGLManager extends DisposableResource {
             return;
         }
 
-        garbageCollector = new GarbageCollector();
-
         // GL ES操作モジュール取得
         egl = (EGL10) EGLContext.getEGL();
         {
@@ -423,9 +425,21 @@ public class EGLManager extends DisposableResource {
         {
             displaySurface = new EGLDisplaySurfaceManager(this);
         }
+        // VRAMの初期化を行う
+        {
+            vram = new VRAM(this);
+        }
 
         // コンテキストリセット
         egl.eglMakeCurrent(display, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT);
+    }
+
+    /**
+     * VRAMを取得する
+     * @return
+     */
+    VRAM getVRAM() {
+        return vram;
     }
 
     /**
@@ -440,13 +454,11 @@ public class EGLManager extends DisposableResource {
             }
 
             // 残っている資源を削除する
-            {
+            if (vram != null) {
                 this.bind();
                 {
-                    // 強制的な解放を行わせる
-                    int gcItems = garbageCollector.delete();
-                    LogUtil.log(String.format("Delete OpenGL GC Resources :: %d", gcItems));
-                    LogUtil.log(String.format("Markers :: %d", garbageCollector.getGcTargetCount()));
+                    vram.dispose();
+                    vram = null;
                 }
                 this.unbind();
             }
@@ -510,26 +522,6 @@ public class EGLManager extends DisposableResource {
         synchronized (GPU.gpu_lock) {
             return getStatus().isRunning();
         }
-    }
-
-    /**
-     * GC対象管理クラス
-     */
-    private GarbageCollector garbageCollector = null;
-
-    /**
-     * GC管理クラスを取得する。
-     * @return
-     */
-    public GarbageCollector getGarbageCollector() {
-        return garbageCollector;
-    }
-
-    /**
-     * 解放対象のメモリを全て解放する。
-     */
-    public int gc() {
-        return garbageCollector.gc();
     }
 
 }
