@@ -438,7 +438,7 @@ public class EGLManager extends DisposableResource {
      * VRAMを取得する
      * @return
      */
-    VRAM getVRAM() {
+    public VRAM getVRAM() {
         return vram;
     }
 
