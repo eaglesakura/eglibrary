@@ -7,6 +7,7 @@ import com.eaglesakura.lib.android.game.graphics.gl11.SpriteManager;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.android.game.util.Timer;
 
+@Deprecated
 public abstract class SpriteGameLoopManagerBase extends GameLoopManagerBase {
     SpriteManager spriteManager;
     int backgroundColor = 0x000000ff;
@@ -102,7 +103,7 @@ public abstract class SpriteGameLoopManagerBase extends GameLoopManagerBase {
         // 一定時間以上経過していたらGC
         if (gcIntervalMs > 0 && gcTimer.end() > gcIntervalMs) {
             gcTimer.start();
-            int gcItems = getGLManager().gc(); // GLのGCを行う
+            int gcItems = egl.getVRAM().gc(); // GLのGCを行う
             LogUtil.log("OpenGL ES Auto GC :: " + gcTimer.end() + " ms = " + gcItems + " resources");
             gcTimer.start(); // タイマーの開始時刻をリセットする
         }
@@ -122,7 +123,7 @@ public abstract class SpriteGameLoopManagerBase extends GameLoopManagerBase {
             onGameFrameDraw();
         }
         spriteManager.end();
-        glManager.swapBuffers();
+        //        glManager.swapBuffers();
         updateGC();
         onGameFrameEnd();
     }

@@ -1,17 +1,9 @@
 package com.eaglesakura.lib.sample.activity;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
-import com.eaglesakura.lib.android.game.graphics.canvas.BitmapImage;
-import com.eaglesakura.lib.android.game.graphics.gl11.BitmapTextureImage;
-import com.eaglesakura.lib.android.game.graphics.gl11.SpriteManager;
-import com.eaglesakura.lib.android.game.graphics.gl11.TextureImageBase;
-import com.eaglesakura.lib.android.splib.fragment.GL11Fragment;
-import com.eaglesakura.lib.android.splib.gl11.module.BufferClearModule;
-import com.eaglesakura.lib.android.splib.gl11.module.GL11FragmentSpriteModule;
 import com.eaglesakura.lib.sample.R;
 
 public class SpriteRotateSample extends FragmentActivity {
@@ -23,13 +15,14 @@ public class SpriteRotateSample extends FragmentActivity {
         if (bundle == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             {
-                Fragment fragment = new SampleFragment();
-                transaction.add(R.id.gl_area, fragment, fragment.getClass().getName());
+                //                Fragment fragment = new SampleFragment();
+                //                transaction.add(R.id.gl_area, fragment, fragment.getClass().getName());
             }
             transaction.commit();
         }
     }
 
+    /*
     public static class SampleFragment extends GL11Fragment {
 
         GL11FragmentSpriteModule renderModule = new GL11FragmentSpriteModule() {
@@ -74,4 +67,5 @@ public class SpriteRotateSample extends FragmentActivity {
             rendering();
         }
     }
+    */
 }

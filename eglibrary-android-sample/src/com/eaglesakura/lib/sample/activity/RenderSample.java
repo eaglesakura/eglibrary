@@ -9,10 +9,9 @@ import com.eaglesakura.lib.android.game.graphics.canvas.BitmapImage;
 import com.eaglesakura.lib.android.game.graphics.gl11.BitmapTextureImage;
 import com.eaglesakura.lib.android.game.graphics.gl11.SpriteManager;
 import com.eaglesakura.lib.android.game.graphics.gl11.TextureImageBase;
-import com.eaglesakura.lib.android.game.thread.UIHandler;
 import com.eaglesakura.lib.android.game.util.LogUtil;
-import com.eaglesakura.lib.android.splib.fragment.GL11Fragment;
-import com.eaglesakura.lib.android.splib.gl11.module.GL11FragmentSpriteModule;
+import com.eaglesakura.lib.android.splib.fragment.EGLFragment;
+import com.eaglesakura.lib.android.splib.fragment.egl.module.EGLFragmentSpriteModule;
 import com.eaglesakura.lib.sample.R;
 
 public class RenderSample extends FragmentActivity {
@@ -33,31 +32,39 @@ public class RenderSample extends FragmentActivity {
         }
     }
 
-    public static class SampleFragment extends GL11Fragment {
-
-        GL11FragmentSpriteModule renderModule = new GL11FragmentSpriteModule() {
-
+    public static class SampleFragment extends EGLFragment {
+        EGLFragmentSpriteModule renderModule = new EGLFragmentSpriteModule() {
             TextureImageBase texture = null;
 
             float rotate = 0;
 
             @Override
-            public void onAttach(GL11Fragment fragment) {
+            public void onAttach(EGLFragment fragment) {
                 super.onAttach(fragment);
 
-                BitmapImage image = new BitmapImage().loadFromDrawable(getResources(), R.drawable.ic_launcher, null);
-                texture = new BitmapTextureImage(image.getBitmap(), getGLManager());
+                work(new Runnable() {
+                    @Override
+                    public void run() {
+                        BitmapImage image = new BitmapImage().loadFromDrawable(getResources(), R.drawable.ic_launcher,
+                                null);
+                        texture = new BitmapTextureImage(image.getBitmap(), getVRAM());
+                        image.dispose();
+                    }
+                });
             }
 
             @Override
             public void onRendering() {
-                getGLManager().bind();
-                getGLManager().clearColorRGBA(0.0f, 1.0f, 1.0f, 1.0f);
-                getGLManager().clear();
+                getGPU().clearColorRGBA(0.0f, 0.5f, 1.0f, 1.0f);
+                getGPU().clear();
+                getGL().glViewport(0, 0, getRenderAreaWidth(), getRenderAreaHeight());
+
                 SpriteManager spriteManager = getSpriteManager();
 
                 spriteManager.begin();
                 {
+                    spriteManager.fillRect(0, 0, 100, 100, 0xFFFFFFFF);
+
                     float scale = 5;
                     //    rotate = 45;//
                     spriteManager.drawImage(texture,//
@@ -69,23 +76,23 @@ public class RenderSample extends FragmentActivity {
                 spriteManager.end();
 
                 rotate += 1;
-                getGL().glFinish();
-                getGLManager().unbind();
-//                getGLManager().swapBuffers();
-                UIHandler.postUI(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
-                });
-                //                rendering();
+                rendering();
             }
         };
 
+        @Override
+        protected void onEGLInitialized() {
+            super.onEGLInitialized();
+            getRootModule().addModule(renderModule);
+            rendering();
+        }
+        /*
         @Override
         protected void onGLInitialize(int width, int height) {
             //            addModule(new BufferClearModule(0x00ffffff));
             addModule(renderModule);
             rendering();
         }
+        */
     }
 }

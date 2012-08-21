@@ -8,8 +8,10 @@ import android.content.res.Resources;
 import android.view.KeyEvent;
 import android.view.SurfaceView;
 
+import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
 import com.eaglesakura.lib.android.game.graphics.gl11.hw.EGLManager;
 import com.eaglesakura.lib.android.game.graphics.gl11.hw.GLRenderer;
+import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
 import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.game.util.GameUtil;
 import com.eaglesakura.lib.android.splib.fragment.EGLFragment;
@@ -92,6 +94,22 @@ public abstract class EGLFragmentModule extends DisposableResource {
     }
 
     /**
+     * GPU管理クラスを取得する
+     * @return
+     */
+    public OpenGLManager getGPU() {
+        return fragment.getGPU();
+    }
+
+    /**
+     * VRAMを取得する
+     * @return
+     */
+    public VRAM getVRAM() {
+        return getEGL().getVRAM();
+    }
+
+    /**
      * GLインターフェースを取得する
      * @return
      */
@@ -156,7 +174,35 @@ public abstract class EGLFragmentModule extends DisposableResource {
     }
 
     /**
-     * GLスレッドで実行を行う
+     * GL実行を行い、結果が戻るまで待つ
+     * @param runnable
+     */
+    public void work(final Runnable runnable) {
+        getEGL().working(new GLRenderer() {
+            @Override
+            public void onWorking(EGLManager egl) {
+                runnable.run();
+            }
+
+            @Override
+            public void onSurfaceReady(EGLManager egl) {
+
+            }
+
+            @Override
+            public void onSurfaceNotReady(EGLManager egl) {
+
+            }
+
+            @Override
+            public void onRendering(EGLManager egl) {
+
+            }
+        });
+    }
+
+    /**
+     * GLで実行を行う
      * @param runnable
      */
     public void post(GLRenderer runnable) {
@@ -164,7 +210,7 @@ public abstract class EGLFragmentModule extends DisposableResource {
     }
 
     /**
-     * GLスレッドで実行を行う
+     * GLで実行を行う
      * @param runnable
      * @param delay
      */
@@ -173,7 +219,7 @@ public abstract class EGLFragmentModule extends DisposableResource {
     }
 
     /**
-     * GLスレッドで実行を行う
+     * GLで実行を行う
      * @param runnable
      * @param uptimeMS
      */

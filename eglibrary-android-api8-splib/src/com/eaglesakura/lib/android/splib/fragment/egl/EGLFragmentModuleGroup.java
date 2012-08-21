@@ -10,15 +10,36 @@ public class EGLFragmentModuleGroup extends EGLFragmentModule {
 
     OrderAccessList<EGLFragmentModule> childs = new OrderAccessList<EGLFragmentModule>();
 
-    public void addModule(EGLFragmentModule module) {
-        childs.add(module);
-        module.onAttach(fragment);
+    /**
+     * モジュールを追加する
+     * @param module
+     */
+    public void addModule(final EGLFragmentModule module) {
+
+        work(new Runnable() {
+            @Override
+            public void run() {
+                module.onAttach(fragment);
+                childs.add(module);
+            }
+        });
     }
 
-    public void addModule(EGLFragmentModule module, Object tag) {
-        module.setTag(tag);
-        childs.add(module);
-        module.onAttach(fragment);
+    /**
+     * モジュールを追加する
+     * @param module
+     * @param tag
+     */
+    public void addModule(final EGLFragmentModule module, final Object tag) {
+        work(new Runnable() {
+
+            @Override
+            public void run() {
+                module.setTag(tag);
+                childs.add(module);
+                module.onAttach(fragment);
+            }
+        });
     }
 
     public EGLFragmentModule findModuleByTag(Object tag) {
@@ -44,7 +65,7 @@ public class EGLFragmentModuleGroup extends EGLFragmentModule {
      * モジュールを削除する
      * @param module
      */
-    public void remove(EGLFragmentModule module) {
+    public void remove(final EGLFragmentModule module) {
         if (childs.indexOf(module) < 0) {
             // 孫を探索する
             Iterator<EGLFragmentModule> iterator = childs.iterator();
@@ -59,8 +80,13 @@ public class EGLFragmentModuleGroup extends EGLFragmentModule {
             }
         } else {
             // 直接子を持っている
-            childs.remove(module);
-            module.onDetatch();
+            work(new Runnable() {
+                @Override
+                public void run() {
+                    childs.remove(module);
+                    module.onDetatch();
+                }
+            });
         }
     }
 

@@ -153,7 +153,8 @@ public abstract class GL11FragmentModule extends DisposableResource {
      * @return
      */
     public Handler getGLHandler() {
-        return getGLManager().getHandler();
+        //        return getGLManager().getHandler();
+        return null;
     }
 
     /**
@@ -288,6 +289,6 @@ public abstract class GL11FragmentModule extends DisposableResource {
      * OpenGLのGCを行わせる。
      */
     public void gc() {
-        getGLManager().gc();
+        //        getGLManager().gc();
     }
 }

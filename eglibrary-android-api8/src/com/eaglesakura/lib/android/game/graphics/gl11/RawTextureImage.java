@@ -2,6 +2,8 @@ package com.eaglesakura.lib.android.game.graphics.gl11;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
+
 /**
  * RGBAの適当な色配列からテクスチャを作成する。
  * @author TAKESHI YAMASHITA
@@ -9,11 +11,11 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class RawTextureImage extends TextureImageBase {
 
-    public RawTextureImage(OpenGLManager glManager, final int texWidth, final int texHeight) {
-        super(glManager);
+    public RawTextureImage(VRAM vram, final int texWidth, final int texHeight) {
+        super(vram);
         width = texWidth;
         height = texHeight;
-        textureId = glManager.genTexture();
+        textureId = vram.genTexture();
         register();
         setTextureLinearFilter(false);
     }
@@ -30,8 +32,8 @@ public class RawTextureImage extends TextureImageBase {
         // テクスチャ転送
         bind();
         {
-            glManager.getGL().glTexImage2D(GL10.GL_TEXTURE_2D, mipLevel, GL10.GL_RGBA, mipWidth, mipHeight, 0,
-                    GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, OpenGLManager.wrapColor(rgba8888Array));
+            getGL().glTexImage2D(GL10.GL_TEXTURE_2D, mipLevel, GL10.GL_RGBA, mipWidth, mipHeight, 0, GL10.GL_RGBA,
+                    GL10.GL_UNSIGNED_BYTE, OpenGLManager.wrapColor(rgba8888Array));
         }
         unbind();
     }
@@ -47,8 +49,8 @@ public class RawTextureImage extends TextureImageBase {
         // テクスチャ転送
         bind();
         {
-            glManager.getGL().glTexImage2D(GL10.GL_TEXTURE_2D, mipLevel, GL10.GL_RGB, mipWidth, mipHeight, 0,
-                    GL10.GL_RGB, GL10.GL_UNSIGNED_BYTE, OpenGLManager.wrap(rgbArray));
+            getGL().glTexImage2D(GL10.GL_TEXTURE_2D, mipLevel, GL10.GL_RGB, mipWidth, mipHeight, 0, GL10.GL_RGB,
+                    GL10.GL_UNSIGNED_BYTE, OpenGLManager.wrap(rgbArray));
         }
         unbind();
     }

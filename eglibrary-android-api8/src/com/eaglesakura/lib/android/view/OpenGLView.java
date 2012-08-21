@@ -12,11 +12,12 @@ import com.eaglesakura.lib.android.game.util.LogUtil;
  * 
  * 
  */
+@Deprecated
 public class OpenGLView extends LooperSurfaceView {
     /**
      * OGL管理。
      */
-    OpenGLManager glManager = new OpenGLManager();
+    OpenGLManager glManager = new OpenGLManager(null);
 
     Context context = null;
 
@@ -29,7 +30,6 @@ public class OpenGLView extends LooperSurfaceView {
     public OpenGLView(Context context) {
         super(context);
         getHolder().setType(SurfaceHolder.SURFACE_TYPE_GPU);
-        glManager.setSurfaceHolder(getHolder());
         this.context = context;
     }
 
@@ -80,8 +80,6 @@ public class OpenGLView extends LooperSurfaceView {
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         this.pixelFormat = format;
         LogUtil.log("GL Pixel Format : " + pixelFormat);
-        glManager.autoConfigSpec(format, true);
-        glManager.setSurfaceHolder(holder);
         //! 廃棄済みだったら、明示的にレジュームを行う。
         super.surfaceChanged(holder, format, width, height);
     }

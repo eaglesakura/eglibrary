@@ -175,4 +175,20 @@ public class VRAM extends DisposableResource {
         LogUtil.log(String.format("Delete OpenGL GC Resources :: %d", gcItems));
         LogUtil.log(String.format("Markers :: %d", garbageCollector.getGcTargetCount()));
     }
+
+    /**
+     * エラーを持っていた場合、GLのエラーを出力する。
+     * @return
+     */
+    public boolean printGLError() {
+        return egl.printGlError();
+    }
+
+    /**
+     * EGLのエラーを表示する
+     * @return
+     */
+    public boolean printEGLError() {
+        return egl.printEglError();
+    }
 }

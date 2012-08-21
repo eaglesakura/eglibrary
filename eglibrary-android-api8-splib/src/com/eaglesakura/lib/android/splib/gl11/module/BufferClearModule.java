@@ -44,7 +44,7 @@ public class BufferClearModule extends GL11FragmentModule {
         super.onRenderingEnd();
 
         try {
-            getGLManager().swapBuffers();
+            //            getGLManager().swapBuffers();
         } catch (Exception e) {
             onSwapError(e);
         }

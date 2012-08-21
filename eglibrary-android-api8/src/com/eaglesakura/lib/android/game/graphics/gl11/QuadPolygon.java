@@ -9,6 +9,7 @@ import java.util.List;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
+import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
 import com.eaglesakura.lib.android.game.resource.IRawResource;
 
 /**
@@ -31,17 +32,17 @@ public class QuadPolygon extends DisposableGLResource {
     /**
      * オブジェクト
      */
-    int vbo = GL_NULL;
+    int vbo = VRAM.NULL;
 
-    public QuadPolygon(OpenGLManager gl) {
-        this(gl, -0.5f, 0.5f, 0.5f, -0.5f);
+    public QuadPolygon(VRAM vram) {
+        this(vram, -0.5f, 0.5f, 0.5f, -0.5f);
     }
 
-    public QuadPolygon(OpenGLManager glManager, float left, float top, float right, float bottom) {
-        super(glManager);
+    public QuadPolygon(VRAM vram, float left, float top, float right, float bottom) {
+        super(vram);
 
-        vbo = glManager.genVertexBufferObject();
-        GL11 gl = glManager.getGL();
+        vbo = vram.genVertexBufferObject();
+        GL11 gl = getGL();
 
         //! 頂点を１VBOにまとめる。
         float[] vertices = {
@@ -77,7 +78,7 @@ public class QuadPolygon extends DisposableGLResource {
     @Override
     public List<IRawResource> getRawResources() {
         List<IRawResource> result = new ArrayList<IRawResource>();
-        if (vbo != GL_NULL) {
+        if (vbo != VRAM.NULL) {
             result.add(new GLResource(getGL(), Type.VertexBufferObject, vbo));
         }
         return result;
@@ -85,9 +86,9 @@ public class QuadPolygon extends DisposableGLResource {
 
     @Override
     public void onDispose() {
-        if (vbo != GL_NULL) {
-            glManager.deleteVertexBufferObject(vbo);
-            vbo = GL_NULL;
+        if (vbo != VRAM.NULL) {
+            vram.deleteVertexBufferObject(vbo);
+            vbo = VRAM.NULL;
         }
     }
 
@@ -95,7 +96,7 @@ public class QuadPolygon extends DisposableGLResource {
      * 頂点情報をGLに関連付ける。
      */
     public void bind() {
-        GL11 gl = glManager.getGL();
+        GL11 gl = getGL();
         gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, vbo);
 
         //! Posバインド
@@ -120,7 +121,7 @@ public class QuadPolygon extends DisposableGLResource {
      * 現在の行列 / 色状態で描画する。
      */
     public void draw() {
-        GL11 gl = glManager.getGL();
+        GL11 gl = getGL();
         gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4);
     }
 
@@ -128,7 +129,7 @@ public class QuadPolygon extends DisposableGLResource {
      * GLとの関連付けを解除する。
      */
     public void unbind() {
-        GL11 gl = glManager.getGL();
+        GL11 gl = getGL();
         gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
     }
 }

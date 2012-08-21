@@ -3,6 +3,7 @@ package com.eaglesakura.lib.android.game.graphics.gl11;
 import javax.microedition.khronos.opengles.GL11;
 import javax.microedition.khronos.opengles.GL11ExtensionPack;
 
+import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
 import com.eaglesakura.lib.android.game.resource.GCResourceBase;
 import com.eaglesakura.lib.android.game.resource.IRawResource;
 
@@ -12,16 +13,10 @@ import com.eaglesakura.lib.android.game.resource.IRawResource;
  *
  */
 public abstract class DisposableGLResource extends GCResourceBase {
-
     /**
-     * OpenGL資源の無効オブジェクト／NULLを示す。
+     * VRAMのメモリ管理クラス
      */
-    public static final int GL_NULL = 0;
-
-    /**
-     * GL管理クラス
-     */
-    protected OpenGLManager glManager = null;
+    protected VRAM vram = null;
 
     /**
      * リソースの種類。
@@ -109,12 +104,12 @@ public abstract class DisposableGLResource extends GCResourceBase {
         }
     }
 
-    public DisposableGLResource(OpenGLManager glManager) {
-        super(glManager.getGarbageCollector());
-        this.glManager = glManager;
+    public DisposableGLResource(VRAM vram) {
+        super(vram.getGarbageCollector());
+        this.vram = vram;
     }
 
     public final GL11 getGL() {
-        return glManager.getGL();
+        return vram.getGL();
     }
 }

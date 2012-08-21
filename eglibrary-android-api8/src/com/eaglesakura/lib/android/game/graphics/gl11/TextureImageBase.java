@@ -9,6 +9,7 @@ import javax.microedition.khronos.opengles.GL11;
 import com.eaglesakura.lib.android.game.graphics.ImageBase;
 import com.eaglesakura.lib.android.game.graphics.gl11.DisposableGLResource.GLResource;
 import com.eaglesakura.lib.android.game.graphics.gl11.DisposableGLResource.Type;
+import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
 import com.eaglesakura.lib.android.game.math.Vector2;
 import com.eaglesakura.lib.android.game.resource.IRawResource;
 
@@ -21,19 +22,14 @@ import com.eaglesakura.lib.android.game.resource.IRawResource;
 public abstract class TextureImageBase extends ImageBase {
 
     /**
-     * OpenGL資源の無効オブジェクト／NULLを示す。
-     */
-    public static final int GL_NULL = 0;
-
-    /**
      * GL管理クラス
      */
-    protected OpenGLManager glManager = null;
+    protected VRAM vram = null;
 
     /**
      * バインド対象
      */
-    protected int textureId = GL_NULL;
+    protected int textureId = VRAM.NULL;
 
     /**
      * テクスチャの幅
@@ -51,9 +47,9 @@ public abstract class TextureImageBase extends ImageBase {
      */
     protected Vector2 textureScale = new Vector2(1, 1);
 
-    protected TextureImageBase(OpenGLManager glManager) {
-        super(glManager.getGarbageCollector());
-        this.glManager = glManager;
+    protected TextureImageBase(VRAM vram) {
+        super(vram.getGarbageCollector());
+        this.vram = vram;
     }
 
     @Override
@@ -66,10 +62,14 @@ public abstract class TextureImageBase extends ImageBase {
         return height;
     }
 
+    protected GL11 getGL() {
+        return vram.getGL();
+    }
+
     @Override
     public List<IRawResource> getRawResources() {
         List<IRawResource> result = new LinkedList<IRawResource>();
-        if (textureId != GL_NULL) {
+        if (textureId != VRAM.NULL) {
             result.add(new GLResource(getGL(), Type.Texture, textureId));
         }
         return result;
@@ -77,9 +77,9 @@ public abstract class TextureImageBase extends ImageBase {
 
     @Override
     public void onDispose() {
-        if (textureId != GL_NULL) {
-            glManager.deleteTexture(textureId);
-            textureId = GL_NULL;
+        if (textureId != VRAM.NULL) {
+            vram.deleteTexture(textureId);
+            textureId = VRAM.NULL;
         }
     }
 
@@ -96,10 +96,10 @@ public abstract class TextureImageBase extends ImageBase {
      * OpenGLへ関連付ける。
      */
     public void bind() {
-        if (textureId == GL_NULL) {
+        if (textureId == VRAM.NULL) {
             return;
         }
-        GL11 gl = glManager.getGL();
+        GL11 gl = getGL();
         gl.glEnable(GL10.GL_TEXTURE_2D);
         gl.glBindTexture(GL10.GL_TEXTURE_2D, getTextureID());
     }
@@ -108,7 +108,7 @@ public abstract class TextureImageBase extends ImageBase {
      * UVのバインドを行わせる。
      */
     public void bindTextureCoord(int x, int y, int w, int h) {
-        GL11 gl = glManager.getGL();
+        GL11 gl = getGL();
         gl.glMatrixMode(GL10.GL_TEXTURE);
         gl.glLoadIdentity();
 
@@ -133,10 +133,10 @@ public abstract class TextureImageBase extends ImageBase {
      * OpenGLへの関連付けを解除する。
      */
     public void unbind() {
-        if (textureId == GL_NULL) {
+        if (textureId == VRAM.NULL) {
             return;
         }
-        GL11 gl = glManager.getGL();
+        GL11 gl = getGL();
         gl.glBindTexture(GL10.GL_TEXTURE_2D, 0);
         gl.glDisable(GL10.GL_TEXTURE_2D);
     }
@@ -165,11 +165,11 @@ public abstract class TextureImageBase extends ImageBase {
      * @param linear
      */
     public void setTextureLinearFilter(boolean linear) {
-        if (textureId == GL_NULL) {
+        if (textureId == VRAM.NULL) {
             return;
         }
 
-        GL11 gl = glManager.getGL();
+        GL11 gl = getGL();
         int type = linear ? GL10.GL_LINEAR : GL10.GL_NEAREST;
         //! テクスチャ属性指定。
         bind();
@@ -194,9 +194,5 @@ public abstract class TextureImageBase extends ImageBase {
             result *= 2;
         }
         return result;
-    }
-
-    protected GL11 getGL() {
-        return glManager.getGL();
     }
 }

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
 import com.eaglesakura.lib.android.game.graphics.gl11.hw.EGLManager;
 import com.eaglesakura.lib.android.game.graphics.gl11.hw.GLRenderer;
 import com.eaglesakura.lib.android.game.thread.UIHandler;
@@ -122,6 +123,14 @@ public class EGLFragment extends Fragment {
      */
     public EGLManager getEGL() {
         return egl;
+    }
+
+    /**
+     * GPUを取得する
+     * @return
+     */
+    public OpenGLManager getGPU() {
+        return egl.getGPU();
     }
 
     /**

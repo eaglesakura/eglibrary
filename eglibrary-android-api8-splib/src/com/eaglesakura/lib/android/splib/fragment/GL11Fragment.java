@@ -16,7 +16,6 @@ import com.eaglesakura.lib.android.game.thread.AsyncHandler;
 import com.eaglesakura.lib.android.game.thread.ThreadSyncRunnerBase;
 import com.eaglesakura.lib.android.splib.fragment.gl11.AutoRetryableGLRunnler;
 import com.eaglesakura.lib.android.splib.fragment.gl11.GLRunnable;
-import com.eaglesakura.lib.android.splib.fragment.gl11.GLRunnable.GLError;
 import com.eaglesakura.lib.android.splib.gl11.module.GL11FragmentModule;
 import com.eaglesakura.lib.android.view.OpenGLView;
 import com.eaglesakura.lib.list.OrderAccessList;
@@ -84,6 +83,7 @@ public abstract class GL11Fragment extends Fragment {
     };
 
     public GL11Fragment() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -150,6 +150,7 @@ public abstract class GL11Fragment extends Fragment {
      * @param h
      */
     protected void onSurfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        /*
         if (!glManager.isInitialized()) {
             glManager.initGL(handler);
             onGLInitialize(width, height);
@@ -159,6 +160,7 @@ public abstract class GL11Fragment extends Fragment {
                 onGLResume();
             }
         }
+        */
         // 復帰用のQueueを実行する
         runSuspendQueue();
 
@@ -174,10 +176,10 @@ public abstract class GL11Fragment extends Fragment {
     protected void onSurfaceDestroyed(SurfaceHolder holder) {
         if (getActivity() == null || getActivity().isFinishing()) {
             onGLDispose();
-            glManager.dispose();
+            //            glManager.dispose();
         } else {
             onGLPause();
-            glManager.onPause();
+            //            glManager.onPause();
         }
     }
 
@@ -318,6 +320,7 @@ public abstract class GL11Fragment extends Fragment {
      * @param runnable
      */
     protected void runGLRunnable(GLRunnable runnable) {
+        /*
         // 初期化されていない
         if (glManager == null || !glManager.isInitialized()) {
             runnable.onError(GLError.NotInitialized, this);
@@ -336,6 +339,7 @@ public abstract class GL11Fragment extends Fragment {
 
         // 実行可能なため、実行を行わせる。
         runnable.run();
+        */
     }
 
     /**

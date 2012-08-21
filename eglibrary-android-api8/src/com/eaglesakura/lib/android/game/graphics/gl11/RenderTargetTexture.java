@@ -10,6 +10,7 @@ import javax.microedition.khronos.opengles.GL11ExtensionPack;
 import com.eaglesakura.lib.android.game.display.VirtualDisplay;
 import com.eaglesakura.lib.android.game.graphics.gl11.DisposableGLResource.GLResource;
 import com.eaglesakura.lib.android.game.graphics.gl11.DisposableGLResource.Type;
+import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
 import com.eaglesakura.lib.android.game.resource.IRawResource;
 
 /**
@@ -29,18 +30,18 @@ public class RenderTargetTexture extends TextureImageBase {
      * 描画対象のカラーバッファ。
      * 通常、テクスチャとバインドされている。
      */
-    int colorBuffer = GL_NULL;
+    int colorBuffer = VRAM.NULL;
 
     /**
      * 描画対象の深度バッファ。
      * テクスチャにはバインドされていない。
      */
-    int depthBuffer = GL_NULL;
+    int depthBuffer = VRAM.NULL;
 
     /**
      * 描画対象のフレームバッファ
      */
-    int frameBuffer = GL_NULL;
+    int frameBuffer = VRAM.NULL;
 
     /**
      * テクスチャレンダリング時のUVオフセット値。
@@ -48,13 +49,11 @@ public class RenderTargetTexture extends TextureImageBase {
      */
     float yUvOffset = 0;
 
-    GL11 gl11 = null;
     GL11ExtensionPack gl11EP = null;
 
-    public RenderTargetTexture(OpenGLManager glManager, int targetWidth, int targetHeight) {
-        super(glManager);
-        gl11 = glManager.getGL();
-        gl11EP = (GL11ExtensionPack) gl11;
+    public RenderTargetTexture(VRAM vram, int targetWidth, int targetHeight) {
+        super(vram);
+        gl11EP = (GL11ExtensionPack) getGL();
         display.setRealDisplaySize(targetWidth, targetHeight);
         display.setVirtualDisplaySize(targetWidth, targetHeight);
         height = targetHeight;
@@ -67,13 +66,13 @@ public class RenderTargetTexture extends TextureImageBase {
      * 
      */
     protected void initRenderFrame() {
-        GL10 gl10 = glManager.getGL();
+        GL10 gl10 = getGL();
         GL11ExtensionPack gl = (GL11ExtensionPack) gl10;
 
-        textureId = glManager.genTexture();
-        frameBuffer = glManager.genFrameBufferObject();
-        colorBuffer = glManager.genRenderBuffer();
-        depthBuffer = glManager.genRenderBuffer();
+        textureId = vram.genTexture();
+        frameBuffer = vram.genFrameBufferObject();
+        colorBuffer = vram.genRenderBuffer();
+        depthBuffer = vram.genRenderBuffer();
 
         final int renderWidth = toGLTextureSize(width);
         final int renderHeight = toGLTextureSize(height);
@@ -128,8 +127,8 @@ public class RenderTargetTexture extends TextureImageBase {
             }
         }
 
-        gl11.glClearColor(0, 0, 0, 0);
-        gl11.glClear(GL10.GL_DEPTH_BUFFER_BIT | GL10.GL_COLOR_BUFFER_BIT);
+        gl10.glClearColor(0, 0, 0, 0);
+        gl10.glClear(GL10.GL_DEPTH_BUFFER_BIT | GL10.GL_COLOR_BUFFER_BIT);
         //! フレームバッファ関連付け解除
         gl.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, 0);
 
@@ -138,7 +137,7 @@ public class RenderTargetTexture extends TextureImageBase {
 
     @Override
     public void bindTextureCoord(int x, int y, int w, int h) {
-        GL11 gl = glManager.getGL();
+        GL11 gl = getGL();
         gl.glMatrixMode(GL10.GL_TEXTURE);
         gl.glLoadIdentity();
         float sizeX = (float) w / (float) getWidth();
@@ -162,11 +161,12 @@ public class RenderTargetTexture extends TextureImageBase {
      * テクスチャへのレンダリングを開始する。
      */
     public void bindRenderTarget() {
+        final GL11 gl11 = getGL();
         //! フレームバッファ関連付け
         gl11.glBindTexture(GL10.GL_TEXTURE_2D, 0);
-        glManager.printGlError();
+        vram.printGLError();
         gl11EP.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, frameBuffer);
-        glManager.printGlError();
+        vram.printGLError();
         gl11.glViewport(0, 0, display.getVirtualDisplayWidth(), display.getVirtualDisplayHeight());
     }
 
@@ -181,11 +181,11 @@ public class RenderTargetTexture extends TextureImageBase {
     /**
      * テクスチャのレンダリングを終了する。
      */
-    public void unbindRenderTarget(VirtualDisplay originDisplay) {
+    public void unbindRenderTarget(OpenGLManager gpu, VirtualDisplay originDisplay) {
         gl11EP.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, 0);
-        glManager.printGlError();
-        glManager.updateDrawArea(originDisplay);
-        glManager.printGlError();
+        vram.printGLError();
+        gpu.updateDrawArea(originDisplay);
+        vram.printGLError();
     }
 
     /**
@@ -194,13 +194,13 @@ public class RenderTargetTexture extends TextureImageBase {
     @Override
     public List<IRawResource> getRawResources() {
         List<IRawResource> result = super.getRawResources();
-        if (frameBuffer != GL_NULL) {
+        if (frameBuffer != VRAM.NULL) {
             result.add(new GLResource(getGL(), Type.FrameBuffer, frameBuffer));
         }
-        if (colorBuffer != GL_NULL) {
+        if (colorBuffer != VRAM.NULL) {
             result.add(new GLResource(getGL(), Type.RenderBuffer, colorBuffer));
         }
-        if (depthBuffer != GL_NULL) {
+        if (depthBuffer != VRAM.NULL) {
             result.add(new GLResource(getGL(), Type.RenderBuffer, depthBuffer));
         }
         return result;
@@ -211,18 +211,18 @@ public class RenderTargetTexture extends TextureImageBase {
      */
     @Override
     public void onDispose() {
-        if (frameBuffer != GL_NULL) {
-            glManager.deleteFrameBufferObject(frameBuffer);
-            frameBuffer = GL_NULL;
+        if (frameBuffer != VRAM.NULL) {
+            vram.deleteFrameBufferObject(frameBuffer);
+            frameBuffer = VRAM.NULL;
         }
 
-        if (colorBuffer != GL_NULL) {
-            glManager.deleteRenderBuffer(colorBuffer);
-            colorBuffer = GL_NULL;
+        if (colorBuffer != VRAM.NULL) {
+            vram.deleteRenderBuffer(colorBuffer);
+            colorBuffer = VRAM.NULL;
         }
-        if (depthBuffer != GL_NULL) {
-            glManager.deleteRenderBuffer(depthBuffer);
-            depthBuffer = GL_NULL;
+        if (depthBuffer != VRAM.NULL) {
+            vram.deleteRenderBuffer(depthBuffer);
+            depthBuffer = VRAM.NULL;
         }
         super.onDispose();
     }
@@ -248,7 +248,7 @@ public class RenderTargetTexture extends TextureImageBase {
             fullScreenRenderVertices = OpenGLManager.wrap(vertices);
         }
 
-        GL11 gl = glManager.getGL();
+        GL11 gl = getGL();
         fullScreenRenderVertices.position(0);
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);

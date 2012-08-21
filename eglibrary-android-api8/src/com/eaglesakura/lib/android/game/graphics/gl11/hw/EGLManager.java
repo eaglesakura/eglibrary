@@ -3,10 +3,12 @@ package com.eaglesakura.lib.android.game.graphics.gl11.hw;
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
+import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
 import android.view.SurfaceHolder;
 
+import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
 import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
@@ -118,6 +120,11 @@ public class EGLManager extends DisposableResource {
     VRAM vram = null;
 
     /**
+     * 
+     */
+    OpenGLManager gpu;
+
+    /**
      * GL描画用スレッドを作成する。
      * 
      * 
@@ -132,6 +139,14 @@ public class EGLManager extends DisposableResource {
      */
     public GL11 getGL() {
         return gl11;
+    }
+
+    /**
+     * HWアクセラレーターを取得する
+     * @return
+     */
+    public OpenGLManager getGPU() {
+        return gpu;
     }
 
     /**
@@ -202,9 +217,9 @@ public class EGLManager extends DisposableResource {
      */
     public void rendering(GLRenderer renderer) {
         synchronized (GPU.gpu_lock) {
-
+            final EGLStatus_e def = getStatus();
             // レンダリング開始を行う
-            if (this.bind() == EGLStatus_e.EGLStatus_Attached) {
+            if (def == EGLStatus_e.EGLStatus_Attached || this.bind() == EGLStatus_e.EGLStatus_Attached) {
                 // サーフェイスの準備ができたことを通知する
                 renderer.onSurfaceReady(this);
 
@@ -215,11 +230,13 @@ public class EGLManager extends DisposableResource {
                 //                glFinish();
                 gl11.glFinish();
 
-                // バックバッファからフロントバッファへ転送する
-                swapBuffers();
+                if (def != EGLStatus_e.EGLStatus_Attached) {
+                    // バックバッファからフロントバッファへ転送する
+                    swapBuffers();
 
-                // バインドを解除
-                this.unbind();
+                    // バインドを解除
+                    this.unbind();
+                }
                 // レンダリング終了
                 //                jclog("end rendering");
                 return;
@@ -236,21 +253,24 @@ public class EGLManager extends DisposableResource {
      */
     public void working(GLRenderer renderer) {
         synchronized (GPU.gpu_lock) {
-
+            final EGLStatus_e def = getStatus();
             // レンダリング開始を行う
-            if (this.bind() == EGLStatus_e.EGLStatus_Attached) {
+            if (def == EGLStatus_e.EGLStatus_Attached || this.bind() == EGLStatus_e.EGLStatus_Attached) {
+
                 // サーフェイスの準備ができたことを通知する
                 renderer.onSurfaceReady(this);
 
                 // レンダリングを行う
-                renderer.onRendering(this);
+                renderer.onWorking(this);
 
                 // コマンドの終了待ちを行う
                 //                glFinish();
                 gl11.glFinish();
 
                 // バインドを解除
-                this.unbind();
+                if (def != EGLStatus_e.EGLStatus_Attached) {
+                    this.unbind();
+                }
                 // レンダリング終了
                 //                jclog("end rendering");
                 return;
@@ -259,6 +279,26 @@ public class EGLManager extends DisposableResource {
 
         // ここまで流れてきたら、エラー処理を行わせる
         renderer.onSurfaceNotReady(this);
+    }
+
+    String toGlErrorInfo(int error) {
+        String info = "glError :: " + error;
+
+        switch (error) {
+            case GL10.GL_NO_ERROR:
+                info = "GL_NO_ERROR";
+                break;
+            case GL10.GL_OUT_OF_MEMORY:
+                info = "GL_OUT_OF_MEMORY";
+                break;
+            case GL10.GL_INVALID_ENUM:
+                info = "GL_INVALID_ENUM";
+                break;
+            default:
+                break;
+        }
+
+        return info;
     }
 
     String toEglErrorInfo(int error) {
@@ -296,6 +336,26 @@ public class EGLManager extends DisposableResource {
                 break;
         }
         return info;
+    }
+
+    /**
+     * エラー内容をログ出力し、SUCCESS以外ならtrueを返す。
+     * @param error
+     * @return
+     */
+    public boolean printGlError(int error) {
+        if (error != GL10.GL_NO_ERROR) {
+            LogUtil.log(toGlErrorInfo(error));
+        }
+        return error != GL10.GL_NO_ERROR;
+    }
+
+    /**
+     * エラー内容をログ表示し、SUCCESS以外ならtrueを返す。
+     * @return
+     */
+    public boolean printGlError() {
+        return printGlError(gl11.glGetError());
     }
 
     /**
@@ -432,6 +492,13 @@ public class EGLManager extends DisposableResource {
 
         // コンテキストリセット
         egl.eglMakeCurrent(display, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT);
+
+        // GPU管理クラスを作成
+        bind();
+        {
+            gpu = new OpenGLManager(this);
+        }
+        unbind();
     }
 
     /**

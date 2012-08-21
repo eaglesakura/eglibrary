@@ -6,48 +6,29 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.microedition.khronos.egl.EGL10;
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.egl.EGLContext;
-import javax.microedition.khronos.egl.EGLDisplay;
-import javax.microedition.khronos.egl.EGLSurface;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
-import javax.microedition.khronos.opengles.GL11Ext;
-import javax.microedition.khronos.opengles.GL11ExtensionPack;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Handler;
-import android.view.SurfaceHolder;
 
 import com.eaglesakura.lib.android.game.display.VirtualDisplay;
 import com.eaglesakura.lib.android.game.graphics.Color;
+import com.eaglesakura.lib.android.game.graphics.gl11.hw.EGLManager;
+import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
 import com.eaglesakura.lib.android.game.math.Matrix4x4;
 import com.eaglesakura.lib.android.game.math.Vector2;
-import com.eaglesakura.lib.android.game.resource.DisposableResource;
-import com.eaglesakura.lib.android.game.resource.GarbageCollector;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
 /**
  * OpenGL管理を行う。<BR>
  * {@link #gc()}等のリソース管理も行う。
  */
-public class OpenGLManager extends DisposableResource {
-    /**
-     * 管理しているサーフェイス。
-     */
-    private SurfaceHolder holder = null;
-    /**
-     * GL10本体。
-     */
-    private EGL10 egl = null;
+public class OpenGLManager {
 
     /**
      * GL本体。
@@ -55,32 +36,9 @@ public class OpenGLManager extends DisposableResource {
     private GL11 gl11 = null;
 
     /**
-     * 拡張パック
+     * 関連付けられたEGL
      */
-    private GL11ExtensionPack gl11EP = null;
-    /**
-     * GLコンテキスト。
-     */
-    private EGLContext eglContext = null;
-    /**
-     * ディスプレイ。
-     */
-    private EGLDisplay eglDisplay = null;
-    /**
-     * サーフェイス。
-     */
-    private EGLSurface eglSurface = null;
-
-    /**
-     * コンフィグ情報。
-     * 実際に利用するコンフィグ
-     */
-    private EGLConfig eglConfig = null;
-
-    /**
-     * GLを初期化したスレッドのハンドラ
-     */
-    private Handler glHandler = null;
+    private EGLManager egl = null;
 
     /**
      * GL描画用スレッドを作成する。
@@ -88,7 +46,30 @@ public class OpenGLManager extends DisposableResource {
      * 
      * @param holder
      */
-    public OpenGLManager() {
+    public OpenGLManager(EGLManager egl) {
+        this.egl = egl;
+        gl11 = egl.getGL();
+        //! デフォルトのStateを設定する
+        {
+            //! 深度テスト有効
+            gl11.glEnable(GL10.GL_DEPTH_TEST);
+            gl11.glEnable(GL10.GL_BLEND);
+            gl11.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+
+            //! カリング無効
+            gl11.glDisable(GL10.GL_CULL_FACE);
+
+            //! 行列無効化
+            gl11.glMatrixMode(GL10.GL_PROJECTION);
+            gl11.glLoadIdentity();
+            gl11.glMatrixMode(GL10.GL_MODELVIEW);
+            gl11.glLoadIdentity();
+
+            //!
+            gl11.glDisable(GL10.GL_LIGHTING);
+
+            gl11.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+        }
     }
 
     /**
@@ -102,11 +83,11 @@ public class OpenGLManager extends DisposableResource {
     }
 
     /**
-     * 操作対象のハンドラを取得する。
+     * VRAM領域を取得する
      * @return
      */
-    public Handler getHandler() {
-        return glHandler;
+    public VRAM getVRAM() {
+        return egl.getVRAM();
     }
 
     /**
@@ -157,20 +138,6 @@ public class OpenGLManager extends DisposableResource {
             default:
                 break;
         }
-    }
-
-    /**
-     * EGLとContextの関連付けを行う
-     */
-    public void bind() {
-        egl.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext);
-    }
-
-    /**
-     * EGLとContextの関連付けを解除する
-     */
-    public void unbind() {
-        egl.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT);
     }
 
     /**
@@ -340,374 +307,11 @@ public class OpenGLManager extends DisposableResource {
         return error != EGL10.EGL_SUCCESS;
     }
 
-    /**
-     * エラー内容をログ表示し、SUCCESS以外ならtrueを返す。
-     * @return
-     */
-    boolean printEglError() {
-        return printEglError(egl.eglGetError());
-    }
-
-    /**
-     * Activity#onResume時に呼び出す。
-     */
-    public void onResume() {
-        if (egl == null) {
-            return;
-        }
-
-        refreshRenderSurface();
-    }
-
-    /**
-     * Activity#onPauseで呼び出す。
-     */
-    public void onPause() {
-        LogUtil.log("PauseOpenGL");
-        if (eglSurface != null) {
-            egl.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, eglContext);
-            egl.eglDestroySurface(eglDisplay, eglSurface);
-            eglSurface = null;
-        }
-    }
-
-    /**
-     * バックバッファをフロントバッファに送る。
-     * 
-     * 
-     * 
-     */
-    public void swapBuffers() {
-        if (egl == null || eglDisplay == null || eglSurface == null) {
-            return;
-        }
-
-        // 画面に出力するバッファの切り替え
-        egl.eglGetError();
-        if (!egl.eglSwapBuffers(eglDisplay, eglSurface)) {
-            onResume();
-            {
-                egl.eglSwapBuffers(eglDisplay, eglSurface);
-                if (printEglError()) {
-                    throw new IllegalStateException("egl bad resume");
-                }
-            }
-        }
-
-    }
-
-    /**
-     * 
-     * @param holder
-     */
-    public void setSurfaceHolder(SurfaceHolder holder) {
-        LogUtil.log("" + holder);
-        LogUtil.log("" + this.holder);
-        this.holder = holder;
-    }
-
-    /**
-     * サーフェイスを返す。
-     * 
-     * @returnx
-     */
-    public SurfaceHolder getSurfaceHolder() {
-        return holder;
-    }
-
-    /**
-     * 初期化時のコンフィグスペック。
-     */
-    private int[] configSpec = {
-        /**
-         * 2008/12/1 修正 以下の設定が実機では使えないようなのでカット。
-         * この部分をはずすと、サポートされている設定が使われる(明示的に設定しないと機種依存で変わる可能性あり?)。
-         * 
-         * EGL10.EGL_RED_SIZE, 5, //! 赤要素：8ビット EGL10.EGL_GREEN_SIZE, 6, //!
-         * 緑要素：8ビット EGL10.EGL_BLUE_SIZE, 5, //! 青要素：8ビット //
-         * EGL10.EGL_ALPHA_SIZE, 8, //! アルファチャンネル：8ビット EGL10.EGL_DEPTH_SIZE, 16,
-         * //! 深度バッファ：16ビット
-         */
-        EGL10.EGL_NONE
-    //! 終端にはEGL_NONEを入れる
-    };
-
-    /**
-     * 赤のピクセルサイズ（bit）
-     */
-    int pixelSizeR = 5;
-
-    /**
-     * 緑のピクセルサイズ(bit)
-     */
-    int pixelSizeG = 6;
-
-    /**
-     * 青のピクセルサイズ(bit)
-     */
-    int pixelSizeB = 5;
-
-    /**
-     * 透過のピクセルサイズ(bit)
-     */
-    int pixelSizeA = 0;
-
-    /**
-     * Depthのピクセルサイズ(bit)
-     */
-    int pixelSizeD = 16;
-
-    /**
-     * 自動でコンフィグを設定する。
-     * 
-     * @param pixelFormat
-     * @param depth
-     */
-    public void autoConfigSpec(int pixelFormat, boolean depth) {
-        List<Integer> specs = new ArrayList<Integer>();
-
-        if (pixelFormat == PixelFormat.RGB_565) {
-            specs.add(EGL10.EGL_RED_SIZE);
-            specs.add(5);
-            specs.add(EGL10.EGL_GREEN_SIZE);
-            specs.add(6);
-            specs.add(EGL10.EGL_BLUE_SIZE);
-            specs.add(5);
-
-            pixelSizeR = 5;
-            pixelSizeG = 6;
-            pixelSizeB = 5;
-            pixelSizeA = 0;
-        } else if (pixelFormat == PixelFormat.RGB_888) {
-            specs.add(EGL10.EGL_RED_SIZE);
-            specs.add(8);
-            specs.add(EGL10.EGL_GREEN_SIZE);
-            specs.add(8);
-            specs.add(EGL10.EGL_BLUE_SIZE);
-            specs.add(8);
-
-            pixelSizeR = 8;
-            pixelSizeG = 8;
-            pixelSizeB = 8;
-            pixelSizeA = 0;
-        } else if (pixelFormat == PixelFormat.RGBA_8888) {
-            specs.add(EGL10.EGL_RED_SIZE);
-            specs.add(8);
-            specs.add(EGL10.EGL_GREEN_SIZE);
-            specs.add(8);
-            specs.add(EGL10.EGL_BLUE_SIZE);
-            specs.add(8);
-            specs.add(EGL10.EGL_ALPHA_SIZE);
-            specs.add(8);
-
-            pixelSizeR = 8;
-            pixelSizeG = 8;
-            pixelSizeB = 8;
-            pixelSizeA = 8;
-        }
-
-        if (depth) {
-            specs.add(EGL10.EGL_DEPTH_SIZE);
-            specs.add(16);
-
-            pixelSizeD = 16;
-        } else {
-            pixelSizeD = 0;
-        }
-
-        specs.add(EGL10.EGL_SURFACE_TYPE);
-        specs.add(EGL10.EGL_WINDOW_BIT);
-
-        specs.add(EGL10.EGL_NONE);
-
-        configSpec = new int[specs.size()];
-        for (int i = 0; i < configSpec.length; ++i) {
-            configSpec[i] = specs.get(i);
-        }
-    }
-
-    /**
-     * レンダリング用サーフェイスを新しく生成する。
-     * @return
-     */
-    protected EGLSurface refreshRenderSurface() {
-        if (eglSurface != null) {
-            egl.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, eglContext);
-            eglSurface = null;
-        }
-
-        {
-            // コンフィグ設定
-            final int CONFIG_MAX = 100;
-            EGLConfig[] configs = new EGLConfig[CONFIG_MAX];
-            int[] numConfigs = new int[1];
-
-            //! コンフィグを全て取得する
-            if (!egl.eglChooseConfig(eglDisplay, configSpec, configs, CONFIG_MAX, numConfigs)) {
-                throw new IllegalStateException(toEglErrorInfo(egl.eglGetError()));
-            }
-
-            //! 必要なものを保存する
-            eglConfig = chooseConfig(egl, eglDisplay, configs);
-        }
-
-        {
-            EGLSurface surface = egl.eglCreateWindowSurface(eglDisplay, eglConfig, holder, null);
-            if (!printEglError()) {
-                eglSurface = surface;
-                egl.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext);
-                return eglSurface;
-            }
-        }
-        throw new IllegalStateException("cerate surface error");
-    }
-
-    private EGLConfig chooseConfig(EGL10 egl, EGLDisplay display, EGLConfig[] configs) {
-        int index = 0;
-        for (EGLConfig config : configs) {
-            if (config == null) {
-                ++index;
-                continue;
-            }
-
-            int d = findConfigAttrib(egl, display, config, EGL10.EGL_DEPTH_SIZE, 0);
-            //            int s = findConfigAttrib(egl, display, config, EGL10.EGL_STENCIL_SIZE, 0);
-            int r = findConfigAttrib(egl, display, config, EGL10.EGL_RED_SIZE, 0);
-            int g = findConfigAttrib(egl, display, config, EGL10.EGL_GREEN_SIZE, 0);
-            int b = findConfigAttrib(egl, display, config, EGL10.EGL_BLUE_SIZE, 0);
-            int a = findConfigAttrib(egl, display, config, EGL10.EGL_ALPHA_SIZE, 0);
-
-            if (d >= pixelSizeD && r == pixelSizeR && g == pixelSizeG && b == pixelSizeB && a == pixelSizeA) {
-                LogUtil.log(String.format("config index :: %d", index));
-                return config;
-            }
-            ++index;
-        }
-        return null;
-    }
-
-    private int findConfigAttrib(EGL10 egl, EGLDisplay display, EGLConfig config, int attribute, int defaultValue) {
-        int[] mValue = new int[1];
-        if (egl.eglGetConfigAttrib(display, config, attribute, mValue)) {
-            return mValue[0];
-        }
-        return defaultValue;
-    }
-
-    /**
-     * GL系を初期化する。
-     * 
-     * 
-     * 
-     */
-    public void initGL(Handler handler) {
-        if (egl != null) {
-            return;
-        }
-        this.glHandler = handler;
-
-        garbageCollector = new GarbageCollector(handler);
-
-        // GL ES操作モジュール取得
-        egl = (EGL10) EGLContext.getEGL();
-        {
-            // ディスプレイコネクション作成
-            eglDisplay = egl.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY);
-            if (eglDisplay == EGL10.EGL_NO_DISPLAY) {
-                throw new IllegalStateException(toEglErrorInfo(egl.eglGetError()));
-            }
-
-            // ディスプレイコネクション初期化
-            if (!egl.eglInitialize(eglDisplay, new int[2])) {
-                throw new IllegalStateException(toEglErrorInfo(egl.eglGetError()));
-            }
-        }
-
-        {
-            // コンフィグ設定
-            final int CONFIG_MAX = 100;
-            EGLConfig[] configs = new EGLConfig[CONFIG_MAX];
-            int[] numConfigs = new int[1];
-
-            //! コンフィグを全て取得する
-            if (!egl.eglChooseConfig(eglDisplay, configSpec, configs, CONFIG_MAX, numConfigs)) {
-                throw new IllegalStateException(toEglErrorInfo(egl.eglGetError()));
-            }
-
-            //! 必要なものを保存する
-            eglConfig = chooseConfig(egl, eglDisplay, configs);
-            if (eglConfig == null) {
-                throw new IllegalStateException("Config not match!!");
-            }
-        }
-
-        {
-            // レンダリングコンテキスト作成
-            eglContext = egl.eglCreateContext(eglDisplay, eglConfig, EGL10.EGL_NO_CONTEXT, null);
-            if (eglContext == EGL10.EGL_NO_CONTEXT) {
-                throw new IllegalStateException(toEglErrorInfo(egl.eglGetError()));
-            }
-
-            gl11 = (GL11) eglContext.getGL();
-            gl11EP = (GL11ExtensionPack) eglContext.getGL();
-        }
-
-        {
-            refreshRenderSurface();
-        }
-
-        //! デフォルトのステータスを設定する
-        {
-            //! 深度テスト有効
-            gl11.glEnable(GL10.GL_DEPTH_TEST);
-            gl11.glEnable(GL10.GL_BLEND);
-            gl11.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-
-            //! カリング無効
-            gl11.glDisable(GL10.GL_CULL_FACE);
-
-            //! 行列無効化
-            gl11.glMatrixMode(GL10.GL_PROJECTION);
-            gl11.glLoadIdentity();
-            gl11.glMatrixMode(GL10.GL_MODELVIEW);
-            gl11.glLoadIdentity();
-
-            //!
-            gl11.glDisable(GL10.GL_LIGHTING);
-        }
-
-        printSpec();
-    }
-
+    /*
     private void printSpec() {
-
         int[] value = {
             -1
         };
-
-        {
-            egl.eglGetConfigAttrib(eglDisplay, eglConfig, EGL10.EGL_RED_SIZE, value);
-            LogUtil.log("EGL_RED_SIZE : " + value[0]);
-            egl.eglGetConfigAttrib(eglDisplay, eglConfig, EGL10.EGL_GREEN_SIZE, value);
-            LogUtil.log("EGL_GREEN_SIZE : " + value[0]);
-            egl.eglGetConfigAttrib(eglDisplay, eglConfig, EGL10.EGL_BLUE_SIZE, value);
-            LogUtil.log("EGL_BLUE_SIZE : " + value[0]);
-            egl.eglGetConfigAttrib(eglDisplay, eglConfig, EGL10.EGL_ALPHA_SIZE, value);
-            LogUtil.log("EGL_ALPHA_SIZE : " + value[0]);
-            egl.eglGetConfigAttrib(eglDisplay, eglConfig, EGL10.EGL_ALPHA_FORMAT, value);
-            LogUtil.log("EGL_ALPHA_FORMAT : " + value[0]);
-            egl.eglGetConfigAttrib(eglDisplay, eglConfig, EGL10.EGL_PIXEL_ASPECT_RATIO, value);
-            LogUtil.log("EGL_PIXEL_ASPECT_RATIO : " + value[0]);
-            egl.eglGetConfigAttrib(eglDisplay, eglConfig, EGL10.EGL_ALPHA_MASK_SIZE, value);
-            LogUtil.log("EGL_ALPHA_MASK_SIZE : " + value[0]);
-            egl.eglGetConfigAttrib(eglDisplay, eglConfig, EGL10.EGL_BUFFER_SIZE, value);
-            LogUtil.log("EGL_BUFFER_SIZE : " + value[0]);
-            egl.eglGetConfigAttrib(eglDisplay, eglConfig, EGL10.EGL_COLOR_BUFFER_TYPE, value);
-            LogUtil.log("EGL_COLOR_BUFFER_TYPE : " + value[0]);
-            egl.eglGetConfigAttrib(eglDisplay, eglConfig, EGL10.EGL_RENDERABLE_TYPE, value);
-            LogUtil.log("EGL_RENDERABLE_TYPE : " + value[0]);
-
-        }
         {
             LogUtil.log("GL_VENDOR : " + gl11.glGetString(GL10.GL_VENDOR));
             LogUtil.log("GL_RENDERER : " + gl11.glGetString(GL10.GL_RENDERER));
@@ -728,57 +332,7 @@ public class OpenGLManager extends DisposableResource {
             LogUtil.log("GL_MAX_PROJECTION_STACK_DEPTH : " + value[0]);
         }
     }
-
-    /**
-     * GLの終了処理を行う。
-     * 
-     * 
-     */
-    @Override
-    public void dispose() {
-        if (egl == null) {
-            return;
-        }
-
-        // 強制的な解放を行わせる
-        int gcItems = garbageCollector.delete();
-        LogUtil.log(String.format("Delete OpenGL GC Resources :: %d", gcItems));
-        LogUtil.log(String.format("Markers :: %d", garbageCollector.getGcTargetCount()));
-        try {
-            // レンダリングコンテキストとの結びつけは解除
-            egl.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT);
-            // サーフェイス破棄
-            if (eglSurface != null) {
-                egl.eglDestroySurface(eglDisplay, eglSurface);
-                eglSurface = null;
-            }
-
-        } catch (Exception e) {
-            LogUtil.log(e);
-        }
-
-        try {
-            // レンダリングコンテキスト破棄
-            if (eglContext != null) {
-                egl.eglDestroyContext(eglDisplay, eglContext);
-                eglContext = null;
-            }
-
-        } catch (Exception e) {
-            LogUtil.log(e);
-        }
-        try {
-            // ディスプレイコネクション破棄
-            if (eglDisplay != null) {
-                egl.eglTerminate(eglDisplay);
-                eglDisplay = null;
-            }
-        } catch (Exception e) {
-            LogUtil.log(e);
-        }
-
-        egl = null;
-    }
+    */
 
     /**
      * カメラ関連の行列をリセットし、単位行列化する。
@@ -799,193 +353,6 @@ public class OpenGLManager extends DisposableResource {
     }
 
     /**
-     * フレームバッファを生成する。
-     * @return
-     */
-    public int genFrameBufferObject() {
-        int[] buffer = new int[1];
-        gl11EP.glGenFramebuffersOES(1, buffer, 0);
-        if (buffer[0] == 0) {
-            printGlError();
-            throw new IllegalStateException("buffer not create");
-        }
-        return buffer[0];
-    }
-
-    /**
-     * フレームバッファを削除する。
-     * 別スレッドから投げられた場合、GLスレッドにpostされる。
-     * @param buffer
-     */
-    public void deleteFrameBufferObject(final int buffer) {
-        if (!isGLThread()) {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    deleteFrameBufferObject(buffer);
-                }
-            });
-            return;
-        }
-
-        gl11.glGetError();
-        gl11EP.glDeleteFramebuffersOES(1, new int[] {
-            buffer
-        }, 0);
-        if (printGlError()) {
-            LogUtil.log("Frame Delete Error :: " + buffer);
-        }
-    }
-
-    /**
-     * レンダリング用バッファを生成する。
-     * @return
-     */
-    public int genRenderBuffer() {
-        int[] buffer = new int[1];
-        gl11EP.glGenRenderbuffersOES(1, buffer, 0);
-        if (buffer[0] == 0) {
-            printGlError();
-            throw new IllegalStateException("buffer not create");
-        }
-        return buffer[0];
-    }
-
-    /**
-     * レンダリングバッファを削除する
-     * 別スレッドから投げられた場合、GLスレッドにpostされる。
-     * @param buffer
-     */
-    public void deleteRenderBuffer(final int buffer) {
-        if (!isGLThread()) {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    deleteRenderBuffer(buffer);
-                }
-            });
-            return;
-        }
-
-        gl11.glGetError();
-        gl11EP.glDeleteRenderbuffersOES(1, new int[] {
-            buffer
-        }, 0);
-
-        if (printGlError()) {
-            LogUtil.log("Render Delete Error :: " + buffer);
-        }
-
-    }
-
-    /**
-     * VBOのバッファをひとつ作成する。
-     * 
-     * @return
-     */
-    public int genVertexBufferObject() {
-        int[] buf = new int[1];
-        gl11.glGetError();
-        gl11.glGenBuffers(1, buf, 0);
-        if (gl11.glGetError() == GL11.GL_OUT_OF_MEMORY) {
-            throw new OutOfMemoryError("glGenTexture Error");
-        }
-
-        return buf[0];
-    }
-
-    /**
-     * VBOのバッファをひとつ削除する。
-     * 別スレッドから投げられた場合、GLスレッドにpostされる。
-     * 
-     * @param vbo
-     */
-    public void deleteVertexBufferObject(final int vbo) {
-        if (!isGLThread()) {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    deleteVertexBufferObject(vbo);
-                }
-            });
-            return;
-        }
-
-        gl11.glGetError();
-        gl11.glDeleteBuffers(1, new int[] {
-            vbo
-        }, 0);
-        if (printGlError()) {
-            LogUtil.log("VBO Delete Error :: " + vbo);
-        }
-    }
-
-    /**
-     * テクスチャバッファをひとつ作成する。
-     * 
-     * @return
-     */
-    public int genTexture() {
-        gl11.glGetError();
-        int[] buf = new int[1];
-        gl11.glGetError();
-        gl11.glGenTextures(1, buf, 0);
-        if (gl11.glGetError() == GL11.GL_OUT_OF_MEMORY) {
-            throw new OutOfMemoryError("glGenTexture Error");
-        }
-
-        return buf[0];
-    }
-
-    /**
-     * テクスチャバッファを削除する。
-     * 
-     * @param tex
-     */
-    public void deleteTexture(final int tex) {
-        if (!isGLThread()) {
-            glHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    deleteTexture(tex);
-                }
-            });
-        }
-
-        gl11.glGetError();
-        gl11.glDeleteTextures(1, new int[] {
-            tex
-        }, 0);
-        if (printGlError()) {
-            LogUtil.log("Texture Delete Error :: " + tex);
-        }
-    }
-
-    /**
-     * GLスレッドで何らかの処理を行わせる。
-     * 主にファイナライザからの連携で利用する。
-     * @param runable
-     */
-    private void post(Runnable runable) {
-        if (glHandler != null) {
-            glHandler.post(runable);
-        } else {
-            throw new IllegalArgumentException("GL Handler Not Found...");
-        }
-    }
-
-    /**
-     * GL用のスレッドかどうかを確認する。
-     * @return
-     */
-    public boolean isGLThread() {
-        if (glHandler == null) {
-            throw new NullPointerException("GL Handler Not Found...");
-        }
-        return Thread.currentThread().equals(glHandler.getLooper().getThread());
-    }
-
-    /**
      * 描画エリアを補正する。
      * 
      * @param correction
@@ -995,30 +362,6 @@ public class OpenGLManager extends DisposableResource {
         Vector2 realDisplaySize = correction.getRealDisplaySize(new Vector2());
         gl11.glViewport((int) area.left, (int) (realDisplaySize.y - area.bottom), (int) area.width(),
                 (int) area.height());
-    }
-
-    /**
-     * 初期化完了していたらtrue
-     * @return
-     */
-    public boolean isInitialized() {
-        return gl11 != null;
-    }
-
-    /**
-     * OpenGLが休止状態の場合はtrueを返す。
-     * @return
-     */
-    public boolean isPaused() {
-        return egl != null && eglSurface == null;
-    }
-
-    /**
-     * OpenGLが活性化されている場合はtrue
-     * @return
-     */
-    public boolean isRunning() {
-        return egl != null && eglSurface != null && gl11 != null;
     }
 
     /**
@@ -1077,26 +420,6 @@ public class OpenGLManager extends DisposableResource {
                 .asShortBuffer();
         result.put(buffer).position(0);
         return result;
-    }
-
-    /**
-     * GC対象管理クラス
-     */
-    private GarbageCollector garbageCollector = null;
-
-    /**
-     * GC管理クラスを取得する。
-     * @return
-     */
-    public GarbageCollector getGarbageCollector() {
-        return garbageCollector;
-    }
-
-    /**
-     * 解放対象のメモリを全て解放する。
-     */
-    public int gc() {
-        return garbageCollector.gc();
     }
 
     /**
