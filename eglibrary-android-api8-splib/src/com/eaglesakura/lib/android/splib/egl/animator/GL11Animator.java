@@ -1,11 +1,12 @@
-package com.eaglesakura.lib.android.splib.gl11.animator;
+package com.eaglesakura.lib.android.splib.egl.animator;
 
+import com.eaglesakura.lib.android.game.graphics.gl11.hw.EGLManager;
 import com.eaglesakura.lib.android.game.util.Timer;
-import com.eaglesakura.lib.android.splib.fragment.GL11Fragment;
+import com.eaglesakura.lib.android.splib.fragment.EGLFragment;
 import com.eaglesakura.lib.android.splib.fragment.gl11.AutoRetryableGLRunnler;
 
 public abstract class GL11Animator extends AutoRetryableGLRunnler {
-    GL11Fragment fragment;
+    EGLFragment fragment;
 
     /**
      * delayは30fps程度を基本とする
@@ -22,7 +23,7 @@ public abstract class GL11Animator extends AutoRetryableGLRunnler {
      */
     Timer timer = new Timer();
 
-    public GL11Animator(GL11Fragment fragment) {
+    public GL11Animator(EGLFragment fragment) {
         this.fragment = fragment;
     }
 
@@ -34,24 +35,21 @@ public abstract class GL11Animator extends AutoRetryableGLRunnler {
             return;
         }
         started = true;
-        fragment.post(this);
+        fragment.eglWork(this);
     }
 
-    /**
-     * 実行を行わせる。
-     * 外部からの呼び出し用で、直接は実行しない。
-     */
     @Override
-    public final void run() {
+    public void onWorking(EGLManager egl) {
         if (!started) {
             return;
         }
         timer.start();
         if (!doAnimation(fragment)) {
-            fragment.postDelayed(this, Math.max(1, delay - timer.end()));
+            fragment.eglWorkDelayed(this, Math.max(1, delay - timer.end()));
         } else {
             started = false;
         }
+
     }
 
     /**
@@ -82,6 +80,6 @@ public abstract class GL11Animator extends AutoRetryableGLRunnler {
      * 完了したらtrueを返す。
      * @return
      */
-    protected abstract boolean doAnimation(GL11Fragment fragment);
+    protected abstract boolean doAnimation(EGLFragment fragment);
 
 }

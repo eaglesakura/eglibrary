@@ -1,4 +1,4 @@
-package com.eaglesakura.lib.android.splib.gl11.module;
+package com.eaglesakura.lib.android.splib.fragment.egl.module;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -6,19 +6,20 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
 
 import com.eaglesakura.lib.android.game.thread.UIHandler;
-import com.eaglesakura.lib.android.splib.fragment.GL11Fragment;
+import com.eaglesakura.lib.android.splib.fragment.EGLFragment;
+import com.eaglesakura.lib.android.splib.fragment.egl.EGLFragmentModule;
 
 /**
  * ダイアログ表示用のモジュール
  * @author TAKESHI YAMASHITA
  *
  */
-public abstract class DialogModule extends GL11FragmentModule {
+public abstract class DialogModule extends EGLFragmentModule {
 
     Dialog dialog = null;
 
     @Override
-    public void onAttach(GL11Fragment fragment) {
+    public void onAttach(EGLFragment fragment) {
         super.onAttach(fragment);
         UIHandler.postUI(new Runnable() {
             @Override

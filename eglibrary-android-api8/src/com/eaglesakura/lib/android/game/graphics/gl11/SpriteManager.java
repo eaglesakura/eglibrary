@@ -22,7 +22,7 @@ public class SpriteManager extends DisposableResource {
     VirtualDisplay virtualDisplay;
 
     //! OpenGL
-    OpenGLManager glManager;
+    GPU gpu;
 
     //! 四角形描画用
     QuadPolygon quadPolygon;
@@ -39,17 +39,14 @@ public class SpriteManager extends DisposableResource {
      * @param display
      * @param gl
      */
-    public SpriteManager(VirtualDisplay display, OpenGLManager gl) {
+    public SpriteManager(VirtualDisplay display, GPU gpu) {
         this.virtualDisplay = display;
-        this.glManager = gl;
+        this.gpu = gpu;
         init();
-
-        //! 描画先座標を設定
-        glManager.updateDrawArea(virtualDisplay);
     }
 
     void init() {
-        quadPolygon = new QuadPolygon(glManager.getVRAM());
+        quadPolygon = new QuadPolygon(gpu.getVRAM());
     }
 
     /**
@@ -57,8 +54,8 @@ public class SpriteManager extends DisposableResource {
      * 
      * @return
      */
-    public OpenGLManager getGlManager() {
-        return glManager;
+    public GPU getGPU() {
+        return gpu;
     }
 
     /**
@@ -90,9 +87,12 @@ public class SpriteManager extends DisposableResource {
      * 描画開始時に必ず呼び出す必要がある。
      */
     public void begin() {
-        glManager.resetCamera();
-        glManager.resetWorldMatrix();
-        GL11 gl = glManager.getGL();
+        gpu.resetCamera();
+        gpu.resetWorldMatrix();
+        //! 描画先座標を設定
+        gpu.updateDrawArea(virtualDisplay);
+
+        GL11 gl = gpu.getGL();
 
         //! ライト無効化
         gl.glDisable(GL10.GL_LIGHTING);
@@ -106,7 +106,7 @@ public class SpriteManager extends DisposableResource {
 
         //! ポリゴン色の設定
         setColor(0xffffffff);
-        glManager.getGL().glColor4f(1, 1, 1, 1);
+        gl.glColor4f(1, 1, 1, 1);
 
         //! テクスチャ行列のリセット
         {
@@ -203,7 +203,7 @@ public class SpriteManager extends DisposableResource {
         final float displayWidth = virtualDisplay.getVirtualDisplayWidth();
         final float displayHeight = virtualDisplay.getVirtualDisplayHeight();
 
-        GL11 gl = glManager.getGL();
+        GL11 gl = gpu.getGL();
 
         setColor(colorRGBA);
 
@@ -282,7 +282,7 @@ public class SpriteManager extends DisposableResource {
         final float displayWidth = virtualDisplay.getVirtualDisplayWidth();
         final float displayHeight = virtualDisplay.getVirtualDisplayHeight();
 
-        GL11 gl = glManager.getGL();
+        GL11 gl = gpu.getGL();
 
         setColor(colorRGBA);
         setTexture(null);
@@ -313,7 +313,7 @@ public class SpriteManager extends DisposableResource {
     void setColor(int colorRGBA) {
         //! 描画色指定
         if (contextColor != colorRGBA) {
-            glManager.getGL().glColor4x(((colorRGBA >> 24) & 0xff) * 0x10000 / 255,
+            gpu.getGL().glColor4x(((colorRGBA >> 24) & 0xff) * 0x10000 / 255,
                     ((colorRGBA >> 16) & 0xff) * 0x10000 / 255, ((colorRGBA >> 8) & 0xff) * 0x10000 / 255,
                     ((colorRGBA & 0xff)) * 0x10000 / 255);
             contextColor = colorRGBA;
@@ -360,7 +360,7 @@ public class SpriteManager extends DisposableResource {
      * 描画終了時に必ず呼び出す必要がある。
      */
     public void end() {
-        final GL11 gl = getGlManager().getGL();
+        final GL11 gl = gpu.getGL();
 
         //! 描画用四角形の廃棄
         quadPolygon.unbind();

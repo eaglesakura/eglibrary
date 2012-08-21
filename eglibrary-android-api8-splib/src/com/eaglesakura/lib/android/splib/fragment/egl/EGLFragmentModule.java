@@ -8,7 +8,7 @@ import android.content.res.Resources;
 import android.view.KeyEvent;
 import android.view.SurfaceView;
 
-import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
+import com.eaglesakura.lib.android.game.graphics.gl11.GPU;
 import com.eaglesakura.lib.android.game.graphics.gl11.hw.EGLManager;
 import com.eaglesakura.lib.android.game.graphics.gl11.hw.GLRenderer;
 import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
@@ -22,7 +22,7 @@ import com.eaglesakura.lib.android.splib.fragment.EGLFragment;
  *
  */
 public abstract class EGLFragmentModule extends DisposableResource {
-    EGLFragment fragment;
+    private EGLFragment fragment;
 
     /**
      * Fragmentと関連付けられた
@@ -97,7 +97,7 @@ public abstract class EGLFragmentModule extends DisposableResource {
      * GPU管理クラスを取得する
      * @return
      */
-    public OpenGLManager getGPU() {
+    public GPU getGPU() {
         return fragment.getGPU();
     }
 
@@ -317,6 +317,13 @@ public abstract class EGLFragmentModule extends DisposableResource {
      * VRAMのGCを行わせる。
      */
     public void gc() {
-        getEGL().getVRAM().gc();
+        if (!isAttached()) {
+            return;
+        }
+
+        VRAM vram = getVRAM();
+        if (vram != null) {
+            vram.gc();
+        }
     }
 }

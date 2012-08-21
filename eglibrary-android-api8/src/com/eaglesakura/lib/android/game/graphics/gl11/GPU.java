@@ -1,11 +1,6 @@
 package com.eaglesakura.lib.android.game.graphics.gl11;
 
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.opengles.GL10;
@@ -28,7 +23,7 @@ import com.eaglesakura.lib.android.game.util.LogUtil;
  * OpenGL管理を行う。<BR>
  * {@link #gc()}等のリソース管理も行う。
  */
-public class OpenGLManager {
+public class GPU {
 
     /**
      * GL本体。
@@ -46,7 +41,7 @@ public class OpenGLManager {
      * 
      * @param holder
      */
-    public OpenGLManager(EGLManager egl) {
+    public GPU(EGLManager egl) {
         this.egl = egl;
         gl11 = egl.getGL();
         //! デフォルトのStateを設定する
@@ -88,6 +83,10 @@ public class OpenGLManager {
      */
     public VRAM getVRAM() {
         return egl.getVRAM();
+    }
+
+    public EGLManager getEGL() {
+        return egl;
     }
 
     /**
@@ -362,64 +361,6 @@ public class OpenGLManager {
         Vector2 realDisplaySize = correction.getRealDisplaySize(new Vector2());
         gl11.glViewport((int) area.left, (int) (realDisplaySize.y - area.bottom), (int) area.width(),
                 (int) area.height());
-    }
-
-    /**
-     * 指定した配列をラッピングする。
-     * @param buffer
-     * @return
-     */
-    public static IntBuffer wrap(int[] buffer) {
-        IntBuffer result = ByteBuffer.allocateDirect(buffer.length * 4).order(ByteOrder.nativeOrder()).asIntBuffer();
-        result.put(buffer).position(0);
-        return result;
-    }
-
-    /**
-     * 指定した配列をラッピングする。
-     * @param buffer
-     * @return
-     */
-    public static FloatBuffer wrap(float[] buffer) {
-        FloatBuffer result = ByteBuffer.allocateDirect(buffer.length * 4).order(ByteOrder.nativeOrder())
-                .asFloatBuffer();
-        result.put(buffer).position(0);
-        return result;
-    }
-
-    /**
-     * 指定した配列をラッピングする。
-     * @param buffer
-     * @return
-     */
-    public static ByteBuffer wrap(byte[] buffer) {
-        ByteBuffer result = ByteBuffer.allocateDirect(buffer.length).order(ByteOrder.nativeOrder());
-        result.put(buffer).position(0);
-        return result;
-    }
-
-    /**
-     * 指定した配列を色情報としてラッピングする。
-     * 色はRGBAで配列されている必要がある。
-     * @param buffer
-     * @return
-     */
-    public static Buffer wrapColor(int[] buffer) {
-        IntBuffer result = ByteBuffer.allocateDirect(buffer.length * 4).order(ByteOrder.BIG_ENDIAN).asIntBuffer();
-        result.put(buffer).position(0);
-        return result;
-    }
-
-    /**
-     * 指定した配列をラッピングする。
-     * @param buffer
-     * @return
-     */
-    public static ShortBuffer wrap(short[] buffer) {
-        ShortBuffer result = ByteBuffer.allocateDirect(buffer.length * 2).order(ByteOrder.nativeOrder())
-                .asShortBuffer();
-        result.put(buffer).position(0);
-        return result;
     }
 
     /**

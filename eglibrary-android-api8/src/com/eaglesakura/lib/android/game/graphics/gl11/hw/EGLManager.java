@@ -8,7 +8,7 @@ import javax.microedition.khronos.opengles.GL11;
 
 import android.view.SurfaceHolder;
 
-import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
+import com.eaglesakura.lib.android.game.graphics.gl11.GPU;
 import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
@@ -122,7 +122,7 @@ public class EGLManager extends DisposableResource {
     /**
      * 
      */
-    OpenGLManager gpu;
+    GPU gpu;
 
     /**
      * GL描画用スレッドを作成する。
@@ -145,7 +145,7 @@ public class EGLManager extends DisposableResource {
      * HWアクセラレーターを取得する
      * @return
      */
-    public OpenGLManager getGPU() {
+    public GPU getGPU() {
         return gpu;
     }
 
@@ -216,7 +216,7 @@ public class EGLManager extends DisposableResource {
      * @param renderer
      */
     public void rendering(GLRenderer renderer) {
-        synchronized (GPU.gpu_lock) {
+        synchronized (GPUUtil.gpu_lock) {
             final EGLStatus_e def = getStatus();
             // レンダリング開始を行う
             if (def == EGLStatus_e.EGLStatus_Attached || this.bind() == EGLStatus_e.EGLStatus_Attached) {
@@ -252,7 +252,7 @@ public class EGLManager extends DisposableResource {
      * @param renderer
      */
     public void working(GLRenderer renderer) {
-        synchronized (GPU.gpu_lock) {
+        synchronized (GPUUtil.gpu_lock) {
             final EGLStatus_e def = getStatus();
             // レンダリング開始を行う
             if (def == EGLStatus_e.EGLStatus_Attached || this.bind() == EGLStatus_e.EGLStatus_Attached) {
@@ -404,7 +404,7 @@ public class EGLManager extends DisposableResource {
 
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            synchronized (GPU.gpu_lock) {
+            synchronized (GPUUtil.gpu_lock) {
                 if (!isInitialized()) {
                     // 未初期化だから初期化を行う
                     context = new EGLContextManager();
@@ -421,7 +421,7 @@ public class EGLManager extends DisposableResource {
 
         @Override
         public void surfaceDestroyed(SurfaceHolder holder) {
-            synchronized (GPU.gpu_lock) {
+            synchronized (GPUUtil.gpu_lock) {
                 if (displaySurface != null) {
                     displaySurface.dispose();
                     displaySurface = null;
@@ -496,7 +496,7 @@ public class EGLManager extends DisposableResource {
         // GPU管理クラスを作成
         bind();
         {
-            gpu = new OpenGLManager(this);
+            gpu = new GPU(this);
         }
         unbind();
     }
@@ -515,7 +515,7 @@ public class EGLManager extends DisposableResource {
     @Override
     public void dispose() {
 
-        synchronized (GPU.gpu_lock) {
+        synchronized (GPUUtil.gpu_lock) {
             if (!isInitialized()) {
                 return;
             }
@@ -566,7 +566,7 @@ public class EGLManager extends DisposableResource {
      * @return
      */
     public boolean isInitialized() {
-        synchronized (GPU.gpu_lock) {
+        synchronized (GPUUtil.gpu_lock) {
             return getStatus() != EGLStatus_e.EGLStatus_NotInitialized;
         }
     }
@@ -576,7 +576,7 @@ public class EGLManager extends DisposableResource {
      * @return
      */
     public boolean isSuspend() {
-        synchronized (GPU.gpu_lock) {
+        synchronized (GPUUtil.gpu_lock) {
             return getStatus() == EGLStatus_e.EGLStatus_Suspend;
         }
     }
@@ -586,7 +586,7 @@ public class EGLManager extends DisposableResource {
      * @return
      */
     public boolean isRunning() {
-        synchronized (GPU.gpu_lock) {
+        synchronized (GPUUtil.gpu_lock) {
             return getStatus().isRunning();
         }
     }

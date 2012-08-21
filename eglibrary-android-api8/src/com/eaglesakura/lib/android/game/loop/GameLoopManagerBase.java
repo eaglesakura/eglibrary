@@ -19,7 +19,7 @@ import android.widget.FrameLayout;
 
 import com.eaglesakura.lib.android.game.display.VirtualDisplay;
 import com.eaglesakura.lib.android.game.graphics.gl11.BitmapTextureImage;
-import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
+import com.eaglesakura.lib.android.game.graphics.gl11.GPU;
 import com.eaglesakura.lib.android.game.graphics.gl11.TextureImageBase;
 import com.eaglesakura.lib.android.game.graphics.gl11.hw.EGLManager;
 import com.eaglesakura.lib.android.game.input.MultiTouchInput;
@@ -369,7 +369,7 @@ public abstract class GameLoopManagerBase {
      * 
      * @return
      */
-    public OpenGLManager getGLManager() {
+    public GPU getGLManager() {
         return glView.getGLManager();
     }
 

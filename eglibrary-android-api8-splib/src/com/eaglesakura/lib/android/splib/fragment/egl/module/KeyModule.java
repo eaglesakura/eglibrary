@@ -1,4 +1,4 @@
-package com.eaglesakura.lib.android.splib.gl11.module;
+package com.eaglesakura.lib.android.splib.fragment.egl.module;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,13 +6,14 @@ import java.util.Map;
 import android.view.KeyEvent;
 
 import com.eaglesakura.lib.android.game.util.Timer;
+import com.eaglesakura.lib.android.splib.fragment.egl.EGLFragmentModule;
 
 /**
  * キー操作を受け取るモジュール
  * @author TAKESHI YAMASHITA
  *
  */
-public class KeyModule extends GL11FragmentModule {
+public class KeyModule extends EGLFragmentModule {
 
     /**
      * 上キーを押した

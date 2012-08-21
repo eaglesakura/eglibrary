@@ -1,6 +1,7 @@
-package com.eaglesakura.lib.android.splib.gl11.animator;
+package com.eaglesakura.lib.android.splib.egl.animator;
 
-import com.eaglesakura.lib.android.splib.fragment.GL11Fragment;
+import com.eaglesakura.lib.android.game.thread.UIHandler;
+import com.eaglesakura.lib.android.splib.fragment.EGLFragment;
 import com.eaglesakura.lib.list.OrderAccessList;
 
 /**
@@ -11,12 +12,12 @@ import com.eaglesakura.lib.list.OrderAccessList;
 public class GL11UpdateAnimator extends GL11Animator {
     OrderAccessList<Updatable> updateObjects = new OrderAccessList<GL11UpdateAnimator.Updatable>();
 
-    public GL11UpdateAnimator(GL11Fragment fragment) {
+    public GL11UpdateAnimator(EGLFragment fragment) {
         super(fragment);
     }
 
     @Override
-    protected boolean doAnimation(GL11Fragment fragment) {
+    protected boolean doAnimation(EGLFragment fragment) {
         boolean finished = false;
 
         OrderAccessList.Iterator<Updatable> iterator = updateObjects.iterator();
@@ -41,13 +42,12 @@ public class GL11UpdateAnimator extends GL11Animator {
      * @param updatable
      */
     public GL11UpdateAnimator add(final Updatable updatable) {
-        fragment.getHandler().post(new Runnable() {
+        UIHandler.postUI(new Runnable() {
             @Override
             public void run() {
                 if (updateObjects.contains(updatable)) {
                     return;
                 }
-
                 updateObjects.add(updatable);
             }
         });

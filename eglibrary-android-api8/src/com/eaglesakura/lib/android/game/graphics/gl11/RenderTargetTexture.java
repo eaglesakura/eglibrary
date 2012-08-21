@@ -181,7 +181,7 @@ public class RenderTargetTexture extends TextureImageBase {
     /**
      * テクスチャのレンダリングを終了する。
      */
-    public void unbindRenderTarget(OpenGLManager gpu, VirtualDisplay originDisplay) {
+    public void unbindRenderTarget(GPU gpu, VirtualDisplay originDisplay) {
         gl11EP.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, 0);
         vram.printGLError();
         gpu.updateDrawArea(originDisplay);
@@ -245,7 +245,7 @@ public class RenderTargetTexture extends TextureImageBase {
                     0, 0, //!< 左下
                     getTextureScaleX(), 0, //!< 右下
             };
-            fullScreenRenderVertices = OpenGLManager.wrap(vertices);
+            fullScreenRenderVertices = VRAM.wrap(vertices);
         }
 
         GL11 gl = getGL();

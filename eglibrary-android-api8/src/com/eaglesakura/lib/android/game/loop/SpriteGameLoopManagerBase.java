@@ -2,7 +2,7 @@ package com.eaglesakura.lib.android.game.loop;
 
 import android.content.Context;
 
-import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
+import com.eaglesakura.lib.android.game.graphics.gl11.GPU;
 import com.eaglesakura.lib.android.game.graphics.gl11.SpriteManager;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.android.game.util.Timer;
@@ -113,10 +113,10 @@ public abstract class SpriteGameLoopManagerBase extends GameLoopManagerBase {
     protected void onGameFrame() {
         onGameFrameBegin();
 
-        final OpenGLManager glManager = getGLManager();
-        glManager.clearColorRGBA(((backgroundColor)) >> 24 & 0xff, ((backgroundColor)) >> 16 & 0xff,
+        final GPU gpu = getGLManager();
+        gpu.clearColorRGBA(((backgroundColor)) >> 24 & 0xff, ((backgroundColor)) >> 16 & 0xff,
                 ((backgroundColor)) >> 8 & 0xff, ((backgroundColor)) >> 0 & 0xff);
-        glManager.clear();
+        gpu.clear();
 
         spriteManager.begin();
         {

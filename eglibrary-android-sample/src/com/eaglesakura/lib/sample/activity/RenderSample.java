@@ -57,8 +57,6 @@ public class RenderSample extends FragmentActivity {
             public void onRendering() {
                 getGPU().clearColorRGBA(0.0f, 0.5f, 1.0f, 1.0f);
                 getGPU().clear();
-                getGL().glViewport(0, 0, getRenderAreaWidth(), getRenderAreaHeight());
-
                 SpriteManager spriteManager = getSpriteManager();
 
                 spriteManager.begin();

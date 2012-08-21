@@ -22,8 +22,8 @@ public class EGLFragmentSpriteModule extends EGLFragmentModule {
 
         {
             display = new VirtualDisplay();
-            display.setRealDisplaySize(getRenderAreaWidth(), getRenderAreaHeight());
-            display.setVirtualDisplaySize(getRenderAreaWidth(), getRenderAreaHeight());
+            display.setRealDisplaySize(fragment.getRenderAreaWidth(), fragment.getRenderAreaHeight());
+            display.setVirtualDisplaySize(fragment.getRenderAreaWidth(), fragment.getRenderAreaHeight());
         }
         spriteManager = new SpriteManager(display, getGPU());
     }

@@ -19,7 +19,7 @@ public class EGLFragmentModuleGroup extends EGLFragmentModule {
         work(new Runnable() {
             @Override
             public void run() {
-                module.onAttach(fragment);
+                module.onAttach(getFragment());
                 childs.add(module);
             }
         });
@@ -37,7 +37,7 @@ public class EGLFragmentModuleGroup extends EGLFragmentModule {
             public void run() {
                 module.setTag(tag);
                 childs.add(module);
-                module.onAttach(fragment);
+                module.onAttach(getFragment());
             }
         });
     }

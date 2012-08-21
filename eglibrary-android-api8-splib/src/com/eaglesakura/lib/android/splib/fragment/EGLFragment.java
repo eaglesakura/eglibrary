@@ -10,11 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
+import com.eaglesakura.lib.android.game.graphics.gl11.GPU;
 import com.eaglesakura.lib.android.game.graphics.gl11.hw.EGLManager;
 import com.eaglesakura.lib.android.game.graphics.gl11.hw.GLRenderer;
 import com.eaglesakura.lib.android.game.thread.UIHandler;
+import com.eaglesakura.lib.android.splib.fragment.egl.EGLFragmentModule;
 import com.eaglesakura.lib.android.splib.fragment.egl.EGLFragmentModuleGroup;
+import com.eaglesakura.lib.list.OrderAccessList;
+import com.eaglesakura.lib.list.OrderAccessList.Iterator;
 
 /**
  * EGL処理を行うFragment
@@ -47,6 +50,11 @@ public class EGLFragment extends Fragment {
      * 登録されているモジュールグループ
      */
     private EGLFragmentModuleGroup rootModule = new EGLFragmentModuleGroup();
+
+    /**
+     * onResume時に行う処理を保留しておく
+     */
+    private OrderAccessList<GLRenderer> pendingWorker = new OrderAccessList<GLRenderer>();
 
     /**
      * レンダリング処理を行うためのコールバック
@@ -101,6 +109,31 @@ public class EGLFragment extends Fragment {
         return rootModule;
     }
 
+    /**
+     * 保留リストに追加する
+     * @param worker
+     */
+    public void addPendingRunner(GLRenderer worker) {
+        pendingWorker.add(worker);
+    }
+
+    /**
+     * モジュールを追加する
+     * @param module
+     */
+    public void addModule(EGLFragmentModule module) {
+        rootModule.addModule(module);
+    }
+
+    /**
+     * モジュールを追加する
+     * @param module
+     * @param tag
+     */
+    public void addModule(EGLFragmentModule module, Object tag) {
+        rootModule.addModule(module);
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -129,7 +162,7 @@ public class EGLFragment extends Fragment {
      * GPUを取得する
      * @return
      */
-    public OpenGLManager getGPU() {
+    public GPU getGPU() {
         return egl.getGPU();
     }
 
@@ -194,6 +227,35 @@ public class EGLFragment extends Fragment {
      */
     protected void onEGLResume() {
         rootModule.onEGLResume();
+
+        // 保留リストを実行させる
+        egl.working(new GLRenderer() {
+
+            @Override
+            public void onWorking(EGLManager egl) {
+                Iterator<GLRenderer> iterator = pendingWorker.iterator();
+                while (iterator.hasNext()) {
+                    GLRenderer glRenderer = iterator.next();
+                    egl.working(glRenderer);
+                }
+                pendingWorker.clear();
+            }
+
+            @Override
+            public void onSurfaceReady(EGLManager egl) {
+
+            }
+
+            @Override
+            public void onSurfaceNotReady(EGLManager egl) {
+
+            }
+
+            @Override
+            public void onRendering(EGLManager egl) {
+
+            }
+        });
     }
 
     /**
@@ -240,10 +302,19 @@ public class EGLFragment extends Fragment {
 
     /**
      * レンダリングを行わせる。
+     * レンダリングは指定スレッドにpostされるため、すぐに制御が戻る。
      */
     public void rendering() {
         renderingHandler.removeCallbacks(renderRunner);
         renderingHandler.post(renderRunner);
+    }
+
+    /**
+     * 今すぐにレンダリングを行う。
+     * レンダリングが完了するまで、制御は戻らない。
+     */
+    public void renderingNow() {
+        egl.rendering(renderer);
     }
 
     private Runnable renderRunner = new Runnable() {

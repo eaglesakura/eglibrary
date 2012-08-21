@@ -11,9 +11,7 @@ import javax.microedition.khronos.opengles.GL11;
  *
  */
 public class QuadPolyColor {
-    OpenGLManager glManager;
-    GL11 gl;
-
+    GPU gpu;
     final byte[] colorFilters = {
             //! r, g, b, a
             (byte) 255, (byte) 255, (byte) 255, (byte) 255, //!< 左上
@@ -24,9 +22,8 @@ public class QuadPolyColor {
 
     ByteBuffer buffer = ByteBuffer.allocateDirect(colorFilters.length);
 
-    public QuadPolyColor(OpenGLManager gl) {
-        this.glManager = gl;
-        this.gl = gl.getGL();
+    public QuadPolyColor(GPU gpu) {
+        this.gpu = gpu;
         setColorRGBA(0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff);
     }
 
@@ -70,6 +67,7 @@ public class QuadPolyColor {
      * カラーバインドを行う。
      */
     public void bind() {
+        final GL11 gl = gpu.getGL();
         gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
         gl.glColorPointer(4, GL10.GL_UNSIGNED_BYTE, 0, buffer);
     }
@@ -78,6 +76,6 @@ public class QuadPolyColor {
      * カラーバインドを外す
      */
     public void unbind() {
-        gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
+        gpu.getGL().glDisableClientState(GL10.GL_COLOR_ARRAY);
     }
 }

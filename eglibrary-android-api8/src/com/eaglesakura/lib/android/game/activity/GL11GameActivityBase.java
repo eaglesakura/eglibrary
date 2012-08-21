@@ -17,6 +17,7 @@ import com.eaglesakura.lib.android.game.util.LogUtil;
  * @author TAKESHI YAMASHITA
  * 
  */
+@Deprecated
 public abstract class GL11GameActivityBase extends Activity implements ILoopParent {
     GameLoopManagerBase gameLoopManager;
 

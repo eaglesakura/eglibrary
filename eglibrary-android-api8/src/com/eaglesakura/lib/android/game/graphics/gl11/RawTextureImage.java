@@ -33,7 +33,7 @@ public class RawTextureImage extends TextureImageBase {
         bind();
         {
             getGL().glTexImage2D(GL10.GL_TEXTURE_2D, mipLevel, GL10.GL_RGBA, mipWidth, mipHeight, 0, GL10.GL_RGBA,
-                    GL10.GL_UNSIGNED_BYTE, OpenGLManager.wrapColor(rgba8888Array));
+                    GL10.GL_UNSIGNED_BYTE, VRAM.wrapColor(rgba8888Array));
         }
         unbind();
     }
@@ -50,7 +50,7 @@ public class RawTextureImage extends TextureImageBase {
         bind();
         {
             getGL().glTexImage2D(GL10.GL_TEXTURE_2D, mipLevel, GL10.GL_RGB, mipWidth, mipHeight, 0, GL10.GL_RGB,
-                    GL10.GL_UNSIGNED_BYTE, OpenGLManager.wrap(rgbArray));
+                    GL10.GL_UNSIGNED_BYTE, VRAM.wrap(rgbArray));
         }
         unbind();
     }

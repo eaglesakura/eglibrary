@@ -3,7 +3,7 @@ package com.eaglesakura.lib.android.view;
 import android.content.Context;
 import android.view.SurfaceHolder;
 
-import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
+import com.eaglesakura.lib.android.game.graphics.gl11.GPU;
 import com.eaglesakura.lib.android.game.math.Vector2;
 import com.eaglesakura.lib.android.game.util.ContextUtil;
 import com.eaglesakura.lib.android.game.util.LogUtil;
@@ -17,7 +17,7 @@ public class OpenGLView extends LooperSurfaceView {
     /**
      * OGL管理。
      */
-    OpenGLManager glManager = new OpenGLManager(null);
+    GPU gpu = new GPU(null);
 
     Context context = null;
 
@@ -57,8 +57,8 @@ public class OpenGLView extends LooperSurfaceView {
      * @return
      * 
      */
-    public OpenGLManager getGLManager() {
-        return glManager;
+    public GPU getGLManager() {
+        return gpu;
     }
 
     int pixelFormat = 0;
