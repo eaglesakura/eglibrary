@@ -3,6 +3,7 @@ package com.eaglesakura.lib.android.splib.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -358,5 +359,50 @@ public class EGLFragment extends Fragment {
 
     protected void onRenderingEnd() {
         rootModule.onRenderingEnd();
+    }
+
+    /**
+     * キーイベントを呼び出す。
+     * 呼び出さない場合は特に機能しない。
+     * @param key
+     */
+    public void onDispatchKeyEvent(final KeyEvent key) {
+        final int keyCode = key.getKeyCode();
+        final int action = key.getAction();
+
+        egl.working(new GLRenderer() {
+
+            @Override
+            public void onWorking(EGLManager egl) {
+                // サブモジュールにライフサイクルを伝える
+                rootModule.onKeyEvent(key);
+                switch (action) {
+                    case KeyEvent.ACTION_DOWN:
+                        rootModule.onKeyDown(keyCode, key);
+                        break;
+                    case KeyEvent.ACTION_UP:
+                        rootModule.onKeyUp(keyCode, key);
+                        break;
+                }
+            }
+
+            @Override
+            public void onSurfaceReady(EGLManager egl) {
+                // TODO 自動生成されたメソッド・スタブ
+
+            }
+
+            @Override
+            public void onSurfaceNotReady(EGLManager egl) {
+                // TODO 自動生成されたメソッド・スタブ
+
+            }
+
+            @Override
+            public void onRendering(EGLManager egl) {
+                // TODO 自動生成されたメソッド・スタブ
+
+            }
+        });
     }
 }

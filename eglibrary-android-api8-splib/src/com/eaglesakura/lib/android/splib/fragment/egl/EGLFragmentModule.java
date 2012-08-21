@@ -206,6 +206,9 @@ public abstract class EGLFragmentModule extends DisposableResource {
      * @param runnable
      */
     public void post(GLRenderer runnable) {
+        if (!isAttached()) {
+            return;
+        }
         fragment.eglWork(runnable);
     }
 
@@ -215,6 +218,9 @@ public abstract class EGLFragmentModule extends DisposableResource {
      * @param delay
      */
     public void postDelayed(GLRenderer runnable, long delay) {
+        if (!isAttached()) {
+            return;
+        }
         fragment.eglWorkDelayed(runnable, delay);
     }
 

@@ -41,6 +41,11 @@ public class EGLAnimator implements Runnable {
     boolean surfaceError = false;
 
     /**
+     * 開始済みの場合true
+     */
+    boolean started = false;
+
+    /**
      * 更新物一覧
      */
     OrderAccessList<Updatable> updatables = new OrderAccessList<Updatable>();
@@ -89,7 +94,11 @@ public class EGLAnimator implements Runnable {
      * 更新を開始する
      */
     public void start() {
+        if (started) {
+            return;
+        }
         this.handler.post(this);
+        started = true;
     }
 
     /**
@@ -133,6 +142,8 @@ public class EGLAnimator implements Runnable {
             // 指定時間の遅延で次のフレームを実行させる
             long nextFrame = Math.max(1, this.delay - workTime);
             handler.postDelayed(this, nextFrame);
+        } else {
+            started = false;
         }
     }
 

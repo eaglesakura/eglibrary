@@ -34,7 +34,6 @@ public abstract class AutoRetryableGLRunnler implements GLRenderer {
 
     @Override
     public void onSurfaceNotReady(EGLManager egl) {
-
     }
 
     @Override

@@ -87,6 +87,27 @@ public class OrderAccessList<T> {
     }
 
     /**
+     * index指定してアイテムを取得する
+     * @param index
+     * @return
+     */
+    public T get(int index) {
+        synchronized (lock) {
+            Iterator<T> iterator = iterator();
+            int current = 0;
+            while (iterator.hasNext()) {
+                T t = iterator.next();
+
+                if (current == index) {
+                    return t;
+                }
+                ++current;
+            }
+        }
+        return null;
+    }
+
+    /**
      * 要素を指定箇所に追加する
      * @param index
      * @param object
