@@ -71,12 +71,29 @@ public class EGLFragment extends Fragment {
             UIHandler.postUI(new Runnable() {
                 @Override
                 public void run() {
-                    if (!egl_initialized) {
-                        egl_initialized = true;
-                        onEGLInitialized();
-                    }
+                    egl.working(new GLRenderer() {
+                        @Override
+                        public void onWorking(EGLManager egl) {
+                            if (!egl_initialized) {
+                                egl_initialized = true;
+                                onEGLInitialized();
+                            }
 
-                    onEGLResume();
+                            onEGLResume();
+                        }
+
+                        @Override
+                        public void onSurfaceReady(EGLManager egl) {
+                        }
+
+                        @Override
+                        public void onSurfaceNotReady(EGLManager egl) {
+                        }
+
+                        @Override
+                        public void onRendering(EGLManager egl) {
+                        }
+                    });
                 }
             });
         }

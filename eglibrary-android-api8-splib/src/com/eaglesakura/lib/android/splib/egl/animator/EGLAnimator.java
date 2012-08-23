@@ -119,6 +119,16 @@ public class EGLAnimator implements Runnable {
     }
 
     /**
+     * アップデータを削除する
+     * @param item
+     * @return
+     */
+    public EGLAnimator remove(Updatable item) {
+        updatables.remove(item);
+        return this;
+    }
+
+    /**
      * 通常、外部から呼び出さない
      */
     @Deprecated

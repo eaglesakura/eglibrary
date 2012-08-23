@@ -46,4 +46,14 @@ public class EGLFragmentSpriteModule extends EGLFragmentModule {
     public SpriteManager getSpriteManager() {
         return spriteManager;
     }
+
+    @Override
+    public void dispose() {
+        work(new Runnable() {
+            @Override
+            public void run() {
+                spriteManager.dispose();
+            }
+        });
+    }
 }

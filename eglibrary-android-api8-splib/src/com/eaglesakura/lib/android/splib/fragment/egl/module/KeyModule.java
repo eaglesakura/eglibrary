@@ -104,7 +104,7 @@ public class KeyModule extends EGLFragmentModule {
     /**
      * 管理中のキー一欄
      */
-    Map<Integer, KeyData> keysMap = new HashMap<Integer, KeyModule.KeyData>();
+    Map<Integer, KeyModule.KeyData> keysMap = new HashMap<Integer, KeyModule.KeyData>();
 
     /**
      * キーが押された
@@ -159,5 +159,10 @@ public class KeyModule extends EGLFragmentModule {
      */
     public boolean isPressed(int keyCode) {
         return getKeyPressTimeMS(keyCode) >= 0;
+    }
+
+    @Override
+    public void dispose() {
+
     }
 }

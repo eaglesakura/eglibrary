@@ -92,8 +92,6 @@ public class EGLFragmentModuleGroup extends EGLFragmentModule {
 
     @Override
     public void dispose() {
-        super.dispose();
-
         Iterator<EGLFragmentModule> iterator = childs.iterator();
         while (iterator.hasNext()) {
             EGLFragmentModule module = iterator.next();
@@ -104,29 +102,40 @@ public class EGLFragmentModuleGroup extends EGLFragmentModule {
     }
 
     @Override
-    public void onAttach(EGLFragment fragment) {
+    public void onAttach(final EGLFragment fragment) {
         super.onAttach(fragment);
 
-        Iterator<EGLFragmentModule> iterator = childs.iterator();
-        while (iterator.hasNext()) {
-            EGLFragmentModule module = iterator.next();
-            {
-                module.onAttach(fragment);
+        work(new Runnable() {
+            @Override
+            public void run() {
+                Iterator<EGLFragmentModule> iterator = childs.iterator();
+                while (iterator.hasNext()) {
+                    EGLFragmentModule module = iterator.next();
+                    {
+                        module.onAttach(fragment);
+                    }
+                }
             }
-        }
+        });
     }
 
     @Override
     public void onDetatch() {
         super.onDetatch();
 
-        Iterator<EGLFragmentModule> iterator = childs.iterator();
-        while (iterator.hasNext()) {
-            EGLFragmentModule module = iterator.next();
-            {
-                module.onDetatch();
+        work(new Runnable() {
+
+            @Override
+            public void run() {
+                Iterator<EGLFragmentModule> iterator = childs.iterator();
+                while (iterator.hasNext()) {
+                    EGLFragmentModule module = iterator.next();
+                    {
+                        module.onDetatch();
+                    }
+                }
             }
-        }
+        });
 
     }
 
@@ -134,13 +143,19 @@ public class EGLFragmentModuleGroup extends EGLFragmentModule {
     public void onFragmentResume() {
         super.onFragmentResume();
 
-        Iterator<EGLFragmentModule> iterator = childs.iterator();
-        while (iterator.hasNext()) {
-            EGLFragmentModule module = iterator.next();
-            {
-                module.onFragmentResume();
+        work(new Runnable() {
+
+            @Override
+            public void run() {
+                Iterator<EGLFragmentModule> iterator = childs.iterator();
+                while (iterator.hasNext()) {
+                    EGLFragmentModule module = iterator.next();
+                    {
+                        module.onFragmentResume();
+                    }
+                }
             }
-        }
+        });
 
     }
 
@@ -148,13 +163,18 @@ public class EGLFragmentModuleGroup extends EGLFragmentModule {
     public void onFragmentSuspend() {
         super.onFragmentSuspend();
 
-        Iterator<EGLFragmentModule> iterator = childs.iterator();
-        while (iterator.hasNext()) {
-            EGLFragmentModule module = iterator.next();
-            {
-                module.onFragmentSuspend();
+        work(new Runnable() {
+            @Override
+            public void run() {
+                Iterator<EGLFragmentModule> iterator = childs.iterator();
+                while (iterator.hasNext()) {
+                    EGLFragmentModule module = iterator.next();
+                    {
+                        module.onFragmentSuspend();
+                    }
+                }
             }
-        }
+        });
     }
 
     @Override
@@ -213,7 +233,6 @@ public class EGLFragmentModuleGroup extends EGLFragmentModule {
     @Override
     public void onKeyDown(int keyCode, KeyEvent event) {
         super.onKeyDown(keyCode, event);
-
         Iterator<EGLFragmentModule> iterator = childs.iterator();
         while (iterator.hasNext()) {
             EGLFragmentModule module = iterator.next();
@@ -226,7 +245,6 @@ public class EGLFragmentModuleGroup extends EGLFragmentModule {
     @Override
     public void onKeyEvent(KeyEvent event) {
         super.onKeyEvent(event);
-
         Iterator<EGLFragmentModule> iterator = childs.iterator();
         while (iterator.hasNext()) {
             EGLFragmentModule module = iterator.next();

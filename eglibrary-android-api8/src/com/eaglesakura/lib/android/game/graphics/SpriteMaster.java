@@ -108,7 +108,9 @@ public class SpriteMaster {
      */
     void noAnimation() {
         frames.clear();
-        addAnimationFrame(new Rect(0, 0, image.getWidth(), image.getHeight()));
+        if (image != null) {
+            addAnimationFrame(new Rect(0, 0, image.getWidth(), image.getHeight()));
+        }
     }
 
     /**

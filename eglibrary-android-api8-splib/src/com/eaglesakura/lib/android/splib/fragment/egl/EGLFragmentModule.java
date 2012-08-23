@@ -65,7 +65,7 @@ public abstract class EGLFragmentModule extends DisposableResource {
      * @return
      */
     public boolean isAttached() {
-        return fragment != null;
+        return fragment != null && fragment.isAdded();
     }
 
     /**
@@ -316,8 +316,7 @@ public abstract class EGLFragmentModule extends DisposableResource {
      * メモリの解放を行う
      */
     @Override
-    public void dispose() {
-    }
+    public abstract void dispose();
 
     /**
      * VRAMのGCを行わせる。
@@ -327,9 +326,15 @@ public abstract class EGLFragmentModule extends DisposableResource {
             return;
         }
 
-        VRAM vram = getVRAM();
+        final VRAM vram = getVRAM();
         if (vram != null) {
-            vram.gc();
+            work(new Runnable() {
+
+                @Override
+                public void run() {
+                    vram.gc();
+                }
+            });
         }
     }
 }

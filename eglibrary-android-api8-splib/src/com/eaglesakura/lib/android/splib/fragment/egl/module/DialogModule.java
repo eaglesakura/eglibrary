@@ -24,6 +24,9 @@ public abstract class DialogModule extends EGLFragmentModule {
         UIHandler.postUI(new Runnable() {
             @Override
             public void run() {
+                if (!isAttached()) {
+                    return;
+                }
                 dialog = createDialog();
                 dialog.setOnCancelListener(new OnCancelListener() {
                     @Override
@@ -40,7 +43,11 @@ public abstract class DialogModule extends EGLFragmentModule {
                     }
                 });
 
-                dialog.show();
+                try {
+                    dialog.show();
+                } catch (Exception e) {
+                    unbind();
+                }
             }
         });
     }

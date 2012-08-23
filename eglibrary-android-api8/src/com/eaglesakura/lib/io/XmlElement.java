@@ -136,6 +136,24 @@ public class XmlElement {
     }
 
     /**
+     * 指定した子要素を取得する。
+     * @param tag
+     * @return
+     */
+    public XmlElement getChild(String tag) {
+        Iterator<XmlElement> iterator = childs.iterator();
+        while (iterator.hasNext()) {
+            XmlElement element = iterator.next();
+            // タグが一致したから返す
+            if (element.getTag().equals(tag)) {
+                return element;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * 親属性を取得する
      * @return
      */
