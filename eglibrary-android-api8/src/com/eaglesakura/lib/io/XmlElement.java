@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -94,6 +95,44 @@ public class XmlElement {
     private void addChild(XmlElement element) {
         childs.add(element);
         element.parent = this;
+    }
+
+    /**
+     * 子要素の持つコンテンツを文字列として取得する
+     * @param tag
+     * @return
+     */
+    public String childToString(String tag) {
+        Iterator<XmlElement> iterator = childs.iterator();
+        while (iterator.hasNext()) {
+            XmlElement child = iterator.next();
+            if (child.getTag().equals(tag)) {
+                return child.getContent();
+            }
+        }
+
+        // 要素が見つからなかった
+        return null;
+    }
+
+    /**
+     * 一致するタグの子エレメントを列挙する
+     * @param tag
+     * @return
+     */
+    public List<XmlElement> listChilds(String tag) {
+        List<XmlElement> result = new ArrayList<XmlElement>();
+        {
+            Iterator<XmlElement> iterator = childs.iterator();
+            while (iterator.hasNext()) {
+                XmlElement element = iterator.next();
+                // タグが一致したから返す
+                if (element.getTag().equals(tag)) {
+                    result.add(element);
+                }
+            }
+        }
+        return result;
     }
 
     /**
