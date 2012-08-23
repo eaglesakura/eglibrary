@@ -164,8 +164,8 @@ public class EGLFragment extends Fragment {
 
     @Override
     public void onDestroy() {
+        rootModule.onFragmentDestroy();
         super.onDestroy();
-        rootModule.onDetatch();
     }
 
     /**

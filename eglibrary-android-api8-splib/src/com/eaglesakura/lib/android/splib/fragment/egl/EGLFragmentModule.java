@@ -280,6 +280,13 @@ public abstract class EGLFragmentModule extends DisposableResource {
     }
 
     /**
+     * Fragment自体が廃棄された
+     */
+    public void onFragmentDestroy() {
+
+    }
+
+    /**
      * Fragment自体がレジュームした
      */
     public void onFragmentResume() {

@@ -129,11 +129,21 @@ public class EGLAnimator implements Runnable {
     }
 
     /**
+     * 動作をキャンセルさせる
+     */
+    public void cancel() {
+        started = false;
+    }
+
+    /**
      * 通常、外部から呼び出さない
      */
     @Deprecated
     @Override
     public void run() {
+        if (!started) {
+            return;
+        }
         Timer timer = new Timer();
 
         rendering = false;

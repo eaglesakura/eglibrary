@@ -15,6 +15,9 @@ public class EGLFragmentModuleGroup extends EGLFragmentModule {
      * @param module
      */
     public void addModule(final EGLFragmentModule module) {
+        if (module == null) {
+            return;
+        }
 
         work(new Runnable() {
             @Override
@@ -31,6 +34,10 @@ public class EGLFragmentModuleGroup extends EGLFragmentModule {
      * @param tag
      */
     public void addModule(final EGLFragmentModule module, final Object tag) {
+        if (module == null) {
+            return;
+        }
+
         work(new Runnable() {
 
             @Override
@@ -124,7 +131,6 @@ public class EGLFragmentModuleGroup extends EGLFragmentModule {
         super.onDetatch();
 
         work(new Runnable() {
-
             @Override
             public void run() {
                 Iterator<EGLFragmentModule> iterator = childs.iterator();
@@ -140,41 +146,42 @@ public class EGLFragmentModuleGroup extends EGLFragmentModule {
     }
 
     @Override
+    public void onFragmentDestroy() {
+        super.onFragmentDestroy();
+
+        Iterator<EGLFragmentModule> iterator = childs.iterator();
+        while (iterator.hasNext()) {
+            EGLFragmentModule module = iterator.next();
+            {
+                module.onFragmentDestroy();
+            }
+        }
+    }
+
+    @Override
     public void onFragmentResume() {
         super.onFragmentResume();
 
-        work(new Runnable() {
-
-            @Override
-            public void run() {
-                Iterator<EGLFragmentModule> iterator = childs.iterator();
-                while (iterator.hasNext()) {
-                    EGLFragmentModule module = iterator.next();
-                    {
-                        module.onFragmentResume();
-                    }
-                }
+        Iterator<EGLFragmentModule> iterator = childs.iterator();
+        while (iterator.hasNext()) {
+            EGLFragmentModule module = iterator.next();
+            {
+                module.onFragmentResume();
             }
-        });
-
+        }
     }
 
     @Override
     public void onFragmentSuspend() {
         super.onFragmentSuspend();
 
-        work(new Runnable() {
-            @Override
-            public void run() {
-                Iterator<EGLFragmentModule> iterator = childs.iterator();
-                while (iterator.hasNext()) {
-                    EGLFragmentModule module = iterator.next();
-                    {
-                        module.onFragmentSuspend();
-                    }
-                }
+        Iterator<EGLFragmentModule> iterator = childs.iterator();
+        while (iterator.hasNext()) {
+            EGLFragmentModule module = iterator.next();
+            {
+                module.onFragmentSuspend();
             }
-        });
+        }
     }
 
     @Override
