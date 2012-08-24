@@ -3,6 +3,7 @@ package com.eaglesakura.lib.android.splib.fragment.egl;
 import javax.microedition.khronos.opengles.GL11;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.view.KeyEvent;
@@ -131,6 +132,14 @@ public abstract class EGLFragmentModule extends DisposableResource {
      */
     public Activity getActivity() {
         return fragment.getActivity();
+    }
+
+    /**
+     * ApplicationContextを取得する
+     * @return
+     */
+    public Context getApplicationContext() {
+        return getActivity().getApplicationContext();
     }
 
     /**

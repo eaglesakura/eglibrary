@@ -1,5 +1,7 @@
 package com.eaglesakura.lib.android.game.graphics.gl11.hw;
 
+import static javax.microedition.khronos.egl.EGL10.*;
+
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
@@ -304,34 +306,34 @@ public class EGLManager extends DisposableResource {
     String toEglErrorInfo(int error) {
         String info = "eglError :: " + error;
         switch (error) {
-            case EGL10.EGL_SUCCESS:
+            case EGL_SUCCESS:
                 info = "EGL_SUCCESS";
                 break;
-            case EGL10.EGL_BAD_SURFACE:
+            case EGL_BAD_SURFACE:
                 info = "EGL_SUCCESS";
                 break;
-            case EGL10.EGL_BAD_ALLOC:
+            case EGL_BAD_ALLOC:
                 info = "EGL_BAD_ALLOC";
                 break;
-            case EGL10.EGL_NOT_INITIALIZED:
+            case EGL_NOT_INITIALIZED:
                 info = "EGL_NOT_INITIALIZED";
                 break;
-            case EGL10.EGL_BAD_ACCESS:
+            case EGL_BAD_ACCESS:
                 info = "EGL_BAD_ACCESS";
                 break;
-            case EGL10.EGL_BAD_ATTRIBUTE:
+            case EGL_BAD_ATTRIBUTE:
                 info = "EGL_BAD_ATTRIBUTE";
                 break;
-            case EGL10.EGL_BAD_CURRENT_SURFACE:
+            case EGL_BAD_CURRENT_SURFACE:
                 info = "EGL_BAD_CURRENT_SURFACE";
                 break;
-            case EGL10.EGL_BAD_CONTEXT:
+            case EGL_BAD_CONTEXT:
                 info = "EGL_BAD_CONTEXT";
                 break;
-            case EGL10.EGL_BAD_NATIVE_WINDOW:
+            case EGL_BAD_NATIVE_WINDOW:
                 info = "EGL_BAD_NATIVE_WINDOW";
                 break;
-            case EGL10.EGL_BAD_MATCH:
+            case EGL_BAD_MATCH:
                 info = "EGL_BAD_MATCH";
                 break;
         }
@@ -364,10 +366,10 @@ public class EGLManager extends DisposableResource {
      * @return
      */
     boolean printEglError(int error) {
-        if (error != EGL10.EGL_SUCCESS) {
+        if (error != EGL_SUCCESS) {
             LogUtil.log(toEglErrorInfo(error));
         }
-        return error != EGL10.EGL_SUCCESS;
+        return error != EGL_SUCCESS;
     }
 
     /**
@@ -491,7 +493,7 @@ public class EGLManager extends DisposableResource {
         }
 
         // コンテキストリセット
-        egl.eglMakeCurrent(display, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT);
+        egl.eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 
         // GPU管理クラスを作成
         bind();
