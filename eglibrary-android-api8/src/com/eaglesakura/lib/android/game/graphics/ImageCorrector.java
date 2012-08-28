@@ -223,20 +223,52 @@ public class ImageCorrector {
         return renderArea.centerY();
     }
 
+    /**
+     * 実際に画像を描画するエリア取得
+     * @return
+     */
     public float getImageAreaLeft() {
         return imageArea.left;
     }
 
+    /**
+     * 実際に画像を描画するエリア取得
+     * @return
+     */
     public float getImageAreaTop() {
         return imageArea.top;
     }
 
+    /**
+     * 実際に画像を描画するエリア取得
+     * @return
+     */
     public float getImageAreaRight() {
         return imageArea.right;
     }
 
+    /**
+     * 実際に画像を描画するエリア取得
+     * @return
+     */
     public float getImageAreaBottom() {
         return imageArea.bottom;
+    }
+
+    /**
+     * 実際に画像を描画するエリア取得
+     * @return
+     */
+    public float getImageAreaWidth() {
+        return imageArea.width();
+    }
+
+    /**
+     * 実際に画像を描画するエリア取得
+     * @return
+     */
+    public float getImageAreaHeight() {
+        return imageArea.height();
     }
 
     /**

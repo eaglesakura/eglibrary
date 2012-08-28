@@ -163,6 +163,18 @@ public class EGLFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        rootModule.onFragmentSuspend();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        rootModule.onFragmentResume();
+        super.onResume();
+    }
+
+    @Override
     public void onDestroy() {
         rootModule.onFragmentDestroy();
         super.onDestroy();
