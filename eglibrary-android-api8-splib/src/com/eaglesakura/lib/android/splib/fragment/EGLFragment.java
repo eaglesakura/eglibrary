@@ -256,12 +256,10 @@ public class EGLFragment extends Fragment {
     }
 
     /**
-     * EGLを復旧させた
-     * @param egl
+     * 保留してあるworkerを全て実行する。
+     * {@link #addPendingRunner(GLRenderer)}で追加された全てを実行する。
      */
-    protected void onEGLResume() {
-        rootModule.onEGLResume();
-
+    public void runPendingWorkers() {
         // 保留リストを実行させる
         egl.working(new GLRenderer() {
 
@@ -290,6 +288,15 @@ public class EGLFragment extends Fragment {
 
             }
         });
+    }
+
+    /**
+     * EGLを復旧させた
+     * @param egl
+     */
+    protected void onEGLResume() {
+        rootModule.onEGLResume();
+        runPendingWorkers();
     }
 
     /**
