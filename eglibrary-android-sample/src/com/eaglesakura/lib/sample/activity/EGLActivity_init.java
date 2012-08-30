@@ -38,6 +38,12 @@ public class EGLActivity_init extends FragmentActivity {
                         gl.glClearColor(0, (float) Math.random(), (float) Math.random(), 1);
                         gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
                     }
+
+                    @Override
+                    public void dispose() {
+                        // TODO 自動生成されたメソッド・スタブ
+
+                    }
                 });
                 transaction.add(R.id.gl_area, fragment, fragment.getClass().getName());
             }

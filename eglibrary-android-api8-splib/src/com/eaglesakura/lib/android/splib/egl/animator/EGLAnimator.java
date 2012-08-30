@@ -97,8 +97,8 @@ public class EGLAnimator implements Runnable {
         if (started) {
             return;
         }
-        this.handler.post(this);
         started = true;
+        this.handler.post(this);
     }
 
     /**
