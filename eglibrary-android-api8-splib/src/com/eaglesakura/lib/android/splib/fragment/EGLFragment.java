@@ -296,7 +296,6 @@ public class EGLFragment extends Fragment {
      */
     protected void onEGLResume() {
         rootModule.onEGLResume();
-        runPendingWorkers();
     }
 
     /**
@@ -428,21 +427,16 @@ public class EGLFragment extends Fragment {
 
             @Override
             public void onSurfaceReady(EGLManager egl) {
-                // TODO 自動生成されたメソッド・スタブ
-
             }
 
             @Override
             public void onSurfaceNotReady(EGLManager egl) {
-                // TODO 自動生成されたメソッド・スタブ
-
             }
 
             @Override
             public void onRendering(EGLManager egl) {
-                // TODO 自動生成されたメソッド・スタブ
-
             }
         });
     }
+
 }

@@ -15,6 +15,7 @@ import com.eaglesakura.lib.android.game.graphics.gl11.hw.GLRenderer;
 import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
 import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.game.util.GameUtil;
+import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.android.splib.fragment.EGLFragment;
 
 /**
@@ -187,7 +188,7 @@ public abstract class EGLFragmentModule extends DisposableResource {
      * @param runnable
      */
     public void work(final Runnable runnable) {
-        getEGL().working(new GLRenderer() {
+        post(new GLRenderer() {
             @Override
             public void onWorking(EGLManager egl) {
                 runnable.run();
@@ -211,6 +212,14 @@ public abstract class EGLFragmentModule extends DisposableResource {
     }
 
     /**
+     * postを許可するタイミングである場合はtrue
+     * @return
+     */
+    protected boolean isPostExist() {
+        return true;
+    }
+
+    /**
      * GLで実行を行う
      * @param runnable
      */
@@ -218,6 +227,13 @@ public abstract class EGLFragmentModule extends DisposableResource {
         if (!isAttached()) {
             return;
         }
+
+        if (!isPostExist()) {
+            LogUtil.log("!isPostExist#post");
+            fragment.addPendingRunner(runnable);
+            return;
+        }
+
         fragment.eglWork(runnable);
     }
 
@@ -226,8 +242,32 @@ public abstract class EGLFragmentModule extends DisposableResource {
      * @param runnable
      * @param delay
      */
-    public void postDelayed(GLRenderer runnable, long delay) {
+    public void postDelayed(final GLRenderer runnable, final long delay) {
         if (!isAttached()) {
+            return;
+        }
+
+        if (!isPostExist()) {
+            LogUtil.log("!isPostExist#postDelayed");
+            fragment.addPendingRunner(new GLRenderer() {
+                @Override
+                public void onWorking(EGLManager egl) {
+                    postDelayed(runnable, delay);
+                }
+
+                @Override
+                public void onSurfaceReady(EGLManager egl) {
+                }
+
+                @Override
+                public void onSurfaceNotReady(EGLManager egl) {
+                    fragment.addPendingRunner(this);
+                }
+
+                @Override
+                public void onRendering(EGLManager egl) {
+                }
+            });
             return;
         }
         fragment.eglWorkDelayed(runnable, delay);
@@ -238,7 +278,36 @@ public abstract class EGLFragmentModule extends DisposableResource {
      * @param runnable
      * @param uptimeMS
      */
-    public void postAtTime(GLRenderer runnable, long uptimeMS) {
+    public void postAtTime(final GLRenderer runnable, final long uptimeMS) {
+        if (isAttached()) {
+            return;
+        }
+        if (!isPostExist()) {
+            LogUtil.log("!isPostExist#postAtTime");
+            fragment.addPendingRunner(new GLRenderer() {
+
+                @Override
+                public void onWorking(EGLManager egl) {
+                    postAtTime(runnable, uptimeMS);
+                }
+
+                @Override
+                public void onSurfaceReady(EGLManager egl) {
+
+                }
+
+                @Override
+                public void onSurfaceNotReady(EGLManager egl) {
+                    fragment.addPendingRunner(this);
+                }
+
+                @Override
+                public void onRendering(EGLManager egl) {
+
+                }
+            });
+            return;
+        }
         fragment.eglWorkAtTime(runnable, uptimeMS);
     }
 
@@ -352,5 +421,13 @@ public abstract class EGLFragmentModule extends DisposableResource {
                 }
             });
         }
+    }
+
+    /**
+     * FragmentがResume済みだったらtrue
+     * @return
+     */
+    public boolean isFragmentResumed() {
+        return fragment.isResumed();
     }
 }
