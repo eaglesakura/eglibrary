@@ -15,6 +15,7 @@ import com.eaglesakura.lib.android.game.graphics.gl11.GPU;
 import com.eaglesakura.lib.android.game.graphics.gl11.hw.EGLManager;
 import com.eaglesakura.lib.android.game.graphics.gl11.hw.GLRenderer;
 import com.eaglesakura.lib.android.game.thread.UIHandler;
+import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.android.splib.fragment.egl.EGLFragmentModule;
 import com.eaglesakura.lib.android.splib.fragment.egl.EGLFragmentModuleGroup;
 import com.eaglesakura.lib.list.OrderAccessList;
@@ -63,11 +64,7 @@ public class EGLFragment extends Fragment {
     private SurfaceHolder.Callback renderCallback = new SurfaceHolder.Callback() {
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-        }
-
-        @Override
-        public void surfaceCreated(SurfaceHolder holder) {
+            LogUtil.log(String.format("egl::surfaceChanged fmt(%d) surface %d x %d", format, width, height));
             UIHandler.postUI(new Runnable() {
                 @Override
                 public void run() {
@@ -76,6 +73,7 @@ public class EGLFragment extends Fragment {
                         public void onWorking(EGLManager egl) {
                             if (!egl_initialized) {
                                 egl_initialized = true;
+                                LogUtil.log("egl::initialize");
                                 onEGLInitialized();
                             }
 
@@ -99,7 +97,13 @@ public class EGLFragment extends Fragment {
         }
 
         @Override
+        public void surfaceCreated(SurfaceHolder holder) {
+            LogUtil.log("egl::surfaceCreated");
+        }
+
+        @Override
         public void surfaceDestroyed(SurfaceHolder holder) {
+            LogUtil.log("egl::surfaceDestroyed");
             onEGLPause();
         }
     };

@@ -64,6 +64,16 @@ public class EGLManager extends DisposableResource {
         },
 
         /**
+         * MakeCurrentに失敗した
+         */
+        EGLStatus_ContextBindFailed {
+            @Override
+            public boolean isRunning() {
+                return false;
+            }
+        },
+
+        /**
          * EGLの初期化が終わっているが、描画できない状態にある場合
          */
         EGLStatus_Suspend {
@@ -196,6 +206,8 @@ public class EGLManager extends DisposableResource {
                     context.getContext())) {
                 // 現在のスレッドIDを指定する
                 glThread = Thread.currentThread();
+            } else {
+                return EGLStatus_e.EGLStatus_ContextBindFailed;
             }
         }
 
@@ -220,8 +232,9 @@ public class EGLManager extends DisposableResource {
     public void rendering(GLRenderer renderer) {
         synchronized (GPUUtil.gpu_lock) {
             final EGLStatus_e def = getStatus();
+            EGLStatus_e bind_status = null;
             // レンダリング開始を行う
-            if (def == EGLStatus_e.EGLStatus_Attached || this.bind() == EGLStatus_e.EGLStatus_Attached) {
+            if (def == EGLStatus_e.EGLStatus_Attached || (bind_status = this.bind()) == EGLStatus_e.EGLStatus_Attached) {
                 // サーフェイスの準備ができたことを通知する
                 renderer.onSurfaceReady(this);
 
@@ -242,6 +255,8 @@ public class EGLManager extends DisposableResource {
                 // レンダリング終了
                 //                jclog("end rendering");
                 return;
+            } else {
+                LogUtil.log("rendering failed::" + bind_status.name());
             }
         }
 
@@ -256,8 +271,9 @@ public class EGLManager extends DisposableResource {
     public void working(GLRenderer renderer) {
         synchronized (GPUUtil.gpu_lock) {
             final EGLStatus_e def = getStatus();
+            EGLStatus_e bind_status = null;
             // レンダリング開始を行う
-            if (def == EGLStatus_e.EGLStatus_Attached || this.bind() == EGLStatus_e.EGLStatus_Attached) {
+            if (def == EGLStatus_e.EGLStatus_Attached || (bind_status = this.bind()) == EGLStatus_e.EGLStatus_Attached) {
 
                 // サーフェイスの準備ができたことを通知する
                 renderer.onSurfaceReady(this);
@@ -276,6 +292,8 @@ public class EGLManager extends DisposableResource {
                 // レンダリング終了
                 //                jclog("end rendering");
                 return;
+            } else {
+                LogUtil.log("working failed::" + bind_status.name());
             }
         }
 
@@ -415,6 +433,11 @@ public class EGLManager extends DisposableResource {
                     // egl初期化を行う
                     initialize();
                 } else {
+                    // 古いサーフェイスを廃棄
+                    if (displaySurface != null) {
+                        displaySurface.dispose();
+                        displaySurface = null;
+                    }
                     // ディスプレイサーフェイスの復旧を行う
                     displaySurface = new EGLDisplaySurfaceManager(EGLManager.this);
                 }
