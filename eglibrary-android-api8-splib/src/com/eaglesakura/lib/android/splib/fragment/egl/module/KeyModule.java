@@ -110,7 +110,7 @@ public class KeyModule extends EGLFragmentModule {
      * キーが押された
      */
     @Override
-    public void onKeyDown(int keyCode, KeyEvent event) {
+    public void onKeyDown(int keyCode, KeyEvent __) {
         synchronized (keysMap) {
             KeyData data = keysMap.get(keyCode);
             if (data == null) {
@@ -125,7 +125,7 @@ public class KeyModule extends EGLFragmentModule {
      * キーが離された
      */
     @Override
-    public void onKeyUp(int keyCode, KeyEvent event) {
+    public void onKeyUp(int keyCode, KeyEvent __) {
         synchronized (keysMap) {
             KeyData data = keysMap.get(keyCode);
             if (data == null) {

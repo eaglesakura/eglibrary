@@ -2,6 +2,7 @@ package com.eaglesakura.lib.android.game.thread;
 
 import android.os.Handler;
 
+import com.eaglesakura.lib.android.game.util.ContextUtil;
 import com.eaglesakura.lib.android.game.util.GameUtil;
 import com.eaglesakura.lib.android.game.util.Timer;
 
@@ -45,10 +46,6 @@ public abstract class ThreadSyncRunnerBase<T> {
             maxTime = 1000 * 5;
         }
 
-        if (Thread.currentThread().equals(targetHandler.getLooper().getThread())) {
-            //! 呼び出しスレッドと対象スレッドが同じため、ロックが発生してしまう
-            throw new IllegalArgumentException("target is current thread!!");
-        }
         this.handler = targetHandler;
     }
 
@@ -57,48 +54,42 @@ public abstract class ThreadSyncRunnerBase<T> {
      * @return
      */
     public T run() {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    result = onOtherThreadRun();
-                } catch (Exception e) {
-                    exception = e;
-                }
-                synchronized (lock) {
-                    lock.notifyAll();
-                }
-            }
-        });
-
-        final Timer timer = new Timer();
-
-        synchronized (lock) {
+        if (ContextUtil.isHandlerThread(handler)) {
+            // ハンドラと同一スレッドなら、そのまま実行させる
             try {
-                lock.wait(maxTime);
+                result = onOtherThreadRun();
             } catch (Exception e) {
-
+                exception = e;
             }
-        }
-        if (timer.end() >= maxTime) {
-            timeout = true;
-        }
-        /**
-         * 終了まで待つ
-         */
-        /*
-        while (!finish) {
-            GameUtil.sleep(1);
+        } else {
+            // 別スレッドなら、ハンドラにPOSTして実行待ちを行う
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        result = onOtherThreadRun();
+                    } catch (Exception e) {
+                        exception = e;
+                    }
+                    synchronized (lock) {
+                        lock.notifyAll();
+                    }
+                }
+            });
 
-            // タイムアウトしたら制御を抜ける
-            if (maxTime > 0 && timer.end() > maxTime) {
-                exception = new TimeoutException("thread is timeout!!");
-                finish = true;
+            final Timer timer = new Timer();
+
+            synchronized (lock) {
+                try {
+                    lock.wait(maxTime);
+                } catch (Exception e) {
+
+                }
+            }
+            if (timer.end() >= maxTime) {
                 timeout = true;
-                return result;
             }
         }
-        */
 
         if (exception != null && exception instanceof RuntimeException) {
             throw (RuntimeException) exception;

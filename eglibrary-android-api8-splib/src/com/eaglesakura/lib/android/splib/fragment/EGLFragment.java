@@ -401,6 +401,41 @@ public class EGLFragment extends Fragment {
     }
 
     /**
+     * イベントを直接指定して送信する
+     * @param keyCode
+     * @param action
+     */
+    public void onDispatchKeyEvent(final int keyCode, final int action) {
+        egl.working(new GLRenderer() {
+            @Override
+            public void onWorking(EGLManager egl) {
+                // サブモジュールにライフサイクルを伝える
+                rootModule.onKeyEvent(null);
+                switch (action) {
+                    case KeyEvent.ACTION_DOWN:
+                        rootModule.onKeyDown(keyCode, null);
+                        break;
+                    case KeyEvent.ACTION_UP:
+                        rootModule.onKeyUp(keyCode, null);
+                        break;
+                }
+            }
+
+            @Override
+            public void onSurfaceReady(EGLManager egl) {
+            }
+
+            @Override
+            public void onSurfaceNotReady(EGLManager egl) {
+            }
+
+            @Override
+            public void onRendering(EGLManager egl) {
+            }
+        });
+    }
+
+    /**
      * キーイベントを呼び出す。
      * 呼び出さない場合は特に機能しない。
      * @param key
