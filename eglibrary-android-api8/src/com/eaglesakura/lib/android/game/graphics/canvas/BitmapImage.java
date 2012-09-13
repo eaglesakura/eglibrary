@@ -17,10 +17,12 @@ import android.graphics.Color;
 import android.net.Uri;
 
 import com.eaglesakura.lib.android.game.graphics.ImageBase;
+import com.eaglesakura.lib.android.game.graphics.ImageCorrector;
 import com.eaglesakura.lib.android.game.io.WebInputStream;
 import com.eaglesakura.lib.android.game.resource.GarbageCollector;
 import com.eaglesakura.lib.android.game.resource.IRawResource;
 import com.eaglesakura.lib.android.game.resource.SharedRawResource;
+import com.eaglesakura.lib.android.game.util.LogUtil;
 
 /**
  * 
@@ -43,6 +45,11 @@ public class BitmapImage extends ImageBase {
 
     public BitmapImage() {
         this((GarbageCollector) null);
+    }
+
+    public BitmapImage(Bitmap image) {
+        this((GarbageCollector) null);
+        onLoad(image);
     }
 
     public BitmapImage(BitmapImage origin) {
@@ -146,6 +153,29 @@ public class BitmapImage extends ImageBase {
                 }
             }
         }
+    }
+
+    /**
+     * 最大幅・高さを指定してリサイズする。
+     * @param maxWidth
+     * @param maxHeight
+     * @return
+     */
+    public BitmapImage fitting(int maxWidth, int maxHeight) {
+        ImageCorrector corrector = new ImageCorrector();
+        corrector.setRenderArea(0, 0, maxWidth, maxHeight);
+        corrector.setImageAspect(getWidth(), getHeight());
+
+        final int nWidth = (int) corrector.getImageAreaWidth();
+        final int nHeight = (int) corrector.getImageAreaHeight();
+
+        LogUtil.log("scaled = " + nWidth + "x" + nHeight);
+
+        Bitmap nImage = Bitmap.createScaledBitmap(getBitmap(), nWidth, nHeight, true);
+
+        // ロードを行う
+        onLoad(nImage);
+        return this;
     }
 
     /**

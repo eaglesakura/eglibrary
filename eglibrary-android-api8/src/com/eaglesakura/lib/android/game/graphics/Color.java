@@ -168,7 +168,7 @@ public class Color {
      * @return
      */
     public static int rgba2argb(final int rgba) {
-        return ((rgba >> 8) & 0x00ffffff) | (rgba & 0xff) << 24;
+        return ((rgba >> 8) & 0x00ffffff) | ((rgba & 0xff) << 24);
     }
 
     /**

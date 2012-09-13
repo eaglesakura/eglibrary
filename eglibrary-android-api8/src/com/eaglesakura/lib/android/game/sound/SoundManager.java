@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
@@ -22,8 +23,26 @@ public class SoundManager extends DisposableResource {
     Map<Object, MediaPlayer> medias = new HashMap<Object, MediaPlayer>();
     Context context = null;
 
+    /**
+     * 再生ストリームタイプを設定する
+     */
+    int streamType = AudioManager.STREAM_MUSIC;
+
     public SoundManager(Context context) {
         this.context = context;
+    }
+
+    /**
+     * {@link AudioManager#STREAM_MUSIC}がデフォルトで設定されている。
+     * @param streamType
+     */
+    public void setStreamType(int streamType) {
+        this.streamType = streamType;
+    }
+
+    private MediaPlayer init(MediaPlayer player) {
+        player.setAudioStreamType(streamType);
+        return player;
     }
 
     /**
@@ -36,7 +55,7 @@ public class SoundManager extends DisposableResource {
     public boolean load(Object id, Uri source) {
         unload(id);
         try {
-            MediaPlayer player = MediaPlayer.create(context, source);
+            MediaPlayer player = init(MediaPlayer.create(context, source));
             medias.put(id, player);
             return true;
         } catch (Exception e) {
@@ -48,7 +67,7 @@ public class SoundManager extends DisposableResource {
     public boolean loadFromRaw(Object id, int rawId) {
         unload(id);
         try {
-            MediaPlayer player = MediaPlayer.create(context, rawId);
+            MediaPlayer player = init(MediaPlayer.create(context, rawId));
             medias.put(id, player);
             return true;
         } catch (Exception e) {
@@ -64,6 +83,7 @@ public class SoundManager extends DisposableResource {
             AssetFileDescriptor fd = context.getAssets().openFd(path);
             player.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
             player.prepare();
+            init(player);
             medias.put(id, player);
             return true;
         } catch (Exception e) {
