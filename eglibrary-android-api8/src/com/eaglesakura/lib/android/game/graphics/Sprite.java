@@ -409,8 +409,9 @@ public class Sprite {
      * 
      * @param color
      */
-    public void setColorRGBA(int color) {
+    public Sprite setColorRGBA(int color) {
         this.color = color;
+        return this;
     }
 
     /**

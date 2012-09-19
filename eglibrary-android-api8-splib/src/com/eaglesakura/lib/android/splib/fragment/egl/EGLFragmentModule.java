@@ -124,6 +124,9 @@ public abstract class EGLFragmentModule extends DisposableResource {
      * @return
      */
     public SurfaceView getView() {
+        if (fragment == null) {
+            return null;
+        }
         return fragment.getSurfaceView();
     }
 
@@ -132,6 +135,9 @@ public abstract class EGLFragmentModule extends DisposableResource {
      * @return
      */
     public Activity getActivity() {
+        if (fragment == null) {
+            return null;
+        }
         return fragment.getActivity();
     }
 
@@ -140,6 +146,9 @@ public abstract class EGLFragmentModule extends DisposableResource {
      * @return
      */
     public Context getApplicationContext() {
+        if (fragment == null) {
+            return null;
+        }
         return getActivity().getApplicationContext();
     }
 
@@ -429,5 +438,14 @@ public abstract class EGLFragmentModule extends DisposableResource {
      */
     public boolean isFragmentResumed() {
         return fragment.isResumed();
+    }
+
+    /**
+     * アプリ用文字列を取得する。
+     * @param string_id
+     * @return
+     */
+    public String getString(int string_id) {
+        return getResources().getString(string_id);
     }
 }
