@@ -281,9 +281,9 @@ public class ContextUtil {
         // 通常のUUID
                 UUID.randomUUID().toString(),
                 // 現在時刻
-                GameUtil.genSHA1(Long.valueOf(System.currentTimeMillis()).toString().getBytes()),
+                EncodeUtil.genSHA1(Long.valueOf(System.currentTimeMillis()).toString().getBytes()),
                 // 端末起動からの経過時間
-                GameUtil.genSHA1(Long.valueOf(SystemClock.elapsedRealtime()).toString().getBytes()));
+                EncodeUtil.genSHA1(Long.valueOf(SystemClock.elapsedRealtime()).toString().getBytes()));
         return result;
     }
 

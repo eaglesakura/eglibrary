@@ -4,9 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.security.MessageDigest;
 
-import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.os.Looper;
 
@@ -274,95 +272,6 @@ public class GameUtil {
     }
 
     /**
-     * byte配列からMD5を求める
-     * 
-     * @param buffer
-     * @return
-     */
-    public static String genMD5(byte[] buffer) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(buffer);
-            byte[] digest = md.digest();
-
-            StringBuffer sBuffer = new StringBuffer(digest.length * 2);
-            for (byte b : digest) {
-                String s = Integer.toHexString(((int) b) & 0xff);
-
-                if (s.length() == 1) {
-                    sBuffer.append('0');
-                }
-                sBuffer.append(s);
-            }
-            return sBuffer.toString();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * byte配列からMD5を求める
-     * 
-     * @param buffer
-     * @return
-     */
-    public static String genMD5(InputStream is) throws IOException {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-
-            {
-                byte[] buffer = new byte[1024 * 8];
-                int readed = 0;
-                while ((readed = is.read(buffer)) > 0) {
-                    md.update(buffer, 0, readed);
-                }
-            }
-
-            byte[] digest = md.digest();
-
-            StringBuffer sBuffer = new StringBuffer(digest.length * 2);
-            for (byte b : digest) {
-                String s = Integer.toHexString(((int) b) & 0xff);
-
-                if (s.length() == 1) {
-                    sBuffer.append('0');
-                }
-                sBuffer.append(s);
-            }
-            return sBuffer.toString();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * byte配列からMD5を求める
-     * 
-     * @param buffer
-     * @return
-     */
-    public static String genSHA1(byte[] buffer) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-1");
-            md.update(buffer);
-            byte[] digest = md.digest();
-
-            StringBuffer sBuffer = new StringBuffer(digest.length * 2);
-            for (byte b : digest) {
-                String s = Integer.toHexString(((int) b) & 0xff);
-
-                if (s.length() == 1) {
-                    sBuffer.append('0');
-                }
-                sBuffer.append(s);
-            }
-            return sBuffer.toString();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
      * 全角英数を半角英数に変換する
      * @param s
      * @return
@@ -560,42 +469,6 @@ public class GameUtil {
             result[i * 4 + 3] = (byte) ((array[i] >> 0) & 0xff);
         }
         return result;
-    }
-
-    /**
-     * 画像からSHA1指紋を作成する。
-     * @param bitmap
-     * @return
-     */
-    public static String genSHA1(Bitmap bitmap) {
-        final int[] pixels = new int[bitmap.getWidth()];
-        final byte[] src = new byte[pixels.length * 4];
-        final int height = bitmap.getHeight();
-
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-1");
-
-            for (int i = 0; i < height; ++i) {
-                bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, i, bitmap.getWidth(), 1);
-                md.update(GameUtil.toByteArray(pixels, src));
-
-            }
-
-            byte[] digest = md.digest();
-
-            StringBuffer sBuffer = new StringBuffer(digest.length * 2);
-            for (byte b : digest) {
-                String s = Integer.toHexString(((int) b) & 0xff);
-
-                if (s.length() == 1) {
-                    sBuffer.append('0');
-                }
-                sBuffer.append(s);
-            }
-            return sBuffer.toString();
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     /**

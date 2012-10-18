@@ -131,7 +131,7 @@ public class FileUtil {
                 FileInputStream is = new FileInputStream(file);
                 is.read(buffer);
                 is.close();
-                start = GameUtil.genMD5(buffer);
+                start = EncodeUtil.genMD5(buffer);
             }
             // 末尾の任意バイトを読み込む
             {
@@ -140,7 +140,7 @@ public class FileUtil {
                 is.skip(file.length() - checkLength);
                 is.read(buffer);
                 is.close();
-                end = GameUtil.genMD5(buffer);
+                end = EncodeUtil.genMD5(buffer);
             }
 
             return start + end;
@@ -255,13 +255,11 @@ public class FileUtil {
     public static String genPathSHA1(final File file) {
         String path = file.getAbsolutePath();
         path = normalizeFileName(path);
-        return GameUtil.genSHA1(path.getBytes());
+        return EncodeUtil.genSHA1(path.getBytes());
     }
 
     /**
      * カレントディレクトリのパスを取得する。
-     *
-     * 
      * @return
      * 
      */
