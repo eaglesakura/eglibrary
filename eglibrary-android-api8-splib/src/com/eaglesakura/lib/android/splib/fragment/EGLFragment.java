@@ -114,13 +114,21 @@ public class EGLFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        surfaceView = new SurfaceView(getActivity());
+        surfaceView = createSurfaceView();
         FrameLayout layout = new FrameLayout(getActivity());
         layout.addView(surfaceView);
 
         egl.setSurfaceHolder(surfaceView.getHolder());
         surfaceView.getHolder().addCallback(renderCallback);
         return layout;
+    }
+
+    /**
+     * SurfaceViewを作成する。
+     * @return
+     */
+    protected SurfaceView createSurfaceView() {
+        return new SurfaceView(getActivity());
     }
 
     /**

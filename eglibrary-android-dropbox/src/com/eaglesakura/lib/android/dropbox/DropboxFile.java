@@ -9,8 +9,8 @@ import java.util.List;
 import com.dropbox.client2.DropboxAPI.Entry;
 import com.eaglesakura.lib.android.dropbox.DropboxAPIException.Type;
 import com.eaglesakura.lib.android.game.io.BufferTargetOutputStream;
+import com.eaglesakura.lib.android.game.util.EncodeUtil;
 import com.eaglesakura.lib.android.game.util.FileUtil;
-import com.eaglesakura.lib.android.game.util.GameUtil;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
 /**
@@ -99,7 +99,7 @@ public class DropboxFile {
      * @return
      */
     public String getUniqueId() {
-        return GameUtil.genMD5((getRev() + "::" + getAbsolutePath()).getBytes());
+        return EncodeUtil.genMD5((getRev() + "::" + getAbsolutePath()).getBytes());
     }
 
     /**

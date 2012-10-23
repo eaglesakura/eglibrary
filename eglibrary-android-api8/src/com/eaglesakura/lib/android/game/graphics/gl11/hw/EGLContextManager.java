@@ -147,6 +147,7 @@ class EGLContextManager extends DisposableResource {
         List<Integer> specs = new ArrayList<Integer>();
 
         if (pixelFormat == PixelFormat.RGB_565) {
+            LogUtil.log("EGLContext RGB565");
             specs.add(EGL10.EGL_RED_SIZE);
             specs.add(5);
             specs.add(EGL10.EGL_GREEN_SIZE);
@@ -159,6 +160,7 @@ class EGLContextManager extends DisposableResource {
             pixelSizeB = 5;
             pixelSizeA = 0;
         } else if (pixelFormat == PixelFormat.RGB_888) {
+            LogUtil.log("EGLContext RGB888");
             specs.add(EGL10.EGL_RED_SIZE);
             specs.add(8);
             specs.add(EGL10.EGL_GREEN_SIZE);
@@ -171,6 +173,7 @@ class EGLContextManager extends DisposableResource {
             pixelSizeB = 8;
             pixelSizeA = 0;
         } else if (pixelFormat == PixelFormat.RGBA_8888) {
+            LogUtil.log("EGLContext RGB8888");
             specs.add(EGL10.EGL_RED_SIZE);
             specs.add(8);
             specs.add(EGL10.EGL_GREEN_SIZE);

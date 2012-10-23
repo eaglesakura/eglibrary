@@ -3,7 +3,7 @@ package com.eaglesakura.lib.net.google;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
-import com.eaglesakura.lib.android.game.util.GameUtil;
+import com.eaglesakura.lib.android.game.util.EncodeUtil;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.net.WebAPIConnectorBase;
 import com.eaglesakura.lib.net.WebAPIException;
@@ -55,7 +55,7 @@ public class GoogleAPIConnector extends WebAPIConnectorBase {
     public synchronized String refreshAccessToken() throws WebAPIException {
         GoogleOAuth2Helper.AuthToken token = GoogleOAuth2Helper.refreshAuthToken(clientId, clientSecret, refreshToken);
         //        LogUtil.log("refreshed token = " + token.access_token);
-        LogUtil.log("refreshed token sha1 :: " + GameUtil.genSHA1(token.access_token.getBytes()));
+        LogUtil.log("refreshed token sha1 :: " + EncodeUtil.genSHA1(token.access_token.getBytes()));
         accessToken = token.access_token;
         listener.onAccessTokenReset(this, token.access_token);
         return accessToken;
