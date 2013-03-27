@@ -9,3 +9,4 @@ local.properties
 *.o.d
 eglibrary-android-api8-splib/libs/**
 javadoc.xml
+doc
