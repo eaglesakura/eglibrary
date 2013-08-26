@@ -229,6 +229,10 @@ public class MultiValueDatabase extends DisposableResource {
                 v.put(columnName, (Integer) value);
             } else if (value instanceof Double) {
                 v.put(columnName, (Double) value);
+            } else if (value instanceof byte[]) {
+                v.put(columnName, (byte[]) value);
+            } else {
+                throw new IllegalArgumentException("value not supported type :: " + value.getClass().getSimpleName());
             }
             db.update(valueList.tableName, v, null, null);
             return true;
