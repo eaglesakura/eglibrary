@@ -216,6 +216,29 @@ public class MultiValueDatabase extends DisposableResource {
     }
 
     /**
+     * 指定したカラムの全レコードを一括で全て上書きする
+     * @param columnName
+     * @param value
+     */
+    public boolean replaseAll(String columnName, Object value) {
+        try {
+            ContentValues v = new ContentValues();
+            if (value instanceof String) {
+                v.put(columnName, (String) value);
+            } else if (value instanceof Integer) {
+                v.put(columnName, (Integer) value);
+            } else if (value instanceof Double) {
+                v.put(columnName, (Double) value);
+            }
+            db.update(valueList.tableName, v, null, null);
+            return true;
+        } catch (Exception e) {
+            LogUtil.log(e);
+        }
+        return false;
+    }
+
+    /**
      * データの挿入を行う。
      * @param key
      * @param values
@@ -383,6 +406,14 @@ public class MultiValueDatabase extends DisposableResource {
             } else {
                 return name + select.getSelection() + value.toString();
             }
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public DBValueType getType() {
+            return type;
         }
     }
 
