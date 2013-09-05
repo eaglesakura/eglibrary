@@ -227,6 +227,8 @@ public class MultiValueDatabase extends DisposableResource {
                 v.put(columnName, (String) value);
             } else if (value instanceof Integer) {
                 v.put(columnName, (Integer) value);
+            } else if (value instanceof Long) {
+                v.put(columnName, (Long) value);
             } else if (value instanceof Double) {
                 v.put(columnName, (Double) value);
             } else if (value instanceof byte[]) {
@@ -318,6 +320,40 @@ public class MultiValueDatabase extends DisposableResource {
          */
         public Data(Cursor cursor, ValueList valueList) {
             bundle = valueList.toBundle(cursor);
+        }
+
+        /**
+         * 直接取得する
+         * @param col
+         * @param def
+         * @return
+         */
+        public Object get(Column col, Object def) {
+            switch (col.type) {
+                case Blob:
+                    return getBlob(col.getName(), (byte[]) def);
+                case Integer:
+                    return getLong(col.getName(), (Long) def);
+                case Real:
+                    return getReal(col.getName(), (Double) def);
+                case Text:
+                    return getText(col.getName(), (String) def);
+            }
+            return null;
+        }
+
+        /**
+         * 
+         * @param key
+         * @param def
+         * @return
+         */
+        public long getLong(String key, long def) {
+            try {
+                return bundle.getLong(key, def);
+            } catch (Exception e) {
+                return bundle.getLong(key, (int) def);
+            }
         }
 
         /**
