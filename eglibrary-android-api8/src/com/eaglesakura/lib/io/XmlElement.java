@@ -2,6 +2,7 @@ package com.eaglesakura.lib.io;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 /**
  * XMLの要素を定義する。
@@ -116,6 +118,37 @@ public class XmlElement {
     }
 
     /**
+     * 子要素の持つコンテンツを整数として取得する
+     * @param tag
+     * @param def
+     * @return
+     */
+    public int childToInt(String tag, int def) {
+        String value = childToString(tag);
+        try {
+            return Integer.parseInt(value);
+        } catch (Exception e) {
+            return def;
+        }
+    }
+
+    /**
+     * 指定子要素の指定属性を取得する
+     * 失敗したらnullを返す
+     * @param tag
+     * @param attribute
+     * @return
+     */
+    public String childAttributeToString(String tag, String attribute) {
+        XmlElement child = getChild(tag);
+        if (child != null) {
+            return child.getAttribute(attribute);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * 一致するタグの子エレメントを列挙する
      * @param tag
      * @return
@@ -161,9 +194,12 @@ public class XmlElement {
         return parent;
     }
 
-    public static XmlElement parse(String xml) throws XmlPullParserException, IOException {
-        XmlPullParser parser = android.util.Xml.newPullParser();
-        parser.setInput(new ByteArrayInputStream(xml.getBytes()), "UTF-8");
+    public static XmlElement parse(InputStream is) throws XmlPullParserException, IOException {
+        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+        XmlPullParser parser = factory.newPullParser();
+        parser.setInput(is, "UTF-8");
+        //        parser.setFeature(XmlPullParser, true);
 
         int event = 0;
 
@@ -175,14 +211,11 @@ public class XmlElement {
 
         while ((event = parser.next()) != XmlPullParser.END_DOCUMENT) {
             switch (event) {
-                case XmlPullParser.START_DOCUMENT:
-                    break;
                 case XmlPullParser.START_TAG:
                     XmlElement nextElement = new XmlElement();
                     // タグ名を取得する
                     nextElement.tag = parser.getName();
                     nextElement.nspace = parser.getNamespace();
-
                     // 現在のタグの子に設定
                     if (current != null) {
                         current.addChild(nextElement);
@@ -199,16 +232,21 @@ public class XmlElement {
                 case XmlPullParser.END_TAG:
                     // 親に戻る
                     current = current.getParent();
+
                     break;
                 case XmlPullParser.TEXT:
                     // テキストを格納する
                     current.content = parser.getText();
                     break;
-                case XmlPullParser.END_DOCUMENT:
+                default:
                     break;
             }
         }
 
         return root;
+    }
+
+    public static XmlElement parse(String xml) throws XmlPullParserException, IOException {
+        return parse(new ByteArrayInputStream(xml.getBytes()));
     }
 }

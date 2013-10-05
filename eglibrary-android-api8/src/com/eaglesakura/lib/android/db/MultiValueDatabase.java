@@ -349,11 +349,7 @@ public class MultiValueDatabase extends DisposableResource {
          * @return
          */
         public long getLong(String key, long def) {
-            try {
-                return bundle.getLong(key, def);
-            } catch (Exception e) {
-                return bundle.getLong(key, (int) def);
-            }
+            return bundle.getLong(key, def);
         }
 
         /**
@@ -363,7 +359,7 @@ public class MultiValueDatabase extends DisposableResource {
          * @return
          */
         public int getInteger(String key, int def) {
-            return bundle.getInt(key, def);
+            return (int) getLong(key, def);
         }
 
         /**

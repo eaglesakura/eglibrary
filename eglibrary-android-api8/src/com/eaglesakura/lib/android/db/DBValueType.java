@@ -11,12 +11,12 @@ public enum DBValueType {
     Integer {
         @Override
         public void toBundle(Bundle result, String key, Cursor cursor, int dataIndex) {
-            result.putInt(key, cursor.getInt(dataIndex));
+            result.putLong(key, cursor.getLong(dataIndex));
         }
 
         @Override
         public void toValue(ContentValues result, String key, Object origin) {
-            result.put(key, java.lang.Integer.valueOf(origin.toString()));
+            result.put(key, java.lang.Long.valueOf(origin.toString()));
         }
     },
 
