@@ -324,6 +324,21 @@ public class TextKeyValueStore extends DisposableResource {
     }
 
     /**
+     * 文字列をint変換して取得する
+     * @param key
+     * @param def
+     * @return
+     */
+    public int getInteger(String key, int def) {
+        String value = get(key, null);
+        if (value != null) {
+            return Integer.parseInt(value);
+        } else {
+            return def;
+        }
+    }
+
+    /**
      * 値を取得する
      * @param key
      * @return
