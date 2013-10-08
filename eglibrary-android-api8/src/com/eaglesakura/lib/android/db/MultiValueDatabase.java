@@ -145,6 +145,38 @@ public class MultiValueDatabase extends DisposableResource {
     }
 
     /**
+     * 特定キーが最大値のデータを取得する
+     * @param keyName
+     * @return
+     */
+    public Data maxData(String keyName, String[] colmns) {
+        String sql = String.format("%s = (select max(%s) from %s)", keyName, keyName, valueList.tableName);
+        List<Data> list = list(sql, colmns);
+
+        if (list != null && list.size() == 1) {
+            return list.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 特定キーが最小値のデータを取得する
+     * @param keyName
+     * @return
+     */
+    public Data minData(String keyName, String[] colmns) {
+        String sql = String.format("%s = (select min(%s) from %s)", keyName, keyName, valueList.tableName);
+        List<Data> list = list(sql, colmns);
+
+        if (list != null && list.size() == 1) {
+            return list.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * selectionを直接指定して取得する
      * @param rawSelection
      * @param colmns
