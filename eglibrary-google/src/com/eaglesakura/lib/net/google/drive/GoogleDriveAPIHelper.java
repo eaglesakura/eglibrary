@@ -24,6 +24,8 @@ import com.eaglesakura.lib.net.WebAPIException.Type;
  */
 public class GoogleDriveAPIHelper {
 
+    public static final int MAX_RESULTS = 1000;
+
     /**
      * リンク情報にしたがってアップデートを続ける
      * @param nextLink
@@ -216,7 +218,7 @@ public class GoogleDriveAPIHelper {
             throw new WebAPIException("item is file", Type.FileNotFound);
         }
         String query = createQuery("'" + driveDirectory.id + "' in parents and trashed = false");
-        return search(connector, query);
+        return search(connector, query, 1000);
     }
 
     /**
@@ -237,8 +239,9 @@ public class GoogleDriveAPIHelper {
      * @return
      * @throws GoogleAPIException
      */
-    public static List<DriveItem> search(WebAPIConnectorBase connector, String query) throws WebAPIException {
-        String nextLink = "https://www.googleapis.com/drive/v2/files?q=" + query;
+    public static List<DriveItem> search(WebAPIConnectorBase connector, String query, int maxResults)
+            throws WebAPIException {
+        String nextLink = "https://www.googleapis.com/drive/v2/files?maxResults=1000&q=" + query;
         return listup(connector, nextLink, -1);
     }
 
@@ -249,7 +252,7 @@ public class GoogleDriveAPIHelper {
      * @throws GoogleAPIException
      */
     public static List<DriveItem> list(WebAPIConnectorBase connector) throws WebAPIException {
-        String nextLink = "https://www.googleapis.com/drive/v2/files";
+        String nextLink = "https://www.googleapis.com/drive/v2/files?maxResults=1000";
         return listup(connector, nextLink, -1);
     }
 
@@ -260,7 +263,7 @@ public class GoogleDriveAPIHelper {
      * @throws GoogleAPIException
      */
     public static List<DriveItem> listDirectories(WebAPIConnectorBase connector) throws WebAPIException {
-        return search(connector, createQuery("mimeType = 'application/vnd.google-apps.folder'"));
+        return search(connector, createQuery("mimeType = 'application/vnd.google-apps.folder'"), 1000);
     }
 
     /**

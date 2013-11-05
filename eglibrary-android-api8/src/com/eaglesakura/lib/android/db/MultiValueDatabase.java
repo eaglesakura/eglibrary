@@ -395,6 +395,16 @@ public class MultiValueDatabase extends DisposableResource {
         }
 
         /**
+         * 
+         * @param key
+         * @param def
+         * @return
+         */
+        public boolean getBoolean(String key, boolean def) {
+            return getLong(key, def ? 1 : 0) != 0;
+        }
+
+        /**
          * テキストを取得する
          * @param key
          * @param def

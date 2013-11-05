@@ -466,7 +466,7 @@ public class DriveFile {
      */
     public static DriveFile get(WebAPIConnectorBase connector, String fileName) throws WebAPIException {
         List<DriveItem> search = GoogleDriveAPIHelper.search(connector,
-                GoogleDriveAPIHelper.createQueryFullTextContains(fileName));
+                GoogleDriveAPIHelper.createQueryFullTextContains(fileName), 1000);
         if (search.isEmpty()) {
             throw new WebAPIException(fileName + " not found", Type.FileNotFound);
         }
