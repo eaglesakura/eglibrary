@@ -338,6 +338,18 @@ public class MultiValueDatabase extends DisposableResource {
     }
 
     /**
+     * テーブル内容を全てリセットする
+     */
+    public void resetTable() {
+        try {
+            db.execSQL(valueList.sqlDropCommand());
+            db.execSQL(valueList.sqlCreateCommand());
+        } catch (Exception e) {
+            LogUtil.log(e);
+        }
+    }
+
+    /**
      * ユーザーに返すデータ。
      * @author TAKESHI YAMASHITA
      *

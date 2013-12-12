@@ -330,9 +330,19 @@ public class TextKeyValueStore extends DisposableResource {
      * @return
      */
     public int getInteger(String key, int def) {
+        return (int) getLong(key, def);
+    }
+
+    /**
+     * 文字列をlong変換して取得する
+     * @param key
+     * @param def
+     * @return
+     */
+    public long getLong(String key, long def) {
         String value = get(key, null);
         if (value != null) {
-            return Integer.parseInt(value);
+            return Long.parseLong(value);
         } else {
             return def;
         }
