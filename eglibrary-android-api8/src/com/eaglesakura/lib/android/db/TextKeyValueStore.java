@@ -115,6 +115,20 @@ public class TextKeyValueStore extends DisposableResource {
     }
 
     /**
+     * 簡易的に値を挿入する
+     * @param key
+     * @param value
+     */
+    public void putDirect(String key, String value) {
+        try {
+            beginTransaction();
+            insertOrUpdate(key, value);
+        } finally {
+            endTransaction();
+        }
+    }
+
+    /**
      * DBに値を新規登録する。
      * 登録済みの場合、上書きを行う。
      * @param key
@@ -343,6 +357,21 @@ public class TextKeyValueStore extends DisposableResource {
         String value = get(key, null);
         if (value != null) {
             return Long.parseLong(value);
+        } else {
+            return def;
+        }
+    }
+
+    /**
+     * 文字列をlong変換して取得する
+     * @param key
+     * @param def
+     * @return
+     */
+    public float getFloat(String key, float def) {
+        String value = get(key, null);
+        if (value != null) {
+            return Float.parseFloat(value);
         } else {
             return def;
         }
