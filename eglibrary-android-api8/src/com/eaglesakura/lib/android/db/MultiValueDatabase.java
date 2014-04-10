@@ -44,8 +44,12 @@ public class MultiValueDatabase extends DisposableResource {
         this.dbFile = dbFile;
         this.valueList = valueList;
 
-        helper = new Helper();
+        helper = newHelper();
         db = type.open(helper);
+    }
+
+    protected Helper newHelper() {
+        return new Helper();
     }
 
     @Override
@@ -683,7 +687,7 @@ public class MultiValueDatabase extends DisposableResource {
         }
     }
 
-    class Helper extends SQLiteOpenHelper {
+    protected class Helper extends SQLiteOpenHelper {
         public Helper() {
             super(context, dbFile.getAbsolutePath(), null, valueList.dbVersion);
         }
