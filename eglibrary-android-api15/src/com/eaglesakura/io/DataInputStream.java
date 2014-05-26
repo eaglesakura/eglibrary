@@ -10,6 +10,7 @@ import java.io.InputStream;
 
 import com.eaglesakura.resource.DisposableResource;
 import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.Util;
 
 /**
  * データ入力を補助するクラス。
@@ -24,6 +25,11 @@ public final class DataInputStream extends DisposableResource {
     private InputStream reader = null;
 
     /**
+     * データが到達するまでのタイムアウト時間
+     */
+    private long dataWaitTimeMs = 0;
+
+    /**
      *
      * 
      * @param is
@@ -31,6 +37,14 @@ public final class DataInputStream extends DisposableResource {
      */
     public DataInputStream(InputStream is) {
         reader = is;
+    }
+
+    /**
+     * データの到達待ちのタイムアウトを指定する
+     * @param dataWaitTimeMs
+     */
+    public void setDataWaitTimeMs(long dataWaitTimeMs) {
+        this.dataWaitTimeMs = dataWaitTimeMs;
     }
 
     /**
@@ -44,7 +58,7 @@ public final class DataInputStream extends DisposableResource {
         byte[] n = {
             0
         };
-        reader.read(n, 0, n.length);
+        readBuffer(n, 0, n.length);
         return n[0];
     }
 
@@ -59,7 +73,7 @@ public final class DataInputStream extends DisposableResource {
         byte[] n = {
                 0, 0
         };
-        reader.read(n, 0, n.length);
+        readBuffer(n, 0, n.length);
 
         int n0 = ((int) n[0] & 0xff);
         int n1 = ((int) n[1] & 0xff);
@@ -79,7 +93,7 @@ public final class DataInputStream extends DisposableResource {
         byte[] n = {
                 0, 0, 0
         };
-        reader.read(n, 0, n.length);
+        readBuffer(n, 0, n.length);
 
         return (int) (((((int) n[0]) & 0xff) << 16) | ((((int) n[1]) & 0xff) << 8) | ((((int) n[2]) & 0xff) << 0));
     }
@@ -117,7 +131,7 @@ public final class DataInputStream extends DisposableResource {
         byte[] n = {
                 0, 0, 0, 0
         };
-        reader.read(n, 0, n.length);
+        readBuffer(n, 0, n.length);
 
         int n0 = ((int) n[0] & 0xff);
         int n1 = ((int) n[1] & 0xff);
@@ -138,7 +152,7 @@ public final class DataInputStream extends DisposableResource {
         byte[] n = {
                 0, 0, 0, 0, 0, 0, 0, 0
         };
-        reader.read(n, 0, n.length);
+        readBuffer(n, 0, n.length);
 
         long n0 = ((int) n[0] & 0xff);
         long n1 = ((int) n[1] & 0xff);
@@ -150,8 +164,7 @@ public final class DataInputStream extends DisposableResource {
         long n6 = ((int) n[6] & 0xff);
         long n7 = ((int) n[7] & 0xff);
 
-        return (((long) (n0 << 24) | (n1 << 16) | (n2 << 8) | (n3 << 0)) << 32)
-                | ((long) (n4 << 24) | (n5 << 16) | (n6 << 8) | (n7 << 0));
+        return (((long) (n0 << 24) | (n1 << 16) | (n2 << 8) | (n3 << 0)) << 32) | ((long) (n4 << 24) | (n5 << 16) | (n6 << 8) | (n7 << 0));
     }
 
     /**
@@ -310,7 +323,34 @@ public final class DataInputStream extends DisposableResource {
      * 
      */
     public int readBuffer(byte[] buf, int index, int length) throws IOException {
-        return reader.read(buf, index, length);
+        final int requestLength = length;
+        while (length > 0) {
+            // 読み取るデータがまだある
+
+            // データの到達まで待つ
+            {
+                final long SLEEP_TIME = 99;
+                long waitTime = dataWaitTimeMs;
+                while (reader.available() <= 0 && waitTime > 0) {
+                    // 読み取りがまだ完了していない
+                    Util.sleep(SLEEP_TIME);
+                    waitTime -= SLEEP_TIME;
+                }
+
+                // 待ち時間を超過した場合
+                if (waitTime < 0) {
+                    //                    throw new IOException("data not available");
+                    return requestLength - length;
+                }
+            }
+
+            // ポインタを読み進める
+            final int readed = reader.read(buf, index, length);
+            index += readed;
+            length -= readed;
+        }
+
+        return requestLength;
     }
 
     /**

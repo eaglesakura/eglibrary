@@ -4,6 +4,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.OnActivityResult;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -14,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 
 import com.eaglesakura.R;
+import com.eaglesakura.android.bluetooth.BluetoothUtil;
 import com.eaglesakura.android.util.FragmentUtil;
 
 /**
@@ -58,9 +60,16 @@ public class BluetoothAdapterInitializeFragment extends Fragment {
      * bluetoothアダプターが有効になっていたらtrue
      * @return
      */
+    @SuppressLint("NewApi")
     boolean isAdapterEnable() {
-        BluetoothManager bluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
-        BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
+        BluetoothAdapter bluetoothAdapter;
+
+        if (BluetoothUtil.isSupportedBluetoothLE(getActivity())) {
+            BluetoothManager bluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
+            bluetoothAdapter = bluetoothManager.getAdapter();
+        } else {
+            bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        }
 
         // アダプタが無効だったら再設定を行う
         if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
