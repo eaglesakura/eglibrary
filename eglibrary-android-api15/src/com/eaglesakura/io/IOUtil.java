@@ -44,6 +44,26 @@ public class IOUtil {
     }
 
     /**
+     * Byte配列に変換する。
+     * @param array
+     * @return
+     */
+    public static final byte[] toByteArray(int[] array) {
+        byte[] result = new byte[array.length * 4];
+        return toByteArray(array, result);
+    }
+
+    public static final byte[] toByteArray(int[] array, byte[] result) {
+        for (int i = 0; i < array.length; ++i) {
+            result[i * 4 + 0] = (byte) ((array[i] >> 24) & 0xff);
+            result[i * 4 + 1] = (byte) ((array[i] >> 16) & 0xff);
+            result[i * 4 + 2] = (byte) ((array[i] >> 8) & 0xff);
+            result[i * 4 + 3] = (byte) ((array[i] >> 0) & 0xff);
+        }
+        return result;
+    }
+
+    /**
      * InputStreamを全てメモリ上に展開する。 isの長さがOOMにならないように調整すること。
      * 
      * @param is

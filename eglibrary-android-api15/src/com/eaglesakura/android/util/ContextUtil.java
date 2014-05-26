@@ -22,7 +22,7 @@ import android.os.SystemClock;
 import android.view.WindowManager;
 
 import com.eaglesakura.math.Vector2;
-import com.eaglesakura.util.Util;
+import com.eaglesakura.util.EncodeUtil;
 
 /**
  * Context関連の便利メソッドを提供する
@@ -72,6 +72,7 @@ public class ContextUtil {
      */
     public static Vector2 getDisplaySize(Context context, Vector2 result) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        @SuppressWarnings("deprecation")
         int displayW = wm.getDefaultDisplay().getWidth(), displayH = wm.getDefaultDisplay().getHeight();
         result.set((float) displayW, (float) displayH);
         return result;
@@ -185,17 +186,15 @@ public class ContextUtil {
      * @param statusbarId
      * @param intent
      */
-    public static void sendStatusBarInfo(Context context, String title, String message, int icon, int statusbarId,
-            Intent intent) {
+    @SuppressWarnings("deprecation")
+    public static void sendStatusBarInfo(Context context, String title, String message, int icon, int statusbarId, Intent intent) {
         try {
             //! 通知作成
-            final NotificationManager nfManager = (NotificationManager) context
-                    .getSystemService(Context.NOTIFICATION_SERVICE);
+            final NotificationManager nfManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
             {
                 Notification notification = new Notification(icon, message, System.currentTimeMillis());
-                notification.setLatestEventInfo(context, title, message,
-                        PendingIntent.getBroadcast(context, 0, intent, 0));
+                notification.setLatestEventInfo(context, title, message, PendingIntent.getBroadcast(context, 0, intent, 0));
                 nfManager.notify(statusbarId, notification);
             }
         } catch (Exception e) {
@@ -224,8 +223,7 @@ public class ContextUtil {
      * @param textWidthDimenId
      * @return
      */
-    public static String getCompactString(String text, String fooder, Context context, int textSizeDimenId,
-            int textWidthDimenId) {
+    public static String getCompactString(String text, String fooder, Context context, int textSizeDimenId, int textWidthDimenId) {
         int textPixelSize = context.getResources().getDimensionPixelSize(textSizeDimenId);
         int textWidthPixelSize = context.getResources().getDimensionPixelSize(textWidthDimenId);
 
@@ -279,9 +277,9 @@ public class ContextUtil {
         // 通常のUUID
                 UUID.randomUUID().toString(),
                 // 現在時刻
-                Util.genSHA1(Long.valueOf(System.currentTimeMillis()).toString().getBytes()),
+                EncodeUtil.genSHA1(Long.valueOf(System.currentTimeMillis()).toString().getBytes()),
                 // 端末起動からの経過時間
-                Util.genSHA1(Long.valueOf(SystemClock.elapsedRealtime()).toString().getBytes()));
+                EncodeUtil.genSHA1(Long.valueOf(SystemClock.elapsedRealtime()).toString().getBytes()));
         return result;
     }
 

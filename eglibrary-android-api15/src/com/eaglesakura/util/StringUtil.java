@@ -1,6 +1,11 @@
 package com.eaglesakura.util;
 
+import android.annotation.SuppressLint;
+
 public class StringUtil {
+
+    public static final String SHIT_JIS = "Shift_JIS";
+
     /**
      * 文字列がnullか空文字だったらtrueを返す。
      * @param str
@@ -140,6 +145,7 @@ public class StringUtil {
      * @param b
      * @return
      */
+    @SuppressLint("DefaultLocale")
     public static int compareString(String a, String b) {
         a = zenkakuHiraganaToZenkakuKatakana(a.toLowerCase());
         a = zenkakuEngToHankakuEng(a);
