@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="Common.Dialog.Title.Error">エラー</string>
+    <string name="Common.Cancel">キャンセル</string>
+
+    <!--  -->
+    <string name="Common.App.Finish">アプリを終了する</string>
+
+</resources>
