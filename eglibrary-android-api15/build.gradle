@@ -1,10 +1,6 @@
 buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.9.+'
-    }
+    repositories { mavenCentral() }
+    dependencies { classpath 'com.android.tools.build:gradle:0.9.+' }
 }
 
 apply plugin: 'android-library'
@@ -26,7 +22,13 @@ android {
             renderscript.srcDirs = ['src']
             java.srcDirs         = ['src']
             manifest.srcFile 'AndroidManifest.xml'
-
         }
     }
+}
+
+task jarbuild << {
+    ["ant", "clean", "release"].execute();
+
+    File target = new File("./bin/classes.jar").absoluteFile;
+    target.renameTo(new File("../release/eglibrary-android-api15.jar"));
 }

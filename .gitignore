@@ -12,5 +12,4 @@ javadoc.xml
 doc
 build/
 .gradle/
-build.xml
-android-support-v4.jar
+*.jar
