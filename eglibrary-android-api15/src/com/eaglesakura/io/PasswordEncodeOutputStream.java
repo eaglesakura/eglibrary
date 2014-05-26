@@ -1,4 +1,4 @@
-package com.eaglesakura.lib.io;
+package com.eaglesakura.io;
 
 import java.io.IOException;
 import java.io.OutputStream;

@@ -1,6 +1,7 @@
-package com.eaglesakura.util;
+package com.eaglesakura.thread;
 
 import com.eaglesakura.time.Timer;
+import com.eaglesakura.util.Util;
 
 /**
  * 何らかの値を保持するためのホルダ。
