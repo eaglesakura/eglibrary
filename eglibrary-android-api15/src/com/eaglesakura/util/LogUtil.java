@@ -89,6 +89,17 @@ public class LogUtil {
         }
     }
 
+    /**
+     * デバッグログ出力を行う
+     * @param message
+     */
+    public static void d(String message) {
+        if (output) {
+            initLogger();
+            logger.i("" + message);
+        }
+    }
+
     public static void log(Exception e) {
         if (output) {
             e.printStackTrace();
