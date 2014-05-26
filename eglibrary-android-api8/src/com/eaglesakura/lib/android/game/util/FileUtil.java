@@ -10,6 +10,7 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -26,6 +27,7 @@ public class FileUtil {
      * @return
      */
     public static final void copy(File src, File dst) throws IOException {
+        mkdir(dst.getParentFile());
         InputStream srcStream = new FileInputStream(src);
         OutputStream dstStream = new FileOutputStream(dst);
 
@@ -43,6 +45,28 @@ public class FileUtil {
 
         //! 最終変更日を修正する
         dst.setLastModified(src.lastModified());
+    }
+
+    /**
+     * コピー先が存在しない、もしくはMD5が一致しない場合のみコピーを行い、それ以外はコピーを行わない
+     * @param src
+     * @param dst
+     * @throws IOException
+     */
+    public static final void copyOrUpdate(File src, File dst) throws IOException {
+        if (!dst.isFile()) {
+            // ファイルが存在しないからコピーする
+            copy(src, dst);
+            return;
+        }
+
+        String srcSHA1 = genSHA1(src);
+        String dstSHA1 = genSHA1(dst);
+
+        // 2つのSHA1が一致しないため、コピーする
+        if (!srcSHA1.equals(dstSHA1)) {
+            copy(src, dst);
+        }
     }
 
     /**
@@ -77,6 +101,50 @@ public class FileUtil {
                 sBuffer.append(s);
             }
             return sBuffer.toString();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 末尾・先端のバイト列を用いた単純なハッシュを生成する
+     * ファイルフォーマットによっては衝突の可能性が非常に高いため、利用する場合は十分に検討を行うこと。
+     * @param file
+     * @return
+     */
+    public static String genShortHash(File file, int checkLength) {
+        if (!file.isFile()) {
+            return null;
+        }
+
+        // 十分に小さいファイルの場合は検証を行わずに返す
+        if (file.length() < (checkLength * 2)) {
+            return FileUtil.genSHA1(file);
+        }
+
+        try {
+            String start = null;
+            String end = null;
+            // 先頭の任意バイトを読み込む
+            {
+                byte[] buffer = new byte[checkLength];
+                FileInputStream is = new FileInputStream(file);
+                is.read(buffer);
+                is.close();
+                start = EncodeUtil.genMD5(buffer);
+            }
+            // 末尾の任意バイトを読み込む
+            {
+                byte[] buffer = new byte[checkLength];
+                FileInputStream is = new FileInputStream(file);
+                is.skip(file.length() - checkLength);
+                is.read(buffer);
+                is.close();
+                end = EncodeUtil.genMD5(buffer);
+            }
+
+            return start + end;
+
         } catch (Exception e) {
             return null;
         }
@@ -125,6 +193,10 @@ public class FileUtil {
      * @param root
      */
     public static void delete(File root) {
+        if (root.isFile()) {
+            root.delete();
+            return;
+        }
         File[] files = root.listFiles();
         if (files != null) {
             for (File file : files) {
@@ -176,9 +248,18 @@ public class FileUtil {
     }
 
     /**
+     * ファイルパスからSHA1を得る。
+     * @param file
+     * @return
+     */
+    public static String genPathSHA1(final File file) {
+        String path = file.getAbsolutePath();
+        path = normalizeFileName(path);
+        return EncodeUtil.genSHA1(path.getBytes());
+    }
+
+    /**
      * カレントディレクトリのパスを取得する。
-     *
-     * 
      * @return
      * 
      */
@@ -221,4 +302,86 @@ public class FileUtil {
         return files;
     }
 
+    /**
+     * 比較等の処理を行うために文字列を正規化する
+     * @param origin
+     * @return
+     */
+    public static String normalizeFileName(String origin) {
+        origin = GameUtil.zenkakuEngToHankakuEng(origin);
+        origin = GameUtil.macStringToWinString(origin);
+
+        while (origin.indexOf('?') >= 0) {
+            origin = origin.replace('?', '？');
+        }
+        return origin;
+    }
+
+    /**
+     * そこまでの道を含めてディレクトリを作成する。
+     * @param dir
+     * @return
+     */
+    public static File mkdir(File dir) {
+        // 作成済みだったら何もしない
+        if (dir.isDirectory()) {
+            return dir;
+        }
+        File parent = dir.getAbsoluteFile().getParentFile();
+        if (parent.isDirectory()) {
+            dir.mkdir();
+        } else {
+            // 親が作られてなかったら作る
+            mkdir(parent);
+        }
+
+        return dir;
+    }
+
+    /**
+     * parentからtargetに到達するまでの全てのファイルを取得する。
+     * 戻り値にtargetとparentも含まれる。
+     * 階層が上にあるFileがindexの0に近くなる。
+     * @param target
+     * @param parent
+     * @return
+     */
+    public static List<File> getDirectoryRoute(File target, File parent) {
+        List<File> result = new LinkedList<File>();
+        File current = target;
+        while (!equals(current, parent)) {
+            result.add(0, current);
+            current = current.getParentFile();
+        }
+        result.add(0, parent);
+        return result;
+    }
+
+    /**
+     * ディレクトリの中身を完全削除する。
+     * dirフォルダ自体は残る。
+     * @param dir
+     * @return
+     */
+    public static File cleanDirectory(File dir) {
+        if (dir.isFile()) {
+            return null;
+        }
+        delete(dir);
+        mkdir(dir);
+        return dir;
+    }
+
+    /**
+     * 同じ内容を指していた場合はtrue
+     * @param a
+     * @param b
+     * @return
+     */
+    public static boolean equals(File a, File b) {
+        if (a == null || b == null) {
+            return false;
+        }
+        return a.getAbsolutePath().equals(b.getAbsolutePath());
+    }
 }

@@ -1,6 +1,7 @@
 package com.eaglesakura.lib.android.game.graphics;
 
 import android.graphics.Rect;
+import android.util.FloatMath;
 
 import com.eaglesakura.lib.android.game.graphics.SpriteMaster.AnimationFrame;
 import com.eaglesakura.lib.android.game.input.MultiTouchInput;
@@ -118,7 +119,7 @@ public class Sprite {
         }
 
         int current = frame / master.komaFrame;
-        return master.frames.get(GameUtil.minmax(0, master.frames.size() - 1, current));
+        return master.frames.get(GameUtil.minmax(0, Math.max(0, master.frames.size() - 1), current));
     }
 
     /**
@@ -308,6 +309,19 @@ public class Sprite {
      * @param scaleY
      * @param flags
      */
+    public Sprite setSpritePosition(int x, int y, float scale, int flags) {
+        return setSpritePosition(x, y, scale, scale, flags);
+    }
+
+    /**
+     * 描画位置を設定する。
+     * 
+     * @param x
+     * @param y
+     * @param scaleX
+     * @param scaleY
+     * @param flags
+     */
     public Sprite setSpritePosition(int x, int y, float scaleX, float scaleY, int flags) {
 
         Rect src = getCurrentFrame().area;
@@ -332,7 +346,7 @@ public class Sprite {
             }
         }
 
-        scale = (float) Math.sqrt(scaleX * scaleY);
+        scale = FloatMath.sqrt(scaleX * scaleY);
         dstArea.set(x, y, x + dstWidth, y + dstHeight);
 
         return this;
@@ -395,8 +409,9 @@ public class Sprite {
      * 
      * @param color
      */
-    public void setColorRGBA(int color) {
+    public Sprite setColorRGBA(int color) {
         this.color = color;
+        return this;
     }
 
     /**

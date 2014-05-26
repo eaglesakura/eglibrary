@@ -8,10 +8,10 @@ import android.graphics.Bitmap;
 import com.eaglesakura.lib.android.game.graphics.Color;
 import com.eaglesakura.lib.android.game.graphics.Sprite;
 import com.eaglesakura.lib.android.game.graphics.canvas.BitmapImage;
-import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
 import com.eaglesakura.lib.android.game.graphics.gl11.RawTextureImage;
 import com.eaglesakura.lib.android.game.graphics.gl11.SpriteManager;
 import com.eaglesakura.lib.android.game.graphics.gl11.TextureImageBase;
+import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
 import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
@@ -101,8 +101,7 @@ public class Background extends DisposableResource {
      * @param originSize
      * @param type
      */
-    public void load(final BitmapImage image, final ImageType type, OpenGLManager glManager,
-            ImageLoadingListener listener) {
+    public void load(final BitmapImage image, final ImageType type, VRAM vram, ImageLoadingListener listener) {
         if (listener == null) {
             listener = new ImageLoadingListener() {
                 @Override
@@ -139,12 +138,12 @@ public class Background extends DisposableResource {
 
                     switch (type) {
                         case RGBA8888:
-                            subTexture = createSubTextureRGBA8888(image.getBitmap(), glManager, imageX, imageY,
+                            subTexture = createSubTextureRGBA8888(image.getBitmap(), vram, imageX, imageY,
                                     textureWidth, textureHeight);
                             break;
                         case RGB888:
-                            subTexture = createSubTextureRGB888(image.getBitmap(), glManager, imageX, imageY,
-                                    textureWidth, textureHeight);
+                            subTexture = createSubTextureRGB888(image.getBitmap(), vram, imageX, imageY, textureWidth,
+                                    textureHeight);
                             break;
                     }
 
@@ -174,8 +173,8 @@ public class Background extends DisposableResource {
      * @param y
      * @return
      */
-    public static TextureImageBase createSubTextureRGBA8888(Bitmap origin, OpenGLManager glManager, int x, int y,
-            int textureWidth, int textureHeight) {
+    public static TextureImageBase createSubTextureRGBA8888(Bitmap origin, VRAM vram, int x, int y, int textureWidth,
+            int textureHeight) {
         int[] pixels = new int[textureWidth * textureHeight];
         final int pixWidth = Math.min(textureWidth, origin.getWidth() - x);
         final int pixHeight = Math.min(textureHeight, origin.getHeight() - y);
@@ -188,12 +187,12 @@ public class Background extends DisposableResource {
             pixels[i] = (pixel << 8) | ((pixel >> 24) & 0xff);
         }
 
-        RawTextureImage texture = new RawTextureImage(glManager, textureWidth, textureHeight);
+        RawTextureImage texture = new RawTextureImage(vram, textureWidth, textureHeight);
         texture.loadMipmapRGBA8888(0, pixels, textureWidth, textureHeight);
 
         texture.bind();
         {
-            GL11 gl = glManager.getGL();
+            GL11 gl = vram.getGL();
             gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
             gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
             gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_CLAMP_TO_EDGE);
@@ -212,8 +211,8 @@ public class Background extends DisposableResource {
      * @param y
      * @return
      */
-    public static TextureImageBase createSubTextureRGB888(Bitmap origin, OpenGLManager glManager, int x, int y,
-            int textureWidth, int textureHeight) {
+    public static TextureImageBase createSubTextureRGB888(Bitmap origin, VRAM vram, int x, int y, int textureWidth,
+            int textureHeight) {
         int[] pixels = new int[textureWidth * textureHeight];
         final int pixWidth = Math.min(textureWidth, origin.getWidth() - x);
         final int pixHeight = Math.min(textureHeight, origin.getHeight() - y);
@@ -230,12 +229,12 @@ public class Background extends DisposableResource {
             rgb[index++] = (byte) (pixel);
         }
 
-        RawTextureImage texture = new RawTextureImage(glManager, textureWidth, textureHeight);
+        RawTextureImage texture = new RawTextureImage(vram, textureWidth, textureHeight);
         texture.loadMipmapRGB888(0, rgb, textureWidth, textureHeight);
 
         texture.bind();
         {
-            GL11 gl = glManager.getGL();
+            GL11 gl = vram.getGL();
             gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
             gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
             gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_CLAMP_TO_EDGE);
@@ -327,8 +326,8 @@ public class Background extends DisposableResource {
 
     @Override
     public void dispose() {
-        synchronized (textures) {
-            if (textures != null) {
+        if (textures != null) {
+            synchronized (textures) {
                 for (TextureImageBase[] texArray : textures) {
                     if (texArray != null) {
                         for (int i = 0; i < texArray.length; ++i) {

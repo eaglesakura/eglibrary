@@ -9,7 +9,9 @@ local.properties
 *.o.d
 eglibrary-android-api8-splib/libs/**
 javadoc.xml
+<<<<<<< HEAD
 build/
 .gradle/
 build.xml
 android-support-v4.jar
+doc

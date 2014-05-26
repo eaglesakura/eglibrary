@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.apache.http.conn.ConnectionPoolTimeoutException;
-
 import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.android.web.google.docs.DocsAPIException.Type;
 import com.google.api.client.googleapis.GoogleHeaders;
@@ -56,6 +54,8 @@ public class GoogleDocsDownloader {
 
     long rangeStart = -1;
     long rangeLength = -1;
+
+    boolean canceled = false;
 
     public GoogleDocsDownloader(String token) {
         this.token = token;
@@ -135,6 +135,9 @@ public class GoogleDocsDownloader {
         try {
             return downRequest.execute();
         } catch (HttpResponseException re) {
+            if (canceled) {
+                return null;
+            }
 
             if (re.response != null) {
                 switch (re.response.statusCode) {
@@ -145,6 +148,7 @@ public class GoogleDocsDownloader {
 
                 //! リダイレクト命令
                 if (re.response.headers != null && re.response.headers.get("Location") != null) {
+                    HttpTransport.setLowLevelHttpTransport(null);
                     try {
                         if (re.response.getContent() != null) {
                             LogUtil.log("close!");
@@ -160,10 +164,9 @@ public class GoogleDocsDownloader {
             } else {
                 LogUtil.log(re);
             }
-        } catch (ConnectionPoolTimeoutException cpe) {
-            throw new DocsAPIException(Type.ConnectPoolError, cpe);
         } catch (Exception e) {
-            throw new DocsAPIException(Type.Unknown, e);
+            LogUtil.log(e);
+            throw new DocsAPIException(DocsAPIException.toExceptionType(e), e);
         }
         throw new DocsAPIException(Type.FileNotFound, url);
     }
@@ -197,7 +200,7 @@ public class GoogleDocsDownloader {
             }
             throw new DocsAPIException(Type.APIResponseError, hre);
         } catch (Exception e) {
-            throw new DocsAPIException(Type.ConnectErrorUnknown, e);
+            throw new DocsAPIException(DocsAPIException.toExceptionType(e), e);
         }
     }
 
@@ -226,6 +229,10 @@ public class GoogleDocsDownloader {
         } else {
             return false;
         }
+    }
+
+    public void setCanceled(boolean canceled) {
+        this.canceled = canceled;
     }
 
     /**

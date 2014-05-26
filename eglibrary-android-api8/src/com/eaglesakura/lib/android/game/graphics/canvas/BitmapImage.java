@@ -17,10 +17,12 @@ import android.graphics.Color;
 import android.net.Uri;
 
 import com.eaglesakura.lib.android.game.graphics.ImageBase;
+import com.eaglesakura.lib.android.game.graphics.ImageCorrector;
 import com.eaglesakura.lib.android.game.io.WebInputStream;
 import com.eaglesakura.lib.android.game.resource.GarbageCollector;
 import com.eaglesakura.lib.android.game.resource.IRawResource;
 import com.eaglesakura.lib.android.game.resource.SharedRawResource;
+import com.eaglesakura.lib.android.game.util.LogUtil;
 
 /**
  * 
@@ -32,6 +34,11 @@ public class BitmapImage extends ImageBase {
     SharedRawResource sharedResource = null;
     BitmapResource bitmapResource = null;
 
+    /**
+     * 自動的にrecycleを呼び出す場合はtrue
+     */
+    boolean autoRecycle = true;
+
     public BitmapImage(GarbageCollector garbageCollector) {
         super(garbageCollector);
     }
@@ -40,11 +47,26 @@ public class BitmapImage extends ImageBase {
         this((GarbageCollector) null);
     }
 
+    public BitmapImage(Bitmap image) {
+        this((GarbageCollector) null);
+        onLoad(image);
+    }
+
     public BitmapImage(BitmapImage origin) {
         this(origin.getGarbageCollector());
         bitmapResource = origin.bitmapResource;
         sharedResource = origin.sharedResource;
         sharedResource.addRef();
+    }
+
+    /**
+     * 自動でrecycleを呼び出す場合はtrue
+     * デフォルトではTRUE
+     * @param set
+     */
+    public BitmapImage setAutoRecycle(boolean set) {
+        autoRecycle = set;
+        return this;
     }
 
     protected void onLoad(Bitmap image) {
@@ -60,7 +82,7 @@ public class BitmapImage extends ImageBase {
             throw new IllegalArgumentException("Bitmap File load Error!!");
         }
 
-        bitmapResource = new BitmapResource(image);
+        bitmapResource = new BitmapResource(image, autoRecycle);
         sharedResource = new SharedRawResource(bitmapResource);
         sharedResource.addRef();
         register();
@@ -87,6 +109,18 @@ public class BitmapImage extends ImageBase {
      */
     public BitmapImage loadFromDrawable(Resources resources, int id, LoadOption option) {
         Bitmap image = BitmapFactory.decodeResource(resources, id);
+        onLoad(image);
+        return this;
+    }
+
+    /**
+     * 画像ストリームから読み込む。
+     * @param is
+     * @return
+     * @throws IOException
+     */
+    public BitmapImage loadFromStream(InputStream is) throws IOException {
+        Bitmap image = BitmapFactory.decodeStream(is);
         onLoad(image);
         return this;
     }
@@ -119,6 +153,29 @@ public class BitmapImage extends ImageBase {
                 }
             }
         }
+    }
+
+    /**
+     * 最大幅・高さを指定してリサイズする。
+     * @param maxWidth
+     * @param maxHeight
+     * @return
+     */
+    public BitmapImage fitting(int maxWidth, int maxHeight) {
+        ImageCorrector corrector = new ImageCorrector();
+        corrector.setRenderArea(0, 0, maxWidth, maxHeight);
+        corrector.setImageAspect(getWidth(), getHeight());
+
+        final int nWidth = (int) corrector.getImageAreaWidth();
+        final int nHeight = (int) corrector.getImageAreaHeight();
+
+        LogUtil.log("scaled = " + nWidth + "x" + nHeight);
+
+        Bitmap nImage = Bitmap.createScaledBitmap(getBitmap(), nWidth, nHeight, true);
+
+        // ロードを行う
+        onLoad(nImage);
+        return this;
     }
 
     /**
@@ -194,14 +251,19 @@ public class BitmapImage extends ImageBase {
     static class BitmapResource implements IRawResource {
         Bitmap rawBitmap = null;
 
-        public BitmapResource(Bitmap image) {
+        boolean autoRecycle = false;
+
+        public BitmapResource(Bitmap image, boolean autoRecycle) {
             this.rawBitmap = image;
+            this.autoRecycle = autoRecycle;
         }
 
         @Override
         public void dispose() {
-            rawBitmap.recycle();
-            rawBitmap = null;
+            if (rawBitmap != null && !rawBitmap.isRecycled()) {
+                rawBitmap.recycle();
+                rawBitmap = null;
+            }
         }
     }
 

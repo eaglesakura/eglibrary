@@ -2,11 +2,12 @@ package com.eaglesakura.lib.android.game.loop;
 
 import android.content.Context;
 
-import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
+import com.eaglesakura.lib.android.game.graphics.gl11.GPU;
 import com.eaglesakura.lib.android.game.graphics.gl11.SpriteManager;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.android.game.util.Timer;
 
+@Deprecated
 public abstract class SpriteGameLoopManagerBase extends GameLoopManagerBase {
     SpriteManager spriteManager;
     int backgroundColor = 0x000000ff;
@@ -102,7 +103,7 @@ public abstract class SpriteGameLoopManagerBase extends GameLoopManagerBase {
         // 一定時間以上経過していたらGC
         if (gcIntervalMs > 0 && gcTimer.end() > gcIntervalMs) {
             gcTimer.start();
-            int gcItems = getGLManager().gc(); // GLのGCを行う
+            int gcItems = egl.getVRAM().gc(); // GLのGCを行う
             LogUtil.log("OpenGL ES Auto GC :: " + gcTimer.end() + " ms = " + gcItems + " resources");
             gcTimer.start(); // タイマーの開始時刻をリセットする
         }
@@ -112,17 +113,17 @@ public abstract class SpriteGameLoopManagerBase extends GameLoopManagerBase {
     protected void onGameFrame() {
         onGameFrameBegin();
 
-        final OpenGLManager glManager = getGLManager();
-        glManager.clearColorRGBA(((backgroundColor)) >> 24 & 0xff, ((backgroundColor)) >> 16 & 0xff,
+        final GPU gpu = getGLManager();
+        gpu.clearColorRGBA(((backgroundColor)) >> 24 & 0xff, ((backgroundColor)) >> 16 & 0xff,
                 ((backgroundColor)) >> 8 & 0xff, ((backgroundColor)) >> 0 & 0xff);
-        glManager.clear();
+        gpu.clear();
 
         spriteManager.begin();
         {
             onGameFrameDraw();
         }
         spriteManager.end();
-        glManager.swapBuffers();
+        //        glManager.swapBuffers();
         updateGC();
         onGameFrameEnd();
     }

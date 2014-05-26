@@ -245,6 +245,9 @@ public final class Vector3 {
      */
     @Override
     public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
         Vector3 v = (Vector3) obj;
         return x == v.x && y == v.y && z == v.z;
     }

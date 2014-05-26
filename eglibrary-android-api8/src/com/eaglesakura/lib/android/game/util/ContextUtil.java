@@ -3,6 +3,7 @@ package com.eaglesakura.lib.android.game.util;
 import java.util.UUID;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -19,6 +20,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 
 import com.eaglesakura.lib.android.game.math.Vector2;
@@ -279,9 +281,9 @@ public class ContextUtil {
         // 通常のUUID
                 UUID.randomUUID().toString(),
                 // 現在時刻
-                GameUtil.genSHA1(Long.valueOf(System.currentTimeMillis()).toString().getBytes()),
+                EncodeUtil.genSHA1(Long.valueOf(System.currentTimeMillis()).toString().getBytes()),
                 // 端末起動からの経過時間
-                GameUtil.genSHA1(Long.valueOf(SystemClock.elapsedRealtime()).toString().getBytes()));
+                EncodeUtil.genSHA1(Long.valueOf(SystemClock.elapsedRealtime()).toString().getBytes()));
         return result;
     }
 
@@ -292,5 +294,53 @@ public class ContextUtil {
      */
     public static boolean isHandlerThread(Handler handler) {
         return Thread.currentThread().equals(handler.getLooper().getThread());
+    }
+
+    /**
+     * ハニカムだったらtrue
+     * @return
+     */
+    public static boolean isHoneycomb() {
+        final int sdk_int = Build.VERSION.SDK_INT;
+        return sdk_int >= 11 && sdk_int <= 13;
+    }
+
+    /**
+     * 戻るキーの
+     * @param event
+     * @return
+     */
+    public static boolean isBackKeyEvent(KeyEvent event) {
+        return event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK;
+    }
+
+    /**
+     * フルスクリーンに変更する
+     * @param activity
+     */
+    public static void fullScreen(Activity activity) {
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
+    /**
+     * 横方向をフルスクリーンにする
+     * @param activity
+     * @param dialog
+     */
+    public static void fullScreenX(Activity activity, Dialog dialog) {
+        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+        lp.width = activity.getWindow().getAttributes().width;
+        dialog.getWindow().setAttributes(lp);
+    }
+
+    /**
+     * 横方向をフルスクリーンにする
+     * @param activity
+     * @param dialog
+     */
+    public static void fullScreenY(Activity activity, Dialog dialog) {
+        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+        lp.height = activity.getWindow().getAttributes().height;
+        dialog.getWindow().setAttributes(lp);
     }
 }

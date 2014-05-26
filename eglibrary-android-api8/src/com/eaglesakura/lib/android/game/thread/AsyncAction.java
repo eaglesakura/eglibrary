@@ -30,6 +30,14 @@ public abstract class AsyncAction extends Thread {
     }
 
     /**
+     * UIハンドラにpostする
+     */
+    public AsyncAction(String name) {
+        this.handler = UIHandler.getInstance();
+        this.setName(name);
+    }
+
+    /**
      * {@link #onBackgroundAction()}の実行直前に呼び出される。
      */
     protected void onPreExecute() throws Exception {

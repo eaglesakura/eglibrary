@@ -13,6 +13,7 @@ import android.graphics.Typeface;
 
 import com.eaglesakura.lib.android.game.graphics.Color;
 import com.eaglesakura.lib.android.game.graphics.canvas.Graphics;
+import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
 
 public class FontTexture extends BitmapTextureImage {
     protected Paint paint = new Paint();
@@ -29,8 +30,8 @@ public class FontTexture extends BitmapTextureImage {
      * @param fontSize
      * @param glManager
      */
-    public FontTexture(String text, int fontSize, OpenGLManager glManager) {
-        super(glManager);
+    public FontTexture(String text, int fontSize, VRAM vram) {
+        super(vram);
         paint.setStyle(Style.STROKE);
         paint.setAntiAlias(true);
         createFont(text, Typeface.DEFAULT, fontSize);
@@ -43,8 +44,8 @@ public class FontTexture extends BitmapTextureImage {
      * @param typeface
      * @param glManager
      */
-    public FontTexture(String text, int fontSize, Typeface typeface, OpenGLManager glManager) {
-        super(glManager);
+    public FontTexture(String text, int fontSize, Typeface typeface, VRAM vram) {
+        super(vram);
         paint.setStyle(Style.STROKE);
         paint.setAntiAlias(true);
         createFont(text, typeface, fontSize);
@@ -113,7 +114,7 @@ public class FontTexture extends BitmapTextureImage {
      * @param fontColorRGBA
      */
     public void setFontColorRGBA(int fontColorRGBA) {
-        final GL10 gl = glManager.getGL();
+        final GL10 gl = getGL();
         gl.glTexEnvfv(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_COLOR, new float[] {
                 Color.toColorRf(fontColorRGBA), //
                 Color.toColorGf(fontColorRGBA), //
@@ -125,13 +126,13 @@ public class FontTexture extends BitmapTextureImage {
     @Override
     public void bind() {
         super.bind();
-        final GL10 gl = glManager.getGL();
+        final GL10 gl = getGL();
         gl.glTexEnvf(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE, GL10.GL_BLEND);
     }
 
     @Override
     public void unbind() {
-        final GL10 gl = glManager.getGL();
+        final GL10 gl = getGL();
         gl.glTexEnvf(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE, GL10.GL_MODULATE);
         super.unbind();
     }

@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.opengl.GLUtils;
 
 import com.eaglesakura.lib.android.game.graphics.canvas.Graphics;
+import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
 
 /**
  * Bitmap画像を利用してテクスチャを生成する。
@@ -26,8 +27,8 @@ public class BitmapTextureImage extends TextureImageBase {
      * @param image
      * @param glManager
      */
-    public BitmapTextureImage(Bitmap image, OpenGLManager glManager) {
-        super(glManager);
+    public BitmapTextureImage(Bitmap image, VRAM vram) {
+        super(vram);
         if (image == null) {
             throw new NullPointerException("input bitmap image is null !!");
         }
@@ -38,8 +39,8 @@ public class BitmapTextureImage extends TextureImageBase {
      * 
      * @param glManager
      */
-    protected BitmapTextureImage(OpenGLManager glManager) {
-        super(glManager);
+    protected BitmapTextureImage(VRAM vram) {
+        super(vram);
     }
 
     /**
@@ -59,12 +60,12 @@ public class BitmapTextureImage extends TextureImageBase {
         }
 
         //! テクスチャ情報を転送する
-        textureId = glManager.genTexture();
+        textureId = vram.genTexture();
         bind();
         {
-            glManager.getGL().glGetError();
+            getGL().glGetError();
             GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, convertedImage, 0);
-            if (glManager.getGL().glGetError() == GL11.GL_OUT_OF_MEMORY) {
+            if (getGL().glGetError() == GL11.GL_OUT_OF_MEMORY) {
                 throw new OutOfMemoryError("GLUtils#texImage2D");
             }
 

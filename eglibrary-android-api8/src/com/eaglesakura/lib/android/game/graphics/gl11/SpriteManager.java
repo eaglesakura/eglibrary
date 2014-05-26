@@ -22,10 +22,10 @@ public class SpriteManager extends DisposableResource {
     VirtualDisplay virtualDisplay;
 
     //! OpenGL
-    OpenGLManager glManager;
+    GPU gpu;
 
     //! 四角形描画用
-    QuadDepthPolygon quadPolygon;
+    QuadPolygon quadPolygon;
 
     int contextColor = 0xffffffff;
 
@@ -34,25 +34,19 @@ public class SpriteManager extends DisposableResource {
 
     Rect renderArea = null;
 
-    static final float DEPTH_DEFAULT = 1.0f;
-    float polyDepth = DEPTH_DEFAULT;
-
     /**
      * 
      * @param display
      * @param gl
      */
-    public SpriteManager(VirtualDisplay display, OpenGLManager gl) {
+    public SpriteManager(VirtualDisplay display, GPU gpu) {
         this.virtualDisplay = display;
-        this.glManager = gl;
+        this.gpu = gpu;
         init();
-
-        //! 描画先座標を設定
-        glManager.updateDrawArea(virtualDisplay);
     }
 
     void init() {
-        quadPolygon = new QuadDepthPolygon(glManager, 0);
+        quadPolygon = new QuadPolygon(gpu.getVRAM());
     }
 
     /**
@@ -60,8 +54,8 @@ public class SpriteManager extends DisposableResource {
      * 
      * @return
      */
-    public OpenGLManager getGlManager() {
-        return glManager;
+    public GPU getGPU() {
+        return gpu;
     }
 
     /**
@@ -74,16 +68,6 @@ public class SpriteManager extends DisposableResource {
     }
 
     /**
-     * 描画用ポリゴンのDEPTHを指定する。
-     * デフォルトは1.0f。
-     * {@link #begin()}の度にリセットされる。
-     * @param polyDepth
-     */
-    public void setPolyDepth(float polyDepth) {
-        this.polyDepth = polyDepth;
-    }
-
-    /**
      * 描画エリアを指定位置に変更する。
      * @param x
      * @param y
@@ -91,37 +75,24 @@ public class SpriteManager extends DisposableResource {
      * @param height
      */
     public void setRenderArea(int x, int y, int width, int height) {
-        renderArea = new Rect(x, y, x + width, y + height);
-        final GL11 gl = getGlManager().getGL();
-        gl.glEnable(GL10.GL_DEPTH_TEST);
-        gl.glDepthFunc(GL10.GL_ALWAYS);
-        polyDepth = 0.1f;
-        fillRect(x, y, width, height, 0x00000000);
-        gl.glDepthFunc(GL10.GL_EQUAL);
     }
 
     /**
      * 描画エリアを全体に直す。
      */
     public void clearRenderArea() {
-        if (renderArea == null) {
-            return;
-        }
-        final GL11 gl = getGlManager().getGL();
-        gl.glDepthFunc(GL10.GL_ALWAYS);
-        polyDepth = DEPTH_DEFAULT;
-        fillRect(renderArea.left - 1, renderArea.top - 1, renderArea.width() + 2, renderArea.height() + 2, 0x00000000);
-        renderArea = null;
-        gl.glDisable(GL10.GL_DEPTH_TEST);
     }
 
     /**
      * 描画開始時に必ず呼び出す必要がある。
      */
     public void begin() {
-        glManager.resetCamera();
-        glManager.resetWorldMatrix();
-        GL11 gl = glManager.getGL();
+        gpu.resetCamera();
+        gpu.resetWorldMatrix();
+        //! 描画先座標を設定
+        gpu.updateDrawArea(virtualDisplay);
+
+        GL11 gl = gpu.getGL();
 
         //! ライト無効化
         gl.glDisable(GL10.GL_LIGHTING);
@@ -135,7 +106,7 @@ public class SpriteManager extends DisposableResource {
 
         //! ポリゴン色の設定
         setColor(0xffffffff);
-        glManager.getGL().glColor4f(1, 1, 1, 1);
+        gl.glColor4f(1, 1, 1, 1);
 
         //! テクスチャ行列のリセット
         {
@@ -143,7 +114,6 @@ public class SpriteManager extends DisposableResource {
             gl.glLoadIdentity();
             gl.glMatrixMode(GL10.GL_MODELVIEW);
         }
-        setPolyDepth(DEPTH_DEFAULT);
     }
 
     /**
@@ -233,7 +203,7 @@ public class SpriteManager extends DisposableResource {
         final float displayWidth = virtualDisplay.getVirtualDisplayWidth();
         final float displayHeight = virtualDisplay.getVirtualDisplayHeight();
 
-        GL11 gl = glManager.getGL();
+        GL11 gl = gpu.getGL();
 
         setColor(colorRGBA);
 
@@ -247,9 +217,15 @@ public class SpriteManager extends DisposableResource {
             gl.glLoadIdentity();
             final float translateX = -1.0f + sizeX / 2.0f + sx;
             final float translateY = 1.0f - sizeY / 2.0f - sy;
-            gl.glTranslatef(translateX, translateY, polyDepth);
-            gl.glScalef(sizeX, sizeY, 1.0f);
-            gl.glRotatef(degree, 0, 0, 1);
+            gl.glTranslatef(translateX, translateY, 0);
+
+            // aspectによる歪みを抑制する
+            {
+                final float aspect = displayWidth / displayHeight;
+                gl.glScalef(1.0f / aspect, 1.0f, 1.0f);
+                gl.glRotatef(degree, 0, 0, 1);
+                gl.glScalef(sizeX * aspect, sizeY, 1.0f);
+            }
         }
 
         //! テクスチャ位置を行列で操作する
@@ -282,6 +258,19 @@ public class SpriteManager extends DisposableResource {
     }
 
     /**
+     * 四角形を描画する
+     * @param area
+     * @param colorRGBA
+     */
+    public void fillRect(Rect area, int colorRGBA) {
+        if (area == null) {
+            return;
+        }
+
+        fillRect(area.left, area.top, area.width(), area.height(), colorRGBA);
+    }
+
+    /**
      * 四角形を描画する。
      * 
      * @param x
@@ -293,7 +282,7 @@ public class SpriteManager extends DisposableResource {
         final float displayWidth = virtualDisplay.getVirtualDisplayWidth();
         final float displayHeight = virtualDisplay.getVirtualDisplayHeight();
 
-        GL11 gl = glManager.getGL();
+        GL11 gl = gpu.getGL();
 
         setColor(colorRGBA);
         setTexture(null);
@@ -308,7 +297,7 @@ public class SpriteManager extends DisposableResource {
             gl.glLoadIdentity();
             final float translateX = -1.0f + sizeX / 2.0f + sx;
             final float translateY = 1.0f - sizeY / 2.0f - sy;
-            gl.glTranslatef(translateX, translateY, polyDepth);
+            gl.glTranslatef(translateX, translateY, 0);
             gl.glScalef(sizeX, sizeY, 1.0f);
         }
 
@@ -324,7 +313,7 @@ public class SpriteManager extends DisposableResource {
     void setColor(int colorRGBA) {
         //! 描画色指定
         if (contextColor != colorRGBA) {
-            glManager.getGL().glColor4x(((colorRGBA >> 24) & 0xff) * 0x10000 / 255,
+            gpu.getGL().glColor4x(((colorRGBA >> 24) & 0xff) * 0x10000 / 255,
                     ((colorRGBA >> 16) & 0xff) * 0x10000 / 255, ((colorRGBA >> 8) & 0xff) * 0x10000 / 255,
                     ((colorRGBA & 0xff)) * 0x10000 / 255);
             contextColor = colorRGBA;
@@ -371,7 +360,7 @@ public class SpriteManager extends DisposableResource {
      * 描画終了時に必ず呼び出す必要がある。
      */
     public void end() {
-        final GL11 gl = getGlManager().getGL();
+        final GL11 gl = gpu.getGL();
 
         //! 描画用四角形の廃棄
         quadPolygon.unbind();

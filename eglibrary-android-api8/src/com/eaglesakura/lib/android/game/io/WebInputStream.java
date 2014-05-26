@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.UUID;
 
+import com.eaglesakura.lib.android.game.util.EncodeUtil;
 import com.eaglesakura.lib.android.game.util.GameUtil;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
@@ -136,7 +137,7 @@ public class WebInputStream extends InputStream {
             throws IOException {
 
         //! 一時的にキャッシュに貯めておく
-        final File cache = new File(local.getParentFile(), "." + GameUtil.genMD5(local.getAbsolutePath().getBytes())
+        final File cache = new File(local.getParentFile(), "." + EncodeUtil.genMD5(local.getAbsolutePath().getBytes())
                 + UUID.randomUUID().hashCode() + ".cache");
 
         int retryNum = 0;

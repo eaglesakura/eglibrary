@@ -7,3 +7,11 @@ cd eglibrary-android-api8-splib/
 ./build
 cd ../
 
+cd eglibrary-android-dropbox/
+./build
+cd ../
+
+cd eglibrary-google/
+./build
+cd ../
+

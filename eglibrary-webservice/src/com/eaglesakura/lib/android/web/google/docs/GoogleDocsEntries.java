@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +22,7 @@ import com.google.api.client.googleapis.GoogleTransport;
 import com.google.api.client.googleapis.GoogleUrl;
 import com.google.api.client.googleapis.auth.clientlogin.ClientLogin;
 import com.google.api.client.googleapis.auth.clientlogin.ClientLogin.Response;
+import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
@@ -104,7 +107,7 @@ public class GoogleDocsEntries {
      */
     public void getNextPage() throws DocsAPIException {
         if (hasNextResult()) {
-            accessURL(nextURL);
+            accessURL(nextURL, "GET");
         }
     }
 
@@ -114,7 +117,7 @@ public class GoogleDocsEntries {
      * @return
      * @throws IOException
      */
-    public byte[] getResult(String _url) throws DocsAPIException {
+    public byte[] getResult(String _url, String method) throws DocsAPIException {
         HttpTransport transport = GoogleTransport.create();
         GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
         headers.setApplicationName(applicationName);
@@ -132,16 +135,26 @@ public class GoogleDocsEntries {
         transport.addParser(parser);
 
         {
-            HttpRequest request = transport.buildGetRequest();
+            HttpRequest request = null;
+
+            method = method.toUpperCase();
+            if ("DELETE".equals(method)) {
+                request = transport.buildDeleteRequest();
+                request.headers.put("If-Match", "*");
+            } else {
+                request = transport.buildGetRequest();
+            }
             final String url = _url;
             LogUtil.log("search url : " + url);
-            request.url = new GoogleUrl(url);
+            //            request.url = new GoogleUrl(url);
+            request.url = new GenericUrl(url);
             HttpResponse responce = null;
             try {
                 responce = request.execute();
                 byte[] buffer = GameUtil.toByteArray(responce.getContent());
                 return buffer;
             } catch (IOException ioe) {
+                LogUtil.log(ioe);
                 throw new DocsAPIException(Type.APIResponseError, ioe);
             } finally {
                 try {
@@ -159,7 +172,7 @@ public class GoogleDocsEntries {
      * @param keyword 検索ワード。nullですべて取得。
      * @throws IOException
      */
-    public void accessURL(String _url) throws DocsAPIException {
+    public void accessURL(String _url, String method) throws DocsAPIException {
         HttpTransport transport = GoogleTransport.create();
         GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
         headers.setApplicationName(applicationName);
@@ -177,7 +190,17 @@ public class GoogleDocsEntries {
         transport.addParser(parser);
 
         try {
-            HttpRequest request = transport.buildGetRequest();
+            HttpRequest request = null;
+
+            method = method.toUpperCase();
+            if ("DELETE".equals(method)) {
+                request = transport.buildDeleteRequest();
+                request.headers.put("If-Match", "*");
+
+            } else {
+                request = transport.buildGetRequest();
+            }
+
             if (_url.startsWith("?")) {
                 _url = "https://docs.google.com/feeds/default/private/full" + _url;
             }
@@ -223,9 +246,11 @@ public class GoogleDocsEntries {
                 case 403:
                     throw new DocsAPIException(Type.AuthError, hre);
             }
+            LogUtil.log(hre);
             throw new DocsAPIException(Type.APIResponseError, hre);
-        } catch (IOException ioe) {
-            throw new DocsAPIException(Type.APIResponseError, ioe);
+        } catch (Exception e) {
+            LogUtil.log(e);
+            throw new DocsAPIException(DocsAPIException.toExceptionType(e), e);
         }
     }
 
@@ -251,8 +276,9 @@ public class GoogleDocsEntries {
             }
             LogUtil.log("search url : " + url);
 
-            accessURL(url);
+            accessURL(url, "GET");
         } catch (UnsupportedEncodingException uee) {
+            LogUtil.log(uee);
             throw new DocsAPIException(Type.Unknown, uee);
         }
     }
@@ -266,6 +292,7 @@ public class GoogleDocsEntries {
     public void searchFullPage(String keyword, boolean isQuery, boolean sort) throws DocsAPIException {
         search(keyword, isQuery);
         while (hasNextResult()) {
+            GameUtil.sleep(1000 + (int) (Math.random() * 1000));
             getNextPage();
         }
 
@@ -281,7 +308,7 @@ public class GoogleDocsEntries {
     public Directory getDocsDirectory() throws DocsAPIException {
 
         //! まずはデータを取得する。
-        accessURL("https://docs.google.com/feeds/default/private/full/-/folder");
+        accessURL("https://docs.google.com/feeds/default/private/full/-/folder", "GET");
         while (hasNextResult()) {
             getNextPage();
         }
@@ -402,6 +429,11 @@ public class GoogleDocsEntries {
          */
         Directory directory = null;
 
+        /**
+         * 更新日
+         */
+        Date updated = null;
+
         public Entry(EntryItem item) {
             title = item.title;
             if (item.content != null) {
@@ -425,6 +457,17 @@ public class GoogleDocsEntries {
             md5 = item.md5;
             id = item.id;
             resourceId = item.resourceId;
+
+            // 更新日をパース
+            {
+                try {
+                    SimpleDateFormat simpleDataFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SS");
+                    updated = simpleDataFormat.parse(item.updated);
+                } catch (Exception e) {
+                    updated = null;
+                }
+
+            }
         }
 
         public String getId() {
@@ -433,6 +476,14 @@ public class GoogleDocsEntries {
 
         public String getResourceId() {
             return resourceId;
+        }
+
+        /**
+         * 更新日を取得する
+         * @return
+         */
+        public Date getUpdated() {
+            return updated;
         }
 
         /**
@@ -490,6 +541,14 @@ public class GoogleDocsEntries {
 
         public Directory getDirectory() {
             return directory;
+        }
+
+        /**
+         * このエントリを削除する。
+         */
+        public void delete() throws DocsAPIException {
+            String url = "https://docs.google.com/feeds/default/private/full/" + URLEncoder.encode(getResourceId());
+            getResult(url, "DELETE");
         }
     }
 
@@ -551,6 +610,9 @@ public class GoogleDocsEntries {
 
         @Key("gd:resourceId")
         public String resourceId;
+
+        @Key("gd:revisionId")
+        public String revisionId;
     }
 
     /**
@@ -558,7 +620,7 @@ public class GoogleDocsEntries {
      * @author SAKURA
      *
      */
-    public static class Directory {
+    public class Directory {
         /**
          * フォルダ名
          */

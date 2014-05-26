@@ -3,6 +3,7 @@ RELEASE_NAME=eglibrary-android-api8-splib.jar
 RELEASE_DIR=release
 LICENSE_FILENAME=LICENSE_$RELEASE_NAME
 
+android update lib-project -p .
 ant clean
 ant release
 if [ $? -ne 0 ]; then

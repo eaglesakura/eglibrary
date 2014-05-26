@@ -19,8 +19,9 @@ import android.widget.FrameLayout;
 
 import com.eaglesakura.lib.android.game.display.VirtualDisplay;
 import com.eaglesakura.lib.android.game.graphics.gl11.BitmapTextureImage;
-import com.eaglesakura.lib.android.game.graphics.gl11.OpenGLManager;
+import com.eaglesakura.lib.android.game.graphics.gl11.GPU;
 import com.eaglesakura.lib.android.game.graphics.gl11.TextureImageBase;
+import com.eaglesakura.lib.android.game.graphics.gl11.hw.EGLManager;
 import com.eaglesakura.lib.android.game.input.MultiTouchInput;
 import com.eaglesakura.lib.android.game.thread.AsyncHandler;
 import com.eaglesakura.lib.android.game.thread.ThreadSyncRunnerBase;
@@ -33,6 +34,7 @@ import com.eaglesakura.lib.android.view.OpenGLView;
 /**
  * ゲームループとそれに付随するViewを管理する。 ゲームループはUIスレッドとは別スレッドを利用していることに注意すること。
  */
+@Deprecated
 public abstract class GameLoopManagerBase {
 
     /**
@@ -65,6 +67,11 @@ public abstract class GameLoopManagerBase {
      * OpenGL用
      */
     OpenGLView glView = null;
+
+    /**
+     * EGL管理クラス
+     */
+    EGLManager egl = null;
 
     /**
      * Canvas用
@@ -212,7 +219,7 @@ public abstract class GameLoopManagerBase {
     /**
      * ゲームループ用ハンドラ。
      */
-    static AsyncHandler gameHandle = AsyncHandler.createInstance();
+    static AsyncHandler gameHandle = AsyncHandler.createInstance("gameloop");
 
     /**
      * 
@@ -285,12 +292,13 @@ public abstract class GameLoopManagerBase {
                                 onGamePause();
                                 onGameFinalize();
                                 System.gc();
-                                getGLManager().dispose();
+                                //                                getGLManager().dispose();
+                                egl.dispose();
                                 lifeCycle = LifeCycle.Finished;
                                 //                                gameHandle.dispose();
                             } else {
                                 onGamePause();
-                                getGLManager().onPause();
+                                //                                getGLManager().onPause();
                                 lifeCycle = LifeCycle.Paused;
                             }
                             return null;
@@ -311,15 +319,13 @@ public abstract class GameLoopManagerBase {
                         return;
                     }
                     LogUtil.log(String.format("Surface Size : %d x %d", width, height));
-                    final OpenGLManager glManager = getGLManager();
-                    if (glManager.isInitialized()) {
+                    if (egl.isInitialized()) {
                         //! GLとゲームの復帰を行う
                         (new ThreadSyncRunnerBase<Void>(gameHandle) {
                             @Override
                             public Void onOtherThreadRun() {
                                 if (getGLView().isDestroyed()) {
                                     LogUtil.log("ResumeOpenGL");
-                                    getGLManager().onResume();
                                 }
                                 LogUtil.log("GameResume");
                                 onGameResume();
@@ -330,16 +336,6 @@ public abstract class GameLoopManagerBase {
                             }
                         }).run();
                     } else {
-                        //! GL初期化とゲーム開始を行う
-                        (new ThreadSyncRunnerBase<Void>(gameHandle) {
-                            @Override
-                            public Void onOtherThreadRun() {
-                                getGLManager().autoConfigSpec(glView.getPixelFormat(), true);
-                                getGLManager().initGL(gameHandle);
-                                return null;
-                            }
-                        }).run();
-
                         gameHandle.post(new Runnable() {
                             @Override
                             public void run() {
@@ -373,7 +369,7 @@ public abstract class GameLoopManagerBase {
      * 
      * @return
      */
-    public OpenGLManager getGLManager() {
+    public GPU getGLManager() {
         return glView.getGLManager();
     }
 
@@ -505,7 +501,7 @@ public abstract class GameLoopManagerBase {
      */
     public TextureImageBase loadImageDrawable(int drawableId) {
         Bitmap image = BitmapFactory.decodeResource(getContext().getResources(), drawableId);
-        TextureImageBase result = new BitmapTextureImage(image, getGLManager());
+        TextureImageBase result = new BitmapTextureImage(image, egl.getVRAM());
         result.setTag("drawable-" + Integer.toHexString(drawableId));
         image.recycle();
         return result;
@@ -521,7 +517,7 @@ public abstract class GameLoopManagerBase {
         InputStream is = getContext().getResources().openRawResource(rawId);
         try {
             Bitmap image = BitmapFactory.decodeStream(is);
-            TextureImageBase result = new BitmapTextureImage(image, getGLManager());
+            TextureImageBase result = new BitmapTextureImage(image, egl.getVRAM());
             result.setTag("raw-" + Integer.toHexString(rawId));
             image.recycle();
             return result;
@@ -541,7 +537,7 @@ public abstract class GameLoopManagerBase {
 
         try {
             Bitmap image = BitmapFactory.decodeStream(is);
-            TextureImageBase result = new BitmapTextureImage(image, getGLManager());
+            TextureImageBase result = new BitmapTextureImage(image, egl.getVRAM());
             result.setTag("assets-" + assetsPath);
             image.recycle();
             return result;
@@ -571,7 +567,7 @@ public abstract class GameLoopManagerBase {
         Canvas canvas = new Canvas(bitmap);
         canvas.drawText(text, 0, 0, paint);
 
-        TextureImageBase result = new BitmapTextureImage(bitmap, getGLManager());
+        TextureImageBase result = new BitmapTextureImage(bitmap, egl.getVRAM());
         result.setTag("font-" + text + " :: " + fontSize);
         bitmap.recycle();
         return result;

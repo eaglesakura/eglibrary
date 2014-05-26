@@ -4,11 +4,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.security.MessageDigest;
 
-import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.os.Looper;
+
+import com.eaglesakura.lib.android.game.math.Vector2;
 
 public class GameUtil {
 
@@ -25,6 +25,29 @@ public class GameUtil {
         } catch (Exception e) {
             LogUtil.log(e);
         }
+    }
+
+    /**
+     * centerから見たpositionが何度になるか360度系で返す。
+     * １２時の方向が0度で、反時計回りに角度を進ませる。
+     * @param center
+     * @param position
+     * @return
+     */
+    public static float getAngleDegree2D(Vector2 center, Vector2 position) {
+        float result = 0;
+
+        Vector2 temp = new Vector2(position.x - center.x, center.y - position.y);
+        if (temp.length() == 0) {
+            return 0;
+        }
+        temp.normalize();
+
+        result = (float) (Math.atan2(temp.y, temp.x) / Math.PI);
+        result /= 2;
+        result -= 0.25f;
+
+        return normalizeDegree(result * 360.0f);
     }
 
     /**
@@ -117,6 +140,28 @@ public class GameUtil {
 
         input.close();
         output.close();
+    }
+
+    /**
+     * inputのバッファを全てoutputへコピーする。 
+     * close=trueの場合、完了した時点でストリームはcloseされる。
+     * 
+     * @param input
+     * @param output
+     * @throws IOException
+     */
+    public static void copyTo(InputStream input, OutputStream output, boolean close) throws IOException {
+        byte[] buffer = new byte[1024 * 128];
+        int length = 0;
+
+        while ((length = input.read(buffer)) > 0) {
+            output.write(buffer, 0, length);
+        }
+
+        if (close) {
+            input.close();
+            output.close();
+        }
     }
 
     /**
@@ -227,60 +272,6 @@ public class GameUtil {
     }
 
     /**
-     * byte配列からMD5を求める
-     * 
-     * @param buffer
-     * @return
-     */
-    public static String genMD5(byte[] buffer) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(buffer);
-            byte[] digest = md.digest();
-
-            StringBuffer sBuffer = new StringBuffer(digest.length * 2);
-            for (byte b : digest) {
-                String s = Integer.toHexString(((int) b) & 0xff);
-
-                if (s.length() == 1) {
-                    sBuffer.append('0');
-                }
-                sBuffer.append(s);
-            }
-            return sBuffer.toString();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * byte配列からMD5を求める
-     * 
-     * @param buffer
-     * @return
-     */
-    public static String genSHA1(byte[] buffer) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-1");
-            md.update(buffer);
-            byte[] digest = md.digest();
-
-            StringBuffer sBuffer = new StringBuffer(digest.length * 2);
-            for (byte b : digest) {
-                String s = Integer.toHexString(((int) b) & 0xff);
-
-                if (s.length() == 1) {
-                    sBuffer.append('0');
-                }
-                sBuffer.append(s);
-            }
-            return sBuffer.toString();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
      * 全角英数を半角英数に変換する
      * @param s
      * @return
@@ -365,6 +356,47 @@ public class GameUtil {
     }
 
     /**
+     * 
+     * @param str
+     * @return
+     */
+    public static String macStringToWinString(String str) {
+        final int indexOffsetDakuten = ('が' - 'か');
+        final int indexOffsetHandakuten = ('ぱ' - 'は');
+        final int dakuten = '゙';
+        final int handakuten = '゚';
+
+        StringBuffer sb = new StringBuffer(str.length());
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (i < (str.length() - 1)) {
+                char cNext = str.charAt(i + 1);
+                if (cNext == dakuten) {
+                    // 特殊な濁点補正
+                    switch (c) {
+                        case 'う':
+                            c = 'ゔ';
+                            break;
+                        case 'ウ':
+                            c = 'ヴ';
+                            break;
+                        default:
+                            c += indexOffsetDakuten;
+                            break;
+                    }
+                } else if (cNext == handakuten) {
+                    c += indexOffsetHandakuten;
+                }
+            }
+
+            if (c != dakuten && c != handakuten) {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
      * 日本語を意識してJavaの辞書順に並び替える
      * @param a
      * @param b
@@ -440,38 +472,24 @@ public class GameUtil {
     }
 
     /**
-     * 画像からSHA1指紋を作成する。
-     * @param bitmap
+     * 文字列がnullか空文字だったらtrueを返す。
+     * @param str
      * @return
      */
-    public static String genSHA1(Bitmap bitmap) {
-        final int[] pixels = new int[bitmap.getWidth()];
-        final byte[] src = new byte[pixels.length * 4];
-        final int height = bitmap.getHeight();
-
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-1");
-
-            for (int i = 0; i < height; ++i) {
-                bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, i, bitmap.getWidth(), 1);
-                md.update(GameUtil.toByteArray(pixels, src));
-
-            }
-
-            byte[] digest = md.digest();
-
-            StringBuffer sBuffer = new StringBuffer(digest.length * 2);
-            for (byte b : digest) {
-                String s = Integer.toHexString(((int) b) & 0xff);
-
-                if (s.length() == 1) {
-                    sBuffer.append('0');
-                }
-                sBuffer.append(s);
-            }
-            return sBuffer.toString();
-        } catch (Exception e) {
-            return null;
+    public static boolean isEmpty(String str) {
+        if (str == null) {
+            return true;
         }
+
+        return str.length() == 0;
+    }
+
+    /**
+     * strがnullかemptyだったらnullを返す。
+     * @param str
+     * @return
+     */
+    public static String emptyToNull(String str) {
+        return isEmpty(str) ? null : str;
     }
 }

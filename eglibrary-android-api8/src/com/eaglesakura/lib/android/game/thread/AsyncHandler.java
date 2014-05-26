@@ -49,7 +49,7 @@ public class AsyncHandler extends Handler {
      * ハンドラを生成する。
      * @return
      */
-    public static AsyncHandler createInstance() {
+    public static AsyncHandler createInstance(String name) {
         final Holder<AsyncHandler> holder = new Holder<AsyncHandler>();
         Thread thread = new Thread() {
             @Override
@@ -59,6 +59,7 @@ public class AsyncHandler extends Handler {
                 Looper.loop();
             }
         };
+        thread.setName(name);
         thread.start();
         return holder.getWithWait();
     }
