@@ -14,8 +14,23 @@ public class BluetoothServer extends BluetoothP2PConnector {
 
     final Context context;
 
+    BluetoothSocket socket;
+
+    /**
+     * サーバーのリクエスト待ちは5分に指定する
+     */
+    long serverRequestTimeoutMs = 1000 * 60 * 5;
+
     public BluetoothServer(Context context) {
         this.context = context;
+    }
+
+    /**
+     * サーバーのリクエスト待ち時間を指定する
+     * @param serverRequestTimeout
+     */
+    public void setServerRequestTimeoutMs(long serverRequestTimeout) {
+        this.serverRequestTimeoutMs = serverRequestTimeout;
     }
 
     /**
@@ -27,11 +42,16 @@ public class BluetoothServer extends BluetoothP2PConnector {
             BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
             BluetoothServerSocket serverSocket = adapter.listenUsingInsecureRfcommWithServiceRecord(context.getPackageName(), PROTOCOL_UUID);
 
-            BluetoothSocket socket = serverSocket.accept((int) getConnectorTimeoutMs() * 10);
+            socket = serverSocket.accept((int) serverRequestTimeoutMs);
 
             // 1デバイスしか受け付けないため、
             // サーバーソケットは閉じる
             serverSocket.close();
+
+            if (isRequestDisconnect()) {
+                socket.close();
+                return;
+            }
 
             startInputThread(socket);
             startOutputThread(socket);
@@ -42,6 +62,21 @@ public class BluetoothServer extends BluetoothP2PConnector {
                     listener.onConnectorStateChanged(BluetoothServer.this, null, ConnectorState.Failed);
                 }
             }
+        }
+    }
+
+    /**
+     * 切断を行う
+     */
+    @Override
+    protected void requestDisconnecting() {
+        if (socket != null) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            socket = null;
         }
     }
 }

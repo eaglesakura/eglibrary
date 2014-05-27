@@ -9,6 +9,8 @@ public class BluetoothClient extends BluetoothP2PConnector {
 
     final BluetoothDevice device;
 
+    BluetoothSocket socket;
+
     public BluetoothClient(BluetoothDevice device) {
         this.device = device;
     }
@@ -17,7 +19,7 @@ public class BluetoothClient extends BluetoothP2PConnector {
     protected void requestConnecting() {
         try {
 
-            BluetoothSocket socket = device.createRfcommSocketToServiceRecord(PROTOCOL_UUID);
+            socket = device.createRfcommSocketToServiceRecord(PROTOCOL_UUID);
             socket.connect();
 
             startInputThread(socket);
@@ -32,6 +34,18 @@ public class BluetoothClient extends BluetoothP2PConnector {
             }
         }
 
+    }
+
+    @Override
+    protected void requestDisconnecting() {
+        if (socket != null) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            socket = null;
+        }
     }
 
 }

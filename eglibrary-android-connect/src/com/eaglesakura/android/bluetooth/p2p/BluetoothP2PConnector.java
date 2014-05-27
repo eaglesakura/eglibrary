@@ -132,6 +132,10 @@ public abstract class BluetoothP2PConnector {
         return connectorTimeoutMs;
     }
 
+    public boolean isRequestDisconnect() {
+        return requestDisconnect;
+    }
+
     /**
      * リスナを追加する
      * @param listener
@@ -190,6 +194,15 @@ public abstract class BluetoothP2PConnector {
                     }
                     outputThread = null;
                 }
+
+                requestDisconnecting();
+
+                synchronized (lock) {
+                    for (P2PConnectorListener listener : listeners) {
+                        listener.onConnectorStateChanged(BluetoothP2PConnector.this, ConnectorType.Output, ConnectorState.Disconnected);
+                        listener.onConnectorStateChanged(BluetoothP2PConnector.this, ConnectorType.Input, ConnectorState.Disconnected);
+                    }
+                }
             }
         }.start();
     }
@@ -198,6 +211,11 @@ public abstract class BluetoothP2PConnector {
      * 接続をリクエストする
      */
     protected abstract void requestConnecting();
+
+    /**
+     * 切断をリクエストする
+     */
+    protected abstract void requestDisconnecting();
 
     /**
      * 受信処理用スレッドを開始する
@@ -299,8 +317,7 @@ public abstract class BluetoothP2PConnector {
                             DataPackage data;
 
                             int numWriteBytes = 0;
-                            // リクエストをすべて載せる
-
+                            // 適当なbyte数ごとに送信する
                             while ((data = popSendData()) != null && numWriteBytes < (512 * 1024)) {
                                 byte[] buffer = data.getPackedBuffer();
                                 stream.write(buffer);
