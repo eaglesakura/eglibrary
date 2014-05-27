@@ -7,8 +7,6 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
-import android.content.Context;
-import android.content.pm.PackageManager;
 
 @SuppressLint("NewApi")
 public class BluetoothLeUtil {
@@ -17,15 +15,6 @@ public class BluetoothLeUtil {
      * config
      */
     public static final UUID BLE_UUID_CLIENT_CHARACTERISTIC_CONFIG = createUUIDFromAssignedNumber("0x2902");
-
-    /**
-     * BluetoothLEに対応しているデバイスの場合trueを返す
-     * @param context
-     * @return
-     */
-    public static boolean isSupportedBluetoothLE(Context context) {
-        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
-    }
 
     /**
      * developer.bluetooth.orgに示されるAssigned NumberからUUIDを生成する

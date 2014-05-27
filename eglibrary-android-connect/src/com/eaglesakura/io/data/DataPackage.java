@@ -10,6 +10,8 @@ import com.eaglesakura.util.LogUtil;
 
 /**
  * Bluetooth等を介して少量のデータ（インメモリに収まる程度）をやりとりするクラス
+ * bluetooth/Wi-Fi-Direct/socket通信等で使用する
+ * 受け取ったデータが壊れている場合は適宜dropする
  */
 public class DataPackage {
 
@@ -47,7 +49,7 @@ public class DataPackage {
      * @param userData
      * @return
      */
-    public static byte[] encode(byte[] userData) {
+    public static byte[] pack(byte[] userData) {
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             DataOutputStream dos = new DataOutputStream(os);
@@ -78,7 +80,7 @@ public class DataPackage {
      * @return
      * @throws IOException
      */
-    public static byte[] decode(InputStream stream, long streamTimeoutMs) throws IOException {
+    public static byte[] unpack(InputStream stream, long streamTimeoutMs) throws IOException {
         DataInputStream dis = new DataInputStream(stream);
         dis.setDataWaitTimeMs(streamTimeoutMs);
         {

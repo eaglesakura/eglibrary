@@ -8,6 +8,15 @@ import android.os.Build;
 public class BluetoothUtil {
 
     /**
+     * BluetoothLEをサポートしている場合true
+     * API18以上ならtrue
+     * @return
+     */
+    public static boolean isSupportedBluetoothLeAPILevel() {
+        return Build.VERSION.SDK_INT >= 18;
+    }
+
+    /**
      * BluetoothLEに対応しているデバイスの場合trueを返す
      * @param context
      * @return
