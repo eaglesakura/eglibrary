@@ -3,6 +3,8 @@ package com.eaglesakura.io.data;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
+import java.util.zip.DataFormatException;
 
 import com.eaglesakura.io.DataInputStream;
 import com.eaglesakura.io.DataOutputStream;
@@ -14,6 +16,52 @@ import com.eaglesakura.util.LogUtil;
  * 受け取ったデータが壊れている場合は適宜dropする
  */
 public class DataPackage {
+
+    String uniqueId;
+
+    byte[] packedBuffer;
+
+    /**
+     * 
+     * @param uniqueId
+     * @param buffer
+     */
+    public DataPackage(String uniqueId, byte[] buffer) {
+        this.uniqueId = uniqueId;
+        this.packedBuffer = pack(buffer);
+    }
+
+    /**
+     * パッケージを生成する
+     * @param buffer
+     */
+    public DataPackage(byte[] buffer) {
+        this.uniqueId = UUID.randomUUID().toString();
+        this.packedBuffer = pack(buffer);
+    }
+
+    public String getUniqueId() {
+        return uniqueId;
+    }
+    
+    /**
+     * パッキングされた送信用データを取得する
+     * このbufferにUniqueIDのデータは含まれない
+     * @return
+     */
+    public byte[] getPackedBuffer() {
+        return packedBuffer;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof DataPackage) {
+            DataPackage other = (DataPackage) o;
+            return this.uniqueId.equals(other.uniqueId);
+        } else {
+            return false;
+        }
+    }
 
     static final byte[] MAGIC = new byte[] {
             3, 1, 0, 3
@@ -80,14 +128,14 @@ public class DataPackage {
      * @return
      * @throws IOException
      */
-    public static byte[] unpack(InputStream stream, long streamTimeoutMs) throws IOException {
+    public static byte[] unpack(InputStream stream, long streamTimeoutMs) throws IOException, DataFormatException {
         DataInputStream dis = new DataInputStream(stream);
         dis.setDataWaitTimeMs(streamTimeoutMs);
         {
             byte[] magic = dis.readBuffer(MAGIC.length);
             for (int i = 0; i < magic.length; ++i) {
                 if (magic[i] != MAGIC[i]) {
-                    throw new IOException("Data Format Error");
+                    throw new DataFormatException("Data Format Error");
                 }
             }
         }
@@ -98,7 +146,7 @@ public class DataPackage {
 
             for (int i = 0; i < verify.length; ++i) {
                 if (verify[i] != fileVerify[i]) {
-                    throw new IOException("Verify Error");
+                    throw new DataFormatException("Verify Error");
                 }
             }
 
