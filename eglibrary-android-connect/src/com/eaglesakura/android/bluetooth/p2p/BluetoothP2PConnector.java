@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.zip.DataFormatException;
 
 import android.bluetooth.BluetoothSocket;
 
 import com.eaglesakura.android.bluetooth.BluetoothLeUtil;
 import com.eaglesakura.io.data.DataPackage;
+import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 
 /**
@@ -161,7 +163,12 @@ public abstract class BluetoothP2PConnector {
      * 同期的には止まらず、コールバックに {@link ConnectorState#Disconnected} が来るのを待つ必要がある
      */
     public final void stop() {
-        requestDisconnect = true;
+        synchronized (lock) {
+            if (requestDisconnect) {
+                return;
+            }
+            requestDisconnect = true;
+        }
 
         new Thread() {
             @Override
@@ -222,10 +229,17 @@ public abstract class BluetoothP2PConnector {
 
                         while (!requestDisconnect) {
                             // データパックを受信する
-                            byte[] buffer = DataPackage.unpack(stream, connectorTimeoutMs);
-                            synchronized (lock) {
-                                for (P2PConnectorListener listener : listeners) {
-                                    listener.onDataReceived(BluetoothP2PConnector.this, buffer);
+                            if (stream.available() > 0) {
+                                try {
+                                    byte[] buffer = DataPackage.unpack(stream, connectorTimeoutMs);
+                                    synchronized (lock) {
+                                        for (P2PConnectorListener listener : listeners) {
+                                            listener.onDataReceived(BluetoothP2PConnector.this, buffer);
+                                        }
+                                    }
+                                } catch (DataFormatException e) {
+                                    LogUtil.d("drop packets");
+                                    e.printStackTrace();
                                 }
                             }
                             // sleep
@@ -244,18 +258,7 @@ public abstract class BluetoothP2PConnector {
                         }
                     }
 
-                    // ストリームを閉じる
-                    try {
-                        stream.close();
-                    } catch (Exception e) {
-                    }
-
-                    synchronized (lock) {
-                        for (P2PConnectorListener listener : listeners) {
-                            listener.onConnectorStateChanged(BluetoothP2PConnector.this, ConnectorType.Input, ConnectorState.Disconnected);
-                        }
-                    }
-
+                    BluetoothP2PConnector.this.stop();
                 }
             };
             inputThread.start();
@@ -293,15 +296,26 @@ public abstract class BluetoothP2PConnector {
 
                         while (!requestDisconnect) {
                             // データパックを送信する
-                            DataPackage data = popSendData();
-                            stream.write(data.getPackedBuffer());
-                            stream.flush();
+                            DataPackage data;
 
-                            // 送信通知を行う
-                            synchronized (lock) {
-                                for (P2PConnectorListener listener : listeners) {
-                                    listener.onDataSended(BluetoothP2PConnector.this, data);
+                            int numWriteBytes = 0;
+                            // リクエストをすべて載せる
+
+                            while ((data = popSendData()) != null && numWriteBytes < (512 * 1024)) {
+                                byte[] buffer = data.getPackedBuffer();
+                                stream.write(buffer);
+                                numWriteBytes += buffer.length;
+
+                                // 送信通知を行う
+                                synchronized (lock) {
+                                    for (P2PConnectorListener listener : listeners) {
+                                        listener.onDataSended(BluetoothP2PConnector.this, data);
+                                    }
                                 }
+                            }
+                            if (numWriteBytes > 0) {
+                                // 必要であればflushする
+                                stream.flush();
                             }
 
                             // sleep
@@ -320,18 +334,7 @@ public abstract class BluetoothP2PConnector {
                         }
                     }
 
-                    // ストリームを閉じる
-                    try {
-                        stream.close();
-                    } catch (Exception e) {
-                    }
-
-                    synchronized (lock) {
-                        for (P2PConnectorListener listener : listeners) {
-                            listener.onConnectorStateChanged(BluetoothP2PConnector.this, ConnectorType.Output, ConnectorState.Disconnected);
-                        }
-                    }
-
+                    BluetoothP2PConnector.this.stop();
                 }
             };
             outputThread.start();
@@ -344,6 +347,9 @@ public abstract class BluetoothP2PConnector {
      */
     public DataPackage popSendData() {
         synchronized (sendLock) {
+            if (sendDataQueue.isEmpty()) {
+                return null;
+            }
             return sendDataQueue.remove(0);
         }
     }

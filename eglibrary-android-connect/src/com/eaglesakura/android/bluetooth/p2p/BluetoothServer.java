@@ -27,7 +27,7 @@ public class BluetoothServer extends BluetoothP2PConnector {
             BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
             BluetoothServerSocket serverSocket = adapter.listenUsingInsecureRfcommWithServiceRecord(context.getPackageName(), PROTOCOL_UUID);
 
-            BluetoothSocket socket = serverSocket.accept((int) getConnectorTimeoutMs());
+            BluetoothSocket socket = serverSocket.accept((int) getConnectorTimeoutMs() * 10);
 
             // 1デバイスしか受け付けないため、
             // サーバーソケットは閉じる
@@ -36,6 +36,7 @@ public class BluetoothServer extends BluetoothP2PConnector {
             startInputThread(socket);
             startOutputThread(socket);
         } catch (IOException e) {
+            e.printStackTrace();
             synchronized (lock) {
                 for (P2PConnectorListener listener : listeners) {
                     listener.onConnectorStateChanged(BluetoothServer.this, null, ConnectorState.Failed);

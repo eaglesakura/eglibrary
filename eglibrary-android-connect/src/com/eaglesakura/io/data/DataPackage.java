@@ -43,7 +43,7 @@ public class DataPackage {
     public String getUniqueId() {
         return uniqueId;
     }
-    
+
     /**
      * パッキングされた送信用データを取得する
      * このbufferにUniqueIDのデータは含まれない
@@ -129,8 +129,9 @@ public class DataPackage {
      * @throws IOException
      */
     public static byte[] unpack(InputStream stream, long streamTimeoutMs) throws IOException, DataFormatException {
-        DataInputStream dis = new DataInputStream(stream);
+        DataInputStream dis = new DataInputStream(stream, false);
         dis.setDataWaitTimeMs(streamTimeoutMs);
+
         {
             byte[] magic = dis.readBuffer(MAGIC.length);
             for (int i = 0; i < magic.length; ++i) {
@@ -139,6 +140,7 @@ public class DataPackage {
                 }
             }
         }
+
         {
             byte[] file = dis.readFile();
             byte[] fileVerify = createVerifyCode(file, 0, file.length);
@@ -146,6 +148,8 @@ public class DataPackage {
 
             for (int i = 0; i < verify.length; ++i) {
                 if (verify[i] != fileVerify[i]) {
+                    LogUtil.log("verify :: " + fileVerify[0] + "/" + fileVerify[1]);
+                    LogUtil.log("readed verify :: " + verify[0] + "/" + verify[1]);
                     throw new DataFormatException("Verify Error");
                 }
             }

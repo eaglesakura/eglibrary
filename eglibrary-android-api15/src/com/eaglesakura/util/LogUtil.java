@@ -10,7 +10,7 @@ import android.util.Log;
  */
 public class LogUtil {
     static String tag = "eglib";
-    static boolean output = false;
+    static boolean output = true;
     static Logger logger = null;
 
     /**

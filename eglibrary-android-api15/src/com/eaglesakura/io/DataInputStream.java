@@ -30,13 +30,19 @@ public final class DataInputStream extends DisposableResource {
     private long dataWaitTimeMs = 0;
 
     /**
+     * InputStreamをこのストリーム内で解放する場合true
+     */
+    private boolean readerClose = true;
+
+    /**
      *
      * 
      * @param is
      * 
      */
-    public DataInputStream(InputStream is) {
+    public DataInputStream(InputStream is, boolean streamClsoe) {
         reader = is;
+        this.readerClose = streamClsoe;
     }
 
     /**
@@ -326,12 +332,14 @@ public final class DataInputStream extends DisposableResource {
         final int requestLength = length;
         while (length > 0) {
             // 読み取るデータがまだある
+            final int available = reader.available();
 
             // データの到達まで待つ
             {
                 final long SLEEP_TIME = 99;
                 long waitTime = dataWaitTimeMs;
-                while (reader.available() <= 0 && waitTime > 0) {
+                while (available <= 0 && waitTime > 0) {
+                    LogUtil.log("sleep available");
                     // 読み取りがまだ完了していない
                     Util.sleep(SLEEP_TIME);
                     waitTime -= SLEEP_TIME;
@@ -344,8 +352,9 @@ public final class DataInputStream extends DisposableResource {
                 }
             }
 
+            int readLength = Math.min(available, length);
             // ポインタを読み進める
-            final int readed = reader.read(buf, index, length);
+            final int readed = reader.read(buf, index, readLength);
             index += readed;
             length -= readed;
         }
@@ -356,18 +365,17 @@ public final class DataInputStream extends DisposableResource {
     /**
      * 資源の解放を行う。<BR>
      * 内部管理する{@link #reader}のdispose()を行う。
-     *
-     * 
-     * 
      */
     public void dispose() {
-        if (reader != null) {
-            try {
-                reader.close();
-            } catch (Exception e) {
-                LogUtil.log(e);
+        if (readerClose) {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (Exception e) {
+                    LogUtil.log(e);
+                }
+                reader = null;
             }
-            reader = null;
         }
     }
 
