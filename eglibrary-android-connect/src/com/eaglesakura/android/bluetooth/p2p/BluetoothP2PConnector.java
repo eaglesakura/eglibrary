@@ -91,7 +91,7 @@ public abstract class BluetoothP2PConnector {
     /**
      * 送受信のタイムアウト時間
      */
-    private long connectorTimeoutMs = 1000 * 5;
+    private long connectorTimeoutMs = 1000 * 10;
 
     /**
      * ロックオブジェクト
@@ -247,7 +247,7 @@ public abstract class BluetoothP2PConnector {
 
                         while (!requestDisconnect) {
                             // データパックを受信する
-                            if (stream.available() > 0) {
+                            while (stream.available() > 0) {
                                 try {
                                     byte[] buffer = DataPackage.unpack(stream, connectorTimeoutMs);
                                     synchronized (lock) {

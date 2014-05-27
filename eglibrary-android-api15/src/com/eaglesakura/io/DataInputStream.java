@@ -332,7 +332,7 @@ public final class DataInputStream extends DisposableResource {
         final int requestLength = length;
         while (length > 0) {
             // 読み取るデータがまだある
-            final int available = reader.available();
+            int available = reader.available();
 
             // データの到達まで待つ
             {
@@ -343,6 +343,7 @@ public final class DataInputStream extends DisposableResource {
                     // 読み取りがまだ完了していない
                     Util.sleep(SLEEP_TIME);
                     waitTime -= SLEEP_TIME;
+                    available = reader.available();
                 }
 
                 // 待ち時間を超過した場合
