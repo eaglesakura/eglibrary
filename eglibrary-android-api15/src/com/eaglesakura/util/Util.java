@@ -1,5 +1,8 @@
 package com.eaglesakura.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class Util {
@@ -30,6 +33,35 @@ public class Util {
         } else {
             return false;
         }
+    }
+
+    /**
+     * @see Collection#toArray(Object[])
+     */
+    public static <T> T[] convert(Collection<T> c, T[] array) {
+        return c.toArray(array);
+    }
+
+    /**
+     * @see ArrayList(Collection)
+     * @see Arrays#asList(Object...)
+     */
+    public static <T> List<T> convert(T[] array) {
+        return new ArrayList<T>(Arrays.asList(array));
+    }
+
+    /**
+     * @see Collection
+     */
+    public static <T> List<T> copy(Collection<T> c) {
+        return new ArrayList<T>(c);
+    }
+
+    /**
+     * @see Arrays#copyOf(Object[], int)
+     */
+    public static <T> T[] copy(T[] array) {
+        return Arrays.copyOf(array, array.length);
     }
 
 }

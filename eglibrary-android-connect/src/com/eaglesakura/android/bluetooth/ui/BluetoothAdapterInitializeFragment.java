@@ -29,12 +29,15 @@ public class BluetoothAdapterInitializeFragment extends Fragment {
 
     BluetoothAdapterInitializeListener listener;
 
+    @SuppressLint("NewApi")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
         if (activity instanceof BluetoothAdapterInitializeListener) {
             listener = (BluetoothAdapterInitializeListener) activity;
+        } else if (FragmentUtil.isSupportChildFragment() && getParentFragment() instanceof BluetoothAdapterInitializeListener) {
+            listener = (BluetoothAdapterInitializeListener) getParentFragment();
         } else {
             throw new IllegalArgumentException("BluetoothAdapterInitializeListener not impl...");
         }

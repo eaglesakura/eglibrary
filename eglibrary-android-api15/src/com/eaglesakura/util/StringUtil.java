@@ -1,5 +1,9 @@
 package com.eaglesakura.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.annotation.SuppressLint;
 
 public class StringUtil {
@@ -155,4 +159,29 @@ public class StringUtil {
         return a.compareTo(b);
     }
 
+    @SuppressLint("SimpleDateFormat")
+    private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-hh:mm:ss.SS");
+
+    /**
+     * 指定時刻を文字列に変換する
+     * 内容はyyyyMMdd-hh:mm:ss.SSとなる。
+     * @param date
+     * @return
+     */
+    public static String toString(Date date) {
+        return formatter.format(date);
+    }
+
+    /**
+     * yyyyMMdd-hh:mm:ss.SSフォーマットの文字列をDateに変換する
+     * @param date
+     * @return
+     */
+    public static Date toDate(String date) {
+        try {
+            return formatter.parse(date);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
 }

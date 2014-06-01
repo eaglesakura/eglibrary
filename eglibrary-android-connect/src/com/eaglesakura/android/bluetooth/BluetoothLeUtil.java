@@ -37,6 +37,9 @@ public class BluetoothLeUtil {
      * @return
      */
     public static BluetoothGattCharacteristic findBluetoothGattCharacteristic(BluetoothGatt gatt, UUID serviceUuid, UUID characteristicUuid) {
+        if (gatt == null) {
+            return null;
+        }
         BluetoothGattService service = gatt.getService(serviceUuid);
         if (service == null) {
             return null;
