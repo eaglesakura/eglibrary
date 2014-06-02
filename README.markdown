@@ -1,36 +1,51 @@
 # eglibrary
 
-## ���C�Z���X�ɂ���
-./LICENSE�̓��e�ɏ]���Ă��������B
-�\�[�X�R�[�h�͎��R�Ɏg���Ă�����č\���܂��񂪁A�ǂ�ȕs��������Ă��ӔC�͎����܂���B
-OpenGL�֘A�̃T���v���\�[�X�Ƃ��Č��邭�炢�����x�����̂ł͂Ȃ����Ǝv���܂��B
+## ライセンスについて
+./LICENSEの内容に従ってください。
+ソースコードは自由に使ってもらって構いませんが、どんな不具合があっても責任は持ちません。
+基本的には @eaglesakura 自身が使用するためのUtil系クラス群です。
 
-## eglibrary-android-api8�ɂ���
+OpenGL関連のサンプルソースとして見るくらいが丁度いいのではないかと思います。
 
-Android����OpenGL ES 1.1���b�p�[���C�u�����ł��B
+## eglibrary-android-api8
 
-API8�iAndroid 2.2�j�ȍ~�����ɍ쐬����Ă��܂��B
+Android向けOpenGL ES 1.1ラッパーライブラリです。
 
-2D�Q�[���̐���ɕK�v�ȕ`�����̏����A���w�����A�X���b�h����n�̕⏕�N���X����ʂɂ���܂��B
+API8（Android 2.2）以降向けに作成されています。
 
-��{�I��@eaglesakura���l�I�Ɏg��or�g�������@�\�݂̂ō\������Ă��܂��B
+2Dゲームの制作に必要な描画周りの処理、数学処理、スレッド操作系の補助クラスが大量にあります。
 
-### �g����
+基本的に@eaglesakuraが個人的に使うor使いたい機能のみで構成されています。
 
-�K�v�ȃv���W�F�N�g��Android�̃��C�u�����v���W�F�N�g�Ƃ��Ēǉ����邩�A�r���h�p�X��release/�z����jar��ǉ����Ă��������B
+### 使い方
 
-jar�ɂ̓\�[�X�R�[�h���܂܂�Ă��܂��̂ŁA�����ŃG���[���������Ă��g���[�X���ł��邩�Ǝv���܂��B
+必要なプロジェクトをAndroidのライブラリプロジェクトとして追加するか、ビルドパスにrelease/配下のjarを追加してください。
 
-### ���m�̖��jMali�nGPU�ł̕s�
+jarにはソースコードも含まれていますので、内部でエラーが発生してもトレースができるかと思います。
 
-���̏������ŁAMali�n��GPU�iGalaxy S2���j�Ɍ���EGL�̕��A�Ɏ��s����悤�ł��B
+### 既知の問題）Mali系GPUでの不具合
 
-���̂Ƃ���Qualcomm�n��GPU�iNexus One���j�ł͔������܂���B
+次の条件下で、Mali系のGPU（Galaxy S2等）に限りEGLの復帰に失敗するようです。
 
-startActivity�����onPause����Thread#sleep��1�b���x������~�����邱�Ƃŉ���ł���悤�ł��B
+今のところQualcomm系のGPU（Nexus One等）では発生しません。
 
-1. OpenGLManager�N���X��OpenGLView���g���Ă���Activity����ʂ�Activity���Ăяo��
-1. ��ʑJ�ڒ�����u�߂�v�L�[��A�ł��A������Activity�֖߂�
-1. OpenGLView��EGL_BAD_ALLOC���������AOpenGL ES�̕`�悪�s���Ȃ��i���f����Ȃ��j
-1. ��L�̏�ԂɂȂ����ꍇ�A���݂̂Ƃ����O�𓊂���悤�ɂ��Ă��邽�߁A���o�͉\
-1. ���̂悤�ȏ�ԂɂȂ�����A�ēxActivity��Surface�̔j���E�����iAcrtivity��onPause/onResume���j���s�����Ƃŕ����ł���
+startActivity直後のonPause中にThread#sleepで1秒程度強制停止させることで回避できるようです。
+
+1. OpenGLManagerクラスとOpenGLViewを使っているActivityから別なActivityを呼び出す
+1. 画面遷移中から「戻る」キーを連打し、すぐにActivityへ戻る
+1. OpenGLViewでEGL_BAD_ALLOCが発生し、OpenGL ESの描画が行えない（反映されない）
+1. 上記の状態になった場合、現在のところ例外を投げるようにしているため、検出は可能
+1. そのような状態になったら、再度ActivityのSurfaceの破棄・復旧（AcrtivityのonPause/onResume等）を行うことで復旧できる
+
+## eglibrary-android-api15
+
+eglibrary-android-api8をAPI15以降向けに整理・書きなおしたライブラリです。OpenGL ES 2.0+Nativeへの移行に伴い、OpenGL ES系ライブラリは基本的に削除されています。
+
+## eglibrary-android-connect
+
+bluetoothでP2P通信を行うためのUtilクラスです。
+
+
+## eglibrary-android-data
+
+greenDAOやJSON系のUtilクラスです。
