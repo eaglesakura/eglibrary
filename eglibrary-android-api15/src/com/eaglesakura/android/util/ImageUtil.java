@@ -1,8 +1,11 @@
 package com.eaglesakura.android.util;
 
+import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 
 import com.eaglesakura.io.IOUtil;
 
@@ -24,7 +27,6 @@ public class ImageUtil {
             for (int i = 0; i < height; ++i) {
                 bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, i, bitmap.getWidth(), 1);
                 md.update(IOUtil.toByteArray(pixels, src));
-
             }
 
             byte[] digest = md.digest();
@@ -44,4 +46,36 @@ public class ImageUtil {
         }
     }
 
+    /**
+     * image bufferからデコードする
+     * @param imageFile
+     * @return
+     */
+    public static Bitmap decode(byte[] imageFile) {
+        if (imageFile == null) {
+            return null;
+        }
+
+        try {
+            return BitmapFactory.decodeByteArray(imageFile, 0, imageFile.length);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * PNG画像にエンコードする
+     * @param bitmap
+     * @return
+     */
+    public static byte[] encodePng(Bitmap bitmap) {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            bitmap.compress(CompressFormat.PNG, 100, os);
+            return os.toByteArray();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
