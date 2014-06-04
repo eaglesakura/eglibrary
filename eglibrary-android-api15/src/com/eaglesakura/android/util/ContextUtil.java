@@ -26,9 +26,6 @@ import com.eaglesakura.util.EncodeUtil;
 
 /**
  * Context関連の便利メソッドを提供する
- * 
- * @author TAKESHI YAMASHITA
- *
  */
 public class ContextUtil {
     /**
