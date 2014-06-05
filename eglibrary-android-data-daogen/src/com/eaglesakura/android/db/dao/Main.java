@@ -43,7 +43,7 @@ public class Main {
      * @throws Exception
      */
     static void genBlobKeyValueStoreDao() throws Exception {
-        Schema scheme = new Schema(0x01, PACKAGE_NAME + ".tkvs");
+        Schema scheme = new Schema(0x01, PACKAGE_NAME + ".bkvs");
         {
             Entity entity = scheme.addEntity("DbKeyValueData");
             // uniqueId

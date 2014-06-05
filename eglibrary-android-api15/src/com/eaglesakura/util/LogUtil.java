@@ -100,6 +100,13 @@ public class LogUtil {
         }
     }
 
+    public static void d(Exception e) {
+        if (output) {
+            e.printStackTrace();
+            d(e.getMessage());
+        }
+    }
+    
     public static void log(Exception e) {
         if (output) {
             e.printStackTrace();
