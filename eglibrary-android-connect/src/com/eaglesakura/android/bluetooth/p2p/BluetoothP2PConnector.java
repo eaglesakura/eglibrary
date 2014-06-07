@@ -11,7 +11,6 @@ import java.util.zip.DataFormatException;
 
 import android.bluetooth.BluetoothSocket;
 
-import com.eaglesakura.android.bluetooth.BluetoothLeUtil;
 import com.eaglesakura.io.data.DataPackage;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
@@ -22,7 +21,9 @@ import com.eaglesakura.util.Util;
  */
 public abstract class BluetoothP2PConnector {
 
-    protected static final UUID PROTOCOL_UUID = BluetoothLeUtil.createUUIDFromAssignedNumber("0x3103");
+    //    protected static final UUID PROTOCOL_UUID = BluetoothLeUtil.createUUIDFromAssignedNumber("0x3103");
+
+    UUID protocolUUID;
 
     /**
      * リスナ一覧
@@ -151,13 +152,13 @@ public abstract class BluetoothP2PConnector {
     /**
      * 処理を開始する
      */
-    public final void start() {
+    public final void start(final UUID protocol) {
         requestDisconnect = false;
 
         new Thread() {
             @Override
             public void run() {
-                requestConnecting();
+                requestConnecting(protocol);
             }
         }.start();
     }
@@ -210,7 +211,7 @@ public abstract class BluetoothP2PConnector {
     /**
      * 接続をリクエストする
      */
-    protected abstract void requestConnecting();
+    protected abstract void requestConnecting(UUID protocol);
 
     /**
      * 切断をリクエストする

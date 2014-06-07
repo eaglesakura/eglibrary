@@ -1,6 +1,7 @@
 package com.eaglesakura.android.bluetooth.p2p;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
@@ -37,10 +38,10 @@ public class BluetoothServer extends BluetoothP2PConnector {
      * サーバー用接続を行う
      */
     @Override
-    protected void requestConnecting() {
+    protected void requestConnecting(UUID protocol) {
         try {
             BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-            BluetoothServerSocket serverSocket = adapter.listenUsingInsecureRfcommWithServiceRecord(context.getPackageName(), PROTOCOL_UUID);
+            BluetoothServerSocket serverSocket = adapter.listenUsingInsecureRfcommWithServiceRecord(context.getPackageName(), protocol);
 
             socket = serverSocket.accept((int) serverRequestTimeoutMs);
 
