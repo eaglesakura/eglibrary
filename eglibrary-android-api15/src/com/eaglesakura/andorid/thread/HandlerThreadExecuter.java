@@ -17,11 +17,23 @@ public class HandlerThreadExecuter {
     public void add(Runnable runnable) {
         runners.add(runnable);
     }
+    
+    /**
+     * 実行スレッドを指定する
+     * @param handler
+     */
+    public void setHandler(Handler handler) {
+        this.handler = handler;
+    }
 
     /**
      * キューを実行する
      */
     public void execute() {
+        if (runners.isEmpty()) {
+            return;
+        }
+        
         handler.post(new Runnable() {
 
             @Override

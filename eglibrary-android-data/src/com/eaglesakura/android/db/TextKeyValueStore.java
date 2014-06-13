@@ -1,7 +1,7 @@
 package com.eaglesakura.android.db;
 
 import java.io.File;
-import java.util.List;
+import java.util.Date;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.eaglesakura.andriders.dao.tkvs.DaoMaster;
 import com.eaglesakura.andriders.dao.tkvs.DaoSession;
 import com.eaglesakura.andriders.dao.tkvs.DbKeyValueData;
-import com.eaglesakura.andriders.dao.tkvs.DbKeyValueDataDao.Properties;
+import com.eaglesakura.android.json.JSON;
 import com.eaglesakura.util.StringUtil;
 
 /**
@@ -19,8 +19,8 @@ public class TextKeyValueStore extends BaseDatabase<DaoSession> {
 
     private final File dbFilePath;
 
-    public TextKeyValueStore(Context context, DaoMaster daoMasterClass, File file) {
-        super(context, daoMasterClass);
+    public TextKeyValueStore(Context context, File file) {
+        super(context, DaoMaster.class);
         this.dbFilePath = file;
     }
 
@@ -30,17 +30,40 @@ public class TextKeyValueStore extends BaseDatabase<DaoSession> {
     }
 
     /**
+     * データの更新を行う
+     * @param key
+     * @param value
+     */
+    public void put(String key, String value) {
+        DbKeyValueData db = new DbKeyValueData();
+        db.setDate(new Date());
+        db.setKey(key);
+        db.setValue(value);
+
+        insertOrUpdate(db, session.getDbKeyValueDataDao());
+    }
+
+    /**
+     * データの更新を行う
+     * @param key
+     * @param obj
+     */
+    public <T> void put(String key, T obj) {
+        put(key, JSON.encodeOrNull(obj));
+    }
+
+    /**
      * 値を取得する
      * @param key
      * @param def
      * @return
      */
     public String get(String key, String def) {
-        List<DbKeyValueData> list = session.queryBuilder(DbKeyValueData.class).where(Properties.Key.eq(key)).list();
+        DbKeyValueData data = session.load(DbKeyValueData.class, key);
 
         String result = def;
-        if (list.size() == 1) {
-            result = list.get(0).getValue();
+        if (data != null) {
+            result = data.getValue();
         }
 
         return result;
@@ -80,5 +103,15 @@ public class TextKeyValueStore extends BaseDatabase<DaoSession> {
         }
 
         return def;
+    }
+
+    /**
+     * JSONとして取得する
+     * @param key
+     * @param clz
+     * @return
+     */
+    public <T> T getJson(String key, Class<T> clz) {
+        return JSON.decodeOrNull(get(key, null), clz);
     }
 }
