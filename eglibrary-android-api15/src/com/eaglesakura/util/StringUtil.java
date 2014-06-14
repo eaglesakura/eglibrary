@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.annotation.SuppressLint;
+import android.util.Base64;
 
 public class StringUtil {
 
@@ -183,5 +184,23 @@ public class StringUtil {
         } catch (ParseException e) {
             return null;
         }
+    }
+
+    /**
+     * base64エンコードする
+     * @param buffer
+     * @return
+     */
+    public static String toString(byte[] buffer) {
+        return Base64.encodeToString(buffer, Base64.DEFAULT);
+    }
+
+    /**
+     * base64文字列をバイト配列へ変換する
+     * @param base64
+     * @return
+     */
+    public static byte[] toByteArray(String base64) {
+        return Base64.decode(base64, Base64.DEFAULT);
     }
 }

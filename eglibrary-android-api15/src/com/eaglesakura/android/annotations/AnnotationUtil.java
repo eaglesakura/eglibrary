@@ -2,6 +2,8 @@ package com.eaglesakura.android.annotations;
 
 import android.app.Fragment;
 
+import com.eaglesakura.util.LogUtil;
+
 /**
  * AndroidAnnotations系Util
  */
@@ -38,6 +40,7 @@ public class AnnotationUtil {
 
             return (Fragment) Class.forName(clazz).newInstance();
         } catch (Exception e) {
+            LogUtil.d(e);
             return null;
         }
     }
@@ -52,6 +55,7 @@ public class AnnotationUtil {
         try {
             return (T) (annotation(clazz).newInstance());
         } catch (Exception e) {
+            LogUtil.d(e);
             return null;
         }
     }

@@ -34,6 +34,33 @@ public class TextKeyValueStore extends BaseDatabase<DaoSession> {
      * @param key
      * @param value
      */
+    public void put(String key, byte[] value) {
+        put(key, StringUtil.toString(value));
+    }
+
+    /**
+     * データの更新を行う
+     * @param key
+     * @param value
+     */
+    public void put(String key, long value) {
+        put(key, String.valueOf(value));
+    }
+
+    /**
+     * データの更新を行う
+     * @param key
+     * @param value
+     */
+    public void put(String key, double value) {
+        put(key, String.valueOf(value));
+    }
+
+    /**
+     * データの更新を行う
+     * @param key
+     * @param value
+     */
     public void put(String key, String value) {
         DbKeyValueData db = new DbKeyValueData();
         db.setDate(new Date());
@@ -103,6 +130,20 @@ public class TextKeyValueStore extends BaseDatabase<DaoSession> {
         }
 
         return def;
+    }
+
+    /**
+     * バイト配列値を取得する
+     * @param key
+     * @return
+     */
+    public byte[] getByteArray(String key) {
+        String value = get(key, null);
+        if (StringUtil.isEmpty(value)) {
+            return null;
+        } else {
+            return StringUtil.toByteArray(value);
+        }
     }
 
     /**
