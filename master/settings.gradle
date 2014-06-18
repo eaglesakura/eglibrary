@@ -1,4 +1,0 @@
-includeFlat 'eglibrary-android-api15'
-includeFlat 'eglibrary-android-api17-ui'
-includeFlat 'eglibrary-android-connect'
-includeFlat 'eglibrary-android-data'
