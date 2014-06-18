@@ -1,11 +1,19 @@
 apply plugin: 'android-library'
 
+configurations {
+    apt
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
+    compile "com.googlecode.android-query:android-query:0.25.+"
+    apt "org.androidannotations:androidannotations:3.0.+"
+    compile "org.androidannotations:androidannotations-api:3.0.+"
+//    compile "com.android.support:support-v13:18.0.+"
 }
 
 android {
-    compileSdkVersion 17
+    compileSdkVersion 19
     buildToolsVersion "19.1.0"
 
     sourceSets {

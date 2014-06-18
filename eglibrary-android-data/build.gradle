@@ -5,7 +5,6 @@ dependencies {
     compile project(':eglibrary-android-api15')
     compile "com.google.protobuf:protobuf-java:2.5.+"
     compile "com.fasterxml.jackson.core:jackson-core:2.4.+"
-//    compile "com.fasterxml.jackson.core:jackson-annotations:2.4.+"
     compile "com.fasterxml.jackson.core:jackson-databind:2.4.+"
     compile "com.google.http-client:google-http-client-xml:1.18.+"
     compile "de.greenrobot:greendao:1.3.+"
