@@ -1,4 +1,5 @@
 apply plugin: 'android-library'
+apply plugin: 'android-apt'
 
 configurations {
     apt
@@ -9,7 +10,7 @@ dependencies {
     compile "org.androidannotations:androidannotations-api:3.0.+"
     compile "com.googlecode.android-query:android-query:0.25.+"
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile project(':eglibrary-android-api15')
+    compile project(':eglibrary:eglibrary-android-api15')
 }
 
 android {

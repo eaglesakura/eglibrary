@@ -1,4 +1,0 @@
-include ':eglibrary-android-api15'
-include ':eglibrary-android-api17-ui'
-include ':eglibrary-android-connect'
-include ':eglibrary-android-data'

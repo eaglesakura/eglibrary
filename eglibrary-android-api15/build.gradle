@@ -20,10 +20,3 @@ android {
         }
     }
 }
-
-task jarbuild << {
-    ["ant", "clean", "release"].execute();
-
-    File target = new File("./bin/classes.jar").absoluteFile;
-    target.renameTo(new File("../release/eglibrary-android-api15.jar"));
-}
