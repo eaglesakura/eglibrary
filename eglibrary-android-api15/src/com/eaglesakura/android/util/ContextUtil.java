@@ -18,6 +18,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.view.WindowManager;
 
@@ -29,8 +30,6 @@ import com.eaglesakura.util.EncodeUtil;
  */
 public class ContextUtil {
     /**
-     *
-     * 
      * @param context
      * @return
      */
@@ -39,8 +38,6 @@ public class ContextUtil {
     }
 
     /**
-     *
-     * 
      * @param context
      * @return
      */
@@ -49,8 +46,6 @@ public class ContextUtil {
     }
 
     /**
-     *
-     * 
      * @param context
      * @return
      */
@@ -60,12 +55,10 @@ public class ContextUtil {
 
     /**
      * ディスプレイのXYサイズを取得する。
-     * 
-     * 
+     *
      * @param context
      * @param result
      * @return
-     * 
      */
     public static Vector2 getDisplaySize(Context context, Vector2 result) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -77,11 +70,9 @@ public class ContextUtil {
 
     /**
      * 指定方向に端末画面を固定する。
-     * 
-     * 
+     *
      * @param context
      * @param isVertical
-     * 
      */
     public static void setOrientation(Context context, boolean isVertical) {
         try {
@@ -98,10 +89,8 @@ public class ContextUtil {
 
     /**
      * 設定を反転する。
-     * 
-     * 
+     *
      * @param context
-     * 
      */
     public static void toggleOrientationFixed(Context context) {
         try {
@@ -118,11 +107,8 @@ public class ContextUtil {
     }
 
     /**
-     * 
-     * 
      * @param context
      * @param is
-     * 
      */
     public static void setOrientationFixed(Context context, boolean is) {
         try {
@@ -144,7 +130,7 @@ public class ContextUtil {
 
     /**
      * DP->Pixを変換して返す。
-     * 
+     *
      * @param dp
      * @param context
      * @return 画面上のピクセル数。ただし、1ピクセル単位に四捨五入されている。
@@ -158,7 +144,7 @@ public class ContextUtil {
 
     /**
      * デバッグモードならtrueを返す。
-     * 
+     *
      * @return
      */
     public static boolean isDebug(Context context) {
@@ -177,7 +163,7 @@ public class ContextUtil {
 
     /**
      * ステータスバーに簡単なメッセージを表示する。
-     * 
+     *
      * @param message
      * @param icon
      * @param statusbarId
@@ -200,6 +186,7 @@ public class ContextUtil {
 
     /**
      * Actionバーに対応している場合、trueを返す。
+     *
      * @param context
      * @return
      */
@@ -213,6 +200,7 @@ public class ContextUtil {
 
     /**
      * 文字幅を指定した幅に収まるように抑えて取得する。
+     *
      * @param text
      * @param fooder
      * @param context
@@ -229,6 +217,7 @@ public class ContextUtil {
 
     /**
      * 文字列を指定した幅に収まるように抑えて取得する。
+     *
      * @param origin
      * @return
      */
@@ -266,12 +255,13 @@ public class ContextUtil {
 
     /**
      * おそらく重複することが無いであろうユニークな文字列を吐き出す。
+     *
      * @return
      */
     public static String genUUID() {
         String result = null;
         result = String.format("%s-%s-%s",
-        // 通常のUUID
+                // 通常のUUID
                 UUID.randomUUID().toString(),
                 // 現在時刻
                 EncodeUtil.genSHA1(Long.valueOf(System.currentTimeMillis()).toString().getBytes()),
@@ -282,10 +272,22 @@ public class ContextUtil {
 
     /**
      * Handlerに関連付けられていたThreadで動作している場合はtrueを返す。
+     *
      * @param handler
      * @return
      */
     public static boolean isHandlerThread(Handler handler) {
         return Thread.currentThread().equals(handler.getLooper().getThread());
+    }
+
+    /**
+     * 画面が点灯状態だったらtrueを返す
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isScreenPowerOn(Context context) {
+        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        return pm.isScreenOn();
     }
 }
