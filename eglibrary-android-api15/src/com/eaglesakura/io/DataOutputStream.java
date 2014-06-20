@@ -9,9 +9,6 @@ import com.eaglesakura.util.LogUtil;
 /**
  * ライブラリ規定の形式でデータを出力するインターフェース。<BR>
  * このクラスを通して出力したファイルは対になる {@link DataInputStream}で開くことが可能。
- *
- * 
- * 
  */
 public final class DataOutputStream extends DisposableResource {
     /**

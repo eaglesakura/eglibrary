@@ -1,13 +1,12 @@
 package com.eaglesakura.android.util;
 
+import android.os.Handler;
 import android.os.Looper;
 
 public class AndroidUtil {
 
     /**
-     * UIスレッドだったらtrueを返す。
-     * 
-     * @return
+     * @return UIスレッドだったらtrue
      */
     public static boolean isUIThread() {
         return Thread.currentThread().equals(Looper.getMainLooper().getThread());
@@ -20,6 +19,14 @@ public class AndroidUtil {
         if (!isUIThread()) {
             throw new IllegalStateException("is not ui thread!!");
         }
+    }
+    /**
+     * Handlerに関連付けられていたThreadで動作している場合はtrueを返す。
+     * @param handler 確認対象のHandler
+     * @return Handlerに関連付けられていたThreadで動作している場合はtrueを返す。
+     */
+    public static boolean isHandlerThread(Handler handler) {
+        return Thread.currentThread().equals(handler.getLooper().getThread());
     }
 
 }

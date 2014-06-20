@@ -54,7 +54,7 @@ public abstract class ThreadSyncRunnerBase<T> {
      * @return
      */
     public T run() {
-        if (ContextUtil.isHandlerThread(handler)) {
+        if (AndroidUtil.isHandlerThread(handler)) {
             // ハンドラと同一スレッドなら、そのまま実行させる
             try {
                 result = onOtherThreadRun();

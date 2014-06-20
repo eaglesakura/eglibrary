@@ -124,7 +124,6 @@ public class ContextUtil {
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             }
         } catch (ClassCastException cce) {
-            return;
         }
     }
 
@@ -268,16 +267,6 @@ public class ContextUtil {
                 // 端末起動からの経過時間
                 EncodeUtil.genSHA1(Long.valueOf(SystemClock.elapsedRealtime()).toString().getBytes()));
         return result;
-    }
-
-    /**
-     * Handlerに関連付けられていたThreadで動作している場合はtrueを返す。
-     *
-     * @param handler
-     * @return
-     */
-    public static boolean isHandlerThread(Handler handler) {
-        return Thread.currentThread().equals(handler.getLooper().getThread());
     }
 
     /**

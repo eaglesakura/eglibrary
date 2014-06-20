@@ -22,6 +22,7 @@ public class PackageUtil {
     /**
      * パッケージ固有の情報を特定ディレクトリにdumpする。
      * 既にディレクトリが存在していた場合の挙動は"cp -R"コマンドの挙動に従う。
+     * "cp -R context.getFilesDir() dst" を行う
      * @param context
      * @param dst
      */

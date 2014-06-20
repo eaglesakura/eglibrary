@@ -17,8 +17,16 @@ import com.eaglesakura.util.LogUtil;
  */
 public class DataPackage {
 
+    /**
+     * データの内容を一意に識別するためのID
+     * 自由に指定可能で、デフォルトではランダムで生成される
+     * ユーザー指定のマジックナンバー等を想定
+     */
     String uniqueId;
 
+    /**
+     * エラー検証コードとヘッダを付与したデータ
+     */
     byte[] packedBuffer;
 
     /**

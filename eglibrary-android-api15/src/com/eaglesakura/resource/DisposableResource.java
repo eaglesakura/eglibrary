@@ -5,9 +5,6 @@ package com.eaglesakura.resource;
  * <BR>
  * dispose()は2回以上呼ばれた場合、2回目以降は何もしないよう挙動を調整すること。<BR>
  * dispose()はfinalize()でも念のため呼ばれるが、明示的に呼ぶことが望ましい。<BR>
- * 
- * @author TAKESHI YAMASHITA
- * 
  */
 public abstract class DisposableResource {
     /**
