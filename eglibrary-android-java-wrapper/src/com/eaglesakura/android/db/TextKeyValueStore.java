@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.eaglesakura.andriders.dao.tkvs.DaoMaster;
 import com.eaglesakura.andriders.dao.tkvs.DaoSession;
 import com.eaglesakura.andriders.dao.tkvs.DbKeyValueData;
-import com.eaglesakura.android.json.JSON;
+import com.eaglesakura.json.JSON;
 import com.eaglesakura.util.StringUtil;
 
 /**

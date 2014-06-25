@@ -1,3 +1,4 @@
 include ':eglibrary-java-core'
+include ':eglibrary-java-wrapper'
 include ':eglibrary-android-java-core'
 include ':eglibrary-android-java-wrapper'

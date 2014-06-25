@@ -1,4 +1,4 @@
-package com.eaglesakura.android.json;
+package com.eaglesakura.json;
 
 import java.io.IOException;
 import java.io.InputStream;
