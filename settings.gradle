@@ -1,4 +1,3 @@
 include ':eglibrary-java-core'
 include ':eglibrary-android-java-core'
 include ':eglibrary-android-java-wrapper'
-//project(':eglibrary-java-core').projectDir = new File('eglibrary/eglibrary-java-core')

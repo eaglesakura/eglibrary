@@ -1,8 +1,5 @@
 package com.eaglesakura.android.bluetooth;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothAdapter.LeScanCallback;
@@ -13,9 +10,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import com.eaglesakura.andorid.thread.UIHandler;
+import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * BluetoothDeviceを自動スキャンする

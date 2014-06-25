@@ -1,9 +1,8 @@
-package com.eaglesakura.andorid.thread;
+package com.eaglesakura.android.thread;
 
 import android.os.Handler;
 
 import com.eaglesakura.android.util.AndroidUtil;
-import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.time.Timer;
 
 /**

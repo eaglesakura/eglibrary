@@ -1,4 +1,4 @@
-package com.eaglesakura.andorid.power;
+package com.eaglesakura.android.power;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

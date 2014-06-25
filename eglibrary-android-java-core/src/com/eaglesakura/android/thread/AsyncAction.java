@@ -1,4 +1,4 @@
-package com.eaglesakura.andorid.thread;
+package com.eaglesakura.android.thread;
 
 import android.os.Handler;
 
