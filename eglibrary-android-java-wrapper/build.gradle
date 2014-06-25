@@ -1,18 +1,28 @@
 apply plugin: 'android-library'
+apply plugin: 'android-apt'
+
+configurations {
+    apt
+}
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-    compile project(':eglibrary:eglibrary-android-api15')
+    apt "org.androidannotations:androidannotations:3.0.+"
+    compile "org.androidannotations:androidannotations-api:3.0.+"
+    compile "com.googlecode.android-query:android-query:0.25.+"
     compile 'com.google.protobuf:protobuf-java:2.5.+'
     compile 'com.fasterxml.jackson.core:jackson-core:2.4.+'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.4.+'
     compile 'com.google.http-client:google-http-client-xml:1.18.+'
     compile 'de.greenrobot:greendao:1.3.+'
+
+    compile fileTree(dir: 'libs', include: '*.jar')
+    compile project(':eglibrary-android-java-core')
 }
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.1.0'
+    buildToolsVersion "19.1.0"
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -35,10 +45,5 @@ android {
         // by a similar customization.
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
-    }
-    defaultConfig {}
-    productFlavors {
-    }
-    buildTypes {
     }
 }
