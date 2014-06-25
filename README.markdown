@@ -7,19 +7,19 @@
 
 基本的に@eaglesakuraが個人的に使うor使いたい機能のみで構成されています。
 
-## eglibrary-android-api8
+## eglibrary-java-core
 
-@eaglesakuraが使用しなくなったため、現在非推奨です。
+Pure-Javaで記述されたライブラリです。
+Androidで実行可能、もしくはJava 1.6相当の機能で記述されています。
 
-## eglibrary-android-api15
+## eglibrary-java-wrapper
 
-eglibrary-android-api8をAPI15以降向けに整理・書きなおしたライブラリです。OpenGL ES 2.0+Nativeへの移行に伴い、OpenGL ES系ライブラリは基本的に削除されています。
+Pure-Java+各種外部ライブラリのラッパーライブラリです。Androidで実行可能、もしくはJava 1.6相当の機能で記述されています。
 
-## eglibrary-android-connect
+## eglibrary-android-java-core
 
-bluetoothでP2P通信を行うためのUtilクラスです。
+eglibrary-android-api8をAPI15以降向けに整理・書きなおしたライブラリです。Android SDKのみで動作し、他のライブラリへの依存がありません。
 
+## eglibrary-android-java-wrapper
 
-## eglibrary-android-data
-
-greenDAOやJSON系のUtilクラスです。
+各種ライブラリのラッパーライブラリです。特性上、apkサイズが肥大化しやすいため、proguardで適当に軽量化することを推奨します。
