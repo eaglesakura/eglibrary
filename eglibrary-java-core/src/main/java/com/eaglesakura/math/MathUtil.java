@@ -1,17 +1,13 @@
 package com.eaglesakura.math;
 
-import android.graphics.RectF;
-
 public class MathUtil {
 
     /**
      * フラグ情報を設定する。
-     * 
-     * 
+     *
      * @param flg
      * @param check
-     * @param is
-     *            ビットを立てる場合はtrue、下げる場合はfalse
+     * @param is    ビットを立てる場合はtrue、下げる場合はfalse
      * @return
      */
     public static final int setFlag(int flg, int check, boolean is) {
@@ -22,22 +18,10 @@ public class MathUtil {
         }
     }
 
-    /**
-     * RectFを四捨五入で丸める。
-     * 
-     * @param rect
-     */
-    public static void round(RectF rect) {
-        rect.left = Math.round(rect.left);
-        rect.right = Math.round(rect.right);
-        rect.top = Math.round(rect.top);
-        rect.bottom = Math.round(rect.bottom);
-    }
 
     /**
      * min <= result <= maxとなるようにnowを補正する。
-     * 
-     * 
+     *
      * @param min
      * @param max
      * @param now
@@ -53,8 +37,7 @@ public class MathUtil {
 
     /**
      * min <= result <= maxとなるようにnowを補正する。
-     * 
-     * 
+     *
      * @param min
      * @param max
      * @param now
@@ -70,11 +53,9 @@ public class MathUtil {
 
     /**
      * 360度系の正規化を行う。
-     * 
-     * 
+     *
      * @param now
      * @return
-     * 
      */
     public static final float normalizeDegree(float now) {
         while (now < 0.0f) {
@@ -91,7 +72,6 @@ public class MathUtil {
     /**
      * 目標数値へ移動する。
      *
-     * 
      * @param now
      * @param offset
      * @param target
@@ -111,7 +91,6 @@ public class MathUtil {
     /**
      * 目標数値へ移動する。
      *
-     * 
      * @param now
      * @param offset
      * @param target
@@ -127,11 +106,13 @@ public class MathUtil {
             return now - offset;
         }
     }
+
     /**
      * 係数ブレンドを行い、結果を返す。
      * 1.0に近いほどaに近い値となる。
      * blend == 1 -> a
      * blend == 0 -> b
+     *
      * @param a
      * @param b
      * @param blend aのブレンド値
@@ -143,8 +124,7 @@ public class MathUtil {
 
     /**
      * 特定のビットフラグが立っていることを検証する。
-     * 
-     * 
+     *
      * @param flg
      * @param check
      * @return
@@ -155,8 +135,7 @@ public class MathUtil {
 
     /**
      * 特定のビットフラグがすべて立っていることを検証する。
-     * 
-     * 
+     *
      * @param flg
      * @param check
      * @return

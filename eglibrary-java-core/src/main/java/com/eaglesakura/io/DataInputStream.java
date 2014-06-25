@@ -5,12 +5,11 @@
  */
 package com.eaglesakura.io;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import com.eaglesakura.resource.DisposableResource;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * データ入力を補助するクラス。
@@ -18,7 +17,7 @@ import com.eaglesakura.util.Util;
  * 
  * 
  */
-public final class DataInputStream extends DisposableResource {
+public final class DataInputStream  {
     /**
      * 読み取りに使用するリーダー。
      */
@@ -381,21 +380,10 @@ public final class DataInputStream extends DisposableResource {
     }
 
     /**
-     *
-     * 
-     * @throws Throwable
-     * 
-     */
-    protected void finalize() throws Throwable {
-        super.finalize();
-        dispose();
-    }
-
-    /**
      * 読み取り位置を指定する。
      *
      * 
-     * @param eSeekType
+     * @param type
      * @param pos
      * 
      */

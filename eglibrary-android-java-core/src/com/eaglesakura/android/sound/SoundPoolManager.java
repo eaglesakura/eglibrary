@@ -1,16 +1,15 @@
 package com.eaglesakura.android.sound;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
 
-import com.eaglesakura.resource.DisposableResource;
 import com.eaglesakura.util.LogUtil;
 
-public class SoundPoolManager extends DisposableResource {
+import java.util.HashMap;
+import java.util.Map;
+
+public class SoundPoolManager {
 
     /**
      * サウンド
@@ -45,6 +44,7 @@ public class SoundPoolManager extends DisposableResource {
 
     /**
      * 読み込みを行う
+     *
      * @param rawId
      */
     public void load(Object id, int rawId) {
@@ -54,6 +54,7 @@ public class SoundPoolManager extends DisposableResource {
 
     /**
      * 読み込みを行う
+     *
      * @param rawId
      */
     public void load(int rawId) {
@@ -62,6 +63,7 @@ public class SoundPoolManager extends DisposableResource {
 
     /**
      * 読み込みを行う
+     *
      * @param id
      */
     public void play(Object id, boolean loop) {
@@ -77,7 +79,6 @@ public class SoundPoolManager extends DisposableResource {
         }
     }
 
-    @Override
     public synchronized void dispose() {
         if (soundPool != null) {
             soundPool.release();

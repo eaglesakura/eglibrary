@@ -1,16 +1,15 @@
 package com.eaglesakura.io;
 
+import com.eaglesakura.util.LogUtil;
+
 import java.io.IOException;
 import java.io.OutputStream;
-
-import com.eaglesakura.resource.DisposableResource;
-import com.eaglesakura.util.LogUtil;
 
 /**
  * ライブラリ規定の形式でデータを出力するインターフェース。<BR>
  * このクラスを通して出力したファイルは対になる {@link DataInputStream}で開くことが可能。
  */
-public final class DataOutputStream extends DisposableResource {
+public final class DataOutputStream {
     /**
      * 入出力。
      */
@@ -22,11 +21,7 @@ public final class DataOutputStream extends DisposableResource {
 
     /**
      * リソースの開放を行う。
-     *
-     * 
-     * 
      */
-    @Override
     public void dispose() {
         if (writer != null) {
             try {
@@ -41,11 +36,9 @@ public final class DataOutputStream extends DisposableResource {
     /**
      * 実際のバッファへ書き込みを行う。
      *
-     * 
      * @param buf
      * @param position
      * @param length
-     * 
      */
     public void writeBuffer(byte[] buf, int position, int length) throws IOException {
         writer.write(buf, position, length);
@@ -54,23 +47,18 @@ public final class DataOutputStream extends DisposableResource {
     /**
      * 1バイト整数を保存する。
      *
-     * 
      * @param n
-     * 
      */
     public void writeS8(byte n) throws IOException {
         byte[] buf = {
-            n,
+                n,
         };
         writeBuffer(buf, 0, buf.length);
     }
 
     /**
-     *
-     * 
      * @param b
      * @throws IOException
-     * 
      */
     public void writeBoolean(boolean b) throws IOException {
         writeS8(b ? (byte) 1 : (byte) 0);
@@ -79,9 +67,7 @@ public final class DataOutputStream extends DisposableResource {
     /**
      * 2バイト整数を保存する。
      *
-     * 
      * @param n
-     * 
      */
     public void writeS16(short n) throws IOException {
         byte[] buf = {
@@ -93,9 +79,7 @@ public final class DataOutputStream extends DisposableResource {
     /**
      * 4バイト整数を保存する。
      *
-     * 
      * @param n
-     * 
      */
     public void writeS32(int n) throws IOException {
         byte[] buf = {
@@ -108,9 +92,7 @@ public final class DataOutputStream extends DisposableResource {
     /**
      * 8バイト整数を保存する。
      *
-     * 
      * @param n
-     * 
      */
     public void writeS64(long n) throws IOException {
         byte[] buf = {
@@ -131,11 +113,7 @@ public final class DataOutputStream extends DisposableResource {
     /**
      * 4バイト整数の配列を保存する。
      *
-     * 
      * @param buffer
-     * @param position
-     * @param length
-     * 
      */
     public final void writeS32Array(final int[] buffer) throws IOException {
         byte[] temp = new byte[buffer.length * 4];
@@ -156,11 +134,7 @@ public final class DataOutputStream extends DisposableResource {
     /**
      * 4バイト整数の配列を保存する。
      *
-     * 
      * @param buffer
-     * @param position
-     * @param length
-     * 
      */
     public final void writeS32ArrayWithLength(final int[] buffer) throws IOException {
         writeS32(buffer.length);
@@ -182,11 +156,7 @@ public final class DataOutputStream extends DisposableResource {
     /**
      * 8バイト整数の配列を保存する。
      *
-     * 
      * @param buffer
-     * @param position
-     * @param length
-     * 
      */
     public final void writeS64Array(final long[] buffer) throws IOException {
         final byte[] temp = new byte[buffer.length * 8];
@@ -215,11 +185,7 @@ public final class DataOutputStream extends DisposableResource {
     /**
      * 8バイト整数の配列を保存する。
      *
-     * 
      * @param buffer
-     * @param position
-     * @param length
-     * 
      */
     public final void writeS64ArrayWithLength(final long[] buffer) throws IOException {
         writeS32(buffer.length);
@@ -249,9 +215,7 @@ public final class DataOutputStream extends DisposableResource {
     /**
      * 浮動小数点配列を保存する。
      *
-     * 
      * @param buffer
-     * 
      */
     public void writeFloatArray(float[] buffer) throws IOException {
         byte[] temp = new byte[buffer.length * 4];
@@ -273,9 +237,7 @@ public final class DataOutputStream extends DisposableResource {
     /**
      * 浮動小数値をGL形式の固定小数として保存する。
      *
-     * 
-     * @param n
-     * 
+     * @param f
      */
     public void writeGLFloat(float f) throws IOException {
         int n = (int) (f * (float) 0x10000);
@@ -290,9 +252,7 @@ public final class DataOutputStream extends DisposableResource {
     /**
      * 浮動小数値を書き込む。
      *
-     * 
      * @param f
-     * 
      */
     public void writeFloat(float f) throws IOException {
         writeS32(Float.floatToIntBits(f));
@@ -302,9 +262,7 @@ public final class DataOutputStream extends DisposableResource {
      * 文字列を書き込む。<BR>
      * エンコードはShiftJISとして保存する。
      *
-     * 
      * @param str
-     * 
      */
     public void writeString(String str) throws IOException {
         byte[] buf = str.getBytes("Shift_JIS");
@@ -317,10 +275,8 @@ public final class DataOutputStream extends DisposableResource {
     /**
      * 書き込みを行った場合の保存バイト数を計算する。
      *
-     * 
      * @param str
      * @return
-     * 
      */
     public static int getWriteSize(String str) {
         byte[] buf = str.getBytes();
@@ -331,9 +287,7 @@ public final class DataOutputStream extends DisposableResource {
      * 配列の大きさと本体を保存する。<BR>
      * bufferがnullである場合、0バイトのファイルとして保存する。
      *
-     * 
      * @param buffer
-     * 
      */
     public void writeFile(byte[] buffer) throws IOException {
         if (buffer == null) {

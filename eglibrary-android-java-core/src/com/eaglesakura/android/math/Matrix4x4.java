@@ -1,6 +1,8 @@
-package com.eaglesakura.math;
+package com.eaglesakura.android.math;
 
 import android.opengl.Matrix;
+
+import com.eaglesakura.math.Vector3;
 
 /**
  * OpenGL ESの挙動に合わせた4x4行列を管理する

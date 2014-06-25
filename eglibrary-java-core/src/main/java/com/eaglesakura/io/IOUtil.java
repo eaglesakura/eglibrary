@@ -282,7 +282,7 @@ public class IOUtil {
      * ファイル拡張子を取得する。
      *
      * 
-     * @param path
+     * @param fileName
      * @return
      * 
      */

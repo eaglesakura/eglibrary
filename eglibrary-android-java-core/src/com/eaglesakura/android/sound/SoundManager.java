@@ -1,26 +1,25 @@
 package com.eaglesakura.android.sound;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
-import com.eaglesakura.resource.DisposableResource;
 import com.eaglesakura.util.LogUtil;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * SE管理クラス
  * @author TAKESHI YAMASHITA
  *
  */
-public class SoundManager extends DisposableResource {
+public class SoundManager  {
     Map<Object, MediaPlayer> medias = new HashMap<Object, MediaPlayer>();
     Context context = null;
 
@@ -147,7 +146,6 @@ public class SoundManager extends DisposableResource {
     /**
      * 握っているリソースを全て解放する
      */
-    @Override
     public void dispose() {
         Iterator<Entry<Object, MediaPlayer>> iterator = medias.entrySet().iterator();
         while (iterator.hasNext()) {

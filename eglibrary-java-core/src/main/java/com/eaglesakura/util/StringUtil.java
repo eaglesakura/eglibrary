@@ -1,11 +1,9 @@
 package com.eaglesakura.util;
 
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import android.annotation.SuppressLint;
-import android.util.Base64;
 
 public class StringUtil {
 
@@ -13,6 +11,7 @@ public class StringUtil {
 
     /**
      * 文字列がnullか空文字だったらtrueを返す。
+     *
      * @param str
      * @return
      */
@@ -26,6 +25,7 @@ public class StringUtil {
 
     /**
      * strがnullかemptyだったらnullを返す。
+     *
      * @param str
      * @return
      */
@@ -35,6 +35,7 @@ public class StringUtil {
 
     /**
      * 全角英数を半角英数に変換する
+     *
      * @param s
      * @return
      */
@@ -80,6 +81,7 @@ public class StringUtil {
 
     /**
      * 全角文字を半角文字に変更する
+     *
      * @param s
      * @return
      */
@@ -104,7 +106,6 @@ public class StringUtil {
     }
 
     /**
-     * 
      * @param str
      * @return
      */
@@ -146,11 +147,11 @@ public class StringUtil {
 
     /**
      * 日本語を意識してJavaの辞書順に並び替える
+     *
      * @param a
      * @param b
      * @return
      */
-    @SuppressLint("DefaultLocale")
     public static int compareString(String a, String b) {
         a = zenkakuHiraganaToZenkakuKatakana(a.toLowerCase());
         a = zenkakuEngToHankakuEng(a);
@@ -160,12 +161,12 @@ public class StringUtil {
         return a.compareTo(b);
     }
 
-    @SuppressLint("SimpleDateFormat")
     private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-hh:mm:ss.SS");
 
     /**
      * 指定時刻を文字列に変換する
      * 内容はyyyyMMdd-hh:mm:ss.SSとなる。
+     *
      * @param date
      * @return
      */
@@ -175,6 +176,7 @@ public class StringUtil {
 
     /**
      * yyyyMMdd-hh:mm:ss.SSフォーマットの文字列をDateに変換する
+     *
      * @param date
      * @return
      */
@@ -187,20 +189,83 @@ public class StringUtil {
     }
 
     /**
+     * base64 encode/decode
+     */
+    private static Class base64Class = null;
+
+    /**
+     * base64 encode
+     */
+    private static Method base64Encode = null;
+
+    /**
+     * base64 decode
+     */
+    private static Method base64Decode = null;
+
+    private synchronized static void initializeBase64Method() {
+        if (base64Class != null) {
+            return;
+        }
+
+        try {
+            // for Android
+            base64Class = Class.forName("android.util.Base64");
+            base64Encode = base64Class.getMethod("encodeToString", byte[].class, int.class);
+            base64Decode = base64Class.getMethod("decode", byte[].class, int.class);
+        } catch (Exception e) {
+            LogUtil.log(e);
+        }
+
+        if (base64Class != null) {
+            return;
+        }
+
+
+        if (base64Class == null) {
+            try {
+                // for Commons Codec Java
+                base64Class = Class.forName("org.apache.commons.codec.binary.Base64");
+                base64Encode = base64Class.getMethod("encodeBase64", byte[].class);
+                base64Decode = base64Class.getMethod("decodeBase64", byte[].class);
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
+
+    /**
      * base64エンコードする
+     *
      * @param buffer
      * @return
      */
     public static String toString(byte[] buffer) {
-        return Base64.encodeToString(buffer, Base64.DEFAULT);
+        initializeBase64Method();
+
+        try {
+            return (String) base64Encode.invoke(base64Class, buffer, 0 /* Base64.Default */);
+        } catch (Exception e) {
+            LogUtil.log(e);
+            return null;
+        }
     }
 
     /**
      * base64文字列をバイト配列へ変換する
+     *
      * @param base64
      * @return
      */
     public static byte[] toByteArray(String base64) {
-        return Base64.decode(base64, Base64.DEFAULT);
+        initializeBase64Method();
+
+        try {
+            return (byte[]) base64Decode.invoke(base64Class, base64, 0 /* Base64.Default */);
+        } catch (Exception e) {
+            LogUtil.log(e);
+            return null;
+        }
     }
 }
