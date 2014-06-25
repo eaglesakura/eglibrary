@@ -75,7 +75,7 @@ public class TextKeyValueStore extends BaseDatabase<DaoSession> {
      * @param key
      * @param obj
      */
-    public <T> void put(String key, T obj) {
+    public <T> void putJson(String key, T obj) {
         put(key, JSON.encodeOrNull(obj));
     }
 

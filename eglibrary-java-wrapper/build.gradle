@@ -7,8 +7,6 @@ repositories {
 }
 
 dependencies {
-    compile "com.googlecode.android-query:android-query:0.25.+"
-    compile 'com.google.protobuf:protobuf-java:2.5.+'
     compile 'com.fasterxml.jackson.core:jackson-core:2.4.+'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.4.+'
     compile 'com.google.http-client:google-http-client-xml:1.18.+'
