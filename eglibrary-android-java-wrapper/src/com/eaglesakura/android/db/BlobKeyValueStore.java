@@ -7,9 +7,9 @@ import java.util.Date;
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.eaglesakura.andriders.dao.bkvs.DaoMaster;
-import com.eaglesakura.andriders.dao.bkvs.DaoSession;
-import com.eaglesakura.andriders.dao.bkvs.DbKeyValueData;
+import com.eaglesakura.android.dao.bkvs.DaoMaster;
+import com.eaglesakura.android.dao.bkvs.DaoSession;
+import com.eaglesakura.android.dao.bkvs.DbKeyValueData;
 import com.eaglesakura.util.LogUtil;
 
 public class BlobKeyValueStore extends BaseDatabase<DaoSession> {
@@ -28,6 +28,7 @@ public class BlobKeyValueStore extends BaseDatabase<DaoSession> {
 
     /**
      * 値を取得する
+     *
      * @param key
      * @return
      */
@@ -42,6 +43,7 @@ public class BlobKeyValueStore extends BaseDatabase<DaoSession> {
 
     /**
      * 値を保存する
+     *
      * @param key
      * @param buffer
      */
@@ -56,6 +58,7 @@ public class BlobKeyValueStore extends BaseDatabase<DaoSession> {
 
     /**
      * 値を保存する
+     *
      * @param key
      * @param data
      */
@@ -65,6 +68,7 @@ public class BlobKeyValueStore extends BaseDatabase<DaoSession> {
 
     /**
      * protocol buffersとして取得する
+     *
      * @param key
      * @param clz
      * @return

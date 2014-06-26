@@ -6,9 +6,9 @@ import java.util.Date;
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.eaglesakura.andriders.dao.tkvs.DaoMaster;
-import com.eaglesakura.andriders.dao.tkvs.DaoSession;
-import com.eaglesakura.andriders.dao.tkvs.DbKeyValueData;
+import com.eaglesakura.android.dao.tkvs.DaoMaster;
+import com.eaglesakura.android.dao.tkvs.DaoSession;
+import com.eaglesakura.android.dao.tkvs.DbKeyValueData;
 import com.eaglesakura.json.JSON;
 import com.eaglesakura.util.StringUtil;
 
@@ -31,6 +31,7 @@ public class TextKeyValueStore extends BaseDatabase<DaoSession> {
 
     /**
      * データの更新を行う
+     *
      * @param key
      * @param value
      */
@@ -40,6 +41,7 @@ public class TextKeyValueStore extends BaseDatabase<DaoSession> {
 
     /**
      * データの更新を行う
+     *
      * @param key
      * @param value
      */
@@ -49,6 +51,7 @@ public class TextKeyValueStore extends BaseDatabase<DaoSession> {
 
     /**
      * データの更新を行う
+     *
      * @param key
      * @param value
      */
@@ -58,6 +61,7 @@ public class TextKeyValueStore extends BaseDatabase<DaoSession> {
 
     /**
      * データの更新を行う
+     *
      * @param key
      * @param value
      */
@@ -72,6 +76,7 @@ public class TextKeyValueStore extends BaseDatabase<DaoSession> {
 
     /**
      * データの更新を行う
+     *
      * @param key
      * @param obj
      */
@@ -81,6 +86,7 @@ public class TextKeyValueStore extends BaseDatabase<DaoSession> {
 
     /**
      * 値を取得する
+     *
      * @param key
      * @param def
      * @return
@@ -98,6 +104,7 @@ public class TextKeyValueStore extends BaseDatabase<DaoSession> {
 
     /**
      * long値を取得する
+     *
      * @param key
      * @param def
      * @return
@@ -116,6 +123,7 @@ public class TextKeyValueStore extends BaseDatabase<DaoSession> {
 
     /**
      * double値を取得する
+     *
      * @param key
      * @param def
      * @return
@@ -134,6 +142,7 @@ public class TextKeyValueStore extends BaseDatabase<DaoSession> {
 
     /**
      * バイト配列値を取得する
+     *
      * @param key
      * @return
      */
@@ -148,6 +157,7 @@ public class TextKeyValueStore extends BaseDatabase<DaoSession> {
 
     /**
      * JSONとして取得する
+     *
      * @param key
      * @param clz
      * @return

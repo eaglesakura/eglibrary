@@ -1,0 +1,19 @@
+apply plugin: 'groovy'
+apply plugin: 'application'
+
+// 実行クラスを指定
+mainClassName = 'com.eaglesakura.android.db.dao.Main'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // build groovy
+    groovy "org.codehaus.groovy:groovy:2.0.+"
+
+    // greenDao
+    compile "de.greenrobot:greendao-generator:1.3.+"
+}
+
+manifest.mainAttributes("Main-Class": "${mainClassName}")

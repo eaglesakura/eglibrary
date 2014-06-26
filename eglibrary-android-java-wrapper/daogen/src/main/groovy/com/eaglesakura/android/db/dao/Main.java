@@ -6,9 +6,9 @@ import de.greenrobot.daogenerator.Schema;
 
 public class Main {
 
-    private static final String PACKAGE_NAME = "com.eaglesakura.andriders.dao";
+    private static final String PACKAGE_NAME = "com.eaglesakura.android.dao";
 
-    private static final String OUTPUT_PATH = "../eglibrary-android-data/dao";
+    private static final String OUTPUT_PATH = "../dao";
 
     public static void main(String[] args) {
         try {
