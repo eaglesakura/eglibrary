@@ -100,6 +100,16 @@ public class BluetoothDeviceScanner {
     }
 
     /**
+     * キャッシュしているデバイスを全て取得する。
+     * <p/>
+     * その際、無効なデバイスは排除する。
+     */
+    public List<BluetoothDeviceCache> getExistDeviceCaches() {
+        cleanDeviceCaches();
+        return deviceCaches;
+    }
+
+    /**
      * キャッシュ時刻が有効なキャッシュ一覧を取得する
      */
     private BluetoothDeviceCache getDeviceCache(BluetoothDevice device) {
@@ -191,6 +201,7 @@ public class BluetoothDeviceScanner {
 
     /**
      * キャッシュが有効な時間を指定する
+     *
      * @param existCacheTimeMs キャッシュが有効な時間(ミリ秒)
      */
     public void setExistCacheTimeMs(long existCacheTimeMs) {
