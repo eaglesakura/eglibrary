@@ -12,7 +12,6 @@ import android.content.IntentFilter;
 
 import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.util.LogUtil;
-import com.eaglesakura.util.Util;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -212,7 +211,7 @@ public class BluetoothDeviceScanner {
      * スキャンを開始する
      */
     @SuppressLint("NewApi")
-    public synchronized void startScan(int timeoutMs) {
+    public synchronized void startScan(long timeoutMs) {
         LogUtil.d("scan mode :: " + mode);
         if (mode == BluetoothDeviceType.BluetoothLE) {
             bluetoothAdapter = bluetoothManager.getAdapter();
@@ -305,7 +304,7 @@ public class BluetoothDeviceScanner {
         /**
          * 発見された時刻
          */
-        final Date connectedDate;
+        final Date updatedDate;
 
         /**
          * 比較用のアドレス
@@ -317,14 +316,14 @@ public class BluetoothDeviceScanner {
             this.rssi = rssi;
             this.scanRecord = scanRecord;
             this.address = device.getAddress();
-            this.connectedDate = new Date();
+            this.updatedDate = new Date();
         }
 
         /**
          * キャッシュが有効であればtrue
          */
         public boolean exist() {
-            return (System.currentTimeMillis() - connectedDate.getTime()) < existCacheTimeMs;
+            return (System.currentTimeMillis() - updatedDate.getTime()) < existCacheTimeMs;
         }
 
         /**
@@ -349,6 +348,14 @@ public class BluetoothDeviceScanner {
         }
 
         /**
+         * 更新日時を取得する
+         * @return
+         */
+        public Date getUpdatedDate() {
+            return updatedDate;
+        }
+
+        /**
          * 同期を行う
          */
         private void sync(BluetoothDevice device, int rssi, byte[] scanRecord) {
@@ -358,7 +365,7 @@ public class BluetoothDeviceScanner {
             this.device = device;
             this.scanRecord = scanRecord;
             this.rssi = rssi;
-            this.connectedDate.setTime(System.currentTimeMillis());
+            this.updatedDate.setTime(System.currentTimeMillis());
         }
 
         @Override
