@@ -37,6 +37,12 @@ public class BluetoothDeviceScanner {
      */
     long existCacheTimeMs = 1000 * 15;
 
+    /**
+     * RSSIをキャッシュする時間
+     * デフォルト時間は要調整
+     */
+    long rssiCacheTimeMs = 1000 * 5;
+
     final Context context;
 
     final Runnable scanStopRunnable = new Runnable() {
@@ -221,6 +227,15 @@ public class BluetoothDeviceScanner {
     }
 
     /**
+     * RSSIキャッシュ時間を指定
+     *
+     * @param rssiCacheTimeMs キャッシュが有効な時間(ミリ秒)
+     */
+    public void setRssiCacheTimeMs(long rssiCacheTimeMs) {
+        this.rssiCacheTimeMs = rssiCacheTimeMs;
+    }
+
+    /**
      * スキャンを開始する
      */
     @SuppressLint("NewApi")
@@ -308,6 +323,26 @@ public class BluetoothDeviceScanner {
          */
         int rssi = RSSI_UNKNOWN;
 
+        /**
+         * 過去のRSSI値
+         */
+        private class RssiCache {
+            /**
+             * RSSI値
+             */
+            int cacheRssi;
+
+            /**
+             * RSSIの検知時刻
+             */
+            long timeMs;
+
+            private RssiCache(int rssi, long timeMs) {
+                this.cacheRssi = rssi;
+                this.timeMs = timeMs;
+            }
+        }
+
 
         /**
          * record
@@ -323,6 +358,11 @@ public class BluetoothDeviceScanner {
          * 比較用のアドレス
          */
         final String address;
+
+        /**
+         * 過去のRSSI値
+         */
+        private List<RssiCache> rssiCaches = new ArrayList<RssiCache>();
 
         private BluetoothDeviceCache(BluetoothDevice device, int rssi, byte[] scanRecord) {
             this.device = device;
@@ -370,16 +410,82 @@ public class BluetoothDeviceScanner {
         }
 
         /**
+         * デバイスからの距離をメートル単位で算出する。
+         * <p/>
+         * 距離は概算となる。また、揺らぎがかなり大きいので、参考値程度に考える。
+         *
+         * @param fromAverage trueの場合、平均のRSSIを使用する。falseの場合は最新のRSSIを使用する
+         * @return デバイスからの距離(m)
+         */
+        public double calcDeviceDistanceMeter(boolean fromAverage) {
+            try {
+                int calcRssi = this.rssi;
+                if (fromAverage) {
+                    calcRssi = getRssiAverage();
+                }
+
+                int txPower = -59;
+
+                // 距離をチェック
+                double distance = 0;
+                double ratio = (double) calcRssi / (double) txPower;
+                if (ratio < 1.0) {
+                    distance = Math.pow(ratio, 10);
+                } else {
+                    distance = (0.89976) * Math.pow(ratio, 7.7095) + 0.111;
+                }
+
+                return distance;
+            } catch (Exception e) {
+                return 0.0;
+            }
+        }
+
+        /**
+         * 有効なスキャンキャッシュ中のRSSI平均を取得する
+         */
+        public int getRssiAverage() {
+            synchronized (this) {
+                int rssiNum = 1 + rssiCaches.size();
+                int rssiSum = this.rssi;
+
+                // キャシュを足し込む
+                for (RssiCache cache : rssiCaches) {
+                    rssiSum += cache.cacheRssi;
+                }
+
+                // 平均を返す
+                return rssiSum / rssiNum;
+            }
+        }
+
+        /**
          * 同期を行う
          */
         private void sync(BluetoothDevice device, int rssi, byte[] scanRecord) {
             assert device != null;
             assert device.getAddress().equals(address);
 
+            final long currentTime = System.currentTimeMillis();
+            // キャッシュを保存する
+            synchronized (this) {
+                Iterator<RssiCache> iterator = rssiCaches.iterator();
+                while (iterator.hasNext()) {
+                    RssiCache cache = iterator.next();
+                    if ((currentTime - cache.timeMs) > rssiCacheTimeMs) {
+                        // 有効なキャッシュ時間を超えたらclean
+                        iterator.remove();
+                    }
+                }
+
+                rssiCaches.add(new RssiCache(this.rssi, updatedDate.getTime()));
+            }
+
             this.device = device;
             this.scanRecord = scanRecord;
             this.rssi = rssi;
-            this.updatedDate.setTime(System.currentTimeMillis());
+            this.updatedDate.setTime(currentTime);
+
         }
 
         @Override
