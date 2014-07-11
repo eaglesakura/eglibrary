@@ -58,6 +58,11 @@ public class BluetoothDeviceScanner {
     private Object leScanCallback = null;
 
     /**
+     * ロックオブジェクト
+     */
+    private Object cacheLock = new Object();
+
+    /**
      * BLEデバイス検索実装クラス
      * 旧APIでビルドできるように隠ぺいする
      */
@@ -65,22 +70,24 @@ public class BluetoothDeviceScanner {
     private class LeScanCallbackImpl implements LeScanCallback {
         @Override
         public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
-            BluetoothDeviceCache cache = getDeviceCache(device);
-            if (cache == null) {
-                // キャッシュがないので、新規ヒットしたデバイスである
-                cache = new BluetoothDeviceCache(device, rssi, scanRecord);
+            synchronized (cacheLock) {
+                BluetoothDeviceCache cache = getDeviceCache(device);
+                if (cache == null) {
+                    // キャッシュがないので、新規ヒットしたデバイスである
+                    cache = new BluetoothDeviceCache(device, rssi, scanRecord);
 
-                // キャッシュを追加する
-                deviceCaches.add(cache);
+                    // キャッシュを追加する
+                    deviceCaches.add(cache);
 
-                // コールバック呼び出し
-                listener.onDeviceFound(BluetoothDeviceScanner.this, cache);
-            } else {
-                // キャッシュを更新する
-                cache.sync(device, rssi, scanRecord);
+                    // コールバック呼び出し
+                    listener.onDeviceFound(BluetoothDeviceScanner.this, cache);
+                } else {
+                    // キャッシュを更新する
+                    cache.sync(device, rssi, scanRecord);
 
-                // コールバック呼び出し
-                listener.onDeviceUpdated(BluetoothDeviceScanner.this, cache);
+                    // コールバック呼び出し
+                    listener.onDeviceUpdated(BluetoothDeviceScanner.this, cache);
+                }
             }
         }
     }
@@ -89,11 +96,13 @@ public class BluetoothDeviceScanner {
      * 保持しているキャッシュをチェックし、不要なものを削除する
      */
     public void cleanDeviceCaches() {
-        Iterator<BluetoothDeviceCache> iterator = deviceCaches.iterator();
-        while (iterator.hasNext()) {
-            BluetoothDeviceCache deviceCache = iterator.next();
-            if (!deviceCache.exist()) {
-                iterator.remove();
+        synchronized (cacheLock) {
+            Iterator<BluetoothDeviceCache> iterator = deviceCaches.iterator();
+            while (iterator.hasNext()) {
+                BluetoothDeviceCache deviceCache = iterator.next();
+                if (!deviceCache.exist()) {
+                    iterator.remove();
+                }
             }
         }
     }
@@ -101,11 +110,15 @@ public class BluetoothDeviceScanner {
     /**
      * キャッシュしているデバイスを全て取得する。
      * <p/>
+     * このメソッドはコピーを返すため、外部の影響を受けない。
+     * <p/>
      * その際、無効なデバイスは排除する。
      */
     public List<BluetoothDeviceCache> getExistDeviceCaches() {
         cleanDeviceCaches();
-        return deviceCaches;
+        synchronized (cacheLock) {
+            return new ArrayList<BluetoothDeviceCache>(deviceCaches);
+        }
     }
 
     /**
@@ -349,6 +362,7 @@ public class BluetoothDeviceScanner {
 
         /**
          * 更新日時を取得する
+         *
          * @return
          */
         public Date getUpdatedDate() {
