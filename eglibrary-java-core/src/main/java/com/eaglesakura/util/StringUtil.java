@@ -268,4 +268,17 @@ public class StringUtil {
             return null;
         }
     }
+
+    /**
+     * 16進数の文字に変換する。
+     * 1桁の場合、頭に"0"を挿入する
+     */
+    public static String toHexString(byte b) {
+        String result = Integer.toHexString(((int) b) & 0xFF);
+        if (result.length() == 1) {
+            return "0" + result;
+        } else {
+            return result;
+        }
+    }
 }
