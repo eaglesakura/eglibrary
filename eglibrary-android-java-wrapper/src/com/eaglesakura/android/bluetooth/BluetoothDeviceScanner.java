@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import com.eaglesakura.android.bluetooth.beacon.BeaconData;
 import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.util.LogUtil;
 
@@ -324,6 +325,11 @@ public class BluetoothDeviceScanner {
         int rssi = RSSI_UNKNOWN;
 
         /**
+         * iBeaconとして扱う場合のキャッシュデータ
+         */
+        BeaconData beacon;
+
+        /**
          * 過去のRSSI値
          */
         private class RssiCache {
@@ -424,7 +430,10 @@ public class BluetoothDeviceScanner {
                     calcRssi = getRssiAverage();
                 }
 
-                int txPower = -59;
+                int txPower = -55;
+                if (beacon != null) {
+                    txPower = beacon.getTxPower();
+                }
 
                 // 距離をチェック
                 double distance = 0;
@@ -439,6 +448,22 @@ public class BluetoothDeviceScanner {
             } catch (Exception e) {
                 return 0.0;
             }
+        }
+
+        /**
+         * ビーコン情報をパースする
+         */
+        public void parseBeacon() throws Exception {
+            if (beacon == null) {
+                beacon = BeaconData.createInstance(device, rssi, scanRecord);
+            }
+        }
+
+        /**
+         * ビーコン情報をパースする
+         */
+        public BeaconData getBeacon() {
+            return beacon;
         }
 
         /**
