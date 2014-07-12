@@ -560,4 +560,29 @@ public class BluetoothDeviceScanner {
             return 0;
         }
     }
+
+    /**
+     * 最も近い位置にあるデバイスを取得する
+     *
+     * 精度を上げるため、平均RSSIを使用してチェックする。
+     *
+     * @param devices 検索対象のデバイス一覧
+     * @return デバイス
+     */
+    public static BluetoothDeviceCache pickNearDevice(List<BluetoothDeviceCache> devices) {
+        BluetoothDeviceCache result = null;
+        double resultDeviceDistance = 99999;
+
+        for (BluetoothDeviceCache cache : devices) {
+            final double cacheDeviceDistance = cache.calcDeviceDistanceMeter(true);
+
+            if (result == null || cacheDeviceDistance < resultDeviceDistance) {
+                // 戻りが指定されていないか、 新たなデバイスのほうが近い
+                result = cache;
+                resultDeviceDistance = cacheDeviceDistance;
+            }
+        }
+
+        return result;
+    }
 }
