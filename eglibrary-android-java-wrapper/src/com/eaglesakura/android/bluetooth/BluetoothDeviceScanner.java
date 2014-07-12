@@ -424,30 +424,18 @@ public class BluetoothDeviceScanner {
          * @return デバイスからの距離(m)
          */
         public double calcDeviceDistanceMeter(boolean fromAverage) {
-            try {
-                int calcRssi = this.rssi;
-                if (fromAverage) {
-                    calcRssi = getRssiAverage();
-                }
 
-                int txPower = -55;
-                if (beacon != null) {
-                    txPower = beacon.getTxPower();
-                }
-
-                // 距離をチェック
-                double distance = 0;
-                double ratio = (double) calcRssi / (double) txPower;
-                if (ratio < 1.0) {
-                    distance = Math.pow(ratio, 10);
-                } else {
-                    distance = (0.89976) * Math.pow(ratio, 7.7095) + 0.111;
-                }
-
-                return distance;
-            } catch (Exception e) {
-                return 0.0;
+            int calcRssi = this.rssi;
+            if (fromAverage) {
+                calcRssi = getRssiAverage();
             }
+
+            int txPower = -55;
+            if (beacon != null) {
+                txPower = beacon.getTxPower();
+            }
+
+            return calcDeviceDistance(calcRssi, txPower);
         }
 
         /**
@@ -534,7 +522,7 @@ public class BluetoothDeviceScanner {
 
     /**
      * ビーコンのみをフィルタリングする
-     *
+     * <p/>
      * 事前に BluetoothDeviceCache.parseBeaconを呼んでおく必要がある
      */
     public static void filterBeacons(List<BluetoothDeviceCache> list) {
@@ -544,6 +532,32 @@ public class BluetoothDeviceScanner {
             if (cache.getBeacon() == null) {
                 iterator.remove();
             }
+        }
+    }
+
+    /**
+     * BLEデバイスへの距離を計算する。
+     * <p/>
+     * この距離は揺らぎが大きいため、参考値程度に考える
+     *
+     * @param rssi    電波強度
+     * @param txPower BLEデバイス電波出力
+     * @return 距離(メートル)
+     */
+    public static double calcDeviceDistance(int rssi, int txPower) {
+        try {
+            // 距離をチェック
+            double distance = 0;
+            double ratio = (double) rssi / (double) txPower;
+            if (ratio < 1.0) {
+                distance = Math.pow(ratio, 10);
+            } else {
+                distance = (0.89976) * Math.pow(ratio, 7.7095) + 0.111;
+            }
+
+            return distance;
+        } catch (Exception e) {
+            return 0;
         }
     }
 }
