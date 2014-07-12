@@ -531,4 +531,19 @@ public class BluetoothDeviceScanner {
             return address != null ? address.hashCode() : 0;
         }
     }
+
+    /**
+     * ビーコンのみをフィルタリングする
+     *
+     * 事前に BluetoothDeviceCache.parseBeaconを呼んでおく必要がある
+     */
+    public static void filterBeacons(List<BluetoothDeviceCache> list) {
+        Iterator<BluetoothDeviceCache> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            BluetoothDeviceCache cache = iterator.next();
+            if (cache.getBeacon() == null) {
+                iterator.remove();
+            }
+        }
+    }
 }
