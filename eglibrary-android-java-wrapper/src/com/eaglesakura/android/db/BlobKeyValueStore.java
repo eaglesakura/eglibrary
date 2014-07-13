@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import com.eaglesakura.android.dao.bkvs.DaoMaster;
 import com.eaglesakura.android.dao.bkvs.DaoSession;
 import com.eaglesakura.android.dao.bkvs.DbKeyValueData;
+import com.eaglesakura.android.dao.bkvs.DbKeyValueDataDao;
 import com.eaglesakura.util.LogUtil;
 
 public class BlobKeyValueStore extends BaseDatabase<DaoSession> {
@@ -29,6 +30,15 @@ public class BlobKeyValueStore extends BaseDatabase<DaoSession> {
     protected SQLiteOpenHelper createHelper() {
         return new DaoMaster.DevOpenHelper(context, dbFilePath.getAbsolutePath(), null);
     }
+
+    /**
+     * 指定したkeyの情報を持っているならば、trueを返す
+     * @param key 調べるkey
+     */
+    public boolean hasValue(String key) {
+        return session.queryBuilder(DbKeyValueData.class).where(DbKeyValueDataDao.Properties.Key.eq(key)).count() == 1;
+    }
+
 
     /**
      * 値を取得する

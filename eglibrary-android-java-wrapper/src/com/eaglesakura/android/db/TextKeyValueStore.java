@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.eaglesakura.android.dao.tkvs.DaoMaster;
 import com.eaglesakura.android.dao.tkvs.DaoSession;
 import com.eaglesakura.android.dao.tkvs.DbKeyValueData;
+import com.eaglesakura.android.dao.tkvs.DbKeyValueDataDao;
 import com.eaglesakura.json.JSON;
 import com.eaglesakura.util.StringUtil;
 
@@ -27,6 +28,15 @@ public class TextKeyValueStore extends BaseDatabase<DaoSession> {
     @Override
     protected SQLiteOpenHelper createHelper() {
         return new DaoMaster.DevOpenHelper(context, dbFilePath.getAbsolutePath(), null);
+    }
+
+    /**
+     * 指定したkeyの情報を持っているならば、trueを返す
+     *
+     * @param key 調べるkey
+     */
+    public boolean hasValue(String key) {
+        return session.queryBuilder(DbKeyValueData.class).where(DbKeyValueDataDao.Properties.Key.eq(key)).count() == 1;
     }
 
     /**
