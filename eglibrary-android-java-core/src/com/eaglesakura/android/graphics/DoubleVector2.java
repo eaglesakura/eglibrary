@@ -29,18 +29,19 @@ public class DoubleVector2 {
      * @param degree
      * @return
      */
-    public static DoubleVector2 rotatedPosition(double length, double degree) {
+    public static DoubleVector2 rotatedPosition(double length, double degree, DoubleVector2 result) {
         final double rad = Math.toRadians(degree);
         final double x0 = 0;
         final double y0 = length;
 
-        final double x1 = x0 * Math.cos(rad) - y0 * Math.sin(rad);
-        final double y1 = x0 * Math.sin(rad) + y0 * Math.cos(rad);
-        return new DoubleVector2(x1, y1);
+        result.x = x0 * Math.cos(rad) - y0 * Math.sin(rad);
+        result.y = x0 * Math.sin(rad) + y0 * Math.cos(rad);
+        return result;
     }
 
     /**
      * vec(x0, y0)からvec(x1, y1)への長さを取得する
+     *
      * @param x0
      * @param y0
      * @param x1
