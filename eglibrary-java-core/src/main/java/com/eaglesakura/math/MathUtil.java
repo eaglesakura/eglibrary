@@ -72,10 +72,29 @@ public class MathUtil {
     /**
      * 目標数値へ移動する。
      *
-     * @param now
-     * @param offset
-     * @param target
-     * @return
+     * @param now    現在値
+     * @param offset 移動量
+     * @param target 目標とすべき値
+     * @return 計算後の値
+     */
+    public static final double targetMove(double now, double offset, double target) {
+        offset = Math.abs(offset);
+        if (Math.abs(target - now) <= offset) {
+            return target;
+        } else if (target > now) {
+            return now + offset;
+        } else {
+            return now - offset;
+        }
+    }
+
+    /**
+     * 目標数値へ移動する。
+     *
+     * @param now    現在値
+     * @param offset 移動量
+     * @param target 目標とすべき値
+     * @return 計算後の値
      */
     public static final float targetMove(float now, float offset, float target) {
         offset = Math.abs(offset);
@@ -91,10 +110,10 @@ public class MathUtil {
     /**
      * 目標数値へ移動する。
      *
-     * @param now
-     * @param offset
-     * @param target
-     * @return
+     * @param now    現在値
+     * @param offset 移動量
+     * @param target 目標とすべき値
+     * @return 計算後の値
      */
     public static final int targetMove(int now, int offset, int target) {
         offset = Math.abs(offset);
@@ -113,13 +132,29 @@ public class MathUtil {
      * blend == 1 -> a
      * blend == 0 -> b
      *
-     * @param a
-     * @param b
+     * @param a 遷移後の値
+     * @param b 遷移前の値
      * @param blend aのブレンド値
-     * @return
+     * @return ブレンド後の値
      */
     public static float blendValue(float a, float b, float blend) {
         return a * blend + b * (1.0f - blend);
+    }
+
+
+    /**
+     * 係数ブレンドを行い、結果を返す。
+     * 1.0に近いほどaに近い値となる。
+     * blend == 1 -> a
+     * blend == 0 -> b
+     *
+     * @param a 遷移後の値
+     * @param b 遷移前の値
+     * @param blend aのブレンド値
+     * @return ブレンド後の値
+     */
+    public static double blendValue(double a, double b, double blend) {
+        return a * blend + b * (1.0 - blend);
     }
 
     /**
