@@ -28,6 +28,7 @@ public abstract class BaseDatabase<SessionClass extends AbstractDaoSession> {
 
     /**
      * 新規に生成する
+     *
      * @param context
      * @param daoMasterClass
      */
@@ -38,6 +39,7 @@ public abstract class BaseDatabase<SessionClass extends AbstractDaoSession> {
 
     /**
      * DaoMasterを指定して生成する
+     *
      * @param context
      * @param daoMaster
      */
@@ -69,6 +71,7 @@ public abstract class BaseDatabase<SessionClass extends AbstractDaoSession> {
     /**
      * Sessionを取得する
      * queryを投げるのに使う。
+     *
      * @return
      */
     public SessionClass getSession() {
@@ -76,7 +79,7 @@ public abstract class BaseDatabase<SessionClass extends AbstractDaoSession> {
     }
 
     /**
-     * 
+     *
      */
     public void close() {
         if (daoMaster != null) {
@@ -102,14 +105,13 @@ public abstract class BaseDatabase<SessionClass extends AbstractDaoSession> {
 
     /**
      * insertを試行し、失敗したらupdateを行う
+     *
      * @param entity
      * @param session
      */
     protected <T, K> void insertOrUpdate(T entity, AbstractDao<T, K> session) {
         try {
-            if (session.insert(entity) < 0) {
-                session.update(entity);
-            }
+            session.insertOrReplace(entity);
         } catch (SQLiteConstraintException e) {
             session.update(entity);
         }
@@ -117,6 +119,7 @@ public abstract class BaseDatabase<SessionClass extends AbstractDaoSession> {
 
     /**
      * ラップしたオブジェクトを返す
+     *
      * @param origin
      * @param originClass
      * @param convertClass
