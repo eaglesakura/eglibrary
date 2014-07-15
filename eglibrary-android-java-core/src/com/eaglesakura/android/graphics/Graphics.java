@@ -113,6 +113,15 @@ public class Graphics {
     }
 
     /**
+     * 描画色を直接指定する
+     *
+     * @param rgba RGBAマッピングされた色情報
+     */
+    public void setColorRGBA(int rgba) {
+        paint.setColor(rgba);
+    }
+
+    /**
      * アンチエイリアスの有効・無効の指定を行う。<BR>
      * デフォルトは無効である。
      *

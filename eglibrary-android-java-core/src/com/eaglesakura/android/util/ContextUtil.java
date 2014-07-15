@@ -1,7 +1,5 @@
 package com.eaglesakura.android.util;
 
-import java.util.UUID;
-
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -17,13 +15,15 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 
 import com.eaglesakura.math.Vector2;
 import com.eaglesakura.util.EncodeUtil;
+
+import java.util.UUID;
 
 /**
  * Context関連の便利メソッドを提供する
@@ -186,15 +186,24 @@ public class ContextUtil {
     /**
      * Actionバーに対応している場合、trueを返す。
      *
-     * @param context
      * @return
      */
-    public static boolean isActionBarEnable() {
+    public static boolean supportedActionBar() {
         try {
             return Build.VERSION.SDK_INT >= 11;
         } catch (Exception e) {
             return false;
         }
+    }
+
+    /**
+     * 戻るキーイベントであればtrue
+     *
+     * @param event dispatchに渡されたイベント
+     * @return 戻るキーならばtrue
+     */
+    public static boolean isBackKeyEvent(KeyEvent event) {
+        return event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK;
     }
 
     /**

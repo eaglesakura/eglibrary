@@ -53,9 +53,11 @@ public class MathUtil {
 
     /**
      * 360度系の正規化を行う。
+     * <p/>
+     * 0 <= now < 360 となる
      *
-     * @param now
-     * @return
+     * @param now 現在の360度系角度
+     * @return 正規化された360度系角度
      */
     public static final float normalizeDegree(float now) {
         while (now < 0.0f) {
@@ -67,6 +69,57 @@ public class MathUtil {
         }
 
         return now;
+    }
+
+    /**
+     * 360度系の正規化を行う。
+     * <p/>
+     * 0 <= return < 360 となる
+     *
+     * @param now 現在の360度系角度
+     * @return 正規化された360度系角度
+     */
+    public static final double normalizeDegree(double now) {
+        while (now < 0.0f) {
+            now += 360.0f;
+        }
+
+        while (now >= 360.0f) {
+            now -= 360.0f;
+        }
+
+        return now;
+    }
+
+    /**
+     * targetの角度を向かせるためにちょうどいい角度を算出する。
+     * <p/>
+     * targetへの角度が180度を超える場合、正負反転させた角度を選択する
+     * <p/>
+     * -360 < return <= 360 となる。
+     *
+     * @param now
+     * @param target
+     * @return
+     */
+    public static final double calcNearDegree(double now, double target) {
+        now = normalizeDegree(now);
+        target = normalizeDegree(target);
+
+        // now -> targetへの角度を求める
+        final double diff = target - now;
+
+        if (Math.abs(diff) <= 180) {
+            // 半周以内であれば、この角度で返してもいい
+            return target;
+        } else {
+            // 半周を超えているのならば、別角度として返さなければならない。
+            if (now > 180) {
+                return target + 360;
+            } else {
+                return target - 360;
+            }
+        }
     }
 
     /**
@@ -132,8 +185,8 @@ public class MathUtil {
      * blend == 1 -> a
      * blend == 0 -> b
      *
-     * @param a 遷移後の値
-     * @param b 遷移前の値
+     * @param a     遷移後の値
+     * @param b     遷移前の値
      * @param blend aのブレンド値
      * @return ブレンド後の値
      */
@@ -148,8 +201,8 @@ public class MathUtil {
      * blend == 1 -> a
      * blend == 0 -> b
      *
-     * @param a 遷移後の値
-     * @param b 遷移前の値
+     * @param a     遷移後の値
+     * @param b     遷移前の値
      * @param blend aのブレンド値
      * @return ブレンド後の値
      */
