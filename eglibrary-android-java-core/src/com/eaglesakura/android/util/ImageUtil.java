@@ -6,6 +6,10 @@ import java.security.MessageDigest;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 
 import com.eaglesakura.io.IOUtil;
 
@@ -13,6 +17,7 @@ public class ImageUtil {
 
     /**
      * 画像からSHA1指紋を作成する。
+     *
      * @param bitmap
      * @return
      */
@@ -48,6 +53,7 @@ public class ImageUtil {
 
     /**
      * image bufferからデコードする
+     *
      * @param imageFile
      * @return
      */
@@ -66,6 +72,7 @@ public class ImageUtil {
 
     /**
      * PNG画像にエンコードする
+     *
      * @param bitmap
      * @return
      */
@@ -77,5 +84,30 @@ public class ImageUtil {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * アルファ値をブレンドした新たな画像を生成する
+     *
+     * @param src
+     * @param alpha
+     * @return
+     */
+    public static Bitmap blendAlpha(Bitmap src, Bitmap alpha) {
+        // アルファ成分をコピーして作成
+        Bitmap image = Bitmap.createScaledBitmap(alpha, src.getWidth(), src.getHeight(), true);
+        Canvas canvas = new Canvas(image);
+
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setFilterBitmap(true);
+
+        // 転送モードを工夫してから
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+
+        canvas.drawBitmap(src, 0, 0, paint);
+
+        // 生成した画像を返す
+        return image;
     }
 }

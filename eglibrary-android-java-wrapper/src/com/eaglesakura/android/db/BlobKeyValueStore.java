@@ -15,7 +15,9 @@ import com.eaglesakura.android.dao.bkvs.DaoMaster;
 import com.eaglesakura.android.dao.bkvs.DaoSession;
 import com.eaglesakura.android.dao.bkvs.DbKeyValueData;
 import com.eaglesakura.android.dao.bkvs.DbKeyValueDataDao;
+import com.eaglesakura.android.util.ImageUtil;
 import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.StringUtil;
 
 public class BlobKeyValueStore extends BaseDatabase<DaoSession> {
 
@@ -33,6 +35,7 @@ public class BlobKeyValueStore extends BaseDatabase<DaoSession> {
 
     /**
      * 指定したkeyの情報を持っているならば、trueを返す
+     *
      * @param key 調べるkey
      */
     public boolean hasValue(String key) {
@@ -68,6 +71,26 @@ public class BlobKeyValueStore extends BaseDatabase<DaoSession> {
         } catch (Exception e) {
             LogUtil.log(e);
             return null;
+        }
+    }
+
+    /**
+     * DBから値を読み出し、アルファ合成を行って取得する
+     *
+     * @param key   読み出すイメージ
+     * @param alpha アルファ合成用画像
+     * @return 合成したイメージ
+     */
+    public Bitmap getImageWithAlphaBlend(String key, Bitmap alpha) {
+        Bitmap origin = getImage(key);
+        if (origin == null) {
+            return null;
+        }
+
+        try {
+            return ImageUtil.blendAlpha(origin, alpha);
+        } finally {
+            origin.recycle();
         }
     }
 
