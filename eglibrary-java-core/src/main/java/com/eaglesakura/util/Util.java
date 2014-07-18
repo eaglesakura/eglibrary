@@ -9,10 +9,15 @@ public class Util {
 
     /**
      * 単純にsleepさせる。
-     * 
+     *
      * @param timems
      */
     public static void sleep(long timems) {
+        if (timems <= 0) {
+            // sleep時間が0ならば何もする必要はない
+            return;
+        }
+
         try {
             Thread.sleep(timems);
         } catch (Exception e) {
@@ -22,6 +27,7 @@ public class Util {
 
     /**
      * itemが重複しないようにaddする
+     *
      * @param list
      * @param item
      * @return
