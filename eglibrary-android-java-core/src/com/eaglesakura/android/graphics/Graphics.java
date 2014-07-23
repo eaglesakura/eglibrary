@@ -1,8 +1,5 @@
 package com.eaglesakura.android.graphics;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -11,6 +8,10 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
+import android.graphics.RectF;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Canvas描画のサポート
@@ -24,6 +25,7 @@ public class Graphics {
     /**
      *
      */
+    @Deprecated
     public Graphics() {
         setFontSize(24);
         clearMatrix();
@@ -117,7 +119,7 @@ public class Graphics {
      *
      * @param rgba RGBAマッピングされた色情報
      */
-    public void setColorRGBA(int rgba) {
+    public void setColorARGB(int rgba) {
         paint.setColor(rgba);
     }
 
@@ -208,6 +210,21 @@ public class Graphics {
     public void fillRect(int x, int y, int w, int h) {
         paint.setStyle(Style.FILL);
         canvas.drawRect((float) x, (float) y, (float) (x + w), (float) (y + h), paint);
+    }
+
+    /**
+     * 丸角四角形の塗りつぶしを行う
+     *
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param radius
+     */
+    public void fillRoundRect(int x, int y, int w, int h, float radius) {
+        paint.setStyle(Style.FILL);
+        dstRectF.set(x, y, (x + w), (y + h));
+        canvas.drawRoundRect(dstRectF, radius, radius, paint);
     }
 
     /**
@@ -422,4 +439,6 @@ public class Graphics {
     private Rect srcRect = new Rect();
 
     private Rect dstRect = new Rect();
+
+    private RectF dstRectF = new RectF();
 }
