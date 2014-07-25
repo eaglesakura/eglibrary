@@ -81,12 +81,4 @@ public class Spreadsheet extends NonProguardModel {
         return null;
     }
 
-    /**
-     * シート情報からKeyを返す
-     * @param spreadsheet 取得対象のシート
-     * @return Keyとなる文字列
-     */
-    public static String    getSpreadsheetKey(Spreadsheet spreadsheet) {
-        return null;
-    }
 }
