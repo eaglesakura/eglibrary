@@ -81,4 +81,37 @@ public class Spreadsheet extends NonProguardModel {
         return null;
     }
 
+    /**
+     * Spreadsheet APIアクセス用URLを生成する
+     * <p/>
+     * JSONが基本となる
+     *
+     * @param key Spreadsheetキー
+     * @return APIアクセス用URL
+     */
+    public static String createSpreadsheetUrl(String key) {
+        return String.format("https://spreadsheets.google.com/feeds/worksheets/%s/private/full?alt=json", key);
+    }
+
+    /**
+     * Worksheet API用のURLを生成する
+     *
+     * @param spreadsheetKey Spreadsheetキー
+     * @param worksheetKey   Worksheetキー
+     * @return APIアクセス用URL
+     */
+    public static String createWorksheetUrl(String spreadsheetKey, String worksheetKey) {
+        return String.format("https://spreadsheets.google.com/feeds/cells/%s/%s/private/full?alt=json", spreadsheetKey, worksheetKey);
+    }
+
+    /**
+     * ワークシートキーを取得する
+     *
+     * @param entry ワークシートデータ
+     * @return ワークシートキー
+     */
+    public static String parseWorksheetKey(WorksheetEntry entry) {
+        final String id = entry.id.value;
+        return id.substring(id.lastIndexOf('/') + 1);
+    }
 }

@@ -1,8 +1,5 @@
 package com.eaglesakura.android.db;
 
-import java.io.File;
-import java.util.Date;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -12,6 +9,9 @@ import com.eaglesakura.android.dao.tkvs.DbKeyValueData;
 import com.eaglesakura.android.dao.tkvs.DbKeyValueDataDao;
 import com.eaglesakura.json.JSON;
 import com.eaglesakura.util.StringUtil;
+
+import java.io.File;
+import java.util.Date;
 
 /**
  * Key-Valueのシンプルなデータベース
@@ -110,6 +110,25 @@ public class TextKeyValueStore extends BaseDatabase<DaoSession> {
         }
 
         return result;
+    }
+
+    /**
+     * int値を取得する
+     *
+     * @param key
+     * @param def
+     * @return
+     */
+    public int getInteger(String key, int def) {
+        String value = get(key, null);
+        if (!StringUtil.isEmpty(value)) {
+            try {
+                return Integer.parseInt(value);
+            } catch (Exception e) {
+            }
+        }
+
+        return def;
     }
 
     /**

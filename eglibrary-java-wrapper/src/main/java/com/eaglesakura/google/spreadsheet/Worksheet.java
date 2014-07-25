@@ -10,6 +10,9 @@ import com.eaglesakura.proguard.NonProguardModel;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -231,5 +234,65 @@ public class Worksheet extends NonProguardModel {
 
         // 発見できなかった
         return null;
+    }
+
+    /**
+     * 行優先でソートする
+     *
+     * @param cells セル一覧
+     * @param up    昇順である場合true
+     * @return
+     */
+    public static List<Cell> sortRow(List<Cell> cells, final boolean up) {
+        Collections.sort(cells, new Comparator<Cell>() {
+            @Override
+            public int compare(Cell o1, Cell o2) {
+                if (o1.value.row != o2.value.row) {
+                    if (up) {
+                        return o1.value.row - o2.value.row;
+                    } else {
+                        return o2.value.row - o1.value.row;
+                    }
+                } else {
+                    if (up) {
+                        return o1.value.col - o2.value.col;
+                    } else {
+                        return o2.value.col- o1.value.col;
+                    }
+                }
+            }
+        });
+        return cells;
+    }
+
+    /**
+     * 列優先でソートする
+     *
+     * @param cells セル一覧
+     * @param up    昇順である場合true
+     * @return
+     */
+    public static List<Cell> sortCol(List<Cell> cells, final boolean up) {
+        Collections.sort(cells, new Comparator<Cell>() {
+            @Override
+            public int compare(Cell o1, Cell o2) {
+                if (o1.value.col != o2.value.col) {
+                    // 列ソート
+                    if (up) {
+                        return o1.value.col - o2.value.col;
+                    } else {
+                        return o2.value.col- o1.value.col;
+                    }
+                } else {
+                    // 行ソート
+                    if (up) {
+                        return o1.value.row - o2.value.row;
+                    } else {
+                        return o2.value.row - o1.value.row;
+                    }
+                }
+            }
+        });
+        return cells;
     }
 }
