@@ -216,6 +216,25 @@ public class Worksheet extends NonProguardModel {
     }
 
     /**
+     * カラムを検索する
+     *
+     * @param cells  検索対象のセル
+     * @param xIndex X方向のインデックス。0以上
+     * @return 成功した場合セル、それ以外はnull
+     */
+    public static Cell findCol(List<Cell> cells, int xIndex) {
+        ++xIndex;
+
+        for (Cell cell : cells) {
+            if (cell.value.col == xIndex) {
+                return cell;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * A1等のセル名称で検索する
      *
      * @param worksheet 検索対象のワークシート
@@ -257,7 +276,7 @@ public class Worksheet extends NonProguardModel {
                     if (up) {
                         return o1.value.col - o2.value.col;
                     } else {
-                        return o2.value.col- o1.value.col;
+                        return o2.value.col - o1.value.col;
                     }
                 }
             }
@@ -281,7 +300,7 @@ public class Worksheet extends NonProguardModel {
                     if (up) {
                         return o1.value.col - o2.value.col;
                     } else {
-                        return o2.value.col- o1.value.col;
+                        return o2.value.col - o1.value.col;
                     }
                 } else {
                     // 行ソート
