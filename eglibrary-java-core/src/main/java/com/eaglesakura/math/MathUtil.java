@@ -51,6 +51,14 @@ public class MathUtil {
         return now;
     }
 
+    public static final double minmax(double min, double max, double now) {
+        if (now < min)
+            return min;
+        if (now > max)
+            return max;
+        return now;
+    }
+
     /**
      * 360度系の正規化を行う。
      * <p/>

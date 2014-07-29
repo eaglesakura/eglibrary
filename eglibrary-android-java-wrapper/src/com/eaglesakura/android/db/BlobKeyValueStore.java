@@ -69,7 +69,7 @@ public class BlobKeyValueStore extends BaseDatabase<DaoSession> {
             byte[] buffer = get(key);
             return BitmapFactory.decodeStream(new ByteArrayInputStream(buffer));
         } catch (Exception e) {
-            LogUtil.log(e);
+//            LogUtil.log(e);
             return null;
         }
     }
