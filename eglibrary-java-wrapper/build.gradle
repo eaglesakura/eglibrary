@@ -16,18 +16,18 @@ dependencies {
 
 apply plugin: 'maven'
 
-if(!hasProperty("MAVEN_LOCAL_PATH")){
-    MAVEN_LOCAL_PATH = ""
+if(!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")){
+    EGLIBRARY_MAVEN_LOCAL_PATH = ""
 }
-if(!hasProperty("ARTIFACT_VERSION")){
-    ARTIFACT_VERSION = ""
+if(!hasProperty("EGLIBRARY_ARTIFACT_VERSION")){
+    EGLIBRARY_ARTIFACT_VERSION = ""
 }
 
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: uri(MAVEN_LOCAL_PATH))
-            pom.version = ARTIFACT_VERSION
+            repository(url: uri(EGLIBRARY_MAVEN_LOCAL_PATH))
+            pom.version = EGLIBRARY_ARTIFACT_VERSION
             pom.groupId = "com.eaglesakura"
             pom.artifactId = file(".").absoluteFile.name;
         }
