@@ -70,7 +70,7 @@ uploadArchives {
             dependency {
                 groupId = 'com.eaglesakura'
                 artifactId = 'eglibrary-java-core'
-                version = ARTIFACT_VERSION
+                version = EGLIBRARY_ARTIFACT_VERSION
                 scope = 'compile'
             }
 

@@ -85,14 +85,14 @@ uploadArchives {
             dependency {
                 groupId = 'com.eaglesakura'
                 artifactId = 'eglibrary-java-wrapper'
-                version = ARTIFACT_VERSION
+                version = EGLIBRARY_ARTIFACT_VERSION
                 scope = 'compile'
             }
 
             dependency {
                 groupId = 'com.eaglesakura'
                 artifactId = 'eglibrary-android-java-core'
-                version = ARTIFACT_VERSION
+                version = EGLIBRARY_ARTIFACT_VERSION
                 scope = 'compile'
             }
 
