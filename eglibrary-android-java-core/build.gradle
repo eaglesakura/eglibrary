@@ -27,8 +27,8 @@ apply plugin: 'maven'
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: uri(file("../maven").absoluteFile))
-            pom.version = '0.1.0'
+            repository(url: uri(MAVEN_LOCAL_PATH))
+            pom.version = ARTIFACT_VERSION
             pom.groupId = "com.eaglesakura"
             pom.artifactId = file(".").absoluteFile.name;
         }
@@ -38,11 +38,20 @@ uploadArchives {
 [uploadArchives.repositories.mavenDeployer]*.pom*.whenConfigured { pom ->
     pom.project {
         inceptionYear '2011'
-        packaging 'jar'
+        packaging 'aar'
         licenses {
             license {
                 name 'NYSL'
                 url 'https://raw.github.com/eaglesakura/eglibrary/master/LICENSE'
+            }
+        }
+
+        dependencies {
+            dependency {
+                groupId = 'com.eaglesakura'
+                artifactId = 'eglibrary-java-core'
+                version = ARTIFACT_VERSION
+                scope = 'compile'
             }
         }
     }

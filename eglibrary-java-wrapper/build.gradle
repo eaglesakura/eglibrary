@@ -13,3 +13,60 @@ dependencies {
 
     compile project(':eglibrary-java-core')
 }
+
+apply plugin: 'maven'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri(MAVEN_LOCAL_PATH))
+            pom.version = ARTIFACT_VERSION
+            pom.groupId = "com.eaglesakura"
+            pom.artifactId = file(".").absoluteFile.name;
+        }
+    }
+}
+
+[uploadArchives.repositories.mavenDeployer]*.pom*.whenConfigured { pom ->
+    pom.project {
+        inceptionYear '2011'
+        packaging 'jar'
+        licenses {
+            license {
+                name 'NYSL'
+                url 'https://raw.githubusercontent.com/eaglesakura/eglibrary/master/LICENSE'
+            }
+        }
+
+        dependencies {
+            dependency {
+                groupId = 'com.fasterxml.jackson.core'
+                artifactId = 'jackson-core'
+                version = '2.4.+'
+                scope = 'compile'
+            }
+
+            dependency {
+                groupId = 'com.fasterxml.jackson.core'
+                artifactId = 'jackson-databind'
+                version = '2.4.+'
+                scope = 'compile'
+            }
+
+            dependency {
+                groupId = 'com.google.http-client'
+                artifactId = 'google-http-client-xml'
+                version = '1.18.+'
+                scope = 'compile'
+            }
+
+            dependency {
+                groupId = 'com.eaglesakura'
+                artifactId = 'eglibrary-java-core'
+                version = ARTIFACT_VERSION
+                scope = 'compile'
+            }
+
+        }
+    }
+}

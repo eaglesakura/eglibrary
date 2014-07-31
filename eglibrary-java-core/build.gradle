@@ -15,8 +15,8 @@ apply plugin: 'maven'
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: uri(file("../maven").absoluteFile))
-            pom.version = '0.1.0'
+            repository(url: uri(MAVEN_LOCAL_PATH))
+            pom.version = ARTIFACT_VERSION
             pom.groupId = "com.eaglesakura"
             pom.artifactId = file(".").absoluteFile.name;
         }

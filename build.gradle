@@ -1,3 +1,5 @@
+apply plugin: 'idea'
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
@@ -8,6 +10,11 @@ buildscript {
         classpath 'com.android.tools.build:gradle:0.12.+'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.3'
     }
+}
+
+ext {
+    MAVEN_LOCAL_PATH = new File("/dev-home/workspaces/github/maven");
+    ARTIFACT_VERSION = "0.1.2"
 }
 
 allprojects {
