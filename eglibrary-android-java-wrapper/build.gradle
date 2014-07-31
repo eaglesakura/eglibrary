@@ -52,6 +52,13 @@ android {
 
 apply plugin: 'maven'
 
+if(!hasProperty("MAVEN_LOCAL_PATH")){
+    MAVEN_LOCAL_PATH = ""
+}
+if(!hasProperty("ARTIFACT_VERSION")){
+    ARTIFACT_VERSION = ""
+}
+
 uploadArchives {
     repositories {
         mavenDeployer {
