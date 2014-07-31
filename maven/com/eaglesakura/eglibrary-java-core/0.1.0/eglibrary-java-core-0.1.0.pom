@@ -1,37 +1,16 @@
-apply plugin: 'java'
-
-sourceCompatibility = 1.6
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-
-}
-
-apply plugin: 'maven'
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: uri(file("../maven").absoluteFile))
-            pom.version = '0.1.0'
-            pom.groupId = "com.eaglesakura"
-            pom.artifactId = file(".").absoluteFile.name;
-        }
-    }
-}
-
-[uploadArchives.repositories.mavenDeployer]*.pom*.whenConfigured { pom ->
-    pom.project {
-        inceptionYear '2011'
-        packaging 'jar'
-        licenses {
-            license {
-                name 'NYSL'
-                url 'https://raw.githubusercontent.com/eaglesakura/eglibrary/master/LICENSE'
-                distribution """
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.eaglesakura</groupId>
+  <artifactId>eglibrary-java-core</artifactId>
+  <version>0.1.0</version>
+  <inceptionYear>2011</inceptionYear>
+  <licenses>
+    <license>
+      <name>NYSL</name>
+      <url>https://raw.githubusercontent.com/eaglesakura/eglibrary/master/LICENSE</url>
+      <distribution>
 A. 本ソフトウェアは Everyone'sWare です。このソフトを手にした一人一人が、
    ご自分の作ったものを扱うのと同じように、自由に利用することが出来ます。
 
@@ -47,8 +26,7 @@ B. このソフトを利用することによって生じた損害等につい�
 C. 著作者人格権は @eaglesakura に帰属します。著作権は放棄します。
 
 D. 以上の３項は、ソース・実行バイナリの双方に適用されます。
-"""
-            }
-        }
-    }
-}
+</distribution>
+    </license>
+  </licenses>
+</project>
