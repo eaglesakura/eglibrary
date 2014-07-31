@@ -15,4 +15,4 @@ build/
 .gradle/
 build.xml
 doc
-*.jar
+release/*.jar
