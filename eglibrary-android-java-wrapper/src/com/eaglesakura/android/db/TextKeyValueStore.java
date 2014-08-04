@@ -12,6 +12,8 @@ import com.eaglesakura.util.StringUtil;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Key-Valueのシンプルなデータベース
@@ -67,6 +69,34 @@ public class TextKeyValueStore extends BaseDatabase<DaoSession> {
      */
     public void put(String key, double value) {
         put(key, String.valueOf(value));
+    }
+
+    /**
+     * 複数の値を一括保存する
+     * <p/>
+     * MapのkeyとvalueがそれぞれDBのkeyとvalueに対応する
+     *
+     * @param values
+     */
+    public void putInTx(final Map values) {
+        session.runInTx(new Runnable() {
+            @Override
+            public void run() {
+                DbKeyValueDataDao dao = session.getDbKeyValueDataDao();
+                Iterator<Map.Entry> iterator = values.entrySet().iterator();
+                while (iterator.hasNext()) {
+                    Map.Entry entry = iterator.next();
+
+                    DbKeyValueData db = new DbKeyValueData();
+                    db.setDate(new Date());
+                    db.setKey(entry.getKey().toString());
+                    db.setValue(entry.getValue() != null ? entry.getValue().toString() : "");
+
+                    dao.insertOrReplace(db);
+                }
+
+            }
+        });
     }
 
     /**

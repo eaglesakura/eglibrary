@@ -1,0 +1,73 @@
+apply plugin: 'groovy'
+
+buildscript {
+    repositories {
+        mavenCentral()
+
+        maven {
+            url "http://eaglesakura.github.io/maven/"
+        }
+    }
+
+    dependencies {
+        classpath 'com.eaglesakura:eglibrary-java-wrapper:0.1.2'
+    }
+}
+
+repositories {
+    mavenCentral()
+
+    maven {
+        url "http://eaglesakura.github.io/maven/"
+    }
+}
+
+dependencies {
+    // build groovy
+    groovy "org.codehaus.groovy:groovy:2.0.+"
+
+    compile project(':eglibrary-groovy-core')
+}
+
+
+apply plugin: 'maven'
+
+if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
+    EGLIBRARY_MAVEN_LOCAL_PATH = ""
+}
+if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
+    EGLIBRARY_ARTIFACT_VERSION = ""
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri(EGLIBRARY_MAVEN_LOCAL_PATH))
+            pom.version = EGLIBRARY_ARTIFACT_VERSION
+            pom.groupId = "com.eaglesakura"
+            pom.artifactId = file(".").absoluteFile.name;
+        }
+    }
+}
+
+[uploadArchives.repositories.mavenDeployer]*.pom*.whenConfigured { pom ->
+    pom.project {
+        inceptionYear '2014'
+        packaging 'aar'
+        licenses {
+            license {
+                name 'NYSL'
+                url 'https://raw.github.com/eaglesakura/eglibrary/master/LICENSE'
+            }
+        }
+
+        dependencies {
+            dependency {
+                groupId = 'com.eaglesakura'
+                artifactId = 'eglibrary-java-wrapper'
+                version = EGLIBRARY_ARTIFACT_VERSION
+                scope = 'compile'
+            }
+        }
+    }
+}
