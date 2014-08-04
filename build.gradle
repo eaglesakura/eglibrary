@@ -14,7 +14,7 @@ buildscript {
 
 ext {
     EGLIBRARY_MAVEN_LOCAL_PATH = new File("/dev-home/workspaces/github/maven");
-    EGLIBRARY_ARTIFACT_VERSION = "0.1.2"
+    EGLIBRARY_ARTIFACT_VERSION = "0.1.6"
 }
 
 allprojects {

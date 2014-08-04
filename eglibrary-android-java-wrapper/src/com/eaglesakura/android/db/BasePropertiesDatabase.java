@@ -150,6 +150,10 @@ public class BasePropertiesDatabase {
      * 既存のキャッシュはクリーンされる
      */
     public void load() {
+        // Contextを持たないため読込が行えない
+        if (context == null || databaseFile == null) {
+            return;
+        }
 
         TextKeyValueStore kvs = new TextKeyValueStore(context, databaseFile);
         try {

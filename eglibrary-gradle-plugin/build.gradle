@@ -10,25 +10,21 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.eaglesakura:eglibrary-java-wrapper:0.1.2'
+        classpath project(':eglibrary-groovy-core')
     }
 }
 
 repositories {
     mavenCentral()
-
-    maven {
-        url "http://eaglesakura.github.io/maven/"
-    }
 }
 
 dependencies {
     // build groovy
-    groovy "org.codehaus.groovy:groovy:2.0.+"
+    compile gradleApi()
+    compile localGroovy()
 
     compile project(':eglibrary-groovy-core')
 }
-
 
 apply plugin: 'maven'
 
@@ -53,7 +49,7 @@ uploadArchives {
 [uploadArchives.repositories.mavenDeployer]*.pom*.whenConfigured { pom ->
     pom.project {
         inceptionYear '2014'
-        packaging 'aar'
+        packaging 'jar'
         licenses {
             license {
                 name 'NYSL'
@@ -65,6 +61,12 @@ uploadArchives {
             dependency {
                 groupId = 'com.eaglesakura'
                 artifactId = 'eglibrary-java-wrapper'
+                version = EGLIBRARY_ARTIFACT_VERSION
+                scope = 'compile'
+            }
+            dependency {
+                groupId = 'com.eaglesakura'
+                artifactId = 'eglibrary-groovy-core'
                 version = EGLIBRARY_ARTIFACT_VERSION
                 scope = 'compile'
             }
