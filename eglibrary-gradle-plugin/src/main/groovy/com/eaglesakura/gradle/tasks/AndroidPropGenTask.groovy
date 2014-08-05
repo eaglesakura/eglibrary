@@ -9,6 +9,7 @@ public class AndroidPropGenTask extends DefaultTask {
     def classPackageName = "com.example";
     def className = "SampleSettingClass";
     def superClass = "com.eaglesakura.android.db.BasePropertiesDatabase"
+    def dbFileName = "props.db"
     def outDirectory = new File("gen-eglib").absoluteFile;
 
     /**
@@ -26,86 +27,86 @@ public class AndroidPropGenTask extends DefaultTask {
     public AndroidPropGenTask() {
     }
 
-    public void floatProperty(final String name, final String defaultValue) {
-        properties.add(new Property(name, defaultValue) {
+    public void floatProperty(String propName, String propDefaultValue) {
+        properties.add(new Property("${className}.${propName}", propName, propDefaultValue) {
             @Override
             String generateSetter() {
-                return "public void set${toCamelCaseUpper(name)}(float set){ setProperty(\"${name}\", set); }";
+                return "public void set${toCamelCaseUpper(name)}(float set){ setProperty(\"${key}\", set); }";
             }
 
             @Override
             String generateGetter() {
-                return "public double get${toCamelCaseUpper(name)}(){ return getFloatProperty(\"${name}\"); }";
+                return "public double get${toCamelCaseUpper(name)}(){ return getFloatProperty(\"${key}\"); }";
             }
         })
     }
 
-    public void doubleProperty(final String name, final String defaultValue) {
-        properties.add(new Property(name, defaultValue) {
+    public void doubleProperty(String propName, String propDefaultValue) {
+        properties.add(new Property("${className}.${propName}", propName, propDefaultValue) {
             @Override
             String generateSetter() {
-                return "public void set${toCamelCaseUpper(name)}(double set){ setProperty(\"${name}\", set); }";
+                return "public void set${toCamelCaseUpper(name)}(double set){ setProperty(\"${key}\", set); }";
             }
 
             @Override
             String generateGetter() {
-                return "public double get${toCamelCaseUpper(name)}(){ return getDoubleProperty(\"${name}\"); }";
+                return "public double get${toCamelCaseUpper(name)}(){ return getDoubleProperty(\"${key}\"); }";
             }
         })
     }
 
-    public void intProperty(final String name, final String defaultValue) {
-        properties.add(new Property(name, defaultValue) {
+    public void intProperty(String propName, String propDefaultValue) {
+        properties.add(new Property("${className}.${propName}", propName, propDefaultValue) {
             @Override
             String generateSetter() {
-                return "public void set${toCamelCaseUpper(name)}(int set){ setProperty(\"${name}\", set); }";
+                return "public void set${toCamelCaseUpper(name)}(int set){ setProperty(\"${key}\", set); }";
             }
 
             @Override
             String generateGetter() {
-                return "public long get${toCamelCaseUpper(name)}(){ return getIntProperty(\"${name}\"); }";
+                return "public long get${toCamelCaseUpper(name)}(){ return getIntProperty(\"${key}\"); }";
             }
         })
     }
 
-    public void longProperty(final String name, final String defaultValue) {
-        properties.add(new Property(name, defaultValue) {
+    public void longProperty(String propName, String propDefaultValue) {
+        properties.add(new Property("${className}.${propName}", propName, propDefaultValue) {
             @Override
             String generateSetter() {
-                return "public void set${toCamelCaseUpper(name)}(long set){ setProperty(\"${name}\", set); }";
+                return "public void set${toCamelCaseUpper(name)}(long set){ setProperty(\"${key}\", set); }";
             }
 
             @Override
             String generateGetter() {
-                return "public long get${toCamelCaseUpper(name)}(){ return getLongProperty(\"${name}\"); }";
+                return "public long get${toCamelCaseUpper(name)}(){ return getLongProperty(\"${key}\"); }";
             }
         })
     }
 
-    public void dateProperty(final String name) {
-        properties.add(new Property(name, "0") {
+    public void dateProperty(String propName) {
+        properties.add(new Property("${className}.${propName}", propName, "0") {
             @Override
             String generateSetter() {
-                return "public void set${toCamelCaseUpper(name)}(java.util.Date set){ setProperty(\"${name}\", set != null ? set.getTime() : 0); }";
+                return "public void set${toCamelCaseUpper(name)}(java.util.Date set){ setProperty(\"${key}\", set != null ? set.getTime() : 0); }";
             }
 
             @Override
             String generateGetter() {
-                return "public java.util.Date get${toCamelCaseUpper(name)}(){ return new java.util.Date(getLongProperty(\"${name}\")); }";
+                return "public java.util.Date get${toCamelCaseUpper(name)}(){ return new java.util.Date(getLongProperty(\"${key}\")); }";
             }
         })
     }
 
-    public void stringProperty(final String name, final String defaultValue) {
-        properties.add(new Property(name, defaultValue) {
+    public void stringProperty(String propName, String propDefaultValue) {
+        properties.add(new Property("${className}.${propName}", propName, propDefaultValue) {
             @Override
             String generateSetter() {
-                return "public void set${toCamelCaseUpper(name)}(String set){ setProperty(\"${name}\", set); }";
+                return "public void set${toCamelCaseUpper(name)}(String set){ setProperty(\"${key}\", set); }";
             }
 
             @Override
             String generateGetter() {
-                return "public String get${toCamelCaseUpper(name)}(){ return getStringProperty(\"${name}\"); }";
+                return "public String get${toCamelCaseUpper(name)}(){ return getStringProperty(\"${key}\"); }";
             }
         })
     }
@@ -115,8 +116,8 @@ public class AndroidPropGenTask extends DefaultTask {
      * @param name プロパティ名
      * @param pojoFullName JSONの
      */
-    public void jsonProperty(final String name, final String pojoFullName) {
-        properties.add(new Property(name, "{}") {
+    public void jsonProperty(String propName, final String pojoFullName) {
+        properties.add(new Property("${className}.${propName}", propName, "{}") {
             @Override
             String generateSetter() {
                 return "public void set${toCamelCaseUpper(name)}(${pojoFullName} set){ setProperty(\"${name}\", com.eaglesakura.json.JSON.encodeOrNull(set)); }";
@@ -160,7 +161,7 @@ public class AndroidPropGenTask extends DefaultTask {
         // コンストラクタと初期化
         INIT:
         {
-            writer.writeLine("public ${className}(Context context){ super(context, \"${className.toLowerCase()}.db\"); _initialize(); }");
+            writer.writeLine("public ${className}(Context context){ super(context, \"${dbFileName}\"); _initialize(); }");
             writer.writeLine("public ${className}(Context context, String dbFileName){ super(context, dbFileName); _initialize(); }")
 
             // 初期化メソッド
@@ -168,7 +169,7 @@ public class AndroidPropGenTask extends DefaultTask {
             writer.newLine();
             // Propertiesを出力する
             for (Property prop : properties) {
-                writer.writeLine("addProperty(\"${prop.name}\", \"${prop.defaultValue}\");");
+                writer.writeLine("addProperty(\"${prop.key}\", \"${prop.defaultValue}\");");
             }
 
             // 初期値のロードを行う
@@ -212,9 +213,12 @@ public class AndroidPropGenTask extends DefaultTask {
     static abstract class Property {
         final String defaultValue;
 
+        final String key;
+
         final String name;
 
-        Property(String name, String defaultValue) {
+        Property(String key, String name, String defaultValue) {
+            this.key = key;
             this.name = name;
             this.defaultValue = defaultValue;
         }

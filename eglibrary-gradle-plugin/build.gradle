@@ -11,6 +11,9 @@ buildscript {
 
     dependencies {
         classpath project(':eglibrary-groovy-core')
+
+        // greenDao
+        classpath "de.greenrobot:greendao-generator:1.3.+"
     }
 }
 
@@ -24,6 +27,7 @@ dependencies {
     compile localGroovy()
 
     compile project(':eglibrary-groovy-core')
+    compile "de.greenrobot:greendao-generator:1.3.+"
 }
 
 apply plugin: 'maven'
@@ -68,6 +72,12 @@ uploadArchives {
                 groupId = 'com.eaglesakura'
                 artifactId = 'eglibrary-groovy-core'
                 version = EGLIBRARY_ARTIFACT_VERSION
+                scope = 'compile'
+            }
+            dependency {
+                groupId = 'de.greenrobot'
+                artifactId = 'greendao-generator'
+                version = '1.3.+'
                 scope = 'compile'
             }
         }

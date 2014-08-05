@@ -14,6 +14,7 @@ public class AndroidPropGenTaskTest extends GroovyTestCase {
         task.intProperty("intValue", "123");
         task.jsonProperty("jsonValue", "com.example.Pojo");
         task.dateProperty("updatedTime");
+        task.outDirectory = new File("gen");
         task.execute();
     }
 }

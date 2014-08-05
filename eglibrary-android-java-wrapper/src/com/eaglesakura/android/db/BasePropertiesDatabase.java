@@ -88,7 +88,7 @@ public class BasePropertiesDatabase {
         return Float.parseFloat(getStringProperty(key));
     }
 
-    public Double getDoubleProperty(String key) {
+    public double getDoubleProperty(String key) {
         return Double.parseDouble(getStringProperty(key));
     }
 
