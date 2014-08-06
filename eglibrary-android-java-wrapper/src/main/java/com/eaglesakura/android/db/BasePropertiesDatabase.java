@@ -145,6 +145,19 @@ public class BasePropertiesDatabase {
     }
 
     /**
+     * 非同期で値を保存する。
+     * その間、値を書き換えても値の保証はしない。
+     */
+    public void commitAsync() {
+        (new Thread() {
+            @Override
+            public void run() {
+                commit();
+            }
+        }).start();
+    }
+
+    /**
      * データをDBからロードする
      * <p/>
      * 既存のキャッシュはクリーンされる
@@ -170,5 +183,17 @@ public class BasePropertiesDatabase {
         } finally {
             kvs.close();
         }
+    }
+
+    /**
+     * 非同期でデータを読み込む
+     */
+    public void loadAsync() {
+        (new Thread() {
+            @Override
+            public void run() {
+                load();
+            }
+        }).start();
     }
 }

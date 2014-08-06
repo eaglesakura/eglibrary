@@ -13,6 +13,11 @@ public class AndroidPropGenTask extends DefaultTask {
     def outDirectory = new File("gen-eglib").absoluteFile;
 
     /**
+     * コンストラクタで自動的に既存データを読み込む場合はtrue
+     */
+    def autoPropLoad = true;
+
+    /**
      * 頭の１文字目を大文字にする
      */
     private static String toCamelCaseUpper(String base) {
@@ -27,8 +32,8 @@ public class AndroidPropGenTask extends DefaultTask {
     public AndroidPropGenTask() {
     }
 
-    public void floatProperty(String propName, String propDefaultValue) {
-        properties.add(new Property("${className}.${propName}", propName, propDefaultValue) {
+    public void floatProperty(String propName, float propDefaultValue) {
+        properties.add(new Property("${className}.${propName}", propName, "" + propDefaultValue) {
             @Override
             String generateSetter() {
                 return "public void set${toCamelCaseUpper(name)}(float set){ setProperty(\"${key}\", set); }";
@@ -41,8 +46,8 @@ public class AndroidPropGenTask extends DefaultTask {
         })
     }
 
-    public void doubleProperty(String propName, String propDefaultValue) {
-        properties.add(new Property("${className}.${propName}", propName, propDefaultValue) {
+    public void doubleProperty(String propName, double propDefaultValue) {
+        properties.add(new Property("${className}.${propName}", propName, "" + propDefaultValue) {
             @Override
             String generateSetter() {
                 return "public void set${toCamelCaseUpper(name)}(double set){ setProperty(\"${key}\", set); }";
@@ -55,8 +60,8 @@ public class AndroidPropGenTask extends DefaultTask {
         })
     }
 
-    public void intProperty(String propName, String propDefaultValue) {
-        properties.add(new Property("${className}.${propName}", propName, propDefaultValue) {
+    public void intProperty(String propName, int propDefaultValue) {
+        properties.add(new Property("${className}.${propName}", propName, "" + propDefaultValue) {
             @Override
             String generateSetter() {
                 return "public void set${toCamelCaseUpper(name)}(int set){ setProperty(\"${key}\", set); }";
@@ -69,8 +74,8 @@ public class AndroidPropGenTask extends DefaultTask {
         })
     }
 
-    public void longProperty(String propName, String propDefaultValue) {
-        properties.add(new Property("${className}.${propName}", propName, propDefaultValue) {
+    public void longProperty(String propName, long propDefaultValue) {
+        properties.add(new Property("${className}.${propName}", propName, "" + propDefaultValue) {
             @Override
             String generateSetter() {
                 return "public void set${toCamelCaseUpper(name)}(long set){ setProperty(\"${key}\", set); }";
@@ -173,7 +178,9 @@ public class AndroidPropGenTask extends DefaultTask {
             }
 
             // 初期値のロードを行う
-            writer.newLine().writeLine("load();");
+            if (autoPropLoad) {
+                writer.newLine().writeLine("load();");
+            }
 
             // メソッドを閉じる
             writer.popIndent(true).writeLine("}");

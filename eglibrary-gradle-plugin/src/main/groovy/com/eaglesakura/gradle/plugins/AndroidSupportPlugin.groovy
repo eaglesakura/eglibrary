@@ -1,9 +1,11 @@
 package com.eaglesakura.gradle.plugins
 
+import com.eaglesakura.gradle.tasks.AndroidCiCleanTask
 import com.eaglesakura.gradle.tasks.AndroidCiCollectTask
 import com.eaglesakura.gradle.tasks.AndroidLocalPropertiesGenTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.tasks.TaskAction
 
 /**
  * Androidアプリ開発用のサポートタスク
@@ -12,8 +14,7 @@ public class AndroidSupportPlugin implements Plugin<Project> {
 
 
     void apply(Project target) {
-        println("AndroidSupportPlugin apply!")
-
+//        println("AndroidSupportPlugin apply!")
         target.extensions.create("eglibrary", ExtensionEglibrary);
 
         CI_SETUP:
@@ -44,8 +45,11 @@ public class AndroidSupportPlugin implements Plugin<Project> {
         println("target.eglibrary.ci.buildDate(${target.eglibrary.ci.buildDate})")
         println("target.eglibrary.ci.buildVersionName(${target.eglibrary.ci.buildVersionName})")
 
+        // 規定のタスクを追加
         target.task('genLocalProperties', type: AndroidLocalPropertiesGenTask)
         target.task('ciCollect', type: AndroidCiCollectTask)
+        target.task('ciClean', type: AndroidCiCleanTask);
+
     }
 
     /**

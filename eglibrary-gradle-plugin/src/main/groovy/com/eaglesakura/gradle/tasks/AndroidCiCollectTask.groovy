@@ -14,6 +14,12 @@ public class AndroidCiCollectTask extends DefaultTask {
         File dstDirectory = project.eglibrary.ci.releaseDir;
         File srcDirectory = project.file("build/outputs");
 
+        // Android Project以外では何もしない
+        if (!(new File(srcDirectory, "apk").directory)) {
+            Logger.out "is not Android Project -> ${project.file(".").absolutePath}";
+            return;
+        }
+
         println("collect src(${srcDirectory.absolutePath}) -> dst(${dstDirectory.absolutePath})")
         dstDirectory.mkdirs();
         srcDirectory.renameTo(dstDirectory);

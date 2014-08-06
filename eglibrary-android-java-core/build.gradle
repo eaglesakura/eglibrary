@@ -1,4 +1,4 @@
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
@@ -7,27 +7,20 @@ dependencies {
 
 android {
     compileSdkVersion 15
-    buildToolsVersion = "19.1"
+    buildToolsVersion = EGLIBRARY_ANDROID_BUILDTOOL_VERSION
 
     sourceSets {
         main {
-            assets.srcDirs       = ['assets']
-            res.srcDirs          = ['res']
-            aidl.srcDirs         = ['src']
-            resources.srcDirs    = ['src']
-            renderscript.srcDirs = ['src']
-            java.srcDirs         = ['src']
-            manifest.srcFile 'AndroidManifest.xml'
         }
     }
 }
 
 apply plugin: 'maven'
 
-if(!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")){
+if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
     EGLIBRARY_MAVEN_LOCAL_PATH = ""
 }
-if(!hasProperty("EGLIBRARY_ARTIFACT_VERSION")){
+if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
     EGLIBRARY_ARTIFACT_VERSION = ""
 }
 

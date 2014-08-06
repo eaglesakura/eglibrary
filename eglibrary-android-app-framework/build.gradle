@@ -1,0 +1,80 @@
+apply plugin: 'com.android.library'
+apply plugin: 'android-apt'
+
+configurations {
+    apt
+}
+
+def APPLICATION_ID = "com.eaglesakura.android.framework"
+def DATABASE_PACKAGE_NAME = "${APPLICATION_ID}.db"
+def DATABSE_FILE_NAME = "appfw.db";
+
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion EGLIBRARY_ANDROID_BUILDTOOL_VERSION
+
+    defaultConfig {
+        applicationId APPLICATION_ID
+        minSdkVersion 15
+        targetSdkVersion 19
+        versionCode 1
+        versionName "1.0"
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src/main/java', 'src/main/dao', 'src/main/gen-prop']
+        }
+    }
+
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(dir: 'libs', include: ['*.aar'])
+
+    // support v4/v13/playservice
+    compile 'com.android.support:support-v4:20.+'
+    compile 'com.android.support:support-v13:20.+'
+    compile 'com.google.android.gms:play-services:4.2.+'
+
+    compile project(':eglibrary-android-java-wrapper')
+}
+
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath project(':eglibrary-gradle-plugin')
+    }
+}
+
+apply plugin: 'com.eaglesakura.android-support'
+
+/**
+ * 設定ファイルを出力する
+ */
+task generateProp(type: com.eaglesakura.gradle.tasks.AndroidPropGenTask) {
+    outDirectory = file("src/main/gen-prop").absoluteFile
+
+    classPackageName DATABASE_PACKAGE_NAME
+    className "BasicSettings"
+    dbFileName DATABSE_FILE_NAME
+
+    stringProperty "gcmToken", ""; // アプリが持つGCMトークン
+
+    // バージョンキャッシュ
+    longProperty "lastBootedAppVersionCode", 0; // 最後に起動した時のアプリバージョンコード
+    stringProperty "lastBootedAppVersionName", ""; // 最後に起動した時のアプリバージョン名
+}

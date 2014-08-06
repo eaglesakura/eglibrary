@@ -9,6 +9,7 @@ public class AndroidSupportPluginTest extends GroovyTestCase {
         project.apply plugin: AndroidSupportPlugin
 
         project.tasks.genLocalProperties.execute();
+        project.tasks.ciClean.execute();
         project.tasks.ciCollect.execute();
     }
 }
