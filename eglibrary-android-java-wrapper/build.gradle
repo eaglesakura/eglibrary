@@ -1,6 +1,16 @@
 apply plugin: 'com.android.library'
 apply plugin: 'android-apt'
 
+if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
+    EGLIBRARY_MAVEN_LOCAL_PATH = ""
+}
+if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
+    EGLIBRARY_ARTIFACT_VERSION = ""
+}
+if (!hasProperty("EGLIBRARY_ANDROID_BUILDTOOL_VERSION")) {
+    EGLIBRARY_ANDROID_BUILDTOOL_VERSION = "20.0.0"
+}
+
 configurations {
     apt
 }
@@ -30,17 +40,6 @@ android {
             manifest.srcFile 'AndroidManifest.xml'
             java.srcDirs = ['src/main/java', 'src/main/dao']
         }
-    }
-}
-
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath project(':eglibrary-gradle-plugin')
     }
 }
 
@@ -79,13 +78,6 @@ task generateDao(type: com.eaglesakura.gradle.tasks.AndroidDaoGenTask) {
 }
 
 apply plugin: 'maven'
-
-if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
-    EGLIBRARY_MAVEN_LOCAL_PATH = ""
-}
-if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
-    EGLIBRARY_ARTIFACT_VERSION = ""
-}
 
 uploadArchives {
     repositories {

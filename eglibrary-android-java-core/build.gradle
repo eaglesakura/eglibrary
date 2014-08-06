@@ -1,5 +1,15 @@
 apply plugin: 'com.android.library'
 
+if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
+    EGLIBRARY_MAVEN_LOCAL_PATH = ""
+}
+if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
+    EGLIBRARY_ARTIFACT_VERSION = ""
+}
+if (!hasProperty("EGLIBRARY_ANDROID_BUILDTOOL_VERSION")) {
+    EGLIBRARY_ANDROID_BUILDTOOL_VERSION = "20.0.0"
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     compile project(':eglibrary-java-core')
@@ -16,13 +26,6 @@ android {
 }
 
 apply plugin: 'maven'
-
-if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
-    EGLIBRARY_MAVEN_LOCAL_PATH = ""
-}
-if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
-    EGLIBRARY_ARTIFACT_VERSION = ""
-}
 
 uploadArchives {
     repositories {

@@ -1,13 +1,35 @@
 apply plugin: 'com.android.library'
 apply plugin: 'android-apt'
 
+def APPLICATION_ID = "com.eaglesakura.android.framework"
+def DATABASE_PACKAGE_NAME = "${APPLICATION_ID}.db"
+def DATABSE_FILE_NAME = "appfw.db";
+
+if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
+    EGLIBRARY_MAVEN_LOCAL_PATH = ""
+}
+if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
+    EGLIBRARY_ARTIFACT_VERSION = ""
+}
+if (!hasProperty("EGLIBRARY_ANDROID_BUILDTOOL_VERSION")) {
+    EGLIBRARY_ANDROID_BUILDTOOL_VERSION = "20.0.0"
+}
+
 configurations {
     apt
 }
 
-def APPLICATION_ID = "com.eaglesakura.android.framework"
-def DATABASE_PACKAGE_NAME = "${APPLICATION_ID}.db"
-def DATABSE_FILE_NAME = "appfw.db";
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(dir: 'libs', include: ['*.aar'])
+
+    // support v4/v13/playservice
+    compile 'com.android.support:support-v4:20.+'
+    compile 'com.android.support:support-v13:20.+'
+    compile 'com.google.android.gms:play-services:4.2.+'
+
+    compile project(':eglibrary-android-java-wrapper')
+}
 
 
 android {
@@ -34,29 +56,6 @@ android {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
-}
-
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile fileTree(dir: 'libs', include: ['*.aar'])
-
-    // support v4/v13/playservice
-    compile 'com.android.support:support-v4:20.+'
-    compile 'com.android.support:support-v13:20.+'
-    compile 'com.google.android.gms:play-services:4.2.+'
-
-    compile project(':eglibrary-android-java-wrapper')
-}
-
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath project(':eglibrary-gradle-plugin')
     }
 }
 
