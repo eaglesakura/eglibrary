@@ -12,8 +12,8 @@ public class AndroidDaoGenTaskTest extends GroovyTestCase {
 
         TEMP_DB:
         {
-            def scheme = task.newScheme(0x01, "temp");
-            def DbTempEntity = scheme.addEntity("DbTempEntity");
+            def schema = task.newSchema(0x01, "temp");
+            def DbTempEntity = schema.addEntity("DbTempEntity");
 
             DbTempEntity.addStringProperty("uniqueId").primaryKey().index().unique();
             DbTempEntity.addStringProperty("value").notNull();
@@ -21,8 +21,8 @@ public class AndroidDaoGenTaskTest extends GroovyTestCase {
 
         TEMP_DB2:
         {
-            def scheme = task.newScheme(0x01, "test");
-            def DbTempEntity = scheme.addEntity("DbTestEntity");
+            def schema = task.newSchema(0x01, "test");
+            def DbTempEntity = schema.addEntity("DbTestEntity");
 
             DbTempEntity.addStringProperty("uniqueId").primaryKey().index().unique();
             DbTempEntity.addDoubleProperty("value").notNull();

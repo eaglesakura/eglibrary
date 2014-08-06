@@ -24,7 +24,7 @@ public class AndroidDaoGenTask extends DefaultTask {
      * @param packageName
      * @return
      */
-    public Schema newScheme(int version, String packageName) {
+    public Schema newSchema(int version, String packageName) {
         Schema result = new Schema(version, "${classPackageBase}.${packageName}");
         schemas.add(result);
         return result;

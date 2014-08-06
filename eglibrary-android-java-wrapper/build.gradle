@@ -33,6 +33,51 @@ android {
     }
 }
 
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath project(':eglibrary-gradle-plugin')
+    }
+}
+
+apply plugin: 'com.eaglesakura.android-support'
+
+/**
+ * DBファイルを出力する
+ */
+task generateDao(type: com.eaglesakura.gradle.tasks.AndroidDaoGenTask) {
+    outDirectory = file("src/main/dao").absoluteFile;
+    classPackageBase = "com.eaglesakura.android.dao";
+
+    def generateTkvs = {
+        def schema = newSchema(0x01, "tkvs");
+        def entity = schema.addEntity("DbKeyValueData");
+        // uniqueId
+        entity.addStringProperty("key").notNull().unique().primaryKey();
+        // value
+        entity.addStringProperty("value");
+        // 更新日時
+        entity.addDateProperty("date").notNull();
+    }
+    generateTkvs();
+
+    def generateBkvs = {
+        def schema = newSchema(0x01, "bkvs");
+        def entity = schema.addEntity("DbKeyValueData");
+        // uniqueId
+        entity.addStringProperty("key").notNull().unique().primaryKey();
+        // value
+        entity.addByteArrayProperty("value");
+        // 更新日時
+        entity.addDateProperty("date").notNull();
+    }
+    generateBkvs();
+}
+
 apply plugin: 'maven'
 
 if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
