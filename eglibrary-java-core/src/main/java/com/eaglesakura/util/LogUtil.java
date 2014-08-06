@@ -129,6 +129,10 @@ public final class LogUtil {
         }
     }
 
+    public static void log(String fmt, Object... formats) {
+        log(String.format(fmt, formats));
+    }
+
     /**
      * デバッグログ出力を行う
      *
@@ -139,6 +143,10 @@ public final class LogUtil {
             initLogger();
             logger.d("" + message);
         }
+    }
+
+    public static void d(String fmt, Object... formats) {
+        d(String.format(fmt, formats));
     }
 
     public static void d(Exception e) {

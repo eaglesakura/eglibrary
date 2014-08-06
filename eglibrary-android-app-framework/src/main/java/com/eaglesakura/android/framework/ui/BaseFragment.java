@@ -2,14 +2,16 @@ package com.eaglesakura.android.framework.ui;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.StringUtil;
 
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.UiThread;
 
 /**
@@ -20,7 +22,36 @@ public abstract class BaseFragment extends Fragment {
 
     public static final int BACKSTACK_NONE = 0xFEFEFEFE;
 
-    private int backstackId = BACKSTACK_NONE;
+    boolean destroyed = false;
+
+    private int backstackIndex = BACKSTACK_NONE;
+
+    @InstanceState
+    protected boolean initializedViews = false;
+
+    /**
+     * 初回のみ呼び出される
+     */
+    protected void onInitializeViews() {
+
+    }
+
+    /**
+     * レストアを行う
+     */
+    protected void onRestoreViews() {
+
+    }
+
+    @AfterViews
+    protected void onAfterViews() {
+        if (!initializedViews) {
+            onInitializeViews();
+            initializedViews = true;
+        } else {
+            onRestoreViews();
+        }
+    }
 
     @UiThread
     protected void toast(String msg) {
@@ -76,10 +107,10 @@ public abstract class BaseFragment extends Fragment {
     /**
      * backstack idを指定する
      *
-     * @param backstackId
+     * @param backstackIndex
      */
-    public void setBackstackId(int backstackId) {
-        this.backstackId = backstackId;
+    public void setBackstackIndex(int backstackIndex) {
+        this.backstackIndex = backstackIndex;
     }
 
     /**
@@ -87,8 +118,20 @@ public abstract class BaseFragment extends Fragment {
      *
      * @return
      */
-    public boolean hasBackstackId() {
-        return backstackId != BACKSTACK_NONE;
+    public boolean hasBackstackIndex() {
+        return backstackIndex != BACKSTACK_NONE;
+    }
+
+    public int getBackstackIndex() {
+        return backstackIndex;
+    }
+
+    /**
+     * バックスタックが一致したらtrue
+     * @return
+     */
+    public boolean isCurrentBackstack() {
+        return backstackIndex == getFragmentManager().getBackStackEntryCount();
     }
 
     /**
@@ -98,10 +141,24 @@ public abstract class BaseFragment extends Fragment {
      */
     @UiThread
     public void detatchSelf(boolean withBackStack) {
-        if (withBackStack && hasBackstackId()) {
-            getFragmentManager().popBackStack(backstackId, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        if (withBackStack && hasBackstackIndex()) {
+            getFragmentManager().popBackStack(backstackIndex, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         } else {
             getFragmentManager().beginTransaction().remove(this).commit();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.destroyed = true;
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
+    }
+
+    protected void log(String fmt, Object... args) {
+        Log.i(getClass().getSimpleName(), String.format(fmt, args));
     }
 }

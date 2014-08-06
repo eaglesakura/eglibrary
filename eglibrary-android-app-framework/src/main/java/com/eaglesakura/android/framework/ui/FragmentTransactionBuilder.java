@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 
 import com.eaglesakura.android.framework.R;
+import com.eaglesakura.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +24,12 @@ public class FragmentTransactionBuilder {
         /**
          * 新しいFragmentが下から上にせり上がる
          */
-        TranslateUp,
+        TranslateVerticalUp,
 
         /**
          *
          */
-        TranslateDown,
+        TranslateVerticalDown,
 
         /**
          * 通常のフェード
@@ -59,9 +60,11 @@ public class FragmentTransactionBuilder {
      */
     protected List<Fragment> fragments = new ArrayList<Fragment>();
 
+    protected FragmentChooser chooser = null;
+
     public FragmentTransactionBuilder(Fragment currentFragment, FragmentManager fragmentManager) {
         this.fragment = currentFragment;
-        this.activity = null;
+        this.activity = fragment.getActivity();
         this.fragmentManager = fragmentManager;
         this.transaction = fragmentManager.beginTransaction();
     }
@@ -75,6 +78,11 @@ public class FragmentTransactionBuilder {
 
     public FragmentTransactionBuilder checkBackstackCount(boolean checkBackstackCount) {
         this.checkBackstackCount = checkBackstackCount;
+        return this;
+    }
+
+    public FragmentTransactionBuilder chooser(FragmentChooser chooser) {
+        this.chooser = chooser;
         return this;
     }
 
@@ -124,6 +132,10 @@ public class FragmentTransactionBuilder {
                 enter = R.animator.fragment_horizontal_enter;
                 exit = R.animator.fragment_horizontal_exit;
                 break;
+            case TranslateVerticalUp:
+                enter = R.animator.fragment_verticalup_enter;
+                exit = R.animator.fragment_verticalup_exit;
+                break;
         }
 
         if (popAnimation != null) {
@@ -132,10 +144,31 @@ public class FragmentTransactionBuilder {
                     popEnter = R.animator.fragment_horizontal_popenter;
                     popExit = R.animator.fragment_horizontal_popexit;
                     break;
+                case TranslateVerticalUp:
+                    popEnter = R.animator.fragment_verticalup_popenter;
+                    popExit = R.animator.fragment_verticalup_popexit;
+                    break;
             }
         }
 
         return animation(enter, exit, popEnter, popExit);
+    }
+
+    public FragmentTransactionBuilder add(Fragment fragment) {
+        return add(fragment, null);
+    }
+
+    public FragmentTransactionBuilder add(Fragment fragment, String tag) {
+        if (StringUtil.isEmpty(tag)) {
+            tag = fragment.getClass().getName() + "/" + fragment.hashCode();
+        }
+
+        transaction.add(fragment, tag);
+        if (chooser != null) {
+            chooser.addFragment(fragment, tag);
+        }
+
+        return this;
     }
 
     /**
@@ -144,7 +177,24 @@ public class FragmentTransactionBuilder {
      * @param container
      */
     public FragmentTransactionBuilder replace(int container, Fragment fragment) {
-        transaction.replace(container, fragment, fragment.getClass().getName());
+        return replace(container, fragment, null);
+    }
+
+    public FragmentTransactionBuilder replace(int container, Fragment fragment, long tag) {
+        return replace(container, fragment, String.valueOf(tag));
+    }
+
+    public FragmentTransactionBuilder replace(int container, Fragment fragment, String tag) {
+        if (StringUtil.isEmpty(tag)) {
+            transaction.replace(container, fragment);
+        } else {
+            transaction.replace(container, fragment, tag);
+        }
+
+        if (chooser != null) {
+            chooser.addFragment(fragment, tag);
+        }
+
         fragments.add(fragment);
         return this;
     }
@@ -161,8 +211,10 @@ public class FragmentTransactionBuilder {
         int backStackId = transaction.commit();
         for (Fragment frag : fragments) {
             if (frag instanceof BaseFragment) {
-                ((BaseFragment) frag).setBackstackId(backStackId);
+                ((BaseFragment) frag).setBackstackIndex(backStackId);
             }
+
+
         }
     }
 }

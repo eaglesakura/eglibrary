@@ -6,9 +6,9 @@
         android:propertyName="alpha"></objectAnimator>
 
     <objectAnimator
-        android:valueFrom="-1.0"
+        android:valueFrom="1.0"
         android:valueTo="0.0"
-        android:propertyName="xFraction"
+        android:propertyName="yFraction"
         android:valueType="floatType"
         android:duration="@integer/eglibrary.Fragment.Transition.Duration" />
 </set>
