@@ -1,11 +1,13 @@
 package com.eaglesakura.android.framework.ui;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.eaglesakura.android.framework.FrameworkCentral;
+import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.StringUtil;
 
@@ -128,10 +130,16 @@ public abstract class BaseFragment extends Fragment {
 
     /**
      * バックスタックが一致したらtrue
+     *
      * @return
      */
+    @SuppressLint("NewApi")
     public boolean isCurrentBackstack() {
-        return backstackIndex == getFragmentManager().getBackStackEntryCount();
+        if (!ContextUtil.supportedChildFragmentManager() || getParentFragment() == null) {
+            return backstackIndex == getFragmentManager().getBackStackEntryCount();
+        } else {
+            return backstackIndex == getParentFragment().getFragmentManager().getBackStackEntryCount();
+        }
     }
 
     /**
@@ -160,5 +168,31 @@ public abstract class BaseFragment extends Fragment {
 
     protected void log(String fmt, Object... args) {
         Log.i(getClass().getSimpleName(), String.format(fmt, args));
+    }
+
+    @SuppressLint("NewApi")
+    protected boolean hasChildBackStack() {
+        return getChildFragmentManager().getBackStackEntryCount() > 1;
+    }
+
+    /**
+     * 戻るボタンのハンドリングを行う
+     *
+     * @return ハンドリングを行えたらtrue
+     */
+    @SuppressLint("NewApi")
+    public boolean handleBackButton() {
+        if (!ContextUtil.supportedChildFragmentManager()) {
+            // no backstack
+            return false;
+        }
+
+        if (hasChildBackStack()) {
+            // backStackを解放する
+            getChildFragmentManager().popBackStack();
+            return true;
+        } else {
+            return false;
+        }
     }
 }

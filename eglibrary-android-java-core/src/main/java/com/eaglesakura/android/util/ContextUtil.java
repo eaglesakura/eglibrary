@@ -184,6 +184,15 @@ public class ContextUtil {
     }
 
     /**
+     * ChildFragmentManagerに対応している場合はtrue
+     *
+     * @return
+     */
+    public static boolean supportedChildFragmentManager() {
+        return Build.VERSION.SDK_INT >= 17;
+    }
+
+    /**
      * Actionバーに対応している場合、trueを返す。
      *
      * @return
