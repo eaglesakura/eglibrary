@@ -32,6 +32,15 @@ public abstract class BaseFragment extends Fragment {
     protected boolean initializedViews = false;
 
     /**
+     * 一意に識別可能なタグを生成する
+     *
+     * @return
+     */
+    public String genTag() {
+        return getClass().getName() + "/" + hashCode();
+    }
+
+    /**
      * 初回のみ呼び出される
      */
     protected void onInitializeViews() {
