@@ -59,6 +59,24 @@ android {
     }
 }
 
+
+buildscript {
+    repositories {
+        jcenter()
+
+        mavenCentral()
+
+        maven {
+            url "http://eaglesakura.github.io/maven/"
+        }
+    }
+
+    dependencies {
+        classpath project(":eglibrary-gradle-plugin")
+    }
+}
+
+
 apply plugin: 'com.eaglesakura.android-support'
 
 /**
