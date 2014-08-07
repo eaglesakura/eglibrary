@@ -55,7 +55,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.eaglesakura:eglibrary-gradle-plugin:0.1.12'
+        classpath 'com.eaglesakura:eglibrary-gradle-plugin:0.1.+'
     }
 }
 
