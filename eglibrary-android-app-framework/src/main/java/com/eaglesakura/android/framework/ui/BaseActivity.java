@@ -2,6 +2,7 @@ package com.eaglesakura.android.framework.ui;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.view.KeyEvent;
 import android.widget.Toast;
@@ -12,20 +13,20 @@ import com.eaglesakura.util.StringUtil;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.UiThread;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 /**
  *
  */
 @EActivity
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends Activity implements FragmentChooser.Callback {
+
+    protected BaseActivity() {
+        fragments.setCallback(this);
+    }
 
     @AfterViews
     protected void onAfterViews() {
@@ -98,7 +99,8 @@ public abstract class BaseActivity extends Activity {
         }
     }
 
-    List<WeakReference<Fragment>> fragments = new ArrayList<WeakReference<Fragment>>();
+    @InstanceState
+    protected FragmentChooser fragments = new FragmentChooser();
 
     /**
      * Fragmentがアタッチされたタイミングで呼び出される。
@@ -111,34 +113,8 @@ public abstract class BaseActivity extends Activity {
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
 
-        fragments.add(0, new WeakReference<Fragment>(fragment));
-    }
-
-    /**
-     * フラグメント一覧を取得する
-     */
-    public Set<Fragment> listFragments() {
-        Set<Fragment> result = new HashSet<Fragment>();
-
-        Iterator<WeakReference<Fragment>> iterator = fragments.iterator();
-        while (iterator.hasNext()) {
-            WeakReference<Fragment> reference = iterator.next();
-
-            // 生存チェック
-            Fragment frag = reference.get();
-            if (frag != null && !frag.isVisible()) {
-                frag = null;
-            }
-
-            if (frag != null) {
-                result.add(frag);
-            } else if (reference.get() == null) {
-                // リファレンスが死んでいる場合は効率化のために排除する
-                iterator.remove();
-            }
-        }
-
-        return result;
+        // キャッシュに登録する
+        fragments.addFragment(FragmentChooser.ReferenceType.Weak, fragment, fragment.getTag(), 0);
     }
 
     /**
@@ -152,9 +128,9 @@ public abstract class BaseActivity extends Activity {
             return false;
         }
 
-        Set<Fragment> list = listFragments();
+        List<Fragment> list = fragments.listExistFragments();
         for (Fragment frag : list) {
-            if (frag instanceof BaseFragment) {
+            if (frag.isVisible() && frag instanceof BaseFragment) {
                 if (((BaseFragment) frag).handleBackButton()) {
                     return true;
                 }
@@ -170,5 +146,31 @@ public abstract class BaseActivity extends Activity {
         }
 
         return super.dispatchKeyEvent(event);
+    }
+
+    @Override
+    public FragmentManager getFragmentManager(FragmentChooser chooser) {
+        return getFragmentManager();
+    }
+
+    @Override
+    public Fragment newFragment(FragmentChooser chooser, String requestTag) {
+        return null;
+    }
+
+    @Override
+    public boolean isFragmentExist(FragmentChooser chooser, Fragment fragment) {
+        if (fragment == null) {
+            return false;
+        }
+
+        if (fragment instanceof BaseFragment) {
+            // 廃棄済みはさっさと排除する
+            if (((BaseFragment) fragment).isDestroyed()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

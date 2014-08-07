@@ -2,15 +2,13 @@ package com.eaglesakura.android.framework.ui;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.eaglesakura.util.LogUtil;
-import com.eaglesakura.util.Util;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +17,82 @@ import java.util.Map;
  *
  */
 public final class FragmentChooser implements Parcelable {
-    protected Map<String, Fragment> fragments = new HashMap<String, Fragment>();
+    private List<FragmentCache> fragmentCaches = new ArrayList<FragmentCache>();
+
+    public enum ReferenceType {
+        /**
+         * 強参照リクエスト
+         */
+        Strong,
+
+        /**
+         * 弱参照リクエスト
+         */
+        Weak,
+    }
+
+    public class FragmentCache {
+        /**
+         * 検索用タグ
+         */
+        private String tag;
+
+        /**
+         * リクエストされる参照タイプ
+         */
+        private ReferenceType referenceType = ReferenceType.Strong;
+
+        /**
+         * 強参照
+         */
+        private Fragment fragment;
+
+        /**
+         * 弱参照オブジェクト
+         */
+        private WeakReference<Fragment> weak;
+
+        FragmentCache(ReferenceType type, Fragment fragment, String tag) {
+            this.referenceType = type;
+            this.tag = tag;
+            set(fragment);
+        }
+
+        FragmentCache(String refType, String tag) {
+            this.referenceType = ReferenceType.valueOf(refType);
+            this.tag = tag;
+        }
+
+
+        /**
+         * 選択対象のFragmentを取得する
+         *
+         * @return
+         */
+        public Fragment get() {
+            if (fragment != null) {
+                return fragment;
+            } else {
+                return weak.get();
+            }
+        }
+
+        /**
+         * 値の設定を適切に行う
+         *
+         * @param fragment
+         */
+        private void set(Fragment fragment) {
+            switch (referenceType) {
+                case Weak:
+                    weak = new WeakReference<Fragment>(fragment);
+                    break;
+                default:
+                    this.fragment = fragment;
+                    break;
+            }
+        }
+    }
 
     protected Callback callback = null;
 
@@ -28,27 +101,85 @@ public final class FragmentChooser implements Parcelable {
 
     private FragmentChooser(Parcel in) {
 //        LogUtil.log("decode FragmentChooser :: %s", getClass().getName());
-        // タグを復元する
-        {
-            List<String> tags = new ArrayList<String>();
-            in.readStringList(tags);
+        // 復元を行う
+        List<String> tags = new ArrayList<String>();
+        List<String> refTypes = new ArrayList<String>();
 
-            for (String tag : tags) {
-                fragments.put(tag, null);
+        in.readStringList(tags);
+        in.readStringList(refTypes);
+
+        if (tags.size() != refTypes.size()) {
+            throw new IllegalStateException("tags.size() != refTypes.size()");
+        }
+
+        for (int i = 0; i < tags.size(); ++i) {
+            String tag = tags.get(i);
+            String refType = refTypes.get(i);
+
+            fragmentCaches.add(new FragmentCache(refType, tag));
+        }
+
+        LogUtil.log("restore fragments(%d)", fragmentCaches.size());
+    }
+
+    /**
+     * 不要なキャッシュを排除する
+     */
+    public void compact() {
+        Iterator<FragmentCache> iterator = fragmentCaches.iterator();
+        while (iterator.hasNext()) {
+            FragmentCache cache = iterator.next();
+            if (cache.get() == null) {
+                iterator.remove();
             }
         }
+    }
+
+    private List<String> listReferenceTypes() {
+        List<String> result = new ArrayList<String>();
+
+        Iterator<FragmentCache> iterator = fragmentCaches.iterator();
+        while (iterator.hasNext()) {
+            FragmentCache cache = iterator.next();
+
+            result.add(cache.referenceType.name());
+        }
+
+        return result;
+    }
+
+    /**
+     * Fragment一覧を生成する。
+     * <p/>
+     * 参照切れのFragmentは登録しない
+     *
+     * @return
+     */
+    public List<Fragment> listExistFragments() {
+        compact();
+        List<Fragment> result = new ArrayList<Fragment>();
+        for (FragmentCache cache : fragmentCaches) {
+            Fragment fragment = cache.get();
+            if (fragment != null && callback.isFragmentExist(this, fragment)) {
+                result.add(fragment);
+            }
+        }
+        return result;
     }
 
     /**
      * 管理しているFragmentのタグ一覧を取得する
      */
-    public List<String> listTags() {
+    private List<String> listTags() {
         List<String> result = new ArrayList<String>();
-        Iterator<Map.Entry<String, Fragment>> iterator = fragments.entrySet().iterator();
+
+        Iterator<FragmentCache> iterator = fragmentCaches.iterator();
         while (iterator.hasNext()) {
-            Map.Entry<String, Fragment> entry = iterator.next();
-            result.add(entry.getKey());
+            FragmentCache cache = iterator.next();
+
+            result.add(cache.tag);
         }
+
         return result;
     }
 
@@ -63,13 +194,14 @@ public final class FragmentChooser implements Parcelable {
      */
     public void restoreFragments() {
         FragmentManager fragmentManager = getFragmentManager();
-        Iterator<Map.Entry<String, Fragment>> iterator = fragments.entrySet().iterator();
+
+        Iterator<FragmentCache> iterator = fragmentCaches.iterator();
         // Fragmentをそれぞれ探し、有効であれば登録する
         while (iterator.hasNext()) {
-            Map.Entry<String, Fragment> entry = iterator.next();
-            Fragment fragment = fragmentManager.findFragmentByTag(entry.getKey());
+            FragmentCache cache = iterator.next();
+            Fragment fragment = fragmentManager.findFragmentByTag(cache.tag);
             if (fragment != null && callback.isFragmentExist(this, fragment)) {
-                entry.setValue(fragment);
+                cache.set(fragment);
             }
         }
     }
@@ -78,33 +210,83 @@ public final class FragmentChooser implements Parcelable {
         return callback.getFragmentManager(this);
     }
 
+    /**
+     * Fragmentを追加する
+     *
+     * @param fragment
+     * @param tag
+     */
     public void addFragment(Fragment fragment, String tag) {
-        fragments.put(tag, fragment);
+        addFragment(ReferenceType.Strong, fragment, tag, -1);
+    }
+
+    /**
+     * Fragmentを条件付きで追加する
+     *
+     * @param type
+     * @param fragment
+     * @param tag
+     */
+    public void addFragment(ReferenceType type, Fragment fragment, String tag) {
+        addFragment(type, fragment, tag, -1);
+    }
+
+    /**
+     * Fragmentを条件指定で追加する
+     *
+     * @param type
+     * @param fragment
+     * @param tag
+     * @param index
+     */
+    public void addFragment(ReferenceType type, Fragment fragment, String tag, int index) {
+        FragmentCache cache = new FragmentCache(type, fragment, tag);
+        if (index < 0) {
+            fragmentCaches.add(cache);
+        } else {
+            fragmentCaches.add(index, cache);
+        }
+    }
+
+    private FragmentCache findCache(String tag) {
+        for (FragmentCache cache : fragmentCaches) {
+            if (cache.tag.equals(tag)) {
+                // タグが一致したらコレ
+                return cache;
+            }
+        }
+        return null;
     }
 
     public Fragment find(String tag) {
         Fragment fragment = getFragmentManager().findFragmentByTag(tag);
+        FragmentCache cache = findCache(tag);
 
         if (fragment != null && !callback.isFragmentExist(this, fragment)) {
-            // Fragmentが無効であればtrue
+            // Fragmentが無効であればnull
             fragment = null;
         }
 
-        if (fragment == null) {
-            fragment = fragments.get(tag);
-
-            // fragmentが無ければ生成リクエストを送る
-            if (fragment == null) {
-                fragment = callback.newFragment(this, tag);
-            }
-
-            // 結果はともあれそれを返す
-            return fragment;
-        } else {
-            fragments.remove(tag);
-            fragments.put(tag, fragment);
-            return fragment;
+        // キャッシュから得る
+        if (fragment == null && cache != null) {
+            fragment = cache.get();
         }
+
+        // fragmentが無ければ生成リクエストを送る
+        if (fragment == null) {
+            fragment = callback.newFragment(this, tag);
+        }
+
+        if (fragment != null) {
+            // Fragmentが存在するならばキャッシュ登録する
+            if (cache == null) {
+                cache = new FragmentCache(ReferenceType.Strong, fragment, tag);
+                fragmentCaches.add(cache);
+            }
+            cache.set(fragment);
+        }
+
+        return fragment;
     }
 
     @Override
@@ -114,16 +296,14 @@ public final class FragmentChooser implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-//        LogUtil.log("writeToParcel :: %s", getClass().getName());
+        // 書き込み前に容量を減らす
+        compact();
 
-        List<String> tags = new ArrayList<String>();
-        Iterator<Map.Entry<String, Fragment>> iterator = fragments.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, Fragment> next = iterator.next();
-            tags.add(next.getKey());
-        }
+        List<String> tags = listTags();
+        List<String> refTypes = listReferenceTypes();
 
         dest.writeStringList(tags);
+        dest.writeStringList(refTypes);
     }
 
     public static final Parcelable.Creator<FragmentChooser> CREATOR
