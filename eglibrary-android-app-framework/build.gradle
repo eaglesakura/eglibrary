@@ -74,6 +74,6 @@ task generateProp(type: com.eaglesakura.gradle.tasks.AndroidPropGenTask) {
     stringProperty "gcmToken", ""; // アプリが持つGCMトークン
 
     // バージョンキャッシュ
-    longProperty "lastBootedAppVersionCode", 0; // 最後に起動した時のアプリバージョンコード
+    intProperty "lastBootedAppVersionCode", 0; // 最後に起動した時のアプリバージョンコード
     stringProperty "lastBootedAppVersionName", ""; // 最後に起動した時のアプリバージョン名
 }

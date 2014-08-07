@@ -41,7 +41,7 @@ public class AndroidPropGenTask extends DefaultTask {
 
             @Override
             String generateGetter() {
-                return "public double get${toCamelCaseUpper(name)}(){ return getFloatProperty(\"${key}\"); }";
+                return "public float get${toCamelCaseUpper(name)}(){ return getFloatProperty(\"${key}\"); }";
             }
         })
     }
@@ -69,7 +69,7 @@ public class AndroidPropGenTask extends DefaultTask {
 
             @Override
             String generateGetter() {
-                return "public long get${toCamelCaseUpper(name)}(){ return getIntProperty(\"${key}\"); }";
+                return "public int get${toCamelCaseUpper(name)}(){ return getIntProperty(\"${key}\"); }";
             }
         })
     }

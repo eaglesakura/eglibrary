@@ -3,6 +3,8 @@ package com.eaglesakura.android.framework;
 import android.app.Application;
 
 import com.eaglesakura.android.framework.db.BasicSettings;
+import com.eaglesakura.android.util.ContextUtil;
+import com.eaglesakura.util.LogUtil;
 
 /**
  *
@@ -28,8 +30,29 @@ public class FrameworkCentral {
             FrameworkCentral.frameworkApplication = (FrameworkApplication) application;
         }
 
-        // 設定を読み出す
         settings = new BasicSettings(application);
+        // 設定を読み出す
+        {
+            final String oldVersionName = settings.getLastBootedAppVersionName();
+            final String versionName = ContextUtil.getVersionName(application);
+
+            final int oldVersionCode = (int) settings.getLastBootedAppVersionCode();
+            final int versionCode = ContextUtil.getVersionCode(application);
+
+            LogUtil.log("VersionCode [%d] -> [%d]", oldVersionCode, versionCode);
+            LogUtil.log("VersionName [%s] -> [%s]", oldVersionName, versionName);
+
+            settings.setLastBootedAppVersionCode(versionCode);
+            settings.setLastBootedAppVersionName(versionName);
+
+            // バージョンコードかバージョン名が変わったら通知を行う
+            if (frameworkApplication != null && ((versionCode != oldVersionCode) || (!oldVersionName.equals(versionName)))) {
+                frameworkApplication.onApplicationUpdated(oldVersionCode, versionCode, oldVersionName, versionName);
+            }
+        }
+
+        // 設定をコミットする
+        settings.commitAsync();
     }
 
     /**
@@ -44,6 +67,7 @@ public class FrameworkCentral {
 
     /**
      * Frameworkの設定クラスを取得する
+     *
      * @return
      */
     public static BasicSettings getSettings() {

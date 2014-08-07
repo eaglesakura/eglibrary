@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
@@ -29,6 +30,32 @@ import java.util.UUID;
  * Context関連の便利メソッドを提供する
  */
 public class ContextUtil {
+
+    public static int getVersionCode(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+
+        try {
+            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES);
+            return packageInfo.versionCode;
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
+    public static String getVersionName(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+
+        try {
+            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES);
+            return packageInfo.versionName;
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "N/A";
+    }
+
     /**
      * @param context
      * @return

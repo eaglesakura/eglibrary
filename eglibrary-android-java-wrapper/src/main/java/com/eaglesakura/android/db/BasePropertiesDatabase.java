@@ -139,6 +139,15 @@ public class BasePropertiesDatabase {
         try {
             kvs.open();
             kvs.putInTx(commitValues);
+
+            // コミットが成功したらmodified属性を元に戻す
+            {
+                Iterator<Map.Entry<String, Property>> iterator = propMap.entrySet().iterator();
+                while (iterator.hasNext()) {
+                    Property property = iterator.next().getValue();
+                    property.modified = false;
+                }
+            }
         } finally {
             kvs.close();
         }
