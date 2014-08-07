@@ -168,6 +168,36 @@ public final class FragmentChooser implements Parcelable {
     }
 
     /**
+     * 管理しているFragment数を取得する
+     *
+     * @return
+     */
+    public int getFragmentNum() {
+        return fragmentCaches.size();
+    }
+
+    /**
+     * Fragmentを取得する
+     *
+     * @param index
+     * @return
+     */
+    public Fragment getFragment(int index) {
+        FragmentCache cache = fragmentCaches.get(index);
+        FragmentManager fragmentManager = getFragmentManager();
+
+        Fragment result = fragmentManager.findFragmentByTag(cache.tag);
+        if (result == null) {
+            // ローカルキャッシュを得る
+            return cache.get();
+        } else {
+            // FragmentManagerがもつものが正である
+            cache.set(result);
+            return result;
+        }
+    }
+
+    /**
      * 管理しているFragmentのタグ一覧を取得する
      */
     private List<String> listTags() {
