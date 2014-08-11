@@ -14,6 +14,9 @@ public class AndroidPropGenTaskTest extends GroovyTestCase {
         task.intProperty("intValue", 123);
         task.jsonProperty("jsonValue", "com.example.Pojo");
         task.dateProperty("updatedTime");
+        task.booleanProperty("boolValue", false);
+        task.enumProperty("enumValue", TestEnum.class.getName(), TestEnum.Hoge.name());
+        task.protobufProperty("protobufValue", "com.example.Protobuf");
         task.outDirectory = new File("gen");
         task.execute();
     }

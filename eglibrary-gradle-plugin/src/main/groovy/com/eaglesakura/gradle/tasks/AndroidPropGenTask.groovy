@@ -60,6 +60,20 @@ public class AndroidPropGenTask extends DefaultTask {
         })
     }
 
+    public void booleanProperty(String propName, boolean propDefaultValue) {
+        properties.add(new Property("${className}.${propName}", propName, "" + propDefaultValue) {
+            @Override
+            String generateSetter() {
+                return "public void set${toCamelCaseUpper(name)}(boolean set){ setProperty(\"${key}\", set); }";
+            }
+
+            @Override
+            String generateGetter() {
+                return "public boolean get${toCamelCaseUpper(name)}(){ return getBooleanProperty(\"${key}\"); }";
+            }
+        })
+    }
+
     public void intProperty(String propName, int propDefaultValue) {
         properties.add(new Property("${className}.${propName}", propName, "" + propDefaultValue) {
             @Override
@@ -97,7 +111,7 @@ public class AndroidPropGenTask extends DefaultTask {
 
             @Override
             String generateGetter() {
-                return "public java.util.Date get${toCamelCaseUpper(name)}(){ return new java.util.Date(getLongProperty(\"${key}\")); }";
+                return "public java.util.Date get${toCamelCaseUpper(name)}(){ return getDateProperty(\"${key}\"); }";
             }
         })
     }
@@ -117,6 +131,26 @@ public class AndroidPropGenTask extends DefaultTask {
     }
 
     /**
+     * enum型のPropertiesを生成する
+     * @param propName
+     * @param enumFullName
+     * @param propDefaultValue
+     */
+    public void enumProperty(String propName, final String enumFullName, String propDefaultValue) {
+        properties.add(new Property("${className}.${propName}", propName, propDefaultValue) {
+            @Override
+            String generateSetter() {
+                return "public void set${toCamelCaseUpper(name)}(${enumFullName} set){ setProperty(\"${key}\", set != null ? set.name() : \"\"; }";
+            }
+
+            @Override
+            String generateGetter() {
+                return "public ${enumFullName} get${toCamelCaseUpper(name)}(){ try{ ${enumFullName}.valueOf(getStringProperty(\"${key}\")); }catch(Exception e){ return null; } }";
+            }
+        })
+    }
+
+    /**
      * JSON型のPropertiesを生成する
      * @param name プロパティ名
      * @param pojoFullName JSONの
@@ -125,12 +159,31 @@ public class AndroidPropGenTask extends DefaultTask {
         properties.add(new Property("${className}.${propName}", propName, "{}") {
             @Override
             String generateSetter() {
-                return "public void set${toCamelCaseUpper(name)}(${pojoFullName} set){ setProperty(\"${name}\", com.eaglesakura.json.JSON.encodeOrNull(set)); }";
+                return "public void set${toCamelCaseUpper(name)}(${pojoFullName} set){ setProperty(\"${key}\", com.eaglesakura.json.JSON.encodeOrNull(set)); }";
             }
 
             @Override
             String generateGetter() {
-                return "public ${pojoFullName} get${toCamelCaseUpper(name)}(){ return com.eaglesakura.json.JSON.decodeOrNull(getStringProperty(\"${name}\"), ${pojoFullName}.class); }";
+                return "public ${pojoFullName} get${toCamelCaseUpper(name)}(){ return getJsonProperty(\"${key}\", ${pojoFullName}.class); }";
+            }
+        })
+    }
+
+    /**
+     * protocol buffersエンコードされたプロパティを追加する
+     * @param propName
+     * @param protobufFullName
+     */
+    public void protobufProperty(String propName, final String protobufFullName) {
+        properties.add(new Property("${className}.${propName}", propName, "") {
+            @Override
+            String generateSetter() {
+                return "public void set${toCamelCaseUpper(name)}(${protobufFullName} set){ setProperty(\"${key}\", set); }";
+            }
+
+            @Override
+            String generateGetter() {
+                return "public ${protobufFullName} get${toCamelCaseUpper(name)}(){ return getProtobufProperty(\"${key}\", ${protobufFullName}.class); }";
             }
         })
     }

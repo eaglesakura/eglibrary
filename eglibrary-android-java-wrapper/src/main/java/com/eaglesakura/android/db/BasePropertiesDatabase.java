@@ -3,8 +3,15 @@ package com.eaglesakura.android.db;
 import android.content.Context;
 
 import com.eaglesakura.json.JSON;
+import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.StringUtil;
+import com.google.protobuf.ByteString;
+import com.google.protobuf.GeneratedMessage;
 
 import java.io.File;
+import java.lang.reflect.Method;
+import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -84,8 +91,16 @@ public class BasePropertiesDatabase {
         return Long.parseLong(getStringProperty(key));
     }
 
+    public Date getDateProperty(String key) {
+        return new Date(getLongProperty(key));
+    }
+
     public float getFloatProperty(String key) {
         return Float.parseFloat(getStringProperty(key));
+    }
+
+    public boolean getBooleanProperty(String key) {
+        return Boolean.parseBoolean(getStringProperty(key));
     }
 
     public double getDoubleProperty(String key) {
@@ -97,6 +112,38 @@ public class BasePropertiesDatabase {
     }
 
     /**
+     * base64エンコードオブジェクトを取得する
+     *
+     * @param key
+     * @return
+     */
+    public byte[] getByteArrayProperty(String key) {
+        try {
+            return StringUtil.toByteArray(getStringProperty(key));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * protocol buffersオブジェクトを取得する
+     *
+     * @param key
+     * @param proto
+     * @param <T>
+     */
+    public <T extends com.google.protobuf.GeneratedMessage> T getProtobufProperty(String key, Class<T> proto) {
+        try {
+            byte[] prop = getByteArrayProperty(key);
+            Method method = proto.getMethod("parseFrom", byte[].class);
+            return (T) method.invoke(proto, prop);
+        } catch (Exception e) {
+            LogUtil.log(e);
+            return null;
+        }
+    }
+
+    /**
      * プロパティを保存する
      *
      * @param key   プロパティのキー値
@@ -104,7 +151,17 @@ public class BasePropertiesDatabase {
      */
     public void setProperty(String key, Object value) {
         Property prop = propMap.get(key);
-        prop.value = value.toString();
+
+        // protobuf
+        if (value instanceof GeneratedMessage) {
+            value = ((com.google.protobuf.GeneratedMessage) value).toByteArray();
+        }
+
+        if (value instanceof byte[]) {
+            prop.value = StringUtil.toString((byte[]) value);
+        } else {
+            prop.value = value.toString();
+        }
         prop.modified = true;
     }
 
