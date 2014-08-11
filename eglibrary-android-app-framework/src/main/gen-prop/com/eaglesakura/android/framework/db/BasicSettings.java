@@ -17,7 +17,7 @@ public class BasicSettings extends com.eaglesakura.android.db.BasePropertiesData
     public void setGcmToken(String set){ setProperty("BasicSettings.gcmToken", set); }
     public String getGcmToken(){ return getStringProperty("BasicSettings.gcmToken"); }
     public void setLastBootedAppVersionCode(int set){ setProperty("BasicSettings.lastBootedAppVersionCode", set); }
-    public long getLastBootedAppVersionCode(){ return getIntProperty("BasicSettings.lastBootedAppVersionCode"); }
+    public int getLastBootedAppVersionCode(){ return getIntProperty("BasicSettings.lastBootedAppVersionCode"); }
     public void setLastBootedAppVersionName(String set){ setProperty("BasicSettings.lastBootedAppVersionName", set); }
     public String getLastBootedAppVersionName(){ return getStringProperty("BasicSettings.lastBootedAppVersionName"); }
     
