@@ -217,6 +217,16 @@ public class PropClassGenerator {
         // class name
         writer.writeLine("public class ${className} extends ${superClass} {").pushIndent(true);
 
+        // プロパティIDを出力
+        PROP_ID:
+        {
+            writer.newLine();
+            for (def prop : properties) {
+                writer.writeLine("public static final String ID_${prop.name.toUpperCase()} = \"${prop.key}\";");
+            }
+            writer.newLine();
+        }
+
         // コンストラクタと初期化
         INIT:
         {
