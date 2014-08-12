@@ -11,7 +11,7 @@ public class AndroidCiCollectTask extends DefaultTask {
         Logger.initialize();
         Logger.outLogLevel = 0;
 
-        File dstDirectory = project.eglibrary.ci.releaseDir;
+        File dstDirectory = new File(project.eglibrary.ci.releaseDir, project.file(".").name);
         File srcDirectory = project.file("build/outputs");
 
         // Android Project以外では何もしない
