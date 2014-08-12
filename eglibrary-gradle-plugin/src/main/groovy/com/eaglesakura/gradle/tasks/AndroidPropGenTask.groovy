@@ -140,12 +140,12 @@ public class AndroidPropGenTask extends DefaultTask {
         properties.add(new Property("${className}.${propName}", propName, propDefaultValue) {
             @Override
             String generateSetter() {
-                return "public void set${toCamelCaseUpper(name)}(${enumFullName} set){ setProperty(\"${key}\", set != null ? set.name() : \"\"; }";
+                return "public void set${toCamelCaseUpper(name)}(${enumFullName} set){ setProperty(\"${key}\", set != null ? set.name() : \"\"); }";
             }
 
             @Override
             String generateGetter() {
-                return "public ${enumFullName} get${toCamelCaseUpper(name)}(){ try{ ${enumFullName}.valueOf(getStringProperty(\"${key}\")); }catch(Exception e){ return null; } }";
+                return "public ${enumFullName} get${toCamelCaseUpper(name)}(){ try{ return ${enumFullName}.valueOf(getStringProperty(\"${key}\")); }catch(Exception e){ return null; } }";
             }
         })
     }
