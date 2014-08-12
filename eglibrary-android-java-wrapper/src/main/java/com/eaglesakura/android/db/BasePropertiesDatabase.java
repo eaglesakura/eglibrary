@@ -1,6 +1,14 @@
 package com.eaglesakura.android.db;
 
 import android.content.Context;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import com.eaglesakura.json.JSON;
 import com.eaglesakura.util.LogUtil;
@@ -10,10 +18,12 @@ import com.google.protobuf.GeneratedMessage;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -144,6 +154,36 @@ public class BasePropertiesDatabase {
     }
 
     /**
+     * Viewの値からpropertyを指定する
+     *
+     * @param key
+     * @param view
+     */
+    public void setPropertyFromView(String key, View view) {
+        String value = null;
+        if (view instanceof RadioGroup) {
+            RadioGroup group = (RadioGroup) view;
+            View selectedView = group.findViewById(group.getCheckedRadioButtonId());
+            // Tagを指定する
+            if (selectedView != null) {
+                value = selectedView.getTag().toString();
+            } else {
+                value = "";
+            }
+        } else if (view instanceof EditText) {
+            value = ((EditText) view).getText().toString();
+        } else if (view instanceof CompoundButton) {
+            value = String.valueOf(((CompoundButton) view).isChecked());
+        } else if (view instanceof TextView) {
+            value = ((TextView) view).getText().toString();
+        }
+
+        if (value != null) {
+            setProperty(key, (Object) value);
+        }
+    }
+
+    /**
      * プロパティを保存する
      *
      * @param key   プロパティのキー値
@@ -155,6 +195,8 @@ public class BasePropertiesDatabase {
         // protobuf
         if (value instanceof GeneratedMessage) {
             value = ((com.google.protobuf.GeneratedMessage) value).toByteArray();
+        } else if (value instanceof Enum) {
+            value = ((Enum) value).name();
         }
 
         if (value instanceof byte[]) {
@@ -310,4 +352,5 @@ public class BasePropertiesDatabase {
             }
         }.start();
     }
+
 }
