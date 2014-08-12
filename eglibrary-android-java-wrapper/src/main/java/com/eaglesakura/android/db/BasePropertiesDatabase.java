@@ -262,4 +262,52 @@ public class BasePropertiesDatabase {
             }
         }).start();
     }
+
+    /**
+     * 全てのプロパティを最新に保つ
+     */
+    public void commitAndLoad() {
+        // Contextを持たないため読込が行えない
+        if (context == null || databaseFile == null) {
+            return;
+        }
+
+        Map<String, String> commitValues = new HashMap<String, String>();
+        TextKeyValueStore kvs = new TextKeyValueStore(context, databaseFile);
+        try {
+            kvs.open();
+
+            Iterator<Map.Entry<String, Property>> iterator = propMap.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Property value = iterator.next().getValue();
+                // リロードする。読み込めなかった場合は規定のデフォルト値を持たせる
+                if (value.modified) {
+                    // 変更がある値はDBへ反映リストに追加
+                    commitValues.put(value.key, value.value);
+                } else {
+                    // 変更が無いならばDBから読み出す
+                    value.value = kvs.get(value.key, value.defaultValue);
+                }
+                // sync直後なのでcommit対象ではない
+                value.modified = false;
+            }
+
+            // 変更を一括更新
+            kvs.putInTx(commitValues);
+        } finally {
+            kvs.close();
+        }
+    }
+
+    /**
+     * 非同期にコミット＆ロードを行い、設定を最新に保つ
+     */
+    public void commitAndLoadAsync() {
+        new Thread() {
+            @Override
+            public void run() {
+                commitAndLoad();
+            }
+        }.start();
+    }
 }

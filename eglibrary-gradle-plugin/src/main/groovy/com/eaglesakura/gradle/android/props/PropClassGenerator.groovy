@@ -1,17 +1,15 @@
-package com.eaglesakura.gradle.tasks
+package com.eaglesakura.gradle.android.props
 
 import com.eaglesakura.tool.generator.CodeWriter
 import com.eaglesakura.tool.log.Logger
-import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
-@Deprecated
-public class AndroidPropGenTask extends DefaultTask {
+public class PropClassGenerator {
     def classPackageName = "com.example";
     def className = "SampleSettingClass";
     def superClass = "com.eaglesakura.android.db.BasePropertiesDatabase"
     def dbFileName = "props.db"
-    def outDirectory = new File("gen-eglib").absoluteFile;
+    File outDirectory = null;
 
     /**
      * コンストラクタで自動的に既存データを読み込む場合はtrue
@@ -189,7 +187,9 @@ public class AndroidPropGenTask extends DefaultTask {
         })
     }
 
-    void build(File srcRootDirectory) {
+    public void build() {
+
+        File srcRootDirectory = outDirectory;
 
         FILE_CHECK:
         {
@@ -252,20 +252,6 @@ public class AndroidPropGenTask extends DefaultTask {
 
         // 生成完了
         writer.commit();
-    }
-
-    @TaskAction
-    def generate() {
-        Logger.initialize();
-        Logger.outLogLevel = 0;
-
-        Logger.out "classPackageName(${classPackageName})"
-        Logger.out "className(${className})"
-        Logger.out "superClass(${superClass})"
-        Logger.out "outDirectory(${outDirectory.absolutePath})"
-
-
-        build(outDirectory);
     }
 
     /**
