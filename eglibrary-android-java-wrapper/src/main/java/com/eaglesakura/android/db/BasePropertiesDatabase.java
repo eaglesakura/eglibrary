@@ -233,6 +233,11 @@ public class BasePropertiesDatabase {
             }
         }
 
+        // 不要であれば何もしない
+        if (commitValues.isEmpty()) {
+            return;
+        }
+
         // 保存する
         TextKeyValueStore kvs = new TextKeyValueStore(context, databaseFile);
         try {
