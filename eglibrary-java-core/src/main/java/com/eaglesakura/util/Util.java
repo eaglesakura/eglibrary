@@ -2,10 +2,29 @@ package com.eaglesakura.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 public class Util {
+
+    /**
+     * 今日の0時0分を取得する
+     */
+    public static Date getTodayStart() {
+        long oneDay = 1000 * 60 * 24;
+        long now = System.currentTimeMillis();
+
+        return new Date(now / oneDay * oneDay);
+    }
+
+    /**
+     * 今日の23時59分59秒....を取得する
+     */
+    public static Date getTodayEnd() {
+        return new Date(getTodayStart().getTime() + (1000 * 60 * 24) - 1);
+    }
 
     /**
      * 単純にsleepさせる。
