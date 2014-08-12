@@ -8,9 +8,9 @@ import org.gradle.api.tasks.TaskAction
  * Protocol Buffersのコンパイルを行うタスク
  */
 public class ProtobufCompileTask extends DefaultTask {
-    def classPath = [''];
-    def src = new File("idl");
-    def javaOutput = new File("protobuf");
+    List<File> classPath = [''];
+    File src = new File("idl");
+    File javaOutput = new File("protobuf");
     File cppOutput = null;
 
     /**
@@ -42,7 +42,10 @@ public class ProtobufCompileTask extends DefaultTask {
         Logger.out "src(${src.absolutePath})"
 
 
-        def command = ['protobuf'];
+        def command = ['protoc'];
+
+        // rootは必要
+        command.add("--proto_path=${src.absolutePath}")
 
         for (def path : classPath) {
             Logger.out "classpath :: ${path}";
@@ -50,7 +53,7 @@ public class ProtobufCompileTask extends DefaultTask {
         }
 
         if (javaOutput != null) {
-            Logger.out "javaOutput :: ${javaOutput.mkdirs()}";
+            Logger.out "javaOutput :: ${javaOutput.absolutePath}";
 
             javaOutput.mkdirs();
             command.add("--java_out");
@@ -58,6 +61,8 @@ public class ProtobufCompileTask extends DefaultTask {
         }
 
         if (cppOutput != null) {
+            Logger.out "cppOutput :: ${cppOutput.absolutePath}";
+
             cppOutput.mkdirs();
             command.add("--cpp_out");
             command.add("${cppOutput.absolutePath}")
