@@ -72,8 +72,10 @@ public final class FragmentChooser implements Parcelable {
         public Fragment get() {
             if (fragment != null) {
                 return fragment;
-            } else {
+            } else if (weak != null) {
                 return weak.get();
+            } else {
+                return null;
             }
         }
 
@@ -97,6 +99,10 @@ public final class FragmentChooser implements Parcelable {
     protected Callback callback = null;
 
     public FragmentChooser() {
+    }
+
+    public FragmentChooser(Callback callback) {
+        setCallback(callback);
     }
 
     private FragmentChooser(Parcel in) {
@@ -160,8 +166,12 @@ public final class FragmentChooser implements Parcelable {
         List<Fragment> result = new ArrayList<Fragment>();
         for (FragmentCache cache : fragmentCaches) {
             Fragment fragment = cache.get();
-            if (fragment != null && callback.isFragmentExist(this, fragment)) {
-                result.add(fragment);
+            if (fragment != null) {
+                if (callback == null) {
+                    result.add(fragment);
+                } else if (callback.isFragmentExist(this, fragment)) {
+                    result.add(fragment);
+                }
             }
         }
         return result;

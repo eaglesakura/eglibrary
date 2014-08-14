@@ -179,6 +179,14 @@ public abstract class BaseFragment extends Fragment {
         Log.i(getClass().getSimpleName(), String.format(fmt, args));
     }
 
+    protected void logi(String fmt, Object... args) {
+        Log.i(getClass().getSimpleName(), String.format(fmt, args));
+    }
+
+    protected void logd(String fmt, Object... args) {
+        Log.d(getClass().getSimpleName(), String.format(fmt, args));
+    }
+
     @SuppressLint("NewApi")
     protected boolean hasChildBackStack() {
         return getChildFragmentManager().getBackStackEntryCount() > 1;

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
@@ -31,6 +32,18 @@ public abstract class BaseActivity extends Activity implements FragmentChooser.C
     @AfterViews
     protected void onAfterViews() {
 
+    }
+
+    protected void log(String fmt, Object... args) {
+        Log.i(getClass().getSimpleName(), String.format(fmt, args));
+    }
+
+    protected void logi(String fmt, Object... args) {
+        Log.i(getClass().getSimpleName(), String.format(fmt, args));
+    }
+
+    protected void logd(String fmt, Object... args) {
+        Log.d(getClass().getSimpleName(), String.format(fmt, args));
     }
 
     @UiThread
