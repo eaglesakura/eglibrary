@@ -1,0 +1,69 @@
+buildscript {
+    repositories {
+        jcenter()
+
+        mavenCentral()
+
+        maven {
+            url "http://eaglesakura.github.io/maven/"
+        }
+    }
+
+    dependencies {
+        classpath 'com.eaglesakura:joint-connector-plugin:0.1.5'
+        classpath 'com.eaglesakura:joint-connector-annotation:0.1.5'
+    }
+}
+
+
+apply plugin: 'com.android.library'
+apply plugin: 'android-apt'
+
+def APPLICATION_ID = "com.eaglesakura.android.glkit"
+
+if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
+    EGLIBRARY_MAVEN_LOCAL_PATH = ""
+}
+if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
+    EGLIBRARY_ARTIFACT_VERSION = ""
+}
+if (!hasProperty("EGLIBRARY_ANDROID_BUILDTOOL_VERSION")) {
+    EGLIBRARY_ANDROID_BUILDTOOL_VERSION = "20.0.0"
+}
+
+configurations {
+    apt
+}
+
+dependencies {
+    compile project(':eglibrary-android-java-core')
+    compile 'com.eaglesakura:joint-connector-annotation:0.1.5'
+}
+
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion EGLIBRARY_ANDROID_BUILDTOOL_VERSION
+
+    defaultConfig {
+        applicationId APPLICATION_ID
+        minSdkVersion 15
+        targetSdkVersion 19
+        versionCode 1
+        versionName "1.0"
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+        }
+    }
+
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+

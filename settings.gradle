@@ -2,6 +2,9 @@ include ':eglibrary-java-core'
 include ':eglibrary-java-wrapper'
 include ':eglibrary-android-java-core'
 include ':eglibrary-android-java-wrapper'
+include ':eglibrary-android-glkit'
+
 include ':eglibrary-groovy-core'
 include ':eglibrary-gradle-plugin'
+
 include ':eglibrary-android-app-framework'
