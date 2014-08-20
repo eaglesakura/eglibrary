@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 
 import com.eaglesakura.android.annotations.AnnotationUtil;
+import com.eaglesakura.android.framework.ui.BaseFragment;
 import com.eaglesakura.android.framework.ui.FragmentChooser;
 import com.eaglesakura.util.LogUtil;
 
