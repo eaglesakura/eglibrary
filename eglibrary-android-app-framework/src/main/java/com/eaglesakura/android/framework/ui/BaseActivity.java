@@ -127,6 +127,7 @@ public abstract class BaseActivity extends Activity implements FragmentChooser.C
         super.onAttachFragment(fragment);
 
         // キャッシュに登録する
+        fragments.compact();
         fragments.addFragment(FragmentChooser.ReferenceType.Weak, fragment, fragment.getTag(), 0);
     }
 
