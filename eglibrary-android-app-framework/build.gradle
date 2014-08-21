@@ -26,7 +26,7 @@ dependencies {
     // support v4/v13/playservice
     compile 'com.android.support:support-v4:20.+'
     compile 'com.android.support:support-v13:20.+'
-    compile 'com.google.android.gms:play-services:4.2.+'
+    compile 'com.google.android.gms:play-services:5.0.+'
 
     compile project(':eglibrary-android-java-wrapper')
 }

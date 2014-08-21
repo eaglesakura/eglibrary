@@ -19,14 +19,14 @@ import com.eaglesakura.util.StringUtil;
 
 /**
  * File関連の便利メソッドを提供する
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class IOUtil {
 
     /**
      * inputのバッファを全てoutputへコピーする。 完了した時点でストリームはcloseされる。
-     * 
+     *
      * @param input
      * @param output
      * @throws IOException
@@ -45,6 +45,7 @@ public class IOUtil {
 
     /**
      * Byte配列に変換する。
+     *
      * @param array
      * @return
      */
@@ -64,8 +65,21 @@ public class IOUtil {
     }
 
     /**
+     * InputStreamから文字列へ変換する
+     *
+     * @param is
+     * @param close
+     * @return
+     * @throws IOException
+     */
+    public static String toString(InputStream is, boolean close) throws IOException {
+        byte[] buffer = toByteArray(is, close);
+        return new String(buffer);
+    }
+
+    /**
      * InputStreamを全てメモリ上に展開する。 isの長さがOOMにならないように調整すること。
-     * 
+     *
      * @param is
      * @param close
      * @return
@@ -94,6 +108,7 @@ public class IOUtil {
 
     /**
      * 指定箇所へファイルをコピーする。
+     *
      * @param src
      * @param dst
      * @return
@@ -121,6 +136,7 @@ public class IOUtil {
 
     /**
      * コピー先が存在しない、もしくはMD5が一致しない場合のみコピーを行い、それ以外はコピーを行わない
+     *
      * @param src
      * @param dst
      * @throws IOException
@@ -143,7 +159,7 @@ public class IOUtil {
 
     /**
      * ファイルからMD5を求める。
-     * 
+     *
      * @param file
      * @return
      */
@@ -181,6 +197,7 @@ public class IOUtil {
     /**
      * 末尾・先端のバイト列を用いた単純なハッシュを生成する
      * ファイルフォーマットによっては衝突の可能性が非常に高いため、利用する場合は十分に検討を行うこと。
+     *
      * @param file
      * @return
      */
@@ -224,7 +241,7 @@ public class IOUtil {
 
     /**
      * ファイルからMD5を求める。
-     * 
+     *
      * @param file
      * @return
      */
@@ -261,7 +278,7 @@ public class IOUtil {
 
     /**
      * ディレクトリを再帰的に削除する。
-     * 
+     *
      * @param root
      */
     public static void delete(File root) {
@@ -281,10 +298,8 @@ public class IOUtil {
     /**
      * ファイル拡張子を取得する。
      *
-     * 
      * @param fileName
      * @return
-     * 
      */
     public static String getFileExt(String fileName) {
         if (fileName == null)
@@ -301,11 +316,8 @@ public class IOUtil {
     /**
      * 拡張子付のファイル名からファイル名のみを抜き出す
      *
-     * 
-     * @param fileName
-     *            ファイル名
+     * @param fileName ファイル名
      * @return 拡張子を取り除いたファイル名
-     * 
      */
     public static String getFileName(final String fileName) {
         if (fileName == null)
@@ -321,6 +333,7 @@ public class IOUtil {
 
     /**
      * ファイルパスからSHA1を得る。
+     *
      * @param file
      * @return
      */
@@ -332,8 +345,8 @@ public class IOUtil {
 
     /**
      * カレントディレクトリのパスを取得する。
+     *
      * @return
-     * 
      */
     public static String getCurrentDirectoryPath() {
         return (new File(".").getAbsoluteFile().getParent());
@@ -346,6 +359,7 @@ public class IOUtil {
     /**
      * ファイルを名前順にソートする。
      * inの中身がソートされるため、戻り値は同じ参照となる。
+     *
      * @param files
      * @return
      */
@@ -376,6 +390,7 @@ public class IOUtil {
 
     /**
      * 比較等の処理を行うために文字列を正規化する
+     *
      * @param origin
      * @return
      */
@@ -391,6 +406,7 @@ public class IOUtil {
 
     /**
      * そこまでの道を含めてディレクトリを作成する。
+     *
      * @param dir
      * @return
      */
@@ -414,6 +430,7 @@ public class IOUtil {
      * parentからtargetに到達するまでの全てのファイルを取得する。
      * 戻り値にtargetとparentも含まれる。
      * 階層が上にあるFileがindexの0に近くなる。
+     *
      * @param target
      * @param parent
      * @return
@@ -432,6 +449,7 @@ public class IOUtil {
     /**
      * ディレクトリの中身を完全削除する。
      * dirフォルダ自体は残る。
+     *
      * @param dir
      * @return
      */
@@ -446,6 +464,7 @@ public class IOUtil {
 
     /**
      * 同じ内容を指していた場合はtrue
+     *
      * @param a
      * @param b
      * @return

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="License.Dialog.Close">CLOSE</string>
+    <string name="License.Dialog.Title">OSS License</string>
+</resources>
