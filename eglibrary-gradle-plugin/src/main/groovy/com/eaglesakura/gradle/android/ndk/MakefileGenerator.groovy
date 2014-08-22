@@ -7,12 +7,12 @@ public class MakefileGenerator {
     /**
      * LOCAL_SRC_FILES
      */
-    private List<String> sourceFiles = new ArrayList<String>();
+    private List<String> sourceFiles = new ArrayList<>();
 
     /**
      * LOCAL_C_INCLUDES
      */
-    private List<String> includeDirs = new ArrayList<String>();
+    private List<String> includeDirs = new ArrayList<>();
 
     /**
      * LOCAL_STATIC_LIBRARIES
@@ -36,6 +36,11 @@ public class MakefileGenerator {
     private List<String> localLdlibs = new ArrayList<>();
 
     /**
+     * Extra
+     */
+    final List<String> extraLines = new ArrayList<>();
+
+    /**
      * LOCAL_MODULE
      */
     String module = "app";
@@ -43,64 +48,51 @@ public class MakefileGenerator {
     /**
      *
      */
-    ModuleType type = SharedLibrary;
+    ModuleType type = ModuleType.SharedLibrary;
 
-    public enum ModuleType {
-        PrebuildStaticLibrary{
-            @Override
-            String includeModule() {
-                return "include \$(PREBUILT_STATIC_LIBRARY"; // *.a
-            }
-        },
+    /**
+     * 出力ディレクトリ
+     */
+    final File outDirectory;
 
-        SharedLibrary{
-            @Override
-            String includeModule() {
-                return "include \$(BUILD_SHARED_LIBRARY)";   // *.so
-            }
-        };
-
-        public abstract String includeModule();
-    }
-
-    public MakefileGenerator() {
-
+    public MakefileGenerator(File outDirectory) {
+        this.outDirectory = outDirectory;
     }
 
     /**
-     * 複数ファイルを読み込む
-     * @param dir
+     * ソースコードを指定パスから探索する
+     *
+     * @param findPath 探索パス
      */
-    public void source(File dir) {
-        if (dir.directory) {
+    public void source(String findPath) {
+        def path = new File(outDirectory, findPath);
+
+        if (path.directory) {
             // 再起
-            def files = dir.listFiles();
+            def files = path.listFiles();
             for (File f : files) {
-                source(f);
+                source("${findPath}/${f.name}");
             }
-        } else {
-            sourceFiles.add(file.path);
-            Logger.out "add source(${file.path})"
+        } else if (path.file) {
+            def name = path.name;
+
+            if (name.endsWith(".cpp") || name.endsWith(".c")) {
+                sourceFiles.add(findPath);
+                Logger.out "add source(${findPath})"
+            }
         }
     }
-
     /**
-     * ソースコードをリストで追加する
-     * @param sources
+     * includeディレクトリの相対パスを指定する
+     *
+     * @param findPath 探索パス
      */
-    public void source(List<File> sources) {
-        for (File file : sources) {
-            sources(file);
+    public void include(String findPath) {
+        File dir = new File(outDirectory, findPath);
+        if (dir.directory) {
+            includeDirs.add(findPath);
+            Logger.out "add source(${findPath})"
         }
-    }
-
-    /**
-     * ディレクトリをincludeする
-     * @param dir
-     */
-    public void include(File dir) {
-        includeDirs.add(dir.path);
-        Logger.out "add source(${file.path})"
     }
 
     /**
@@ -109,6 +101,44 @@ public class MakefileGenerator {
     public void include(MakefileGenerator makefile) {
         includeDirs.add(makefile.includeDirs);
         staticModules.add(makefile.module);
+    }
+
+    /**
+     * LOCAL_CPPFLAGSに直接フラグを指定する。
+     *
+     * @param flag
+     */
+    public void cppFlag(String flag) {
+        cppFlags.add(flag);
+    }
+
+    /**
+     * LOCAL_CFLAGSに直接フラグを指定する
+     * @param flag
+     */
+    public void cFlag(String flag) {
+        cFlags.add(flag);
+    }
+
+    /**
+     * C/CPPフラグを同時に指定する
+     * @param flag
+     */
+    public void flags(String flag) {
+        cppFlags.add(flag);
+        cFlags.add(flag);
+    }
+
+    /**
+     * #define定義を行う
+     *
+     * @param name define名. "__ARM_V7__"等、-Dを付与せずに指定する
+     */
+    public void define(String name) {
+        name = "-D${name}";
+
+        cFlag name;
+        cppFlag name;
     }
 
     /**
@@ -126,7 +156,30 @@ public class MakefileGenerator {
      * @param libs
      */
     public void ldlibs(List<String> libs) {
-        localLdlibs.add(libs);
+        localLdlibs.addAll(libs);
+    }
+
+    public static final def LDLIB_EGL = "EGL";
+
+    public static final def LDLIB_GLES11 = "GLESv1_CM";
+
+    public static final def LDLIB_GLES20 = "GLESv2";
+
+    public static final def LDLIB_GLES30 = "GLESv3";
+
+    public static final def LDLIB_GLES31 = "GLESv3";
+
+    public static final def LDLIB_ANDROID_LOG = "log";
+
+    public static final def LDLIB_ANDROID = "android";
+
+    public static final def LBLIB_ANDROID_JNIGRAPHICS = "jnigraphics";
+
+    /**
+     * C++11としてビルドする
+     */
+    public void cpp11() {
+        cppFlag "-std=c++0x"
     }
 
     /**
@@ -138,13 +191,22 @@ public class MakefileGenerator {
         writer.writeLine("############  Module : ${module}  ############");
         writer.writeLine("include \$(CLEAR_VARS)");
 
+        // module name
+        LOCAL_MODULE:
+        {
+            writer.writeLine("###### Includes")
+            writer.writeLine("LOCAL_MODULE := ${module}");
+            writer.newLine();
+        }
+
         // include
         LOCAL_C_INCLUDES:
         {
             writer.writeLine("###### Includes")
-            for (def file : sourceFiles) {
-                writer.write("LOCAL_SRC_FILES += ${file}")
+            for (def file : includeDirs) {
+                writer.writeLine("LOCAL_C_INCLUDES += ${file}")
             }
+            writer.newLine();
         }
 
         // cpp files
@@ -152,8 +214,47 @@ public class MakefileGenerator {
         {
             writer.writeLine("###### Sources")
             for (def file : sourceFiles) {
-                writer.write("LOCAL_SRC_FILES += ${file}")
+                writer.writeLine("LOCAL_SRC_FILES += ${file}")
             }
+            writer.newLine();
+        }
+
+        LOCAL_FLAGS:
+        {
+            writer.writeLine("###### Flags")
+            for (def flag : cFlags) {
+                writer.writeLine("LOCAL_CFLAGS += ${flag}")
+            }
+            for (def flag : cppFlags) {
+                writer.writeLine("LOCAL_CPPFLAGS += ${flag}")
+            }
+            writer.newLine();
+        }
+
+        LOCAL_LDLIBS:
+        {
+            writer.writeLine("###### Libs")
+            for (def lib : localLdlibs) {
+                writer.writeLine("LOCAL_LDLIBS += -l${lib}")
+            }
+            writer.newLine();
+        }
+
+        // EXTRA
+        if (!extraLines.empty) {
+            writer.writeLine("###### EXTRA");
+            for (def line : extraLines) {
+                writer.writeLine(line);
+            }
+            writer.newLine();
+        }
+
+        // BUILD
+        BUILD:
+        {
+            writer.writeLine("###### Build")
+            writer.writeLine(type.buildLine());
+            writer.newLine();
         }
     }
 }

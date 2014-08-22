@@ -50,7 +50,6 @@ public interface IEGLDevice {
     /**
      * Context管理グループを取得する
      */
-    @JCMethod
     IEGLContextGroup getContextGroup();
 
     /**

@@ -10,8 +10,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.eaglesakura:joint-connector-plugin:0.1.5'
-        classpath 'com.eaglesakura:joint-connector-annotation:0.1.5'
+        classpath 'com.eaglesakura:joint-connector-plugin:0.1.11'
     }
 }
 
@@ -35,9 +34,19 @@ configurations {
     apt
 }
 
+repositories {
+    jcenter()
+
+    mavenCentral()
+
+    maven {
+        url "http://eaglesakura.github.io/maven/"
+    }
+}
+
 dependencies {
     compile project(':eglibrary-android-java-core')
-    compile 'com.eaglesakura:joint-connector-annotation:0.1.5'
+    compile 'com.eaglesakura:joint-connector-annotation:0.1.11'
 }
 
 
@@ -65,5 +74,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+// export cpp
+/**
+ * 事前に"gradle assemble"を行い、classesを吐き出しておく
+ */
+task generateCppSource(type: com.eaglesakura.jc.gradle.tasks.ExportTask) {
+    projectPath = file('.').absolutePath;
+    cppGeneratePath = file("./jni/jcgen").absolutePath
+    tempGeneratePath = file("./build/joint-connector/jnibuild.jointclasses").absolutePath
+    dex2jarCommand = System.getenv("DEX2JAR_PATH")
 }
 

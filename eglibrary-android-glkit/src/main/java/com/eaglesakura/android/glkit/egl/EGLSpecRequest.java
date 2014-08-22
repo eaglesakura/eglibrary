@@ -18,7 +18,6 @@ import static javax.microedition.khronos.egl.EGL10.EGL_STENCIL_SIZE;
 /**
  * 要求するEGL設定
  */
-@JCClass(cppNamespace = "es.glkit")
 public class EGLSpecRequest {
     /**
      * EGLで利用する色バッファ情報
@@ -76,7 +75,6 @@ public class EGLSpecRequest {
      * @param d
      * @param s
      */
-    @JCMethod
     public void setSurfaceColorSpec(int r, int g, int b, int a, int d, int s) {
         if (r >= 8 && g >= 8 && b >= 8) {
             // alphaが指定してある
