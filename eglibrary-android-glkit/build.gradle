@@ -65,6 +65,7 @@ android {
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
+            jniLibs.srcDirs = ['../ndk/eglibrary-android-glkit/libs']
         }
     }
 
