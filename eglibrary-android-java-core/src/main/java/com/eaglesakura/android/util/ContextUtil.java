@@ -19,7 +19,9 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import com.eaglesakura.math.Vector2;
 import com.eaglesakura.util.EncodeUtil;
@@ -323,5 +325,19 @@ public class ContextUtil {
     public static boolean isScreenPowerOn(Context context) {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         return pm.isScreenOn();
+    }
+
+    /**
+     * IMEを閉じる
+     *
+     * @param context 対象のActivity
+     */
+    public static void closeIME(View focus, Activity context) {
+        try {
+            ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(focus.getWindowToken(), 0);
+
+        } catch (Exception e) {
+
+        }
     }
 }

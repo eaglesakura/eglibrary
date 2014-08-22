@@ -1,4 +1,4 @@
-package com.eaglesakura.android.sound;
+package com.eaglesakura.android.device.sound;
 
 import android.content.Context;
 import android.media.AudioManager;

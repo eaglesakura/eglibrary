@@ -1,4 +1,4 @@
-package com.eaglesakura.android.sound;
+package com.eaglesakura.android.device.sound;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
@@ -16,10 +16,8 @@ import java.util.Map.Entry;
 
 /**
  * SE管理クラス
- * @author TAKESHI YAMASHITA
- *
  */
-public class SoundManager  {
+public class SoundManager {
     Map<Object, MediaPlayer> medias = new HashMap<Object, MediaPlayer>();
     Context context = null;
 
@@ -34,6 +32,7 @@ public class SoundManager  {
 
     /**
      * {@link AudioManager#STREAM_MUSIC}がデフォルトで設定されている。
+     *
      * @param streamType
      */
     public void setStreamType(int streamType) {
@@ -47,7 +46,8 @@ public class SoundManager  {
 
     /**
      * 効果音のローディングを行う。
-     * @param id 再生に利用する効果音ID
+     *
+     * @param id     再生に利用する効果音ID
      * @param source 音源URI
      * @return 成功した場合true
      * @throws IOException
@@ -94,6 +94,7 @@ public class SoundManager  {
 
     /**
      * 効果音を再生する。
+     *
      * @param id {@link #load(Object, Uri)}で指定した効果音ID
      */
     public void play(Object id) {
@@ -113,6 +114,7 @@ public class SoundManager  {
 
     /**
      * 指定したIDの効果音を解放する。
+     *
      * @param id
      */
     public void unload(Object id) {
@@ -125,6 +127,7 @@ public class SoundManager  {
 
     /**
      * ロード済みだったらtrueを返す。
+     *
      * @param id
      * @return
      */
