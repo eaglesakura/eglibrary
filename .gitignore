@@ -1,3 +1,5 @@
+.project
+.cproject
 gen/
 *.iml
 .idea/
