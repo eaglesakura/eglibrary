@@ -56,16 +56,6 @@ public class FrameworkCentral {
     }
 
     /**
-     * Application#onTerminateで呼び出す
-     *
-     * @param application
-     */
-    public static void onApplicationTerminate(Application application) {
-        // 必要な項目を保存する
-        settings.commit();
-    }
-
-    /**
      * Frameworkの設定クラスを取得する
      *
      * @return

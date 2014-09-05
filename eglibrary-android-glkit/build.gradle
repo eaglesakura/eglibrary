@@ -1,20 +1,16 @@
 buildscript {
     repositories {
         jcenter()
-
         mavenCentral()
-
         maven {
             url "http://eaglesakura.github.io/maven/"
         }
     }
 
     dependencies {
-        classpath 'com.eaglesakura:joint-connector-plugin:0.1.5'
-        classpath 'com.eaglesakura:joint-connector-annotation:0.1.5'
+        classpath 'com.eaglesakura:joint-connector-plugin:0.1.13'
     }
 }
-
 
 apply plugin: 'com.android.library'
 apply plugin: 'android-apt'
@@ -37,7 +33,7 @@ configurations {
 
 dependencies {
     compile project(':eglibrary-android-java-core')
-    compile 'com.eaglesakura:joint-connector-annotation:0.1.5'
+    compile 'com.eaglesakura:joint-connector-annotation:0.1.13'
 }
 
 
