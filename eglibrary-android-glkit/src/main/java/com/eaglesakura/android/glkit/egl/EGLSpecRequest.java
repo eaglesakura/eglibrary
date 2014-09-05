@@ -1,8 +1,5 @@
 package com.eaglesakura.android.glkit.egl;
 
-import com.eaglesakura.jc.annotation.JCClass;
-import com.eaglesakura.jc.annotation.JCMethod;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,8 +100,13 @@ public class EGLSpecRequest {
         List<Integer> result = new ArrayList<Integer>();
         // レンダラーを指定バージョンに設定
         {
-            result.add(EGL_RENDERABLE_TYPE);
-            result.add(4); /* EGL_OPENGL_ES2_BIT */
+            if (version.ordinal() >= GLESVersion.GLES30.ordinal()) {
+                result.add(EGL_RENDERABLE_TYPE);
+                result.add(0x0010); /* EGL_OPENGL_ES3_BIT */
+            } else if (version == GLESVersion.GLES20) {
+                result.add(EGL_RENDERABLE_TYPE);
+                result.add(0x0004); /* EGL_OPENGL_ES2_BIT */
+            }
         }
 
         switch (surfaceColor) {

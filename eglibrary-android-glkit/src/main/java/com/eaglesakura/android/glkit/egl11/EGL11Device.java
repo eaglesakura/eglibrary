@@ -1,5 +1,7 @@
 package com.eaglesakura.android.glkit.egl11;
 
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.opengl.GLES20;
 
 import com.eaglesakura.android.glkit.GLKitUtil;
@@ -81,6 +83,16 @@ public class EGL11Device implements IEGLDevice {
         this.context = group.createContext();
     }
 
+    @Override
+    public Context getApplicationContext() {
+        return controller.getApplicationContext();
+    }
+
+    @Override
+    public AssetManager getAssetManager() {
+        return controller.getAssetManager();
+    }
+
     void destroySurface() {
         synchronized (surfaceLock) {
             if (hasSurface()) {
@@ -135,11 +147,18 @@ public class EGL11Device implements IEGLDevice {
             EGL10 egl = controller.egl;
             EGLDisplay display = controller.display;
             EGLConfig config = controller.config;
-            egl.eglCreatePbufferSurface(display, config, new int[]{
+            surface = egl.eglCreatePbufferSurface(display, config, new int[]{
                     EGL_WIDTH, width,
                     EGL_HEIGHT, height,
                     EGL_NONE,
             });
+
+            this.surfaceWidth = width;
+            this.surfaceHeight = height;
+
+            if(surface == EGL_NO_SURFACE) {
+                throw new IllegalStateException("eglCreatePbufferSurface");
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 package com.eaglesakura.android.glkit.egl11;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.util.Log;
 
 import com.eaglesakura.android.glkit.GLKitUtil;
@@ -70,6 +71,7 @@ public class EGL11Manager implements IEGLManager {
         display = egl.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY);
 
     }
+
 
     public GLESVersion getGLESVersion() {
         return specRequest.version;
@@ -187,6 +189,7 @@ public class EGL11Manager implements IEGLManager {
 
     /**
      * デバイスの廃棄を行わせる
+     *
      * @param device
      */
     void onDestroyDevice(EGL11Device device) {
@@ -200,5 +203,13 @@ public class EGL11Manager implements IEGLManager {
 
     void log(String msg, Object... fmt) {
         Log.i("EGL11", String.format(msg, fmt));
+    }
+
+    public Context getApplicationContext() {
+        return context;
+    }
+
+    public AssetManager getAssetManager() {
+        return context.getAssets();
     }
 }

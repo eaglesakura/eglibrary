@@ -10,7 +10,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.eaglesakura:joint-connector-plugin:0.1.11'
+        classpath 'com.eaglesakura:joint-connector-plugin:0.1.12'
     }
 }
 
@@ -83,8 +83,9 @@ android {
  */
 task generateCppSource(type: com.eaglesakura.jc.gradle.tasks.ExportTask) {
     projectPath = file('.').absolutePath;
-    cppGeneratePath = file("./jni/jcgen").absolutePath
+    cppGeneratePath = file("../ndk/${file('.').name}/jni/jcgen").absolutePath
     tempGeneratePath = file("./build/joint-connector/jnibuild.jointclasses").absolutePath
+    exportCppHeader = false;
     dex2jarCommand = System.getenv("DEX2JAR_PATH")
 }
 

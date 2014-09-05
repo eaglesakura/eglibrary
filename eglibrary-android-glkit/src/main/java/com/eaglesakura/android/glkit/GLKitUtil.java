@@ -1,14 +1,17 @@
 package com.eaglesakura.android.glkit;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.TextureView;
 
 import com.eaglesakura.android.glkit.egl.IEGLDevice;
 import com.eaglesakura.android.glkit.egl.IEGLManager;
+import com.eaglesakura.android.glkit.egl11.EGL11Manager;
 import com.eaglesakura.jc.annotation.JCClass;
 import com.eaglesakura.jc.annotation.JCMethod;
 import com.eaglesakura.util.LogUtil;
@@ -84,8 +87,12 @@ public class GLKitUtil {
         } else if (surface instanceof SurfaceHolder) {
             return surface;
         } else if (surface instanceof TextureView) {
-            return ((TextureView) surface).getSurfaceTexture();
+            return new Surface(((TextureView) surface).getSurfaceTexture());
+//            return surface;
         } else if (surface instanceof SurfaceTexture) {
+            return new Surface((SurfaceTexture) surface);
+//            return surface;
+        } else if (surface instanceof Surface) {
             return surface;
         }
 

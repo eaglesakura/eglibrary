@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.eaglesakura.android.glkit.egl.IEGLManager;
 import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.jc.annotation.JCClass;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 
@@ -12,6 +13,7 @@ import java.lang.ref.WeakReference;
 /**
  * 描画ループ等を構築する必要が有る場合に使用する
  */
+@JCClass(cppNamespace = "es.glkit")
 public abstract class GLLoopStateManager extends GLProcessingManager {
     /**
      * このオブジェクトを管理しているオーナー

@@ -26,6 +26,7 @@ public enum GLESVersion {
         public int[] getContextAttribute() {
             return new int[]{
                     0x3098 /*EGL_CONTEXT_CLIENT_VERSION */, 2,
+                    EGL10.EGL_NONE,
             };
         }
     },

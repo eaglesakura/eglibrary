@@ -1,5 +1,8 @@
 package com.eaglesakura.android.glkit.egl;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+
 import com.eaglesakura.jc.annotation.JCClass;
 import com.eaglesakura.jc.annotation.JCMethod;
 
@@ -119,4 +122,20 @@ public interface IEGLDevice {
      */
     @JCMethod
     public boolean hasContext();
+
+    /**
+     * ApplicationContextを取得する
+     *
+     * @return
+     */
+    @JCMethod
+    public Context getApplicationContext();
+
+    /**
+     * AssetManagerを取得する
+     *
+     * @return
+     */
+    @JCMethod
+    public AssetManager getAssetManager();
 }
