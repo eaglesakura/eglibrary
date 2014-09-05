@@ -77,16 +77,6 @@ public abstract class GLProcessingManager {
         initializeOffscreenDevice(1, 1, contextGroup);
     }
 
-    @JCMethod
-    public Context getApplicationContext() {
-        return context;
-    }
-
-    @JCMethod
-    public AssetManager getAssetManager() {
-        return context.getAssets();
-    }
-
     /**
      * EGL管理クラスを取得する
      *
