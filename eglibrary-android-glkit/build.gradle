@@ -43,11 +43,7 @@ repositories {
 
 dependencies {
     compile project(':eglibrary-android-java-core')
-    <<<<<<< HEAD
     compile 'com.eaglesakura:joint-connector-annotation:0.1.13'
-    === === =
-    compile 'com.eaglesakura:joint-connector-annotation:0.1.11'
-    >>>>>>> 0e2f a143fe1364bd66db02005fee72450fcc7ac6
 }
 
 
