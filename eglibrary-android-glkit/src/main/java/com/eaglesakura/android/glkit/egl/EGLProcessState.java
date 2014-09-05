@@ -1,13 +1,6 @@
 package com.eaglesakura.android.glkit.egl;
 
-import android.app.Activity;
-
 import com.eaglesakura.util.LogUtil;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * プロセス単位でEGLの制御を行う
@@ -58,37 +51,4 @@ public class EGLProcessState {
             }
         }
     }
-
-
-//    /**
-//     * 初期化済みデバイスを保持しておき、もしオーナーが消えていたら解放を行う
-//     */
-//    static final List<EGLDeviceHolder> deviceHolders = new ArrayList<EGLDeviceHolder>();
-//
-//    static class EGLDeviceHolder {
-//        String ownerName;
-//
-//        WeakReference<Object> owner;
-//
-//        IEGLDevice device;
-//
-//        boolean exist() {
-//            return owner != null && owner.get() != null;
-//        }
-//    }
-//
-//    /**
-//     * いつ死ぬかわからないデバイスをキャッシュに追加し、任意タイミングで解放するように保険をかける
-//     *
-//     * @param owner
-//     * @param device
-//     */
-//    public static void addDeviceCache(Object owner, IEGLDevice device) {
-//        synchronized (lock) {
-//            EGLDeviceHolder holder = new EGLDeviceHolder();
-//            holder.owner = new WeakReference<Object>(owner);
-//            holder.ownerName = String.format("clz(%s)/ts(%s)", owner.getClass().getName(), owner.toString());
-//            holder.device = device;
-//        }
-//    }
 }

@@ -31,9 +31,23 @@ configurations {
     apt
 }
 
+repositories {
+    jcenter()
+
+    mavenCentral()
+
+    maven {
+        url "http://eaglesakura.github.io/maven/"
+    }
+}
+
 dependencies {
     compile project(':eglibrary-android-java-core')
+    <<<<<<< HEAD
     compile 'com.eaglesakura:joint-connector-annotation:0.1.13'
+    === === =
+    compile 'com.eaglesakura:joint-connector-annotation:0.1.11'
+    >>>>>>> 0e2f a143fe1364bd66db02005fee72450fcc7ac6
 }
 
 
@@ -52,6 +66,7 @@ android {
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
+            jniLibs.srcDirs = ['../ndk/eglibrary-android-glkit/libs']
         }
     }
 
@@ -61,5 +76,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+// export cpp
+/**
+ * 事前に"gradle assemble"を行い、classesを吐き出しておく
+ */
+task generateCppSource(type: com.eaglesakura.jc.gradle.tasks.ExportTask) {
+    projectPath = file('.').absolutePath;
+    cppGeneratePath = file("../ndk/${file('.').name}/jni/jcgen").absolutePath
+    tempGeneratePath = file("./build/joint-connector/jnibuild.jointclasses").absolutePath
+    exportCppHeader = false;
+    dex2jarCommand = System.getenv("DEX2JAR_PATH")
 }
 

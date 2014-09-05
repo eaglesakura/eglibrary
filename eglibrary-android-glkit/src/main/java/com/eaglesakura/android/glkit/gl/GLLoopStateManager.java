@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.eaglesakura.android.glkit.egl.IEGLManager;
 import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.jc.annotation.JCClass;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 
@@ -12,6 +13,7 @@ import java.lang.ref.WeakReference;
 /**
  * 描画ループ等を構築する必要が有る場合に使用する
  */
+@JCClass(cppNamespace = "es.glkit")
 public abstract class GLLoopStateManager extends GLProcessingManager {
     /**
      * このオブジェクトを管理しているオーナー
@@ -41,7 +43,7 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
     /**
      * 現在の描画ステート
      */
-    protected LoopState processingState = null;
+    protected LoopState loopState = null;
 
     protected GLLoopStateManager(Context context, IEGLManager eglManager) {
         super(context, eglManager);
@@ -51,33 +53,33 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
      * 処理の休止を行う
      */
     public void onPause() {
-        processingState = LoopState.Pause;
+        loopState = LoopState.Pause;
     }
 
     /**
      * 処理のレジュームを行う
      */
     public void onResume() {
-        processingState = LoopState.Run;
+        loopState = LoopState.Run;
     }
 
     /**
      * 現在のレンダリング状態を取得する
      */
-    public LoopState getProcessingState() {
-        return processingState;
+    public LoopState getLoopState() {
+        return loopState;
     }
 
     public boolean isProcessingPaused() {
-        return processingState == LoopState.Pause;
+        return loopState == LoopState.Pause;
     }
 
     public boolean isProcessingDestroy() {
-        return processingState == LoopState.Destroyed;
+        return loopState == LoopState.Destroyed;
     }
 
     public boolean isProcessingRunning() {
-        return processingState == LoopState.Run;
+        return loopState == LoopState.Run;
     }
 
     /**
@@ -118,7 +120,13 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
     @Override
     public void start() {
         super.start();
-        processingState = LoopState.Run;
+        loopState = LoopState.Run;
+    }
+
+    @Override
+    public void dispose() {
+        loopState = LoopState.Destroyed;
+        super.dispose();
     }
 
     /**
@@ -141,7 +149,7 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
      * 処理ループを速やかに停止する
      */
     public void stop() {
-        processingState = LoopState.Destroyed;
+        loopState = LoopState.Destroyed;
         if (thread == null) {
             return;
         }
@@ -187,8 +195,8 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
 
         // 初期化イベントを発行する
         {
-            LogUtil.log("call onProcessingInitialize");
-            onProcessingInitialize();
+            LogUtil.log("call onLoopInitialize");
+            onLoopInitialize();
         }
 
         int nowSurfaceHeight = 0;
@@ -219,18 +227,18 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
 
                     if (lastState == LoopState.Pause) {
                         // pauseから復旧したらresume
-                        LogUtil.log("call onProcessingResume");
-                        onProcessingResume();
+                        LogUtil.log("call onLoopResume");
+                        onLoopResume();
                     }
 
                     if (nowSurfaceWidth != oldSurfaceWidth || nowSurfaceHeight != oldSurfaceHeight) {
                         // 解像度に変化があったらイベントを発行
-                        LogUtil.log("call onProcessingSurfaceSizeChanged old(%dx%d) -> new(%dx%d)", oldSurfaceWidth, oldSurfaceHeight, nowSurfaceWidth, nowSurfaceHeight);
-                        onProcessingSurfaceSizeChanged(oldSurfaceWidth, oldSurfaceHeight, nowSurfaceWidth, nowSurfaceHeight);
+                        LogUtil.log("call onLoopSurfaceSizeChanged old(%dx%d) -> new(%dx%d)", oldSurfaceWidth, oldSurfaceHeight, nowSurfaceWidth, nowSurfaceHeight);
+                        onLoopSurfaceSizeChanged(oldSurfaceWidth, oldSurfaceHeight, nowSurfaceWidth, nowSurfaceHeight);
                     }
 
                     // 毎フレーム処理
-                    onProcessingLoopFrame();
+                    onLoopFrame();
 
                     // processを通ったら再描画リクエストは廃棄する
                     renderingRequest = false;
@@ -239,16 +247,16 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
                         LogUtil.log("has RenderingRequest(%s)", toString());
 
                         device.bind();
-                        LogUtil.log("call onProcessingRequestRendering");
-                        onProcessingRequestRendering();
+                        LogUtil.log("call onLoopRequestRendering");
+                        onLoopRequestRendering();
                         device.unbind();
 
                         renderingRequest = false;
                     }
 
                     if (lastState == LoopState.Run) {
-                        LogUtil.log("call onProcessingPaused");
-                        onProcessingPaused();
+                        LogUtil.log("call onLoopPaused");
+                        onLoopPaused();
                     }
 
                     // デバイスは開放しておく
@@ -259,7 +267,7 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
                 }
 
                 // 現在のステートを保存する
-                lastState = processingState;
+                lastState = loopState;
                 oldSurfaceWidth = nowSurfaceWidth;
                 oldSurfaceHeight = nowSurfaceHeight;
             } else {
@@ -277,8 +285,8 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
         // 終了処理を行わせる
         {
             device.bind();
-            LogUtil.log("call onProcessingFinish");
-            onProcessingFinish();
+            LogUtil.log("call onLoopFinish");
+            onLoopFinish();
             device.unbind();
         }
         // 処理を終了させる
@@ -288,7 +296,7 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
     /**
      * 処理の初期化を行わせる
      */
-    protected abstract void onProcessingInitialize();
+    protected abstract void onLoopInitialize();
 
     /**
      * 処理中にサーフェイスサイズが変更になったら呼び出される
@@ -298,31 +306,31 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
      * @param newWidth
      * @param newHeight
      */
-    protected abstract void onProcessingSurfaceSizeChanged(int oldWidth, int oldHeight, int newWidth, int newHeight);
+    protected abstract void onLoopSurfaceSizeChanged(int oldWidth, int oldHeight, int newWidth, int newHeight);
 
     /**
      * 処理の一時停止を行う
      */
-    protected abstract void onProcessingPaused();
+    protected abstract void onLoopPaused();
 
     /**
      * 処理の復帰を行う
      */
-    protected abstract void onProcessingResume();
+    protected abstract void onLoopResume();
 
     /**
      * 再描画のリクエストがあった
      */
-    protected abstract void onProcessingRequestRendering();
+    protected abstract void onLoopRequestRendering();
 
     /**
      * 処理ループの１フレーム処理を行わせる
      */
-    protected abstract void onProcessingLoopFrame();
+    protected abstract void onLoopFrame();
 
     /**
      * 処理ループの終了を行わせる
      */
-    protected abstract void onProcessingFinish();
+    protected abstract void onLoopFinish();
 
 }

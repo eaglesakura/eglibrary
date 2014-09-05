@@ -1,0 +1,3 @@
+[submodule "ndk"]
+	path = ndk
+	url = git@github.com:eaglesakura/eglibrary-cpp.git

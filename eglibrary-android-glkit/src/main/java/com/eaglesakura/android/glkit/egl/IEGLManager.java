@@ -1,5 +1,7 @@
 package com.eaglesakura.android.glkit.egl;
 
+import android.content.Context;
+
 import com.eaglesakura.jc.annotation.JCClass;
 import com.eaglesakura.jc.annotation.JCMethod;
 
