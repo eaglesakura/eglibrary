@@ -282,6 +282,12 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
             }
         }
 
+        // 必要であれば、一時的なサーフェイス復帰を行う
+        if (!device.isBinded() && !device.hasSurface()) {
+            LogUtil.log("create stub surface");
+            device.createPBufferSurface(1, 1);
+        }
+
         // 終了処理を行わせる
         {
             device.bind();

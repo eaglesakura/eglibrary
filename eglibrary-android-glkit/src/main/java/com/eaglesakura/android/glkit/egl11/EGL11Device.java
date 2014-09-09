@@ -156,7 +156,7 @@ public class EGL11Device implements IEGLDevice {
             this.surfaceWidth = width;
             this.surfaceHeight = height;
 
-            if(surface == EGL_NO_SURFACE) {
+            if (surface == EGL_NO_SURFACE) {
                 throw new IllegalStateException("eglCreatePbufferSurface");
             }
         }
@@ -164,7 +164,18 @@ public class EGL11Device implements IEGLDevice {
 
     @Override
     public boolean bind() {
-        if (!hasSurface() || isBinded()) {
+        if (isBindedThread()) {
+            LogUtil.log("binded this thread");
+            return false;
+        }
+
+        if (isBinded()) {
+            LogUtil.log("binded other thread");
+            return false;
+        }
+
+        if (!hasSurface()) {
+            LogUtil.log("no surface");
             // surfaceを持たないならバインドも成功しない
             return false;
         }

@@ -1,6 +1,6 @@
 package com.eaglesakura.android.jc.support;
 
-import android.content.Context;
+import com.eaglesakura.jc.annotation.JCClass;
 
 /**
  *
