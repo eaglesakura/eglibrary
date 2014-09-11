@@ -90,6 +90,12 @@ public class CameraTextureRenderer extends CameraManager {
 
     @JCMethod
     @Override
+    public void requestPreviewSize(int width, int height, int minWidth, int minHeight) {
+        super.requestPreviewSize(width, height, minWidth, minHeight);
+    }
+
+    @JCMethod
+    @Override
     public boolean startAutofocus() {
         return super.startAutofocus();
     }
