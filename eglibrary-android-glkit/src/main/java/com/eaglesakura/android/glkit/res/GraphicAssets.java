@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 
 import com.eaglesakura.jc.annotation.JCClass;
 import com.eaglesakura.jc.annotation.JCMethod;
+import com.eaglesakura.util.LogUtil;
 
 import java.io.InputStream;
 
@@ -18,6 +19,7 @@ public class GraphicAssets {
 
     /**
      * AssetManagerを取得する
+     *
      * @param context
      * @return
      */
@@ -61,6 +63,26 @@ public class GraphicAssets {
 
                 }
             }
+        }
+        return null;
+    }
+
+    /**
+     * カメラに接続する
+     *
+     * @param CameraTextureRenderer_MODE
+     * @return
+     */
+    @JCMethod
+    public static CameraTextureRenderer connectCamera(Context context, int CameraTextureRenderer_MODE) {
+        try {
+            CameraTextureRenderer result = new CameraTextureRenderer(context);
+            if (result.connect(CameraTextureRenderer_MODE)) {
+                // 接続成功した
+                return result;
+            }
+        } catch (Exception e) {
+            LogUtil.log(e);
         }
         return null;
     }
