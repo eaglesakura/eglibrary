@@ -1,6 +1,7 @@
 package com.eaglesakura.android.framework.context;
 
 import android.content.res.AssetManager;
+import android.graphics.drawable.Drawable;
 
 import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.io.IOUtil;
@@ -64,5 +65,9 @@ public class Resources {
 
     public static String string(int stringId) {
         return app().getString(stringId);
+    }
+
+    public static Drawable drawable(int drawableId) {
+        return app().getDrawable(drawableId);
     }
 }
