@@ -385,4 +385,15 @@ public class BasePropertiesDatabase {
         }.start();
     }
 
+    /**
+     * 値を全てデフォルト化する
+     */
+    public void clear() {
+        Iterator<Map.Entry<String, Property>> iterator = propMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, Property> entry = iterator.next();
+            Property prop = entry.getValue();
+            prop.value = prop.defaultValue;
+        }
+    }
 }
