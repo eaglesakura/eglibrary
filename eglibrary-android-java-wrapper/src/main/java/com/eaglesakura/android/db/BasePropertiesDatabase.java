@@ -1,6 +1,8 @@
 package com.eaglesakura.android.db;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -16,6 +18,8 @@ import com.eaglesakura.util.StringUtil;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.GeneratedMessage;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -122,6 +126,26 @@ public class BasePropertiesDatabase {
     }
 
     /**
+     * PNG形式で保存してあるBitmapを取得する
+     *
+     * @param key
+     * @return
+     */
+    public Bitmap getBitmapProperty(String key) {
+        byte[] pngFile = getByteArrayProperty(key);
+        if (pngFile == null) {
+            return null;
+        }
+
+        try {
+            return BitmapFactory.decodeStream(new ByteArrayInputStream(pngFile));
+        } catch (Exception e) {
+
+        }
+        return null;
+    }
+
+    /**
      * base64エンコードオブジェクトを取得する
      *
      * @param key
@@ -197,6 +221,16 @@ public class BasePropertiesDatabase {
             value = ((com.google.protobuf.GeneratedMessage) value).toByteArray();
         } else if (value instanceof Enum) {
             value = ((Enum) value).name();
+        } else if (value instanceof Bitmap) {
+            try {
+                Bitmap bmp = (Bitmap) value;
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, os);
+
+                value = os.toByteArray();
+            } catch (Exception e) {
+                value = null;
+            }
         }
 
         if (value instanceof byte[]) {

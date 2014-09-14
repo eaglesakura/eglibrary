@@ -1,9 +1,11 @@
 package com.eaglesakura.android.util;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -26,6 +28,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.eaglesakura.math.Vector2;
 import com.eaglesakura.util.EncodeUtil;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -339,5 +342,30 @@ public class ContextUtil {
         } catch (Exception e) {
 
         }
+    }
+
+    /**
+     * 指定クラスが起動中であればtrueを返す
+     *
+     * @param context
+     * @param clazz
+     * @return
+     */
+    public static boolean isServiceRunning(Context context, Class<? extends Service> clazz) {
+        try {
+            ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+            List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
+
+            for (ActivityManager.RunningServiceInfo info : services) {
+                if (clazz.getName().equals(info.service.getClassName())) {
+                    // 一致するクラスが見つかった
+                    return true;
+                }
+            }
+            return false;
+        } catch (Exception e) {
+
+        }
+        return false;
     }
 }
