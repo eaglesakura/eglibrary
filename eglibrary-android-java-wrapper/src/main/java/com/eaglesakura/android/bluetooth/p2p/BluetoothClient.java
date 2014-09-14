@@ -8,24 +8,22 @@ import android.bluetooth.BluetoothSocket;
 
 public class BluetoothClient extends BluetoothP2PConnector {
 
-    final BluetoothDevice device;
-
     BluetoothSocket socket;
 
     public BluetoothClient(BluetoothDevice device) {
-        this.device = device;
+        this.connectDevice = device;
     }
 
     @Override
     protected void requestConnecting(UUID protocol) {
         try {
 
-            socket = device.createRfcommSocketToServiceRecord(protocol);
+            socket = connectDevice.createRfcommSocketToServiceRecord(protocol);
             socket.connect();
 
             startInputThread(socket);
             startOutputThread(socket);
-        } catch (IOException ioe) {
+        } catch (Exception ioe) {
             ioe.printStackTrace();
 
             synchronized (lock) {

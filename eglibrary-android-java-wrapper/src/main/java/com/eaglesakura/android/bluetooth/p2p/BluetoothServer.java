@@ -28,6 +28,7 @@ public class BluetoothServer extends BluetoothP2PConnector {
 
     /**
      * サーバーのリクエスト待ち時間を指定する
+     *
      * @param serverRequestTimeout
      */
     public void setServerRequestTimeoutMs(long serverRequestTimeout) {
@@ -44,6 +45,7 @@ public class BluetoothServer extends BluetoothP2PConnector {
             BluetoothServerSocket serverSocket = adapter.listenUsingInsecureRfcommWithServiceRecord(context.getPackageName(), protocol);
 
             socket = serverSocket.accept((int) serverRequestTimeoutMs);
+            connectDevice = socket.getRemoteDevice();
 
             // 1デバイスしか受け付けないため、
             // サーバーソケットは閉じる
