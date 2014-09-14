@@ -187,6 +187,24 @@ public class PropClassGenerator {
         })
     }
 
+    /**
+     * Bitmap用Propertyを追加する
+     * @param propName
+     */
+    public void bitmapProperty(String propName) {
+        properties.add(new Property("${className}.${propName}", propName, "") {
+            @Override
+            String generateSetter() {
+                return "public void set${toCamelCaseUpper(name)}(android.graphics.Bitmap set){ setProperty(\"${key}\", set); }";
+            }
+
+            @Override
+            String generateGetter() {
+                return "public android.graphics.Bitmap get${toCamelCaseUpper(name)}(){ return getBitmapProperty(\"${key}\"); }";
+            }
+        })
+    }
+
     public void build() {
 
         File srcRootDirectory = outDirectory;
