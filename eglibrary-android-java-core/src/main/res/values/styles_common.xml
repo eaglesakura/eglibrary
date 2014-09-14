@@ -16,6 +16,7 @@
         <item name="android:background">@drawable/common_light_group_line</item>
         <item name="android:padding">@dimen/Common.Group.Outer.Padding</item>
     </style>
+    <color name="Common.Light.Group.Background">#FFFFFF</color>
 
     <!-- Activityの標準スタイル -->
     <dimen name="Common.Activity.NavigationDrawer.Width">200dp</dimen>
