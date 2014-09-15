@@ -9,6 +9,8 @@ buildscript {
 
     dependencies {
         classpath 'com.eaglesakura:joint-connector-plugin:0.1.13'
+        classpath 'com.android.tools.build:gradle:0.12.+'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.3'
     }
 }
 
@@ -33,9 +35,7 @@ configurations {
 
 repositories {
     jcenter()
-
     mavenCentral()
-
     maven {
         url "http://eaglesakura.github.io/maven/"
     }
@@ -75,14 +75,14 @@ android {
 }
 
 // export cpp
-/**
- * 事前に"gradle assemble"を行い、classesを吐き出しておく
- */
-task generateCppSource(type: com.eaglesakura.jc.gradle.tasks.ExportTask) {
-    projectPath = file('.').absolutePath;
-    cppGeneratePath = file("../ndk/${file('.').name}/jni/jcgen").absolutePath
-    tempGeneratePath = file("./build/joint-connector/jnibuild.jointclasses").absolutePath
-    exportCppHeader = false;
-    dex2jarCommand = System.getenv("DEX2JAR_PATH")
-}
-
+///**
+// * 事前に"gradle assemble"を行い、classesを吐き出しておく
+// */
+//task generateCppSource(type: com.eaglesakura.jc.gradle.tasks.ExportTask) {
+//    projectPath = file('.').absolutePath;
+//    cppGeneratePath = file("../ndk/${file('.').name}/jni/jcgen").absolutePath
+//    tempGeneratePath = file("./build/joint-connector/jnibuild.jointclasses").absolutePath
+//    exportCppHeader = false;
+//    dex2jarCommand = System.getenv("DEX2JAR_PATH")
+//}
+//

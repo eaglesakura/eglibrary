@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.view.SurfaceHolder;
+import android.view.TextureView;
 
 import com.eaglesakura.math.MathUtil;
 import com.eaglesakura.thread.Holder;
@@ -45,6 +46,22 @@ public class CameraManager implements Camera.AutoFocusCallback {
      * オートフォーカス実行モード
      */
     AutofucusMode autofucusMode = AutofucusMode.None;
+
+    public enum FlashMode {
+        Off,
+
+        Auto,
+
+        On,
+
+        RedEye,
+
+        Torch;
+
+        public String getApiFlashMode() {
+            return this.name().toLowerCase();
+        }
+    }
 
     public enum CameraType {
         /**
@@ -217,6 +234,21 @@ public class CameraManager implements Camera.AutoFocusCallback {
     }
 
     /**
+     * 撮影時のフラッシュモードを指定する
+     *
+     * @param mode フラッシュモード
+     */
+    public boolean setFlashMode(FlashMode mode) {
+        try {
+            parameters.setFlashMode(mode.getApiFlashMode());
+            return true;
+        } catch (Exception e) {
+            LogUtil.log(e);
+            return false;
+        }
+    }
+
+    /**
      * 指定したアスペクト比に近い撮影サイズを選択する
      *
      * @param width     リクエストする幅
@@ -265,6 +297,11 @@ public class CameraManager implements Camera.AutoFocusCallback {
                 parameters = camera.getParameters();
                 this.connectedCameraType = type;
                 if (isConnected()) {
+                    List<String> flashModes = parameters.getSupportedFlashModes();
+                    for (String mode : flashModes) {
+                        LogUtil.log("flash mode :: " + mode);
+                    }
+
                     return true;
                 }
             } catch (Exception e) {
@@ -285,6 +322,10 @@ public class CameraManager implements Camera.AutoFocusCallback {
      */
     public boolean startPreview(Object surface) {
         try {
+            if (surface instanceof TextureView) {
+                surface = ((TextureView) surface).getSurfaceTexture();
+            }
+
             if (surface instanceof SurfaceHolder) {
                 camera.setPreviewDisplay((SurfaceHolder) surface);
             } else if (surface instanceof SurfaceTexture) {
@@ -365,6 +406,33 @@ public class CameraManager implements Camera.AutoFocusCallback {
      */
     public boolean isAutofocusProcessing() {
         return autofucusMode == AutofucusMode.Processing;
+    }
+
+    /**
+     * 同期的にオートフォーカスを行う
+     *
+     * @return オートフォーカスに成功したらtrue
+     */
+    public boolean autofocusSync() {
+        final Holder<Boolean> holder = new Holder<Boolean>();
+        try {
+            camera.autoFocus(new Camera.AutoFocusCallback() {
+                @Override
+                public void onAutoFocus(boolean success, Camera camera) {
+                    if (success) {
+                        autofucusMode = AutofucusMode.Completed;
+                    } else {
+                        autofucusMode = AutofucusMode.Failed;
+                    }
+                    LogUtil.log("autofocus :: " + autofucusMode);
+                    holder.set(success);
+                }
+            });
+            autofucusMode = AutofucusMode.Processing;
+        } catch (Exception e) {
+            holder.set(false);
+        }
+        return holder.getWithWait(1000 * 10);
     }
 
     /**
