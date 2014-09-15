@@ -5,6 +5,8 @@ import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.view.SurfaceHolder;
 
+import com.eaglesakura.math.MathUtil;
+import com.eaglesakura.thread.Holder;
 import com.eaglesakura.util.LogUtil;
 
 import java.util.List;
@@ -151,24 +153,13 @@ public class CameraManager implements Camera.AutoFocusCallback {
         }
     }
 
-    /**
-     * 指定したアスペクト比に近いプレビューサイズを選択する
-     *
-     * @param width     リクエストする幅
-     * @param height    リクエストする高さ
-     * @param minWidth  最低限持っていて欲しい幅
-     * @param minHeight 最低限持っていていて欲しい高さ
-     */
-    public void requestPreviewSize(int width, int height, int minWidth, int minHeight) {
-        LogUtil.log("request preview(%d, %d)", width, height);
+    private Camera.Size chooseShotSize(List<Camera.Size> targetSizes, int width, int height, int minWidth, int minHeight) {
         final float TARGET_ASPECT = (float) Math.max(1, width) / (float) Math.max(1, height);
-
         try {
-            List<Camera.Size> previewSizes = parameters.getSupportedPreviewSizes();
             Camera.Size target = null;
             float current_diff = 999999999;
 
-            for (Camera.Size size : previewSizes) {
+            for (Camera.Size size : targetSizes) {
                 // 最低限のフォーマットは保つ
                 if (size.width >= minWidth && size.height >= minHeight) {
                     float aspect_diff = ((float) size.width / (float) size.height) - TARGET_ASPECT;
@@ -182,17 +173,62 @@ public class CameraManager implements Camera.AutoFocusCallback {
             }
 
             if (target != null) {
-
-                LogUtil.log("change preview size(%d x %d) no-frip", target.width, target.height);
-                parameters.setPreviewSize(target.width, target.height);
-                camera.setParameters(parameters);
-
-                parameters = camera.getParameters();
+                return target;
             }
         } catch (Exception e) {
             LogUtil.log(e);
         }
+        return targetSizes.get(0);
+    }
 
+    /**
+     * 指定したアスペクト比に近いプレビューサイズを選択する
+     *
+     * @param width     リクエストする幅
+     * @param height    リクエストする高さ
+     * @param minWidth  最低限持っていて欲しい幅
+     * @param minHeight 最低限持っていていて欲しい高さ
+     */
+    public void requestPreviewSize(int width, int height, int minWidth, int minHeight) {
+        Camera.Size previewSize = chooseShotSize(parameters.getSupportedPreviewSizes(), width, height, minWidth, minHeight);
+        parameters.setPreviewSize(previewSize.width, previewSize.height);
+        camera.setParameters(parameters);
+        LogUtil.log("previewSize request(%d x %d) -> set(%d x %d) no-frip", width, height, previewSize.width, previewSize.height);
+    }
+
+    /**
+     * GPSデータを設定する
+     *
+     * @param lat 緯度
+     * @param lng 経度
+     */
+    public void setGpsData(double lat, double lng) {
+        parameters.setGpsLatitude(lat);
+        parameters.setGpsLongitude(lng);
+    }
+
+    /**
+     * JPEG画質を設定する
+     *
+     * @param quality 画質(0〜100)
+     */
+    public void setJpegQuality(int quality) {
+        parameters.setJpegQuality(MathUtil.minmax(0, 100, quality));
+    }
+
+    /**
+     * 指定したアスペクト比に近い撮影サイズを選択する
+     *
+     * @param width     リクエストする幅
+     * @param height    リクエストする高さ
+     * @param minWidth  最低限持っていて欲しい幅
+     * @param minHeight 最低限持っていていて欲しい高さ
+     */
+    public void requestPictureSize(int width, int height, int minWidth, int minHeight) {
+        Camera.Size pictureSize = chooseShotSize(parameters.getSupportedPictureSizes(), width, height, minWidth, minHeight);
+        parameters.setPictureSize(pictureSize.width, pictureSize.height);
+        camera.setParameters(parameters);
+        LogUtil.log("previewSize request(%d x %d) -> set(%d x %d) no-frip", width, height, pictureSize.width, pictureSize.height);
     }
 
     /**
@@ -352,6 +388,28 @@ public class CameraManager implements Camera.AutoFocusCallback {
             return false;
         }
     }
+
+    public Camera getCamera() {
+        return camera;
+    }
+
+
+    /**
+     * カメラの撮影待ちを行う
+     *
+     * @return 撮影したJpegデータ
+     */
+    public byte[] takePictureSync() {
+        final Holder<byte[]> pictureHolder = new Holder<byte[]>();
+        camera.takePicture(null, null, new Camera.PictureCallback() {
+            @Override
+            public void onPictureTaken(byte[] data, Camera camera) {
+                pictureHolder.set(data);
+            }
+        });
+        return pictureHolder.getWithWait(1000 * 30);
+    }
+
 
     /**
      * オートフォーカス処理をキャンセルする
