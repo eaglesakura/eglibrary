@@ -298,8 +298,10 @@ public class CameraManager implements Camera.AutoFocusCallback {
                 this.connectedCameraType = type;
                 if (isConnected()) {
                     List<String> flashModes = parameters.getSupportedFlashModes();
-                    for (String mode : flashModes) {
-                        LogUtil.log("flash mode :: " + mode);
+                    if (flashModes != null) {
+                        for (String mode : flashModes) {
+                            LogUtil.log("flash mode :: " + mode);
+                        }
                     }
 
                     return true;
