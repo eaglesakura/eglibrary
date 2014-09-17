@@ -56,7 +56,7 @@ public class JSON {
     public static <T> T decodeOrNull(String json, Class<T> clazz) {
         try {
             return new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).readValue(json, clazz);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             //            LogUtil.log(e);
             return null;
         }
