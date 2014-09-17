@@ -1,11 +1,5 @@
 package com.eaglesakura.android.db;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.lang.reflect.Method;
-import java.util.Date;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
@@ -17,7 +11,12 @@ import com.eaglesakura.android.dao.bkvs.DbKeyValueData;
 import com.eaglesakura.android.dao.bkvs.DbKeyValueDataDao;
 import com.eaglesakura.android.util.ImageUtil;
 import com.eaglesakura.util.LogUtil;
-import com.eaglesakura.util.StringUtil;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.lang.reflect.Method;
+import java.util.Date;
 
 public class BlobKeyValueStore extends BaseDatabase<DaoSession> {
 
