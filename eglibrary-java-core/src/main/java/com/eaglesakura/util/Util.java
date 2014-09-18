@@ -9,6 +9,22 @@ import java.util.List;
 
 public class Util {
 
+    public static int getInt(Integer value, int defValue) {
+        if (value == null) {
+            return defValue;
+        } else {
+            return value;
+        }
+    }
+
+    public static double getDouble(Double value, double defValue) {
+        if (value == null) {
+            return defValue;
+        } else {
+            return value;
+        }
+    }
+
     /**
      * 今日の0時0分を取得する
      */

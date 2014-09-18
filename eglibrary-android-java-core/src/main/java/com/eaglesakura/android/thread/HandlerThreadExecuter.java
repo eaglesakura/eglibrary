@@ -26,6 +26,10 @@ public class HandlerThreadExecuter {
         this.handler = handler;
     }
 
+    public Handler getHandler() {
+        return handler;
+    }
+
     /**
      * キューを実行する
      */
