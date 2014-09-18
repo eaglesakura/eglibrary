@@ -10,17 +10,18 @@ import com.eaglesakura.util.LogUtil;
 public class AnnotationUtil {
     /**
      * Annotationのコンバートクラスに変換する
+     *
      * @param clazz
      * @return
      */
-    public static Class<?> annotation(Class<?> clazz) {
+    public static <T> Class<? extends T> annotation(Class<T> clazz) {
         try {
             // 最後が"_"で終わっていればAnnotation化する必要はない
             if (clazz.getName().endsWith("_")) {
                 return clazz;
             }
 
-            return Class.forName(clazz.getName() + "_");
+            return (Class<? extends T>) Class.forName(clazz.getName() + "_");
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -29,6 +30,7 @@ public class AnnotationUtil {
 
     /**
      * Annotation付きのフラグメントへ変換する
+     *
      * @param clazz
      * @return
      */
@@ -47,6 +49,7 @@ public class AnnotationUtil {
 
     /**
      * Annotation付きのフラグメントへ変換する
+     *
      * @param clazz
      * @return
      */
