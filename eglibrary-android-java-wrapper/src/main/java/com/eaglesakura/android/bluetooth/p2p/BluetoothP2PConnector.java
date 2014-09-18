@@ -422,6 +422,19 @@ public abstract class BluetoothP2PConnector {
         }
     }
 
+    /**
+     * 指定個数のキャッシュを超えた場合にクリアしてしまう
+     *
+     * @param maxRequest
+     */
+    public void clearSendRequestOver(int maxRequest) {
+        synchronized (sendLock) {
+            while (sendDataQueue.size() > maxRequest) {
+                sendDataQueue.remove(0);
+            }
+        }
+    }
+
     public BluetoothDevice getConnectDevice() {
         return connectDevice;
     }
