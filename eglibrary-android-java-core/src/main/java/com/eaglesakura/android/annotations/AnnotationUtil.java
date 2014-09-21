@@ -1,6 +1,8 @@
 package com.eaglesakura.android.annotations;
 
 import android.app.Fragment;
+import android.content.Context;
+import android.view.View;
 
 import com.eaglesakura.util.LogUtil;
 
@@ -57,6 +59,25 @@ public class AnnotationUtil {
     public static <T extends Fragment> T newFragment(Class<T> clazz) {
         try {
             return (T) (annotation(clazz).newInstance());
+        } catch (Exception e) {
+            LogUtil.d(e);
+            return null;
+        }
+    }
+
+
+    /**
+     * Annotation付きのViewへ変換する
+     *
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends View> T newView(Class<T> clazz, Context context) {
+        try {
+
+            return (T) (annotation(clazz).getConstructor(Context.class).newInstance(context));
         } catch (Exception e) {
             LogUtil.d(e);
             return null;
