@@ -76,6 +76,10 @@ public class CameraManager implements Camera.AutoFocusCallback {
         }
 
         public static FlashMode get(String cameraFlashMode) {
+            if (cameraFlashMode.equals("red-eye")) {
+                return RedEye;
+            }
+
             // 対応しているフラッシュモードIDに変換する
             try {
                 FlashMode result = FlashMode.valueOf(cameraFlashMode.substring(0, 1).toUpperCase() + cameraFlashMode.substring(1));
@@ -487,6 +491,18 @@ public class CameraManager implements Camera.AutoFocusCallback {
         parameters.setPictureSize(pictureSize.width, pictureSize.height);
         camera.setParameters(parameters);
         LogUtil.log("previewSize request(%d x %d) -> set(%d x %d) no-frip", width, height, pictureSize.width, pictureSize.height);
+    }
+
+    /**
+     * 撮影サイズIDを指定する
+     *
+     * @param pictureSizeId
+     */
+    public void setPictureSize(String pictureSizeId) {
+        Camera.Size pictureSize = specs.getShotSize(pictureSizeId).getCameraSize();
+        parameters.setPictureSize(pictureSize.width, pictureSize.height);
+        camera.setParameters(parameters);
+        LogUtil.log("previewSize id(%s) request(%d x %d) no-frip", pictureSizeId, pictureSize.width, pictureSize.height);
     }
 
     /**

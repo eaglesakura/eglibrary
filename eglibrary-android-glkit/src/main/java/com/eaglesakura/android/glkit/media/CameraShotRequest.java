@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.SurfaceTexture;
 
 import com.eaglesakura.android.camera.CameraManager;
+import com.eaglesakura.android.camera.CameraSpec;
 import com.eaglesakura.android.glkit.egl.EGLSpecRequest;
 import com.eaglesakura.android.glkit.egl.GLESVersion;
 import com.eaglesakura.android.glkit.egl.IEGLDevice;
@@ -11,6 +12,7 @@ import com.eaglesakura.android.glkit.egl11.EGL11Manager;
 import com.eaglesakura.android.util.AndroidUtil;
 import com.eaglesakura.math.Vector2;
 import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.StringUtil;
 
 import static android.opengl.GLES20.*;
 
@@ -37,6 +39,11 @@ public class CameraShotRequest {
      * カメラの指定
      */
     CameraManager.CameraType cameraType = CameraManager.CameraType.Main;
+
+    /**
+     * 撮影サイズID
+     */
+    String shotSizeId = null;
 
     /**
      * リクエストする撮影サイズ
@@ -92,6 +99,15 @@ public class CameraShotRequest {
         this.sceneMode = sceneMode;
     }
 
+    /**
+     * 撮影サイズのIDを設定する
+     *
+     * @param shotSizeId
+     */
+    public void shotSizeId(String shotSizeId) {
+        this.shotSizeId = shotSizeId;
+    }
+
     private static int genPreviewTexture() {
         int[] temp = new int[1];
         glGenTextures(1, temp, 0);
@@ -128,8 +144,10 @@ public class CameraShotRequest {
                 return null;
             }
 
+            CameraSpec spec = cameraManager.getSpecs();
+
             cameraManager.setJpegQuality(request.jpegQuality);
-            LogUtil.log("set Jpet Quality(%d)", request.jpegQuality);
+            LogUtil.log("set Jpeg Quality(%d)", request.jpegQuality);
 
             if (cameraManager.requestFlashMode(request.flashMode)) {
                 LogUtil.log("Flash Mode(%s) complete", request.flashMode);
@@ -144,7 +162,11 @@ public class CameraShotRequest {
             }
 
             // pic size
-            cameraManager.requestPictureSize((int) request.pictureSize.x, (int) request.pictureSize.y, (int) request.pictureSize.x / 2, (int) request.pictureSize.y / 2);
+            if (!StringUtil.isEmpty(request.shotSizeId)) {
+                cameraManager.setPictureSize(request.shotSizeId);
+            } else {
+                cameraManager.requestPictureSize((int) request.pictureSize.x, (int) request.pictureSize.y, (int) request.pictureSize.x / 2, (int) request.pictureSize.y / 2);
+            }
 
             if (request.gps != null) {
                 cameraManager.setGpsData(request.gps[0], request.gps[1]);
@@ -179,7 +201,7 @@ public class CameraShotRequest {
 
             return jpeg;
         } catch (Exception e) {
-
+            LogUtil.log(e);
         } finally {
             if (cameraManager != null) {
                 cameraManager.disconnect();
