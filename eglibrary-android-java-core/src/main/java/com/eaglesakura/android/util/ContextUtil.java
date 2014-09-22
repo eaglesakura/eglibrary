@@ -368,4 +368,25 @@ public class ContextUtil {
         }
         return false;
     }
+
+    /**
+     * 文字列名から取得する
+     *
+     * @param context
+     * @param resName
+     * @return
+     */
+    public static String getStringFromIdName(Context context, String resName) {
+        try {
+            int target_string_id = context.getResources().getIdentifier(
+                    resName,
+                    "string",
+                    context.getPackageName()
+            );
+
+            return context.getResources().getString(target_string_id);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

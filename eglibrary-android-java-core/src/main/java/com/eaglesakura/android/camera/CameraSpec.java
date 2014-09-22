@@ -32,9 +32,19 @@ public class CameraSpec {
     private List<CameraManager.FlashMode> flashModes = new ArrayList<CameraManager.FlashMode>();
 
     /**
+     * サポートしているシーン
+     */
+    private List<CameraManager.SceneMode> sceneModes = new ArrayList<CameraManager.SceneMode>();
+
+    /**
      * カメラの種類
      */
     private CameraManager.CameraType type;
+
+    /**
+     * フラッシュモードを保つ場合はtrue
+     */
+    boolean hasFlash = false;
 
     public CameraSpec(int num, Camera camera) {
         this.number = num;
@@ -64,12 +74,18 @@ public class CameraSpec {
                     CameraManager.FlashMode supportedFlashMode = CameraManager.FlashMode.get(mode);
                     if (supportedFlashMode != null) {
                         flashModes.add(supportedFlashMode);
+                        if (CameraManager.FlashMode.Off != supportedFlashMode) {
+                            // 物理Flashを持つ
+                            hasFlash = true;
+                        }
                     } else {
                         LogUtil.log("unknown flash mode(%s)", mode);
                     }
                 }
             }
         }
+        // シーンモード
+        sceneModes = CameraManager.SceneMode.pickUp(parameters.getSupportedSceneModes());
     }
 
     /**
@@ -90,7 +106,55 @@ public class CameraSpec {
         return shotSizes;
     }
 
+    public List<CameraManager.SceneMode> getSceneModes() {
+        return sceneModes;
+    }
+
+    public List<CameraManager.FlashMode> getFlashModes() {
+        return flashModes;
+    }
+
+    /**
+     * フラッシュモードを持っていたらtrue
+     *
+     * @return
+     */
+    public boolean hasFlash() {
+        return hasFlash;
+    }
+
     public int getNumber() {
         return number;
+    }
+
+    /**
+     * IDからプレビューサイズを逆引きする
+     *
+     * @param id
+     * @return
+     */
+    public PictureSize getPreviewSize(String id) {
+        for (PictureSize size : previewSizes) {
+            if (size.getId().equals(id)) {
+                return size;
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * IDから撮影サイズを逆引きする
+     *
+     * @param id
+     * @return
+     */
+    public PictureSize getShotSize(String id) {
+        for (PictureSize size : shotSizes) {
+            if (size.getId().equals(id)) {
+                return size;
+            }
+        }
+        return null;
     }
 }

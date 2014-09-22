@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Camera.Scene.Auto">自動</string>
+    <string name="Camera.Scene.Persons">人物</string>
+    <string name="Camera.Scene.Scenery">風景</string>
+    <string name="Camera.Scene.Night">夜景</string>
+    <string name="Camera.Scene.NightAndPersons">夜景と人物</string>
+    <string name="Camera.Scene.Beach">ビーチ</string>
+    <string name="Camera.Scene.Snow">雪景色</string>
+    <string name="Camera.Scene.Sports">スポーツ</string>
+    <string name="Camera.Scene.Party">パーティ</string>
+    <string name="Camera.Scene.Document">ドキュメント</string>
+</resources>

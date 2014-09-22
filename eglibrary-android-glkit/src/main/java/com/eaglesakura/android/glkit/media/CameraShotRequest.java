@@ -48,6 +48,11 @@ public class CameraShotRequest {
      */
     double[] gps;
 
+    /**
+     * シーン設定
+     */
+    CameraManager.SceneMode sceneMode = CameraManager.SceneMode.Auto;
+
     public CameraShotRequest jpegQuality(int jpegQuality) {
         this.jpegQuality = jpegQuality;
         return this;
@@ -76,6 +81,15 @@ public class CameraShotRequest {
     public CameraShotRequest gps(double lat, double lng) {
         gps = new double[]{lat, lng};
         return this;
+    }
+
+    /**
+     * シーン設定
+     *
+     * @param sceneMode
+     */
+    public void sceneMode(CameraManager.SceneMode sceneMode) {
+        this.sceneMode = sceneMode;
     }
 
     private static int genPreviewTexture() {
@@ -117,10 +131,16 @@ public class CameraShotRequest {
             cameraManager.setJpegQuality(request.jpegQuality);
             LogUtil.log("set Jpet Quality(%d)", request.jpegQuality);
 
-            if (cameraManager.setFlashMode(request.flashMode)) {
+            if (cameraManager.requestFlashMode(request.flashMode)) {
                 LogUtil.log("Flash Mode(%s) complete", request.flashMode);
             } else {
                 LogUtil.log("Flash Mode(%s) fail", request.flashMode);
+            }
+
+            if (cameraManager.requestScene(request.sceneMode)) {
+                LogUtil.log("Scene Mode(%s) complete", request.sceneMode);
+            } else {
+                LogUtil.log("Scene Mode(%s) fail", request.sceneMode);
             }
 
             // pic size

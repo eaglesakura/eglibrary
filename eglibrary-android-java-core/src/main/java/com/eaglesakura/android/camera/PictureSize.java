@@ -185,4 +185,13 @@ public class PictureSize {
     public AspectID getAspectId() {
         return AspectID.getNearAspect(getAspect());
     }
+
+    /**
+     * 一意に識別するためのIDを取得する
+     *
+     * @return
+     */
+    public String getId() {
+        return String.format("pic(%dx%d)", getWidth(), getHeight());
+    }
 }

@@ -6,10 +6,13 @@ import android.hardware.Camera;
 import android.view.SurfaceHolder;
 import android.view.TextureView;
 
+import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.math.MathUtil;
 import com.eaglesakura.thread.Holder;
 import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.StringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -47,6 +50,16 @@ public class CameraManager implements Camera.AutoFocusCallback {
      */
     AutofucusMode autofucusMode = AutofucusMode.None;
 
+    /**
+     * シーン設定
+     */
+    SceneMode sceneMode = SceneMode.Auto;
+
+    /**
+     * カメラ性能リスト
+     */
+    CameraSpec specs;
+
     public enum FlashMode {
         Off,
 
@@ -65,13 +78,169 @@ public class CameraManager implements Camera.AutoFocusCallback {
         public static FlashMode get(String cameraFlashMode) {
             // 対応しているフラッシュモードIDに変換する
             try {
-                FlashMode result = FlashMode.valueOf(cameraFlashMode.toLowerCase());
+                FlashMode result = FlashMode.valueOf(cameraFlashMode.substring(0, 1).toUpperCase() + cameraFlashMode.substring(1));
                 if (result != null) {
                     return result;
                 }
             } catch (Exception e) {
             }
             return null;
+        }
+    }
+
+    /**
+     * シーン設定
+     */
+    public enum SceneMode {
+
+        /**
+         * 自動設定
+         */
+        Auto {
+            @Override
+            public String settingText() {
+                return name().toLowerCase();
+            }
+        },
+
+        /**
+         * 人物撮影
+         * ソフトスナップ by XperiaGX
+         */
+        Persons {
+            @Override
+            public String settingText() {
+                return "portrait";
+            }
+        },
+
+        /**
+         * 風景
+         */
+        Scenery {
+            @Override
+            public String settingText() {
+                return "landscape";
+            }
+        },
+
+        /**
+         * 夜景
+         */
+        Night {
+            @Override
+            public String settingText() {
+                return "night";
+            }
+        },
+
+        /**
+         * 夜景人物
+         * 夜景＆人物 by XperiaGX
+         */
+        NightAndPersons {
+            @Override
+            public String settingText() {
+                return "night-portrait";
+            }
+        },
+
+        /**
+         * ビーチ
+         * ビーチ & スノー by XperiaGX
+         */
+        Beach {
+            @Override
+            public String settingText() {
+                return name().toLowerCase();
+            }
+        },
+
+        /**
+         * 雪景色
+         * ビーチ & スノー by XperiaGX
+         */
+        Snow {
+            @Override
+            public String settingText() {
+                return name().toLowerCase();
+            }
+        },
+
+        /**
+         * スポーツ
+         */
+        Sports {
+            @Override
+            public String settingText() {
+                return name().toLowerCase();
+            }
+        },
+
+        /**
+         * パーティ
+         */
+        Party {
+            @Override
+            public String settingText() {
+                return name().toLowerCase();
+            }
+        },
+
+        /**
+         * 二値化
+         */
+        Document {
+            @Override
+            public String settingText() {
+                return "barcode";
+            }
+        };
+
+        /**
+         * CameraParametersに設定する文字列
+         *
+         * @return
+         */
+        public abstract String settingText();
+
+        /**
+         * 表示用テキストを取得する
+         *
+         * @param context
+         * @return
+         */
+        public String text(Context context) {
+            String result = ContextUtil.getStringFromIdName(context, String.format("Camera.Scene.%s", name()));
+            if (StringUtil.isEmpty(result)) {
+                return name();
+            } else {
+                return result;
+            }
+        }
+
+        /**
+         * カメラがサポートしているシーンをピックアップする
+         *
+         * @param rawSceneModes
+         * @return
+         */
+        public static List<SceneMode> pickUp(List<String> rawSceneModes) {
+            List<SceneMode> result = new ArrayList<SceneMode>();
+            SceneMode[] allValues = values();
+            // シーンが何も無ければカラリスト
+            if (rawSceneModes == null) {
+                return result;
+            }
+
+            for (SceneMode mode : allValues) {
+                // モード文字列が含まれていればそれを返す
+                if (rawSceneModes.contains(mode.settingText())) {
+                    result.add(mode);
+                }
+            }
+
+            return result;
         }
     }
 
@@ -210,6 +379,23 @@ public class CameraManager implements Camera.AutoFocusCallback {
         return false;
     }
 
+    /**
+     * シーンモードを設定する
+     *
+     * @param sceneMode
+     * @return
+     */
+    public boolean requestScene(SceneMode sceneMode) {
+        try {
+            parameters.setSceneMode(sceneMode.settingText());
+            this.sceneMode = sceneMode;
+            return true;
+        } catch (Exception e) {
+            LogUtil.log(e);
+        }
+        return false;
+    }
+
     private Camera.Size chooseShotSize(List<Camera.Size> targetSizes, int width, int height, int minWidth, int minHeight) {
         final float TARGET_ASPECT = (float) Math.max(1, width) / (float) Math.max(1, height);
         try {
@@ -278,7 +464,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
      *
      * @param mode フラッシュモード
      */
-    public boolean setFlashMode(FlashMode mode) {
+    public boolean requestFlashMode(FlashMode mode) {
         try {
             parameters.setFlashMode(mode.getApiFlashMode());
             return true;
@@ -325,11 +511,12 @@ public class CameraManager implements Camera.AutoFocusCallback {
         synchronized (lock) {
             try {
                 final int numberOfCameras = Camera.getNumberOfCameras();
-
+                int openCameraNumber = 0;
                 if (type == CameraType.Main || numberOfCameras == 1) {
                     camera = Camera.open(0);
                 } else if (numberOfCameras > 1 && type == CameraType.Sub) {
                     camera = Camera.open(1);
+                    openCameraNumber = 1;
                 } else {
                     camera = Camera.open();
                 }
@@ -337,13 +524,11 @@ public class CameraManager implements Camera.AutoFocusCallback {
                 parameters = camera.getParameters();
                 this.connectedCameraType = type;
                 if (isConnected()) {
-                    List<String> flashModes = parameters.getSupportedFlashModes();
-                    if (flashModes != null) {
-                        for (String mode : flashModes) {
-                            LogUtil.log("flash mode :: " + mode);
-                        }
-                    }
+                    // jpeg quality
+                    setJpegQuality(100);
 
+                    // スペックを切り出す
+                    specs = new CameraSpec(openCameraNumber, camera);
                     return true;
                 }
             } catch (Exception e) {
@@ -431,6 +616,9 @@ public class CameraManager implements Camera.AutoFocusCallback {
         }
     }
 
+    public CameraSpec getSpecs() {
+        return specs;
+    }
 
     /**
      * 現在のオートフォーカス状態を取得する
@@ -596,5 +784,24 @@ public class CameraManager implements Camera.AutoFocusCallback {
          * @param camera
          */
         void onAutoFocus(boolean success, CameraManager camera);
+    }
+
+    /**
+     * カメラスペックを取得する
+     *
+     * @param context
+     * @param type
+     * @return
+     */
+    public static CameraSpec loadCameraSpec(Context context, CameraType type) {
+        CameraManager cameraManager = new CameraManager(context);
+        try {
+            if (cameraManager.connect(type)) {
+                return cameraManager.getSpecs();
+            }
+        } finally {
+            cameraManager.disconnect();
+        }
+        return null;
     }
 }
