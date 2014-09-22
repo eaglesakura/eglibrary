@@ -49,6 +49,7 @@ public abstract class HandlerLoopController {
      */
     public void connect() {
         looping = true;
+        handler.removeCallbacks(loopRunner);
         handler.post(loopRunner);
     }
 
