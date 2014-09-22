@@ -61,6 +61,18 @@ public class CameraManager implements Camera.AutoFocusCallback {
         public String getApiFlashMode() {
             return this.name().toLowerCase();
         }
+
+        public static FlashMode get(String cameraFlashMode) {
+            // 対応しているフラッシュモードIDに変換する
+            try {
+                FlashMode result = FlashMode.valueOf(cameraFlashMode.toLowerCase());
+                if (result != null) {
+                    return result;
+                }
+            } catch (Exception e) {
+            }
+            return null;
+        }
     }
 
     public enum CameraType {
@@ -77,6 +89,13 @@ public class CameraManager implements Camera.AutoFocusCallback {
          * 前面で低画質な場合が多い
          */
         Sub,
+
+        /**
+         * その他のカメラ
+         * <p/>
+         * ただし、3カメラ装備していることは恐らく無いと思われる
+         */
+        Extra,
     }
 
     public enum OrientationType {
@@ -168,6 +187,27 @@ public class CameraManager implements Camera.AutoFocusCallback {
             LogUtil.log(e);
             return false;
         }
+    }
+
+    /**
+     * 手ぶれ補正の有効化を行わせる
+     * <p/>
+     * この機能はプレビュー時及びビデオ撮影時のみに有効となる
+     *
+     * @param enable true=有効、false=無効
+     * @return 切り替えに成功したらtrue
+     */
+    public boolean requestStabilization(boolean enable) {
+        try {
+            if (parameters.isVideoStabilizationSupported()) {
+                parameters.setVideoStabilization(enable);
+                return true;
+            }
+            LogUtil.log("not support Stabilization");
+        } catch (Exception e) {
+            LogUtil.log(e);
+        }
+        return false;
     }
 
     private Camera.Size chooseShotSize(List<Camera.Size> targetSizes, int width, int height, int minWidth, int minHeight) {

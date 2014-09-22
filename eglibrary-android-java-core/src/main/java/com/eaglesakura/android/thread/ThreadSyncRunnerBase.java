@@ -8,8 +8,6 @@ import com.eaglesakura.time.Timer;
 /**
  * 何らかの事情で別スレッドで特定処理を行わせる必要がある場合に利用するヘルパ。
  * UIスレッド実行まで待つ、GLスレッド実行まで待つ等の用途に利用
- * @author TAKESHI YAMASHITA
- *
  */
 public abstract class ThreadSyncRunnerBase<T> {
 

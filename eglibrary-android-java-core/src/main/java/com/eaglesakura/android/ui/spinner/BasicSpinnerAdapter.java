@@ -10,8 +10,6 @@ public class BasicSpinnerAdapter extends ArrayAdapter<String> {
 
     public BasicSpinnerAdapter(Context context) {
         super(context, android.R.layout.simple_spinner_item);
-
         setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     }
-
 }
