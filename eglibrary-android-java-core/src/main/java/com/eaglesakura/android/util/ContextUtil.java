@@ -22,6 +22,7 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.view.Display;
 import android.view.KeyEvent;
+import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -60,6 +61,27 @@ public class ContextUtil {
             e.printStackTrace();
         }
         return "N/A";
+    }
+
+    /**
+     * ディスプレイの回転角を取得する
+     *
+     * @param context
+     * @return
+     */
+    public static int getDeviceRotateDegree(Context context) {
+        final int surfaceRotation = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+        switch (surfaceRotation) {
+            case Surface.ROTATION_0:
+                return 0;
+            case Surface.ROTATION_90:
+                return 90;
+            case Surface.ROTATION_180:
+                return 180;
+            case Surface.ROTATION_270:
+                return 270;
+        }
+        return 0;
     }
 
     /**

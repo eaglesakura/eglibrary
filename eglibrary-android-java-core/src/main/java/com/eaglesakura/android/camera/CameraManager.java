@@ -14,7 +14,6 @@ import com.eaglesakura.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * カメラハードウェアの管理クラス
@@ -516,6 +515,24 @@ public class CameraManager implements Camera.AutoFocusCallback {
     }
 
     /**
+     * デバイスの回転角にプレビュー角度を合わせる
+     */
+    public void requestPreviewRotateLinkDevice() {
+        int deviceRotateDegree = ContextUtil.getDeviceRotateDegree(context);
+
+        Camera.CameraInfo info = new Camera.CameraInfo();
+        Camera.getCameraInfo(specs.getNumber(), info);
+        int cameraDegree = 0;
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            cameraDegree = (info.orientation + deviceRotateDegree) % 360;
+            cameraDegree = (360 - cameraDegree) % 360;  // compensate the mirror
+        } else {  // back-facing
+            cameraDegree = (info.orientation - deviceRotateDegree + 360) % 360;
+        }
+        camera.setDisplayOrientation(cameraDegree);
+    }
+
+    /**
      * カメラに接続する
      *
      * @param type
@@ -546,6 +563,9 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
                     // スペックを切り出す
                     specs = new CameraSpec(openCameraNumber, camera);
+
+                    // 回転を設定する
+                    requestPreviewRotateLinkDevice();
                     return true;
                 }
             } catch (Exception e) {

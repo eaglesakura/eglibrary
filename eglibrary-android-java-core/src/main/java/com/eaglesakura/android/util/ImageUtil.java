@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.media.ExifInterface;
 
 import com.eaglesakura.android.graphics.Graphics;
 import com.eaglesakura.io.IOUtil;
@@ -92,6 +93,22 @@ public class ImageUtil {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * Bitmapからサムネイルを読み込む
+     *
+     * @param pathName
+     * @return
+     */
+    public static Bitmap decodeThumbnail(String pathName) {
+        try {
+            ExifInterface exif = new ExifInterface(pathName);
+            return decode(exif.getThumbnail());
+        } catch (Exception e) {
+            LogUtil.log(e);
+        }
+        return null;
     }
 
     /**
@@ -213,7 +230,7 @@ public class ImageUtil {
             Canvas canvas = new Canvas(dst);
             Graphics graphics = new Graphics(canvas);
             graphics.setAntiAlias(true);
-            graphics.drawBitmap(src, (size / 2) - srcWidth, (size / 2) - srcHeight, srcWidth, srcHeight);
+            graphics.drawBitmap(src, (size - srcWidth) / 2, (size - srcHeight) / 2, srcWidth, srcHeight);
 
             return dst;
         }
