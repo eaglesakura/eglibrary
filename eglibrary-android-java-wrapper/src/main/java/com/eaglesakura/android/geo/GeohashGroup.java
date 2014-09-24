@@ -84,14 +84,15 @@ public class GeohashGroup {
      *
      * @param lat 北緯
      * @param lng 東経
+     * @return ジオハッシュが更新されたらtrue
      */
-    public void updateLocation(double lat, double lng) {
+    public boolean updateLocation(double lat, double lng) {
         String newGeohash = toGeohash(lat, lng);
         String oldGeohash = centerGeohash;
 
         // ジオハッシュが一致したら何もしない
         if (!StringUtil.isEmpty(oldGeohash) && oldGeohash.equals(newGeohash)) {
-            return;
+            return false;
         }
 
         this.centerGeohash = newGeohash;
@@ -101,6 +102,7 @@ public class GeohashGroup {
         for (GeohashGroupListener listener : listeners) {
             listener.onGeohashChanged(this, oldGeohash, newGeohash);
         }
+        return true;
     }
 
     /**
