@@ -20,6 +20,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -86,7 +87,7 @@ public class ContextUtil {
     }
 
     /**
-     * ディスプレイのXYサイズを取得する。
+     * ディスプレイのWHサイズを取得する。
      *
      * @param context
      * @param result
@@ -98,6 +99,18 @@ public class ContextUtil {
         int displayW = wm.getDefaultDisplay().getWidth(), displayH = wm.getDefaultDisplay().getHeight();
         result.set((float) displayW, (float) displayH);
         return result;
+    }
+
+    /**
+     * ディスプレイのWHサイズを取得する
+     *
+     * @param context
+     * @return
+     */
+    public static int[] getDisplaySize(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        return new int[]{display.getWidth(), display.getHeight()};
     }
 
     /**

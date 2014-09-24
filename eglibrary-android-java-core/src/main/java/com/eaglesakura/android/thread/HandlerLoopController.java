@@ -2,6 +2,8 @@ package com.eaglesakura.android.thread;
 
 import android.os.Handler;
 
+import com.eaglesakura.time.Timer;
+
 /**
  * 指定のハンドラでループ処理を行うUtilクラス
  */
@@ -22,6 +24,16 @@ public abstract class HandlerLoopController {
     boolean disposed = false;
 
     final protected Object lock = new Object();
+
+    /**
+     * ループ時間管理用タイマー
+     */
+    Timer timer = new Timer();
+
+    /**
+     * 前のフレームからの経過時間
+     */
+    double deltaTime = 1.0;
 
     public HandlerLoopController(Handler handler) {
         if (handler != null) {
@@ -78,6 +90,15 @@ public abstract class HandlerLoopController {
     }
 
     /**
+     * 前のフレームからのデルタ時間を取得する
+     *
+     * @return
+     */
+    public double getDeltaTime() {
+        return deltaTime;
+    }
+
+    /**
      * 更新を行う
      */
     protected abstract void onUpdate();
@@ -86,10 +107,21 @@ public abstract class HandlerLoopController {
     private Runnable loopRunner = new Runnable() {
         @Override
         public void run() {
-            // 所定の時間の場合
+            final long FRAME_TIME = (long) (1000.0 / frameRate); // 1フレームの許容時間
+            // デルタ時間を計算
+            long deltaMs = timer.end();
+            if (deltaMs > 0) {
+                deltaTime = (double) deltaMs / 1000.0f;
+            } else {
+                deltaTime = (double) FRAME_TIME / 1000.0f;
+            }
+            timer.start();
+            // 更新を行わせる
             onUpdate();
+
+            final long UPDATE_TIME = timer.end();
             if (looping) {
-                handler.postDelayed(this, (long) (1000.0 / frameRate));
+                handler.postDelayed(this, Math.max(1, FRAME_TIME - UPDATE_TIME));   // 1フレームにかけた時間を差し引いてpostする
             }
         }
     };

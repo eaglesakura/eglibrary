@@ -4,6 +4,7 @@ import android.content.res.AssetManager;
 import android.graphics.drawable.Drawable;
 
 import com.eaglesakura.android.framework.FrameworkCentral;
+import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.io.IOUtil;
 import com.eaglesakura.util.LogUtil;
 
@@ -14,8 +15,21 @@ import java.io.InputStream;
  * APKが持つリソースを管理する
  */
 public class Resources {
+    private static int[] displaySize = null;
+
     public static android.content.res.Resources app() {
         return FrameworkCentral.getApplication().getResources();
+    }
+
+    /**
+     * 画面サイズを取得する
+     * @return
+     */
+    public static int[] displaySize() {
+        if (displaySize == null) {
+            displaySize = ContextUtil.getDisplaySize(FrameworkCentral.getApplication());
+        }
+        return displaySize;
     }
 
     public static AssetManager assets() {

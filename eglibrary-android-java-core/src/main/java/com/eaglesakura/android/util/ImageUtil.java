@@ -1,19 +1,62 @@
 package com.eaglesakura.android.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.security.MessageDigest;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 
+import com.eaglesakura.android.graphics.Graphics;
 import com.eaglesakura.io.IOUtil;
+import com.eaglesakura.math.MathUtil;
+import com.eaglesakura.util.LogUtil;
 
 public class ImageUtil {
+
+    /**
+     * ある特定の色の補色を計算する
+     * <p/>
+     * 計算はIllustrator方式で行う
+     * <p/>
+     * http://appakumaturi.hatenablog.com/entry/20120121/1327143125
+     *
+     * @param xrgb
+     * @return
+     */
+    public static int getComplementaryColor(int xrgb) {
+        int r = Color.red(xrgb);
+        int g = Color.green(xrgb);
+        int b = Color.blue(xrgb);
+
+        int maxValue = Math.max(Math.max(r, g), b);
+        int minValue = Math.min(Math.min(r, g), b);
+
+        int sum = maxValue + minValue;
+
+        return Color.rgb(MathUtil.minmax(0, 255, sum - r), MathUtil.minmax(0, 255, sum - g), MathUtil.minmax(0, 255, sum - b));
+    }
+
+    /**
+     * 反転色を取得する
+     *
+     * @param xrgb
+     * @return
+     */
+    public static int getNegaColor(int xrgb) {
+        int r = Color.red(xrgb);
+        int g = Color.green(xrgb);
+        int b = Color.blue(xrgb);
+
+        return Color.rgb(255 - r, 255 - g, 255 - b);
+    }
 
     /**
      * 画像からSHA1指紋を作成する。
@@ -65,7 +108,32 @@ public class ImageUtil {
         try {
             return BitmapFactory.decodeByteArray(imageFile, 0, imageFile.length);
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.log(e);
+
+        }
+        return null;
+    }
+
+    public static Bitmap decode(Context context, int drawableId) {
+        try {
+            return BitmapFactory.decodeResource(context.getResources(), drawableId);
+        } catch (Exception e) {
+            LogUtil.log(e);
+        }
+        return null;
+    }
+
+    /**
+     * 画像ファイルから直接デコードする
+     *
+     * @param pathName
+     * @return
+     */
+    public static Bitmap decode(String pathName) {
+        try {
+            return BitmapFactory.decodeFile(pathName);
+        } catch (Exception e) {
+            LogUtil.log(e);
         }
         return null;
     }
@@ -109,5 +177,45 @@ public class ImageUtil {
 
         // 生成した画像を返す
         return image;
+    }
+
+    /**
+     * 正方形画像へ変形する。
+     * <p/>
+     * 強制的に変形を行うため、srcは破棄して問題ない。
+     *
+     * @param src  元画像
+     * @param size 出力サイズ
+     * @return
+     */
+    public static Bitmap toSquareImage(Bitmap src, int size) {
+        if (src.getWidth() == src.getHeight()) {
+            if (src.getWidth() == size) {
+                // 既に同じサイズであるため、コピーのみでOK
+                return Bitmap.createBitmap(src);
+            } else {
+                // 既に正方形である場合、縮小のみで行える
+                return Bitmap.createScaledBitmap(src, size, size, true);
+            }
+        } else {
+            double scale;
+            // 短編に合わせてスケーリングし、長辺ははみ出す
+            if (src.getWidth() < src.getHeight()) {
+                scale = (double) size / (double) src.getWidth();
+            } else {
+                scale = (double) size / (double) src.getHeight();
+            }
+
+            int srcWidth = (int) (src.getWidth() * scale + 0.9);
+            int srcHeight = (int) (src.getHeight() * scale + 0.9);
+
+            Bitmap dst = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(dst);
+            Graphics graphics = new Graphics(canvas);
+            graphics.setAntiAlias(true);
+            graphics.drawBitmap(src, (size / 2) - srcWidth, (size / 2) - srcHeight, srcWidth, srcHeight);
+
+            return dst;
+        }
     }
 }

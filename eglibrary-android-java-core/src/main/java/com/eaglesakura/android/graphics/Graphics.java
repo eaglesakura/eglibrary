@@ -117,10 +117,10 @@ public class Graphics {
     /**
      * 描画色を直接指定する
      *
-     * @param rgba RGBAマッピングされた色情報
+     * @param argb ARGBマッピングされた色情報
      */
-    public void setColorARGB(int rgba) {
-        paint.setColor(rgba);
+    public void setColorARGB(int argb) {
+        paint.setColor(argb);
     }
 
     /**
@@ -223,6 +223,21 @@ public class Graphics {
      */
     public void fillRoundRect(int x, int y, int w, int h, float radius) {
         paint.setStyle(Style.FILL);
+        dstRectF.set(x, y, (x + w), (y + h));
+        canvas.drawRoundRect(dstRectF, radius, radius, paint);
+    }
+
+    /**
+     * 丸角四角形の塗りつぶしを行う
+     *
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param radius
+     */
+    public void drawRoundRect(int x, int y, int w, int h, float radius) {
+        paint.setStyle(Style.STROKE);
         dstRectF.set(x, y, (x + w), (y + h));
         canvas.drawRoundRect(dstRectF, radius, radius, paint);
     }
