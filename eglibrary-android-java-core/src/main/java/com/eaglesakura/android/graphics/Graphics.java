@@ -23,6 +23,17 @@ public class Graphics {
     Paint paint = new Paint();
 
     /**
+     * 幅
+     */
+    int width = 0;
+
+    /**
+     * 高さ
+     */
+    int height = 0;
+
+
+    /**
      *
      */
     @Deprecated
@@ -49,9 +60,6 @@ public class Graphics {
             setHeight(canvas.getHeight());
         }
     }
-
-    int width = 0;
-    int height = 0;
 
     public void setWidth(int width) {
         this.width = width;
