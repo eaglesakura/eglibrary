@@ -6,6 +6,7 @@ import com.eaglesakura.jc.annotation.JCClass;
 import com.eaglesakura.jc.annotation.JCMethod;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 /**
@@ -19,11 +20,6 @@ public class PreviewSurfaceTexture extends SurfaceTexture implements SurfaceText
     boolean captured = false;
 
     /**
-     * 正しい行列を得られていたらtrue
-     */
-    boolean matrixCompleted = false;
-
-    /**
      * テクスチャ描画用マトリクス
      */
     FloatBuffer textureMatrix;
@@ -31,7 +27,7 @@ public class PreviewSurfaceTexture extends SurfaceTexture implements SurfaceText
     public PreviewSurfaceTexture(int texName) {
         super(texName);
         setOnFrameAvailableListener(this);
-        textureMatrix = ByteBuffer.allocateDirect(4 * 16).asFloatBuffer();
+        textureMatrix = ByteBuffer.allocateDirect(4 * 16).order(ByteOrder.nativeOrder()).asFloatBuffer();
     }
 
     /**
@@ -66,12 +62,15 @@ public class PreviewSurfaceTexture extends SurfaceTexture implements SurfaceText
      * テクスチャ行列を取得する。
      * <p/>
      * 行列が取得できていない状態の場合、nullptrを返す。
+     *
      * @return
      */
     @JCMethod
     public FloatBuffer getTextureMatrix() {
         // 行列のキャプチャを試みる
-        if (!matrixCompleted) {
+//        if (!matrixCompleted)
+        {
+            boolean matrixCompleted = false;
             float[] temp = new float[4 * 4];
             getTransformMatrix(temp);
             for (float f : temp) {

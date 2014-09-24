@@ -412,7 +412,8 @@ public class CameraManager implements Camera.AutoFocusCallback {
                     float aspect_diff = ((float) size.width / (float) size.height) - TARGET_ASPECT;
 
                     // アスペクト比の差分が小さい＝近い構成をコピーする
-                    if (Math.abs(aspect_diff) < current_diff) {
+                    // 基本的に奥へ行くほど解像度が低いため、最低限の要求を満たせる解像度を探す
+                    if (Math.abs(aspect_diff) <= current_diff) {
                         target = size;
                         current_diff = aspect_diff;
                     }
