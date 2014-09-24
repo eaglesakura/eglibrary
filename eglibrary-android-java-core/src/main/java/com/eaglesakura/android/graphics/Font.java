@@ -29,11 +29,13 @@ public class Font {
     public Font(Typeface typeface) {
         this.font = typeface;
         paint.setTypeface(typeface);
+        paint.setAntiAlias(true);
     }
 
     public Font() {
         this.font = Typeface.DEFAULT;
         paint.setTypeface(font);
+        paint.setAntiAlias(true);
     }
 
     public Paint getPaint() {
@@ -102,7 +104,7 @@ public class Font {
     }
 
     /**
-     * 文字列の描画を行う
+     * 文字列の描画を行う。特定範囲内に収まらない場合は、適当なフッタテキストを追加する。
      *
      * @param text            描画対象文字列
      * @param x               描画するX位置
