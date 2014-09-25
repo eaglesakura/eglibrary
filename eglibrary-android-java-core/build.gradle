@@ -10,6 +10,13 @@ if (!hasProperty("EGLIBRARY_ANDROID_BUILDTOOL_VERSION")) {
     EGLIBRARY_ANDROID_BUILDTOOL_VERSION = "20.0.0"
 }
 
+repositories {
+    mavenCentral()
+    maven {
+        url "http://eaglesakura.github.io/maven/"
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     compile project(':eglibrary-java-core')

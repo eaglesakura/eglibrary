@@ -114,4 +114,12 @@ public class CameraType {
     public static boolean hasSubCamera() {
         return TYPE_SUB != null;
     }
+
+    public static CameraType fromNumber(int number) {
+        if (number == 0) {
+            return TYPE_MAIN;
+        } else {
+            return TYPE_SUB;
+        }
+    }
 }

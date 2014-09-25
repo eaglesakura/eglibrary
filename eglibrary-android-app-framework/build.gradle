@@ -34,6 +34,9 @@ configurations {
 repositories {
     jcenter()
     mavenCentral()
+    maven {
+        url "http://eaglesakura.github.io/maven/"
+    }
 }
 
 dependencies {
