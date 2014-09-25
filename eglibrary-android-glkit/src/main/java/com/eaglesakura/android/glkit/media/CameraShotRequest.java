@@ -5,6 +5,11 @@ import android.graphics.SurfaceTexture;
 
 import com.eaglesakura.android.camera.CameraManager;
 import com.eaglesakura.android.camera.CameraSpec;
+import com.eaglesakura.android.camera.CameraType;
+import com.eaglesakura.android.camera.FlashModeSpec;
+import com.eaglesakura.android.camera.FocusModeSpec;
+import com.eaglesakura.android.camera.SceneSpec;
+import com.eaglesakura.android.camera.WhiteBaranceSpec;
 import com.eaglesakura.android.glkit.egl.EGLSpecRequest;
 import com.eaglesakura.android.glkit.egl.GLESVersion;
 import com.eaglesakura.android.glkit.egl.IEGLDevice;
@@ -26,9 +31,9 @@ public class CameraShotRequest {
     int jpegQuality = 100;
 
     /**
-     * Flash指定
+     * フラッシュは自動
      */
-    CameraManager.FlashMode flashMode = CameraManager.FlashMode.Auto;
+    FlashModeSpec flashMode = FlashModeSpec.SETTING_AUTO;
 
     /**
      * オートフォーカス
@@ -38,7 +43,7 @@ public class CameraShotRequest {
     /**
      * カメラの指定
      */
-    CameraManager.CameraType cameraType = CameraManager.CameraType.Main;
+    CameraType cameraType = CameraType.TYPE_MAIN;
 
     /**
      * 撮影サイズID
@@ -58,14 +63,24 @@ public class CameraShotRequest {
     /**
      * シーン設定
      */
-    CameraManager.SceneMode sceneMode = CameraManager.SceneMode.Auto;
+    SceneSpec sceneSpec = SceneSpec.SETTING_AUTO;
+
+    /**
+     * フォーカスモード指定
+     */
+    FocusModeSpec focusModeSpec = FocusModeSpec.SETTING_AUTO;
+
+    /**
+     * ホワイトバランス指定
+     */
+    WhiteBaranceSpec whiteBaranceSpec = WhiteBaranceSpec.SETTING_AUTO;
 
     public CameraShotRequest jpegQuality(int jpegQuality) {
         this.jpegQuality = jpegQuality;
         return this;
     }
 
-    public CameraShotRequest flashMode(CameraManager.FlashMode mode) {
+    public CameraShotRequest flashMode(FlashModeSpec mode) {
         this.flashMode = mode;
         return this;
     }
@@ -75,7 +90,7 @@ public class CameraShotRequest {
         return this;
     }
 
-    public CameraShotRequest cameraType(CameraManager.CameraType type) {
+    public CameraShotRequest cameraType(CameraType type) {
         this.cameraType = type;
         return this;
     }
@@ -95,8 +110,8 @@ public class CameraShotRequest {
      *
      * @param sceneMode
      */
-    public void sceneMode(CameraManager.SceneMode sceneMode) {
-        this.sceneMode = sceneMode;
+    public void scene(SceneSpec sceneMode) {
+        this.sceneSpec = sceneMode;
     }
 
     /**
@@ -149,16 +164,28 @@ public class CameraShotRequest {
             cameraManager.setJpegQuality(request.jpegQuality);
             LogUtil.log("set Jpeg Quality(%d)", request.jpegQuality);
 
-            if (cameraManager.requestFlashMode(request.flashMode)) {
-                LogUtil.log("Flash Mode(%s) complete", request.flashMode);
+            if (cameraManager.requestScene(request.sceneSpec)) {
+                LogUtil.log("Scene Mode(%s) complete", request.sceneSpec.getApiSettingName());
             } else {
-                LogUtil.log("Flash Mode(%s) fail", request.flashMode);
+                LogUtil.log("Scene Mode(%s) fail", request.sceneSpec.getApiSettingName());
             }
 
-            if (cameraManager.requestScene(request.sceneMode)) {
-                LogUtil.log("Scene Mode(%s) complete", request.sceneMode);
+            if (cameraManager.requestFlashMode(request.flashMode)) {
+                LogUtil.log("Flash Mode(%s) complete", request.flashMode.getApiSettingName());
             } else {
-                LogUtil.log("Scene Mode(%s) fail", request.sceneMode);
+                LogUtil.log("Flash Mode(%s) fail", request.flashMode.getApiSettingName());
+            }
+
+            if (cameraManager.requestFocusMode(request.focusModeSpec)) {
+                LogUtil.log("Focus Mode(%s) complete", request.focusModeSpec.getApiSettingName());
+            } else {
+                LogUtil.log("Focus Mode(%s) fail", request.focusModeSpec.getApiSettingName());
+            }
+
+            if (cameraManager.requestWhiteBarance(request.whiteBaranceSpec)) {
+                LogUtil.log("WhiteBarance Mode(%s) complete", request.whiteBaranceSpec.getApiSettingName());
+            } else {
+                LogUtil.log("WhiteBarance Mode(%s) fail", request.whiteBaranceSpec.getApiSettingName());
             }
 
             // pic size

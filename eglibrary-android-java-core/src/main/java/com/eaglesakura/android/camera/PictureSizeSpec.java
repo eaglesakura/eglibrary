@@ -5,10 +5,12 @@ import android.hardware.Camera;
 /**
  * 撮影・プレビュー用のサイズを返す
  */
-public class PictureSize {
+public class PictureSizeSpec {
     private final Camera.Size size;
 
-    public enum AspectID {
+    private final AspectID aspectID;
+
+    private enum AspectID {
         /**
          * 縦横1:1
          */
@@ -123,8 +125,9 @@ public class PictureSize {
         }
     }
 
-    public PictureSize(Camera.Size size) {
+    public PictureSizeSpec(Camera.Size size) {
         this.size = size;
+        this.aspectID = AspectID.getNearAspect(getAspect());
     }
 
     /**
@@ -158,14 +161,23 @@ public class PictureSize {
      * <p/>
      * 小数点第一位まで計算する
      * <p/>
-     * 例: 5
+     * 例) 5.0
      * <p/>
-     * 例：13.1
+     * 例)13.1
      *
      * @return 表示用のメガピクセル
      */
     public String getMegaPixelText() {
         return String.format("%.1f", getMegaPixel());
+    }
+
+    /**
+     * アスペクト比表示用テキストを取得する
+     * 例) 16:9
+     * @return
+     */
+    public String getAspectText() {
+        return aspectID.aspectText();
     }
 
     /**
@@ -175,15 +187,6 @@ public class PictureSize {
      */
     public double getAspect() {
         return (double) getWidth() / (double) getHeight();
-    }
-
-    /**
-     * アスペクト比のIDを取得する
-     *
-     * @return
-     */
-    public AspectID getAspectId() {
-        return AspectID.getNearAspect(getAspect());
     }
 
     /**

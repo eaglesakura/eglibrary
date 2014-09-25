@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-
+    compile 'com.eaglesakura:joint-connector-annotation:0.1.13'
 }
 
 apply plugin: 'maven'

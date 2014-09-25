@@ -1,13 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="Camera.Scene.Auto">自動</string>
-    <string name="Camera.Scene.Persons">人物</string>
-    <string name="Camera.Scene.Scenery">風景</string>
-    <string name="Camera.Scene.Night">夜景</string>
-    <string name="Camera.Scene.NightAndPersons">夜景と人物</string>
-    <string name="Camera.Scene.Beach">ビーチ</string>
-    <string name="Camera.Scene.Snow">雪景色</string>
-    <string name="Camera.Scene.Sports">スポーツ</string>
-    <string name="Camera.Scene.Party">パーティ</string>
-    <string name="Camera.Scene.Document">ドキュメント</string>
+
+    <!-- シーン認識 -->
+    <string name="Camera.Scene.auto">自動</string>
+    <string name="Camera.Scene.portrait">人物</string>
+    <string name="Camera.Scene.landscape">風景</string>
+    <string name="Camera.Scene.night">夜景</string>
+    <string name="Camera.Scene.night_portrait">夜景と人物</string>
+    <string name="Camera.Scene.beach">ビーチ</string>
+    <string name="Camera.Scene.snow">雪景色</string>
+    <string name="Camera.Scene.sports">スポーツ</string>
+    <string name="Camera.Scene.party">パーティ</string>
+    <string name="Camera.Scene.document">ドキュメント</string>
+
+    <!-- ホワイトバランス設定 -->
+    <string name="Camera.WhiteBarance.auto">自動</string>
+    <string name="Camera.WhiteBarance.incandescent">白熱灯</string>
+    <string name="Camera.WhiteBarance.fluorescent">蛍光灯</string>
+    <string name="Camera.WhiteBarance.daylight">晴天</string>
+    <string name="Camera.WhiteBarance.cloudy_daylight">曇り</string>
+
+    <!-- フォーカスモード -->
+    <string name="Camera.FocusMode.auto">自動</string>
+    <string name="Camera.FocusMode.infinity">無限遠</string>
+    <string name="Camera.FocusMode.macro">マクロ</string>
+    <string name="Camera.FocusMode.continuous_picture">静止画自動</string>
+    <string name="Camera.FocusMode.continuous_video">動画自動</string>
+
+    <!-- フラッシュモード -->
+    <string name="Camera.FlashMode.auto">自動</string>
+    <string name="Camera.FlashMode.off">オフ</string>
+    <string name="Camera.FlashMode.on">オン</string>
+    <string name="Camera.FlashMode.red_eye">赤目補正</string>
+    <string name="Camera.FlashMode.torch">常時</string>
 </resources>

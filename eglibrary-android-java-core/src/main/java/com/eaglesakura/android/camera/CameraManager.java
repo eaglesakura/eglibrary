@@ -6,19 +6,20 @@ import android.hardware.Camera;
 import android.view.SurfaceHolder;
 import android.view.TextureView;
 
-import com.eaglesakura.android.util.ContextUtil;
+import com.eaglesakura.jc.annotation.JCClass;
+import com.eaglesakura.jc.annotation.JCMethod;
 import com.eaglesakura.math.MathUtil;
 import com.eaglesakura.thread.Holder;
 import com.eaglesakura.util.LogUtil;
-import com.eaglesakura.util.StringUtil;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * カメラハードウェアの管理クラス
  */
+@JCClass(cppNamespace = "es")
 public class CameraManager implements Camera.AutoFocusCallback {
     final Context context;
 
@@ -38,287 +39,38 @@ public class CameraManager implements Camera.AutoFocusCallback {
     /**
      * 接続されているカメラタイプ
      */
-    CameraType connectedCameraType = null;
+    CameraType connectedCamera;
 
     /**
      * 回転タイプ
      */
-    OrientationType orientationType = OrientationType.Rotate0;
+    OrientationSpec orientation = OrientationSpec.ROTATE_0;
 
     /**
      * オートフォーカス実行モード
      */
-    AutofucusMode autofucusMode = AutofucusMode.None;
+    AutofucusState autofucusState = AutofucusState.None;
 
     /**
      * シーン設定
      */
-    SceneMode sceneMode = SceneMode.Auto;
+    SceneSpec scene = SceneSpec.SETTING_AUTO;
+
+    FlashModeSpec flashMode = FlashModeSpec.SETTING_AUTO;
+
+    WhiteBaranceSpec whiteBarance = WhiteBaranceSpec.SETTING_AUTO;
+
+    FocusModeSpec focusMode = FocusModeSpec.SETTING_AUTO;
 
     /**
      * カメラ性能リスト
      */
     CameraSpec specs;
 
-    public enum FlashMode {
-        Off,
-
-        Auto,
-
-        On,
-
-        RedEye,
-
-        Torch;
-
-        public String getApiFlashMode() {
-            return this.name().toLowerCase();
-        }
-
-        public static FlashMode get(String cameraFlashMode) {
-            if (cameraFlashMode.equals("red-eye")) {
-                return RedEye;
-            }
-
-            // 対応しているフラッシュモードIDに変換する
-            try {
-                FlashMode result = FlashMode.valueOf(cameraFlashMode.substring(0, 1).toUpperCase() + cameraFlashMode.substring(1));
-                if (result != null) {
-                    return result;
-                }
-            } catch (Exception e) {
-            }
-            return null;
-        }
-    }
-
-    /**
-     * シーン設定
-     */
-    public enum SceneMode {
-
-        /**
-         * 自動設定
-         */
-        Auto {
-            @Override
-            public String settingText() {
-                return name().toLowerCase();
-            }
-        },
-
-        /**
-         * 人物撮影
-         * ソフトスナップ by XperiaGX
-         */
-        Persons {
-            @Override
-            public String settingText() {
-                return "portrait";
-            }
-        },
-
-        /**
-         * 風景
-         */
-        Scenery {
-            @Override
-            public String settingText() {
-                return "landscape";
-            }
-        },
-
-        /**
-         * 夜景
-         */
-        Night {
-            @Override
-            public String settingText() {
-                return "night";
-            }
-        },
-
-        /**
-         * 夜景人物
-         * 夜景＆人物 by XperiaGX
-         */
-        NightAndPersons {
-            @Override
-            public String settingText() {
-                return "night-portrait";
-            }
-        },
-
-        /**
-         * ビーチ
-         * ビーチ & スノー by XperiaGX
-         */
-        Beach {
-            @Override
-            public String settingText() {
-                return name().toLowerCase();
-            }
-        },
-
-        /**
-         * 雪景色
-         * ビーチ & スノー by XperiaGX
-         */
-        Snow {
-            @Override
-            public String settingText() {
-                return name().toLowerCase();
-            }
-        },
-
-        /**
-         * スポーツ
-         */
-        Sports {
-            @Override
-            public String settingText() {
-                return name().toLowerCase();
-            }
-        },
-
-        /**
-         * パーティ
-         */
-        Party {
-            @Override
-            public String settingText() {
-                return name().toLowerCase();
-            }
-        },
-
-        /**
-         * 二値化
-         */
-        Document {
-            @Override
-            public String settingText() {
-                return "barcode";
-            }
-        };
-
-        /**
-         * CameraParametersに設定する文字列
-         *
-         * @return
-         */
-        public abstract String settingText();
-
-        /**
-         * 表示用テキストを取得する
-         *
-         * @param context
-         * @return
-         */
-        public String text(Context context) {
-            String result = ContextUtil.getStringFromIdName(context, String.format("Camera.Scene.%s", name()));
-            if (StringUtil.isEmpty(result)) {
-                return name();
-            } else {
-                return result;
-            }
-        }
-
-        /**
-         * カメラがサポートしているシーンをピックアップする
-         *
-         * @param rawSceneModes
-         * @return
-         */
-        public static List<SceneMode> pickUp(List<String> rawSceneModes) {
-            List<SceneMode> result = new ArrayList<SceneMode>();
-            SceneMode[] allValues = values();
-            // シーンが何も無ければカラリスト
-            if (rawSceneModes == null) {
-                return result;
-            }
-
-            for (SceneMode mode : allValues) {
-                // モード文字列が含まれていればそれを返す
-                if (rawSceneModes.contains(mode.settingText())) {
-                    result.add(mode);
-                }
-            }
-
-            return result;
-        }
-    }
-
-    public enum CameraType {
-        /**
-         * メインカメラ
-         * <p/>
-         * 背面で高画質な場合が多い
-         */
-        Main,
-
-        /**
-         * サブカメラ
-         * <p/>
-         * 前面で低画質な場合が多い
-         */
-        Sub,
-
-        /**
-         * その他のカメラ
-         * <p/>
-         * ただし、3カメラ装備していることは恐らく無いと思われる
-         */
-        Extra,
-    }
-
-    public enum OrientationType {
-        /**
-         * そのまま
-         */
-        Rotate0 {
-            @Override
-            int degree() {
-                return 0;
-            }
-        },
-
-        /**
-         * 90度傾ける
-         */
-        Rotate90 {
-            @Override
-            int degree() {
-                return 90;
-            }
-        },
-
-        /**
-         * 180度傾ける
-         */
-        Rotate180 {
-            @Override
-            int degree() {
-                return 180;
-            }
-        },
-
-        /**
-         * 270度傾ける
-         */
-        Rotate270 {
-            @Override
-            int degree() {
-                return 270;
-            }
-        };
-
-        abstract int degree();
-    }
-
     /**
      * オートフォーカス状態
      */
-    public enum AutofucusMode {
+    public enum AutofucusState {
         /**
          * 未実行
          */
@@ -337,7 +89,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
         /**
          * オートフォーカス成功
          */
-        Completed,
+        Completed;
     }
 
     public CameraManager(Context context) {
@@ -347,14 +99,15 @@ public class CameraManager implements Camera.AutoFocusCallback {
     /**
      * カメラの回転角を取得する
      *
-     * @param orientationType 回転タイプ
+     * @param spec 回転タイプ
      * @return
      */
-    public boolean requestOrientation(OrientationType orientationType) {
+    @JCMethod
+    public boolean requestOrientation(OrientationSpec spec) {
         try {
             // 回転角を設定する
-            camera.setDisplayOrientation(orientationType.degree());
-            this.orientationType = orientationType;
+            camera.setDisplayOrientation(spec.getDegree());
+            this.orientation = spec;
             return true;
         } catch (Exception e) {
             LogUtil.log(e);
@@ -370,6 +123,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
      * @param enable true=有効、false=無効
      * @return 切り替えに成功したらtrue
      */
+    @JCMethod
     public boolean requestStabilization(boolean enable) {
         try {
             if (parameters.isVideoStabilizationSupported()) {
@@ -386,13 +140,14 @@ public class CameraManager implements Camera.AutoFocusCallback {
     /**
      * シーンモードを設定する
      *
-     * @param sceneMode
+     * @param spec
      * @return
      */
-    public boolean requestScene(SceneMode sceneMode) {
+    @JCMethod
+    public boolean requestScene(SceneSpec spec) {
         try {
-            parameters.setSceneMode(sceneMode.settingText());
-            this.sceneMode = sceneMode;
+            parameters.setSceneMode(spec.getApiSettingName());
+            this.scene = spec;
             return true;
         } catch (Exception e) {
             LogUtil.log(e);
@@ -437,6 +192,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
      * @param minWidth  最低限持っていて欲しい幅
      * @param minHeight 最低限持っていていて欲しい高さ
      */
+    @JCMethod
     public void requestPreviewSize(int width, int height, int minWidth, int minHeight) {
         Camera.Size previewSize = chooseShotSize(parameters.getSupportedPreviewSizes(), width, height, minWidth, minHeight);
         parameters.setPreviewSize(previewSize.width, previewSize.height);
@@ -467,11 +223,47 @@ public class CameraManager implements Camera.AutoFocusCallback {
     /**
      * 撮影時のフラッシュモードを指定する
      *
-     * @param mode フラッシュモード
+     * @param spec フラッシュモード
      */
-    public boolean requestFlashMode(FlashMode mode) {
+    public boolean requestFlashMode(FlashModeSpec spec) {
         try {
-            parameters.setFlashMode(mode.getApiFlashMode());
+            parameters.setFlashMode(spec.getApiSettingName());
+            flashMode = spec;
+            return true;
+        } catch (Exception e) {
+            LogUtil.log(e);
+            return false;
+        }
+    }
+
+    /**
+     * フォーカスモード設定
+     *
+     * @param spec
+     * @return
+     */
+    public boolean requestFocusMode(FocusModeSpec spec) {
+        try {
+            parameters.setFocusMode(spec.getApiSettingName());
+            focusMode = spec;
+            return true;
+        } catch (Exception e) {
+            LogUtil.log(e);
+            return false;
+        }
+    }
+
+    /**
+     * ホワイトバランス設定
+     *
+     * @param spec
+     * @return
+     */
+    public boolean requestWhiteBarance(WhiteBaranceSpec spec) {
+        try {
+            parameters.setWhiteBalance(spec.getApiSettingName());
+            whiteBarance = spec;
+
             return true;
         } catch (Exception e) {
             LogUtil.log(e);
@@ -527,25 +319,20 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
         synchronized (lock) {
             try {
-                final int numberOfCameras = Camera.getNumberOfCameras();
-                int openCameraNumber = 0;
-                if (type == CameraType.Main || numberOfCameras == 1) {
-                    camera = Camera.open(0);
-                } else if (numberOfCameras > 1 && type == CameraType.Sub) {
-                    camera = Camera.open(1);
-                    openCameraNumber = 1;
-                } else {
-                    camera = Camera.open();
-                }
-
+                camera = Camera.open(type.getCameraNumber());
                 parameters = camera.getParameters();
-                this.connectedCameraType = type;
+                this.connectedCamera = type;
                 if (isConnected()) {
                     // jpeg quality
                     setJpegQuality(100);
 
+                    try {
+                        parameters.set("focus-mode", "continuous-video");
+                    } catch (Exception e) {
+
+                    }
                     // スペックを切り出す
-                    specs = new CameraSpec(openCameraNumber, camera);
+                    specs = new CameraSpec(type, camera);
                     return true;
                 }
             } catch (Exception e) {
@@ -553,7 +340,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
             }
             camera = null;
             parameters = null;
-            connectedCameraType = null;
+            connectedCamera = null;
         }
         return false;
     }
@@ -592,6 +379,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
      *
      * @return
      */
+    @JCMethod
     public boolean stopPreview() {
         try {
             camera.stopPreview();
@@ -605,6 +393,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
     /**
      * カメラから切断する
      */
+    @JCMethod
     public void disconnect() {
         if (!isConnected()) {
             return;
@@ -627,9 +416,9 @@ public class CameraManager implements Camera.AutoFocusCallback {
     @Override
     public void onAutoFocus(boolean success, Camera camera) {
         if (success) {
-            autofucusMode = AutofucusMode.Completed;
+            autofucusState = AutofucusState.Completed;
         } else {
-            autofucusMode = AutofucusMode.Failed;
+            autofucusState = AutofucusState.Failed;
         }
     }
 
@@ -642,8 +431,8 @@ public class CameraManager implements Camera.AutoFocusCallback {
      *
      * @return
      */
-    public AutofucusMode getAutofucusMode() {
-        return autofucusMode;
+    public AutofucusState getAutofucusState() {
+        return autofucusState;
     }
 
     /**
@@ -651,8 +440,9 @@ public class CameraManager implements Camera.AutoFocusCallback {
      *
      * @return
      */
+    @JCMethod
     public boolean isAutofocusProcessing() {
-        return autofucusMode == AutofucusMode.Processing;
+        return autofucusState == AutofucusState.Processing;
     }
 
     /**
@@ -660,6 +450,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
      *
      * @return オートフォーカスに成功したらtrue
      */
+    @JCMethod
     public boolean autofocusSync() {
         final Holder<Boolean> holder = new Holder<Boolean>();
         try {
@@ -667,15 +458,15 @@ public class CameraManager implements Camera.AutoFocusCallback {
                 @Override
                 public void onAutoFocus(boolean success, Camera camera) {
                     if (success) {
-                        autofucusMode = AutofucusMode.Completed;
+                        autofucusState = AutofucusState.Completed;
                     } else {
-                        autofucusMode = AutofucusMode.Failed;
+                        autofucusState = AutofucusState.Failed;
                     }
-                    LogUtil.log("autofocus :: " + autofucusMode);
+                    LogUtil.log("autofocus :: " + autofucusState);
                     holder.set(success);
                 }
             });
-            autofucusMode = AutofucusMode.Processing;
+            autofucusState = AutofucusState.Processing;
         } catch (Exception e) {
             holder.set(false);
         }
@@ -687,14 +478,15 @@ public class CameraManager implements Camera.AutoFocusCallback {
      *
      * @return
      */
+    @JCMethod
     public boolean startAutofocus() {
         synchronized (lock) {
             try {
-                if (autofucusMode == AutofucusMode.Processing) {
+                if (autofucusState == AutofucusState.Processing) {
                     return true;
                 }
 
-                autofucusMode = AutofucusMode.Processing;
+                autofucusState = AutofucusState.Processing;
                 camera.autoFocus(this);
                 return true;
             } catch (Exception e) {
@@ -702,6 +494,26 @@ public class CameraManager implements Camera.AutoFocusCallback {
             }
             return false;
         }
+    }
+
+    /**
+     * オートフォーカス処理に失敗していたらtrue
+     *
+     * @return
+     */
+    @JCMethod
+    public boolean isAutofocusFailed() {
+        return autofucusState == AutofucusState.Failed;
+    }
+
+    /**
+     * オートフォーカス処理に成功していたらtrue
+     *
+     * @return
+     */
+    @JCMethod
+    public boolean isAutofocusCompleted() {
+        return autofucusState == AutofucusState.Completed;
     }
 
     public Camera getCamera() {
@@ -714,6 +526,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
      *
      * @return 撮影したJpegデータ
      */
+    @JCMethod
     public byte[] takePictureSync() {
         final Holder<byte[]> pictureHolder = new Holder<byte[]>();
         camera.takePicture(null, null, new Camera.PictureCallback() {
@@ -731,6 +544,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
      *
      * @return
      */
+    @JCMethod
     public boolean cancelAutofocus() {
         synchronized (lock) {
             if (!isAutofocusProcessing()) {
@@ -738,7 +552,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
             }
 
             try {
-                autofucusMode = AutofucusMode.None;
+                autofucusState = AutofucusState.None;
                 camera.cancelAutoFocus();
                 return true;
             } catch (Exception e) {
@@ -751,25 +565,17 @@ public class CameraManager implements Camera.AutoFocusCallback {
     /**
      * カメラを縦方向に持っている場合はtrue
      */
+    @JCMethod
     public boolean isVerticalMode() {
-        switch (orientationType) {
-            case Rotate90:
-            case Rotate270:
-                return true;
-        }
-        return false;
+        return orientation.isVertical();
     }
 
     /**
      * カメラを水平に持っている場合はtrue
      */
+    @JCMethod
     public boolean isHorizontalMode() {
-        switch (orientationType) {
-            case Rotate0:
-            case Rotate180:
-                return true;
-        }
-        return false;
+        return orientation.isHorizontal();
     }
 
     /**
@@ -777,6 +583,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
      *
      * @return
      */
+    @JCMethod
     public int getPreviewWidth() {
         return parameters.getPreviewSize().width;
     }
@@ -786,6 +593,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
      *
      * @return
      */
+    @JCMethod
     public int getPreviewHeight() {
         return parameters.getPreviewSize().height;
     }

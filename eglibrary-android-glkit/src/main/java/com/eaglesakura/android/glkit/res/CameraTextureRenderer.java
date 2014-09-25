@@ -3,6 +3,7 @@ package com.eaglesakura.android.glkit.res;
 import android.content.Context;
 
 import com.eaglesakura.android.camera.CameraManager;
+import com.eaglesakura.android.camera.OrientationSpec;
 import com.eaglesakura.jc.annotation.JCClass;
 import com.eaglesakura.jc.annotation.JCField;
 import com.eaglesakura.jc.annotation.JCMethod;
@@ -27,54 +28,6 @@ public class CameraTextureRenderer extends CameraManager {
     public static final int CAMERAMODE_SUB = 1;
 
     /**
-     * 0度傾ける
-     */
-    @JCField
-    public static final int ORIENTATION_0 = 0;
-
-    /**
-     * 90度傾ける
-     */
-    @JCField
-    public static final int ORIENTATION_90 = 1;
-
-    /**
-     * 180度傾ける
-     */
-    @JCField
-    public static final int ORIENTATION_180 = 2;
-
-    /**
-     * 270度傾ける
-     */
-    @JCField
-    public static final int ORIENTATION_270 = 3;
-
-    /**
-     * オートフォーカス未実行
-     */
-    @JCField
-    public static final int AUTOFOCUS_NONE = 0;
-
-    /**
-     * オートフォーカス実行中
-     */
-    @JCField
-    public static final int AUTOFOCUS_PROCESSING = 1;
-
-    /**
-     * オートフォーカス失敗
-     */
-    @JCField
-    public static final int AUTOFOCUS_FAILED = 2;
-
-    /**
-     * オートフォーカス成功
-     */
-    @JCField
-    public static final int AUTOFOCUS_COMPLETED = 3;
-
-    /**
      * プレビュー対象のサーフェイス
      */
     PreviewSurfaceTexture previewSurface;
@@ -84,60 +37,8 @@ public class CameraTextureRenderer extends CameraManager {
     }
 
     @JCMethod
-    public boolean requestOrientation(int ORIENTATION) {
-        return requestOrientation(OrientationType.values()[ORIENTATION]);
-    }
-
-    @JCMethod
-    @Override
-    public void requestPreviewSize(int width, int height, int minWidth, int minHeight) {
-        super.requestPreviewSize(width, height, minWidth, minHeight);
-    }
-
-    @JCMethod
-    @Override
-    public boolean startAutofocus() {
-        return super.startAutofocus();
-    }
-
-    @JCMethod
-    @Override
-    public boolean isAutofocusProcessing() {
-        return super.isAutofocusProcessing();
-    }
-
-    @JCMethod
-    public int getAutofucusModeI() {
-        return getAutofucusMode().ordinal();
-    }
-
-    @JCMethod
-    @Override
-    public int getPreviewHeight() {
-        return super.getPreviewHeight();
-    }
-
-    @JCMethod
-    @Override
-    public int getPreviewWidth() {
-        return super.getPreviewWidth();
-    }
-
-    /**
-     * カメラに接続する
-     *
-     * @param CAMERAMODE
-     * @return
-     */
-    @JCMethod
-    public boolean connect(int CAMERAMODE) {
-        return super.connect(CameraType.values()[CAMERAMODE]);
-    }
-
-    @JCMethod
-    @Override
-    public void disconnect() {
-        super.disconnect();
+    public boolean requestOrientation(int orientation) {
+        return requestOrientation(OrientationSpec.fromDegree(orientation));
     }
 
     /**

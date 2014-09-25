@@ -5,6 +5,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.eaglesakura.android.camera.CameraType;
 import com.eaglesakura.jc.annotation.JCClass;
 import com.eaglesakura.jc.annotation.JCMethod;
 import com.eaglesakura.util.LogUtil;
@@ -77,7 +78,13 @@ public class GraphicAssets {
     public static CameraTextureRenderer connectCamera(Context context, int CameraTextureRenderer_MODE) {
         try {
             CameraTextureRenderer result = new CameraTextureRenderer(context);
-            if (result.connect(CameraTextureRenderer_MODE)) {
+            CameraType type;
+            if (CameraTextureRenderer_MODE == CameraTextureRenderer.CAMERAMODE_MAIN) {
+                type = CameraType.TYPE_MAIN;
+            } else {
+                type = CameraType.TYPE_SUB;
+            }
+            if (result.connect(type)) {
                 // 接続成功した
                 return result;
             }

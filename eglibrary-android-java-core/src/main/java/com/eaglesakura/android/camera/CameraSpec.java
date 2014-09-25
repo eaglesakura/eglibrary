@@ -14,41 +14,39 @@ public class CameraSpec {
     /**
      * カメラの識別番号
      */
-    private final int number;
+    private final CameraType type;
 
     /**
      * カメラのプレビューサイズ
      */
-    private List<PictureSize> previewSizes = new ArrayList<PictureSize>();
+    private List<PictureSizeSpec> previewSizes = new ArrayList<PictureSizeSpec>();
 
     /**
      * カメラの撮影サイズ
      */
-    private List<PictureSize> shotSizes = new ArrayList<PictureSize>();
-
-    /**
-     * オートフォーカスサポートの場合はtrue
-     */
-    private List<CameraManager.FlashMode> flashModes = new ArrayList<CameraManager.FlashMode>();
-
+    private List<PictureSizeSpec> shotSizes = new ArrayList<PictureSizeSpec>();
     /**
      * サポートしているシーン
      */
-    private List<CameraManager.SceneMode> sceneModes = new ArrayList<CameraManager.SceneMode>();
+    private final List<SceneSpec> sceneSpecs;
 
     /**
-     * カメラの種類
+     * ホワイトバランス設定一覧
      */
-    private CameraManager.CameraType type;
+    private final List<WhiteBaranceSpec> whiteBaranceSpecs;
 
     /**
-     * フラッシュモードを保つ場合はtrue
+     * フォーカスモード一覧
      */
-    boolean hasFlash = false;
+    private final List<FocusModeSpec> focusModeSpecs;
 
-    public CameraSpec(int num, Camera camera) {
-        this.number = num;
-        this.type = CameraManager.CameraType.values()[num];
+    /**
+     * フラッシュモード一覧
+     */
+    private final List<FlashModeSpec> flashModeSpecs;
+
+    public CameraSpec(CameraType type, Camera camera) {
+        this.type = type;
 
         // スペックを取得する
         Camera.Parameters parameters = camera.getParameters();
@@ -56,36 +54,20 @@ public class CameraSpec {
         {
             List<Camera.Size> sizeList = parameters.getSupportedPreviewSizes();
             for (Camera.Size size : sizeList) {
-                previewSizes.add(new PictureSize(size));
+                previewSizes.add(new PictureSizeSpec(size));
             }
         }
         {
             List<Camera.Size> sizeList = parameters.getSupportedPictureSizes();
             for (Camera.Size size : sizeList) {
-                shotSizes.add(new PictureSize(size));
+                shotSizes.add(new PictureSizeSpec(size));
             }
         }
 
-        // フラッシュ
-        {
-            List<String> supportedFlashModeList = parameters.getSupportedFlashModes();
-            if (supportedFlashModeList != null) {
-                for (String mode : supportedFlashModeList) {
-                    CameraManager.FlashMode supportedFlashMode = CameraManager.FlashMode.get(mode);
-                    if (supportedFlashMode != null) {
-                        flashModes.add(supportedFlashMode);
-                        if (CameraManager.FlashMode.Off != supportedFlashMode) {
-                            // 物理Flashを持つ
-                            hasFlash = true;
-                        }
-                    } else {
-                        LogUtil.log("unknown flash mode(%s)", mode);
-                    }
-                }
-            }
-        }
-        // シーンモード
-        sceneModes = CameraManager.SceneMode.pickUp(parameters.getSupportedSceneModes());
+        sceneSpecs = SceneSpec.list(parameters.getSupportedSceneModes());   // シーンモード
+        whiteBaranceSpecs = WhiteBaranceSpec.list(parameters.getSupportedWhiteBalance());   // ホワイトバランス
+        focusModeSpecs = FocusModeSpec.list(parameters.getSupportedFocusModes()); // フォーカス設定
+        flashModeSpecs = FlashModeSpec.list(parameters.getSupportedFlashModes()); // フラッシュモード一覧
     }
 
     /**
@@ -93,7 +75,7 @@ public class CameraSpec {
      *
      * @return
      */
-    public List<PictureSize> getPreviewSizes() {
+    public List<PictureSizeSpec> getPreviewSizes() {
         return previewSizes;
     }
 
@@ -102,16 +84,34 @@ public class CameraSpec {
      *
      * @return
      */
-    public List<PictureSize> getShotSizes() {
+    public List<PictureSizeSpec> getShotSizes() {
         return shotSizes;
     }
 
-    public List<CameraManager.SceneMode> getSceneModes() {
-        return sceneModes;
+    /**
+     * シーンをサポートしていたらtrue
+     *
+     * @param scene
+     * @return
+     */
+    public boolean isSupportedScene(SceneSpec scene) {
+        return sceneSpecs.contains(scene);
     }
 
-    public List<CameraManager.FlashMode> getFlashModes() {
-        return flashModes;
+    public List<SceneSpec> getSceneSpecs() {
+        return sceneSpecs;
+    }
+
+    public List<WhiteBaranceSpec> getWhiteBaranceSpecs() {
+        return whiteBaranceSpecs;
+    }
+
+    public List<FlashModeSpec> getFlashModeSpecs() {
+        return flashModeSpecs;
+    }
+
+    public List<FocusModeSpec> getFocusModeSpecs() {
+        return focusModeSpecs;
     }
 
     /**
@@ -120,11 +120,20 @@ public class CameraSpec {
      * @return
      */
     public boolean hasFlash() {
-        return hasFlash;
+        for (FlashModeSpec spec : flashModeSpecs) {
+            if (spec.getApiSettingName().equals("on")) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public int getNumber() {
-        return number;
+    public CameraType getType() {
+        return type;
+    }
+
+    public int getCameraNumber() {
+        return type.getCameraNumber();
     }
 
     /**
@@ -133,8 +142,8 @@ public class CameraSpec {
      * @param id
      * @return
      */
-    public PictureSize getPreviewSize(String id) {
-        for (PictureSize size : previewSizes) {
+    public PictureSizeSpec getPreviewSize(String id) {
+        for (PictureSizeSpec size : previewSizes) {
             if (size.getId().equals(id)) {
                 return size;
             }
@@ -149,8 +158,8 @@ public class CameraSpec {
      * @param id
      * @return
      */
-    public PictureSize getShotSize(String id) {
-        for (PictureSize size : shotSizes) {
+    public PictureSizeSpec getShotSize(String id) {
+        for (PictureSizeSpec size : shotSizes) {
             if (size.getId().equals(id)) {
                 return size;
             }
