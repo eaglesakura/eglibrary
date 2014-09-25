@@ -6,15 +6,14 @@ import android.hardware.Camera;
 import android.view.SurfaceHolder;
 import android.view.TextureView;
 
+import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.jc.annotation.JCClass;
 import com.eaglesakura.jc.annotation.JCMethod;
 import com.eaglesakura.math.MathUtil;
 import com.eaglesakura.thread.Holder;
 import com.eaglesakura.util.LogUtil;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * カメラハードウェアの管理クラス
@@ -308,6 +307,24 @@ public class CameraManager implements Camera.AutoFocusCallback {
     }
 
     /**
+     * デバイスの回転角にプレビュー角度を合わせる
+     */
+    public void requestPreviewRotateLinkDevice() {
+        int deviceRotateDegree = ContextUtil.getDeviceRotateDegree(context);
+
+        Camera.CameraInfo info = new Camera.CameraInfo();
+        Camera.getCameraInfo(specs.getCameraNumber(), info);
+        int cameraDegree = 0;
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            cameraDegree = (info.orientation + deviceRotateDegree) % 360;
+            cameraDegree = (360 - cameraDegree) % 360;  // compensate the mirror
+        } else {  // back-facing
+            cameraDegree = (info.orientation - deviceRotateDegree + 360) % 360;
+        }
+        camera.setDisplayOrientation(cameraDegree);
+    }
+
+    /**
      * カメラに接続する
      *
      * @param type
@@ -333,6 +350,9 @@ public class CameraManager implements Camera.AutoFocusCallback {
                     }
                     // スペックを切り出す
                     specs = new CameraSpec(type, camera);
+
+                    // 回転を設定する
+                    requestPreviewRotateLinkDevice();
                     return true;
                 }
             } catch (Exception e) {

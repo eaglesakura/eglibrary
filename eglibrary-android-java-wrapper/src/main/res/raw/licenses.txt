@@ -436,6 +436,16 @@ part of AndroidAnnotations.
    See the License for the specific language governing permissions and
    limitations under the License.
 
+==================
+* Geohash.java
+
+// Geohash.java
+// Geohash library for Java
+// ported from David Troy's Geohash library for Javascript
+//  - http://github.com/davetroy/geohash-js/tree/master
+// (c) 2008 David Troy
+// (c) 2008 Tom Carden
+// Distributed under the MIT License
 
 ==================
 * Protocol Buffers
