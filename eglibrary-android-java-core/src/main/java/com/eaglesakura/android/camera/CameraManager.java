@@ -6,6 +6,7 @@ import android.hardware.Camera;
 import android.view.SurfaceHolder;
 import android.view.TextureView;
 
+import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.jc.annotation.JCClass;
 import com.eaglesakura.jc.annotation.JCMethod;
@@ -127,11 +128,13 @@ public class CameraManager implements Camera.AutoFocusCallback {
         try {
             if (parameters.isVideoStabilizationSupported()) {
                 parameters.setVideoStabilization(enable);
+                camera.setParameters(parameters);
                 return true;
             }
             LogUtil.log("not support Stabilization");
         } catch (Exception e) {
             LogUtil.log(e);
+            parameters = camera.getParameters();
         }
         return false;
     }
@@ -146,10 +149,12 @@ public class CameraManager implements Camera.AutoFocusCallback {
     public boolean requestScene(SceneSpec spec) {
         try {
             parameters.setSceneMode(spec.getApiSettingName());
+            camera.setParameters(parameters);
             this.scene = spec;
             return true;
         } catch (Exception e) {
             LogUtil.log(e);
+            parameters = camera.getParameters();
         }
         return false;
     }
@@ -194,9 +199,17 @@ public class CameraManager implements Camera.AutoFocusCallback {
     @JCMethod
     public void requestPreviewSize(int width, int height, int minWidth, int minHeight) {
         Camera.Size previewSize = chooseShotSize(parameters.getSupportedPreviewSizes(), width, height, minWidth, minHeight);
-        parameters.setPreviewSize(previewSize.width, previewSize.height);
-        camera.setParameters(parameters);
-        LogUtil.log("previewSize request(%d x %d) -> set(%d x %d) no-frip", width, height, previewSize.width, previewSize.height);
+        try {
+            Camera.Size oldSize = parameters.getPreviewSize();
+            if (oldSize.width != previewSize.width || oldSize.height != previewSize.height) {
+                parameters.setPreviewSize(previewSize.width, previewSize.height);
+                camera.setParameters(parameters);
+                LogUtil.log("previewSize old(%d x %d) / request(%d x %d) -> set(%d x %d) no-frip", oldSize.width, oldSize.height, width, height, previewSize.width, previewSize.height);
+            }
+        } catch (Exception e) {
+            LogUtil.log(e);
+            parameters = camera.getParameters();
+        }
     }
 
     /**
@@ -206,8 +219,14 @@ public class CameraManager implements Camera.AutoFocusCallback {
      * @param lng 経度
      */
     public void setGpsData(double lat, double lng) {
-        parameters.setGpsLatitude(lat);
-        parameters.setGpsLongitude(lng);
+        try {
+            parameters.setGpsLatitude(lat);
+            parameters.setGpsLongitude(lng);
+            camera.setParameters(parameters);
+        } catch (Exception e) {
+            LogUtil.log(e);
+            parameters = camera.getParameters();
+        }
     }
 
     /**
@@ -216,7 +235,12 @@ public class CameraManager implements Camera.AutoFocusCallback {
      * @param quality 画質(0〜100)
      */
     public void setJpegQuality(int quality) {
-        parameters.setJpegQuality(MathUtil.minmax(0, 100, quality));
+        try {
+            parameters.setJpegQuality(MathUtil.minmax(0, 100, quality));
+            camera.setParameters(parameters);
+        } catch (Exception e) {
+            parameters = camera.getParameters();
+        }
     }
 
     /**
@@ -227,10 +251,12 @@ public class CameraManager implements Camera.AutoFocusCallback {
     public boolean requestFlashMode(FlashModeSpec spec) {
         try {
             parameters.setFlashMode(spec.getApiSettingName());
+            camera.setParameters(parameters);
             flashMode = spec;
             return true;
         } catch (Exception e) {
             LogUtil.log(e);
+            parameters = camera.getParameters();
             return false;
         }
     }
@@ -244,10 +270,12 @@ public class CameraManager implements Camera.AutoFocusCallback {
     public boolean requestFocusMode(FocusModeSpec spec) {
         try {
             parameters.setFocusMode(spec.getApiSettingName());
+            camera.setParameters(parameters);
             focusMode = spec;
             return true;
         } catch (Exception e) {
             LogUtil.log(e);
+            parameters = camera.getParameters();
             return false;
         }
     }
@@ -261,11 +289,12 @@ public class CameraManager implements Camera.AutoFocusCallback {
     public boolean requestWhiteBarance(WhiteBaranceSpec spec) {
         try {
             parameters.setWhiteBalance(spec.getApiSettingName());
+            camera.setParameters(parameters);
             whiteBarance = spec;
-
             return true;
         } catch (Exception e) {
             LogUtil.log(e);
+            parameters = camera.getParameters();
             return false;
         }
     }
@@ -280,9 +309,19 @@ public class CameraManager implements Camera.AutoFocusCallback {
      */
     public void requestPictureSize(int width, int height, int minWidth, int minHeight) {
         Camera.Size pictureSize = chooseShotSize(parameters.getSupportedPictureSizes(), width, height, minWidth, minHeight);
-        parameters.setPictureSize(pictureSize.width, pictureSize.height);
-        camera.setParameters(parameters);
-        LogUtil.log("previewSize request(%d x %d) -> set(%d x %d) no-frip", width, height, pictureSize.width, pictureSize.height);
+        try {
+            Camera.Size currentSize = parameters.getPreviewSize();
+            if (currentSize.width != pictureSize.width || currentSize.height != pictureSize.height) {
+                parameters.setPictureSize(pictureSize.width, pictureSize.height);
+                camera.setParameters(parameters);
+                LogUtil.log("previewSize request(%d x %d) -> set(%d x %d) no-frip", width, height, pictureSize.width, pictureSize.height);
+            } else {
+                LogUtil.log("previewSize eq request(%d x %d) -> set(%d x %d) no-frip", width, height, pictureSize.width, pictureSize.height);
+            }
+        } catch (Exception e) {
+            LogUtil.log(e);
+            parameters = camera.getParameters();
+        }
     }
 
     /**
@@ -292,9 +331,14 @@ public class CameraManager implements Camera.AutoFocusCallback {
      */
     public void setPictureSize(String pictureSizeId) {
         Camera.Size pictureSize = specs.getShotSize(pictureSizeId).getCameraSize();
-        parameters.setPictureSize(pictureSize.width, pictureSize.height);
-        camera.setParameters(parameters);
-        LogUtil.log("previewSize id(%s) request(%d x %d) no-frip", pictureSizeId, pictureSize.width, pictureSize.height);
+        try {
+            parameters.setPictureSize(pictureSize.width, pictureSize.height);
+            camera.setParameters(parameters);
+            LogUtil.log("previewSize id(%s) request(%d x %d) no-frip", pictureSizeId, pictureSize.width, pictureSize.height);
+        } catch (Exception e) {
+            LogUtil.log(e);
+            parameters = camera.getParameters();
+        }
     }
 
     /**
@@ -343,11 +387,6 @@ public class CameraManager implements Camera.AutoFocusCallback {
                     // jpeg quality
                     setJpegQuality(100);
 
-                    try {
-                        parameters.set("focus-mode", "continuous-video");
-                    } catch (Exception e) {
-
-                    }
                     // スペックを切り出す
                     specs = new CameraSpec(type, camera);
 
@@ -386,6 +425,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
                 // not support
                 return false;
             }
+
             camera.startPreview();
             return true;
         } catch (Exception e) {
