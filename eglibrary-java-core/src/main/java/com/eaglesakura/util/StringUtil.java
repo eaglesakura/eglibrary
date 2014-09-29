@@ -161,7 +161,7 @@ public class StringUtil {
         return a.compareTo(b);
     }
 
-    private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-hh:mm:ss.SS");
+    private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-HH:mm:ss.SS");
 
     /**
      * 指定時刻を文字列に変換する
