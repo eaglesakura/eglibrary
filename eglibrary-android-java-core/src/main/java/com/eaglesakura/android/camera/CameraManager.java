@@ -239,7 +239,26 @@ public class CameraManager implements Camera.AutoFocusCallback {
             parameters.setJpegQuality(MathUtil.minmax(0, 100, quality));
             camera.setParameters(parameters);
         } catch (Exception e) {
+            LogUtil.log(e);
             parameters = camera.getParameters();
+        }
+    }
+
+    /**
+     * setting zoom
+     *
+     * @param zoom
+     * @return
+     */
+    public boolean requestZoom(int zoom) {
+        try {
+            parameters.setZoom(zoom);
+            camera.setParameters(parameters);
+            return true;
+        } catch (Exception e) {
+            LogUtil.log(e);
+            parameters = camera.getParameters();
+            return false;
         }
     }
 
@@ -283,7 +302,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
     /**
      * ホワイトバランス設定
      *
-     * @param spec
+     * @param spec ホワイトバランス設定
      * @return
      */
     public boolean requestWhiteBarance(WhiteBaranceSpec spec) {
