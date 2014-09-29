@@ -544,6 +544,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
     public boolean autofocusSync() {
         final Holder<Boolean> holder = new Holder<Boolean>();
         try {
+            camera.cancelAutoFocus();
             camera.autoFocus(new Camera.AutoFocusCallback() {
                 @Override
                 public void onAutoFocus(boolean success, Camera camera) {
