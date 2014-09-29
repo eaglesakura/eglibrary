@@ -1,5 +1,7 @@
 apply plugin: 'groovy'
 
+sourceCompatibility = 1.7
+
 repositories {
     mavenCentral()
 
