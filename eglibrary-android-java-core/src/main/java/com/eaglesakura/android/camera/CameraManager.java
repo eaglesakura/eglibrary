@@ -245,13 +245,23 @@ public class CameraManager implements Camera.AutoFocusCallback {
     }
 
     /**
+     * 現在のズーム値を取得する
+     *
+     * @return
+     */
+    @JCMethod
+    public int getZoom() {
+        return parameters.getZoom();
+    }
+
+    /**
      * ズームの最大値を取得する
      *
      * @return
      */
     @JCMethod
     public int getMaxZoom() {
-        return parameters.getZoom();
+        return parameters.getMaxZoom();
     }
 
     /**
@@ -263,7 +273,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
     @JCMethod
     public boolean requestZoom(int zoom) {
         try {
-            parameters.setZoom(zoom);
+            parameters.setZoom(Math.min(zoom, getMaxZoom()));
             camera.setParameters(parameters);
             return true;
         } catch (Exception e) {
