@@ -1,0 +1,85 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.12.+'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.3'
+    }
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+    maven {
+        url "http://eaglesakura.github.io/maven/"
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
+
+def APPLICATION_ID = "com.eaglesakura.dummybeaconadvertiser"
+
+if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
+    EGLIBRARY_MAVEN_LOCAL_PATH = ""
+}
+if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
+    EGLIBRARY_ARTIFACT_VERSION = ""
+}
+if (!hasProperty("EGLIBRARY_ANDROID_BUILDTOOL_VERSION")) {
+    EGLIBRARY_ANDROID_BUILDTOOL_VERSION = "20.0.0"
+}
+
+configurations {
+    apt
+}
+
+
+dependencies {
+    compile project(':eglibrary-android-app-framework')
+    compile 'org.androidannotations:androidannotations-api:3.0.+'
+    apt "org.androidannotations:androidannotations:3.0.+"
+}
+
+android {
+    compileSdkVersion 'android-L'
+    buildToolsVersion "20.0.0"
+
+    defaultConfig {
+        applicationId APPLICATION_ID
+        minSdkVersion 'L'
+        targetSdkVersion 'L'
+        versionCode 1
+        versionName "1.0"
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+        }
+    }
+
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // ignore include
+    packagingOptions {
+//        android.enforceUniquePackageName = false
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'androidannotations-api.properties'
+        exclude 'services/com.fasterxml.jackson.core.JsonFactory'
+        exclude 'services/com.fasterxml.jackson.core.ObjectCodec'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
