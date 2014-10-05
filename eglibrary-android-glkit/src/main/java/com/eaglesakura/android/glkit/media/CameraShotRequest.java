@@ -31,6 +31,11 @@ public class CameraShotRequest {
     int jpegQuality = 100;
 
     /**
+     * カメラ起動からオートフォーカスまでの猶予時間
+     */
+    long cameraSleepTimeMs = 300;
+
+    /**
      * フラッシュは自動
      */
     FlashModeSpec flashMode = FlashModeSpec.SETTING_AUTO;
@@ -39,6 +44,11 @@ public class CameraShotRequest {
      * オートフォーカス
      */
     boolean autoFocus = true;
+
+    /**
+     * オートフォーカスのリトライ試行回数
+     */
+    int autoFocusRetry = 3;
 
     /**
      * カメラの指定
@@ -214,9 +224,20 @@ public class CameraShotRequest {
             SurfaceTexture surfaceTexture = new SurfaceTexture(texture);
 
             cameraManager.startPreview(surfaceTexture);
+
             if (request.autoFocus) {
-                boolean completed = cameraManager.autofocusSync();
-                LogUtil.log("autofocus :: " + completed);
+                int autoFocusRetry = request.autoFocusRetry;
+                boolean autofucsCompleted = false;
+                while (autoFocusRetry > 0 && !autofucsCompleted) {
+                    if (request.cameraSleepTimeMs > 0) {
+                        Thread.sleep(request.cameraSleepTimeMs);
+                    }
+
+                    autofucsCompleted = cameraManager.autofocusSync();
+                    LogUtil.log("autofocus :: " + autofucsCompleted);
+                    --autoFocusRetry;
+                }
+                LogUtil.log("autofocus finished :: " + autofucsCompleted);
             }
 
             // 撮影

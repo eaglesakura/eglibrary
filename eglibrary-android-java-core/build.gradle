@@ -23,9 +23,13 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 15
+    compileSdkVersion 19
     buildToolsVersion = EGLIBRARY_ANDROID_BUILDTOOL_VERSION
 
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 19
+    }
     sourceSets {
         main {
         }

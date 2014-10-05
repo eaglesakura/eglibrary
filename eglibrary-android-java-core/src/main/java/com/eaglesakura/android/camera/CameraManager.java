@@ -239,7 +239,47 @@ public class CameraManager implements Camera.AutoFocusCallback {
             parameters.setJpegQuality(MathUtil.minmax(0, 100, quality));
             camera.setParameters(parameters);
         } catch (Exception e) {
+            LogUtil.log(e);
             parameters = camera.getParameters();
+        }
+    }
+
+    /**
+     * 現在のズーム値を取得する
+     *
+     * @return
+     */
+    @JCMethod
+    public int getZoom() {
+        return parameters.getZoom();
+    }
+
+    /**
+     * ズームの最大値を取得する
+     *
+     * @return
+     */
+    @JCMethod
+    public int getMaxZoom() {
+        return parameters.getMaxZoom();
+    }
+
+    /**
+     * ズームレベルを指定する
+     *
+     * @param zoom
+     * @return
+     */
+    @JCMethod
+    public boolean requestZoom(int zoom) {
+        try {
+            parameters.setZoom(Math.min(zoom, getMaxZoom()));
+            camera.setParameters(parameters);
+            return true;
+        } catch (Exception e) {
+            LogUtil.log(e);
+            parameters = camera.getParameters();
+            return false;
         }
     }
 
@@ -283,7 +323,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
     /**
      * ホワイトバランス設定
      *
-     * @param spec
+     * @param spec ホワイトバランス設定
      * @return
      */
     public boolean requestWhiteBarance(WhiteBaranceSpec spec) {
@@ -514,6 +554,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
     public boolean autofocusSync() {
         final Holder<Boolean> holder = new Holder<Boolean>();
         try {
+            camera.cancelAutoFocus();
             camera.autoFocus(new Camera.AutoFocusCallback() {
                 @Override
                 public void onAutoFocus(boolean success, Camera camera) {

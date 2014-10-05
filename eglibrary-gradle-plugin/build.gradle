@@ -1,5 +1,7 @@
 apply plugin: 'groovy'
 
+sourceCompatibility = 1.7
+
 buildscript {
     repositories {
         mavenCentral()
@@ -19,6 +21,9 @@ buildscript {
 
 repositories {
     mavenCentral()
+    maven {
+        url "http://eaglesakura.github.io/maven/"
+    }
 }
 
 dependencies {

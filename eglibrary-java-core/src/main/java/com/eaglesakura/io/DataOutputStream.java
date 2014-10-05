@@ -15,14 +15,29 @@ public final class DataOutputStream {
      */
     private OutputStream writer = null;
 
+    /**
+     * InputStreamをこのストリーム内で解放する場合true
+     */
+    private boolean writerClose = true;
+
+    @Deprecated
     public DataOutputStream(OutputStream os) {
         writer = os;
+    }
+
+    public DataOutputStream(OutputStream os, boolean withClose) {
+        writer = os;
+        writerClose = withClose;
     }
 
     /**
      * リソースの開放を行う。
      */
     public void dispose() {
+        if (!writerClose) {
+            return;
+        }
+
         if (writer != null) {
             try {
                 writer.close();
