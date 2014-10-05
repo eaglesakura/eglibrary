@@ -129,6 +129,25 @@ public class BluetoothDeviceScanner {
     }
 
     /**
+     * キャッシュから指定したデバイスを削除する
+     *
+     * @param device
+     */
+    public void remove(BluetoothDevice device) {
+        cleanDeviceCaches();
+        synchronized (cacheLock) {
+            Iterator<BluetoothDeviceCache> iterator = deviceCaches.iterator();
+            while (iterator.hasNext()) {
+                BluetoothDeviceCache cache = iterator.next();
+                if (cache.device == device) {
+                    iterator.remove();
+                    return;
+                }
+            }
+        }
+    }
+
+    /**
      * キャッシュ時刻が有効なキャッシュ一覧を取得する
      */
     private BluetoothDeviceCache getDeviceCache(BluetoothDevice device) {
@@ -563,7 +582,7 @@ public class BluetoothDeviceScanner {
 
     /**
      * 最も近い位置にあるデバイスを取得する
-     *
+     * <p/>
      * 精度を上げるため、平均RSSIを使用してチェックする。
      *
      * @param devices 検索対象のデバイス一覧
