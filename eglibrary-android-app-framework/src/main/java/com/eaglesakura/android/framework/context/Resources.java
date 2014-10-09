@@ -27,9 +27,9 @@ public class Resources {
      * @return
      */
     public static int[] displaySize() {
-        if (displaySize == null) {
-            displaySize = ContextUtil.getDisplaySize(FrameworkCentral.getApplication());
-        }
+//        if (displaySize == null) {
+//        }
+        displaySize = ContextUtil.getDisplaySize(FrameworkCentral.getApplication());
         return displaySize;
     }
 
