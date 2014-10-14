@@ -1,5 +1,6 @@
 package com.eaglesakura.io;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,6 +14,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -106,6 +109,7 @@ public class IOUtil {
 
     /**
      * ファイルを文字列 or null
+     *
      * @param file
      * @return
      */
@@ -523,6 +527,55 @@ public class IOUtil {
             return false;
         }
         return a.getAbsolutePath().equals(b.getAbsolutePath());
+    }
+
+    /**
+     * GZIPバッファであればtrueを返却する。
+     * <p/>
+     * ただし、これはヘッダのみをチェックするため、簡易的なチェックしか行えない。
+     *
+     * @param buffer
+     * @return
+     */
+    public static boolean isGzip(byte[] buffer) {
+        return buffer.length > 2 && buffer[0] == (byte) 0x1F && buffer[1] == (byte) 0x8B;
+    }
+
+    /**
+     * rawバッファをGZIPに圧縮して返却する
+     *
+     * @param raw
+     */
+    public static byte[] compressGzip(byte[] raw) {
+        try {
+            ByteArrayOutputStream bufferStream = new ByteArrayOutputStream();
+            GZIPOutputStream gzipOutputStream = new GZIPOutputStream(bufferStream);
+            gzipOutputStream.write(raw);
+
+            gzipOutputStream.flush();
+            gzipOutputStream.close();
+
+            return bufferStream.toByteArray();
+        } catch (Exception e) {
+            LogUtil.log(e);
+            throw new IllegalStateException(e);
+        }
+    }
+
+    /**
+     * GZIPバッファをデコードする。失敗したらnullを返却する。
+     *
+     * @param gzip
+     * @return
+     */
+    public static byte[] decompressGzipOrNull(byte[] gzip) {
+        try {
+            GZIPInputStream is = new GZIPInputStream(new ByteArrayInputStream(gzip));
+            return toByteArray(is, true);
+        } catch (Exception e) {
+            LogUtil.log(e);
+            return null;
+        }
     }
 
     /**
