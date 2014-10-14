@@ -78,6 +78,11 @@ android {
         exclude 'services/com.fasterxml.jackson.core.JsonFactory'
         exclude 'services/com.fasterxml.jackson.core.ObjectCodec'
     }
+
+    // テスト用アプリだからlint警告不要
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {

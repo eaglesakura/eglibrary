@@ -6,6 +6,7 @@ import android.bluetooth.le.AdvertiseSettings;
 import android.bluetooth.le.AdvertisementData;
 import android.bluetooth.le.BluetoothLeAdvertiser;
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,18 +55,13 @@ public class DummyBeaconAdvertiseFragment extends BaseFragment {
     protected void onAfterViews() {
         bluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
         advertiser = bluetoothManager.getAdapter().getBluetoothLeAdvertiser();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         loadBeacons();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-
+    /**
+     * 起動されているBeacon一覧を全て削除する
+     */
+    void cleanBeacons() {
         // advertise stop
         Iterator<Map.Entry<DummyBeaconModel, AdvertiseCallback>> iterator = beaconAdvertises.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -73,6 +69,12 @@ public class DummyBeaconAdvertiseFragment extends BaseFragment {
             advertiser.stopAdvertising(next.getValue());
         }
         beaconAdvertises.clear();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        cleanBeacons();
     }
 
     /**
@@ -101,6 +103,8 @@ public class DummyBeaconAdvertiseFragment extends BaseFragment {
      */
     @UiThread
     void updateUI(DummyBeaconModel[] newBeacons) {
+        cleanBeacons();
+
         this.beacons = newBeacons;
         BaseAdapter adapter = (BaseAdapter) beaconList.getAdapter();
 
