@@ -172,6 +172,23 @@ public class ImageUtil {
     }
 
     /**
+     * Jpeg画像にエンコードする
+     *
+     * @param bitmap
+     * @param quality
+     * @return
+     */
+    public static byte[] encodeJpeg(Bitmap bitmap, int quality) {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            bitmap.compress(CompressFormat.JPEG, quality, os);
+            return os.toByteArray();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
      * アルファ値をブレンドした新たな画像を生成する
      *
      * @param src
