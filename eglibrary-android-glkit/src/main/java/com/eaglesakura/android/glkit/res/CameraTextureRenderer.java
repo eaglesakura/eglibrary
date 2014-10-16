@@ -42,7 +42,7 @@ public class CameraTextureRenderer extends CameraManager {
     }
 
     /**
-     * プレビューを開始する
+     * プレビューを開始する。開始時点でプレビューサーフェイスを生成する。
      *
      * @param textureName 焼きこみ対象のteture / glGenTexturesしたばかりのオブジェクトが必要
      * @return

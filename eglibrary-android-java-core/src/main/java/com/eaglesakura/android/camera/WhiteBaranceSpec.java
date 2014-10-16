@@ -15,7 +15,7 @@ import java.util.Map;
  * ホワイトバランス設定
  */
 @JCClass(cppNamespace = "es")
-public class WhiteBaranceSpec {
+public final class WhiteBaranceSpec {
     private static final Map<String, WhiteBaranceSpec> gWhiteBaranceSpecMap;
 
     /**
@@ -80,6 +80,20 @@ public class WhiteBaranceSpec {
         } else {
             return result;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof WhiteBaranceSpec)) {
+            return false;
+        }
+
+        return ((WhiteBaranceSpec) o).apiSettingName.equals(apiSettingName);
+    }
+
+    @Override
+    public int hashCode() {
+        return apiSettingName.hashCode();
     }
 
     /**

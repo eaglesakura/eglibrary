@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * シーン情報
  */
-public class SceneSpec {
+public final class SceneSpec {
     /**
      * API設定名
      */
@@ -116,6 +116,20 @@ public class SceneSpec {
         } else {
             return result;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof SceneSpec)) {
+            return false;
+        }
+
+        return ((SceneSpec) o).apiSettingName.equals(apiSettingName);
+    }
+
+    @Override
+    public int hashCode() {
+        return apiSettingName.hashCode();
     }
 
     /**
