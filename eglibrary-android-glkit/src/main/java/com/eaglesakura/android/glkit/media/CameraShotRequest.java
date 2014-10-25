@@ -48,7 +48,7 @@ public class CameraShotRequest {
     /**
      * オートフォーカスのリトライ試行回数
      */
-    int autoFocusRetry = 3;
+    int autoFocusRetry = 10;
 
     /**
      * カメラの指定
