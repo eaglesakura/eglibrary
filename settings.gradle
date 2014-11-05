@@ -10,4 +10,4 @@ include ':eglibrary-gradle-plugin'
 include ':eglibrary-android-app-framework'
 
 // app
-include ':dummy-beacon-advertiser'
+// include ':dummy-beacon-advertiser'

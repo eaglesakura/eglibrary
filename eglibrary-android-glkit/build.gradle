@@ -25,9 +25,6 @@ if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
 if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
     EGLIBRARY_ARTIFACT_VERSION = ""
 }
-if (!hasProperty("EGLIBRARY_ANDROID_BUILDTOOL_VERSION")) {
-    EGLIBRARY_ANDROID_BUILDTOOL_VERSION = "20.0.0"
-}
 
 configurations {
     apt
@@ -48,13 +45,13 @@ dependencies {
 
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion EGLIBRARY_ANDROID_BUILDTOOL_VERSION
+    compileSdkVersion 21
+    buildToolsVersion '21.1'
 
     defaultConfig {
         applicationId APPLICATION_ID
         minSdkVersion 15
-        targetSdkVersion 19
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }

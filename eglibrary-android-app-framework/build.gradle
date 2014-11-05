@@ -23,9 +23,6 @@ if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
 if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
     EGLIBRARY_ARTIFACT_VERSION = ""
 }
-if (!hasProperty("EGLIBRARY_ANDROID_BUILDTOOL_VERSION")) {
-    EGLIBRARY_ANDROID_BUILDTOOL_VERSION = "20.0.0"
-}
 
 configurations {
     apt
@@ -44,22 +41,24 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.aar'])
 
     // support v4/v13/playservice
-    compile 'com.android.support:support-v4:20.+'
-    compile 'com.android.support:support-v13:20.+'
-    compile 'com.google.android.gms:play-services:5.0.+'
+    compile 'com.android.support:support-v4:21.0.+'
+    compile 'com.android.support:support-v13:21.0.+'
+    compile 'com.android.support:appcompat-v7:21.0.+'
+
+    compile 'com.google.android.gms:play-services:6.1.+'
 
     compile project(':eglibrary-android-java-wrapper')
 }
 
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion EGLIBRARY_ANDROID_BUILDTOOL_VERSION
+    compileSdkVersion 21
+    buildToolsVersion '21.1'
 
     defaultConfig {
         applicationId APPLICATION_ID
         minSdkVersion 15
-        targetSdkVersion 19
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
