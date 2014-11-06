@@ -5,8 +5,14 @@
         refs:http://android-developers.blogspot.jp/2014/08/material-design-in-2014-google-io-app.html
     -->
     <!-- コンテンツ左右の基本マージン -->
-    <dimen name="EsMaterial.Margin.KeyLine1">16dp</dimen>
+    <dimen name="EsMaterial.Margin.KeyLine1Horizontal">16dp</dimen>
+    <dimen name="EsMaterial.Margin.KeyLine1Vertical">8dp</dimen>
     <!-- コンテンツ左右からメインコンテンツまでのマージン -->
     <dimen name="EsMaterial.Margin.KeyLine2">72dp</dimen>
 
+    <!-- NavigationDrawer -->
+    <dimen name="EsMaterial.NaviDrawer.Width">240dp</dimen>
+
+    <!-- Dialog -->
+    <dimen name="EsMaterial.Dialog.MinWidth">280dp</dimen>
 </resources>

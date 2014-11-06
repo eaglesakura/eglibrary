@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="EsMaterial.Margin.KeyLine1">24dp</dimen>
-    <dimen name="EsMaterial.Margin.KeyLine2">80dp</dimen>
+    <dimen name="EsMaterial.Margin.KeyLine1Horizontal">24dp</dimen>
+    <dimen name="EsMaterial.Margin.KeyLine1Vertical">16dp</dimen>
+    <dimen name="EsMaterial.Margin.KeyLine2Horizontal">80dp</dimen>
 
+    <!-- NavigationDrawer -->
+    <dimen name="EsMaterial.NaviDrawer.Width">320dp</dimen>
+
+    <!-- Dialog -->
+    <dimen name="EsMaterial.Dialog.MinWidth">380dp</dimen>
 </resources>

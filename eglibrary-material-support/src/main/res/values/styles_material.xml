@@ -4,30 +4,33 @@
     <dimen name="EsMaterial.Font.Small">14sp</dimen>
     <dimen name="EsMaterial.Font.Medium">16sp</dimen>
     <dimen name="EsMaterial.Font.Large">20sp</dimen>
+    <dimen name="EsMaterial.Font.Title">28sp</dimen>
     <dimen name="EsMaterial.Font.LargeLarge">34sp</dimen>
 
-    <color name="EsMaterial.Button.Shadow">#42000000</color>
+    <color name="EsMaterial.Button.Shadow">#7F000000</color>
     <dimen name="EsMaterial.Button.ShadowRadius">6dp</dimen>
     <dimen name="EsMaterial.Button.Margin">6dp</dimen>
     <dimen name="EsMaterial.Button.ExternalMarginHorizontal">4dp</dimen>
     <dimen name="EsMaterial.Button.ExternalMarginVertical">6dp</dimen>
     <dimen name="EsMaterial.Button.InternalMarginHorizontal">8dp</dimen>
-
-
-    <dimen name="EsMaterial.Button.Inset">8dp</dimen>
-    <dimen name="EsMaterial.Button.ShadowLeft">2dp</dimen>
-    <dimen name="EsMaterial.Button.ShadowRight">2dp</dimen>
-    <dimen name="EsMaterial.Button.ShadowTop">2dp</dimen>
-    <dimen name="EsMaterial.Button.ShadowBottom">2dp</dimen>
     <dimen name="EsMaterial.Button.MinWidth">64dp</dimen>
     <dimen name="EsMaterial.Button.MinHeight">48dp</dimen>
 
+    <dimen name="EsMaterial.Dialog.Button.Height">48dp</dimen>
+    <dimen name="EsMaterial.Dialog.Content.MinHeight">96dp</dimen>
+    <color name="EsMaterial.Dialog.Shadow">#0F000000</color>
+    <dimen name="EsMaterial.Dialog.ShadowRadius">7dp</dimen>
+
+    <color name="EsMaterial.Background.Base">@color/EsMaterial.Grey.50</color>
+    <color name="EsMaterial.Background.BaseDropShadow">#05000000</color>
     <color name="EsMaterial.Transparent">#00000000</color>
 
     <style name="EsMaterial.Base" parent="Theme.AppCompat.Light">
         <item name="colorAccent">@color/accent_material_light</item>
+        <item name="android:textColor">@color/EsMaterial.Grey.700</item>
         <item name="android:textSize">@dimen/EsMaterial.Font.Medium</item>
     </style>
+
 
     <style name="EsMaterial.Button.Base" parent="EsMaterial.Base">
         <item name="android:height">@dimen/EsMaterial.Button.MinHeight</item>
@@ -36,6 +39,21 @@
 
     <style name="EsMaterial.Base.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorAccent">@color/accent_material_light</item>
+    </style>
+
+
+    <style name="EsMaterial.Font.Normal" parent="EsMaterial.Base">
+        <item name="android:textSize">@dimen/EsMaterial.Font.Medium</item>
+    </style>
+
+    <style name="EsMaterial.Font.Header" parent="EsMaterial.Base">
+        <item name="android:textColor">@color/EsMaterial.Grey.900</item>
+        <item name="android:textSize">@dimen/EsMaterial.Font.Medium</item>
+    </style>
+
+    <style name="EsMaterial.Font.Title" parent="EsMaterial.Base">
+        <item name="android:textColor">@color/EsMaterial.Grey.900</item>
+        <item name="android:textSize">@dimen/EsMaterial.Font.Title</item>
     </style>
 
 
