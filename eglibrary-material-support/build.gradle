@@ -63,4 +63,9 @@ dependencies {
     apt "org.androidannotations:androidannotations:3.0.+"
     compile "org.androidannotations:androidannotations-api:3.0.+"
     compile "com.googlecode.android-query:android-query:0.25.+"
+
+    /**
+     * lib
+     */
+    compile project(':eglibrary-android-java-core')
 }
