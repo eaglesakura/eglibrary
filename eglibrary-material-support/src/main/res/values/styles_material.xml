@@ -8,7 +8,7 @@
     <dimen name="EsMaterial.Font.LargeLarge">34sp</dimen>
 
     <color name="EsMaterial.Button.Shadow">#7F000000</color>
-    <dimen name="EsMaterial.Button.ShadowRadius">6dp</dimen>
+    <dimen name="EsMaterial.Button.ShadowRadius">2dp</dimen>
     <dimen name="EsMaterial.Button.Margin">6dp</dimen>
     <dimen name="EsMaterial.Button.ExternalMarginHorizontal">4dp</dimen>
     <dimen name="EsMaterial.Button.ExternalMarginVertical">6dp</dimen>
@@ -24,6 +24,8 @@
     <color name="EsMaterial.Background.Base">@color/EsMaterial.Grey.50</color>
     <color name="EsMaterial.Background.BaseDropShadow">#05000000</color>
     <color name="EsMaterial.Transparent">#00000000</color>
+    <color name="EsMaterial.Transparent.Pressed">#0F000000</color>
+    <color name="EsMaterial.Transparent.Ripple">#7F000000</color>
 
     <style name="EsMaterial.Base" parent="Theme.AppCompat.Light">
         <item name="colorAccent">@color/accent_material_light</item>
