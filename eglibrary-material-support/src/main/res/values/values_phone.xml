@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+        refs:http://android-developers.blogspot.jp/2014/08/material-design-in-2014-google-io-app.html
+    -->
+    <!-- コンテンツ左右の基本マージン -->
+    <dimen name="EsMaterial.Margin.KeyLine1">16dp</dimen>
+    <!-- コンテンツ左右からメインコンテンツまでのマージン -->
+    <dimen name="EsMaterial.Margin.KeyLine2">72dp</dimen>
+
+</resources>

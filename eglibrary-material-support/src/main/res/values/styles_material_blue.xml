@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="EsMaterial.Blue.50">#E3F2FD</color>
+    <color name="EsMaterial.Blue.100">#BBDEFB</color>
+    <color name="EsMaterial.Blue.200">#90CAF9</color>
+    <color name="EsMaterial.Blue.300">#64B5F6</color>
+    <color name="EsMaterial.Blue.400">#42A5F5</color>
+    <color name="EsMaterial.Blue.500">#2196F3</color>
+    <color name="EsMaterial.Blue.600">#1E88E5</color>
+    <color name="EsMaterial.Blue.700">#1976D2</color>
+    <color name="EsMaterial.Blue.800">#1565C0</color>
+    <color name="EsMaterial.Blue.900">#0D47A1</color>
+
+    <color name="EsMaterial.Blue.Button.Disabled">@color/EsMaterial.Blue.400</color>
+    <color name="EsMaterial.Blue.Button.Normal">@color/EsMaterial.Blue.500</color>
+    <color name="EsMaterial.Blue.Button.Focused">@color/EsMaterial.Blue.500</color>
+    <color name="EsMaterial.Blue.Button.Pressed">@color/EsMaterial.Blue.800</color>
+    <color name="EsMaterial.Blue.Button.Ripple">@color/EsMaterial.Blue.900</color>
+
+    <style name="EsMaterial.Button.Blue" parent="EsMaterial.Button.Base">
+        <item name="android:background">@drawable/esm_button_blue</item>
+        <item name="android:textColor">@color/EsMaterial.Blue.50</item>
+    </style>
+
+    <style name="EsMaterial.FlatButton.Blue" parent="EsMaterial.Button.Base">
+        <item name="android:background">@color/EsMaterial.Transparent</item>
+        <item name="android:textColor">@color/esm_button_blue</item>
+    </style>
+</resources>
