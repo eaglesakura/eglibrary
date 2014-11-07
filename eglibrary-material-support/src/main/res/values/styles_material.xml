@@ -31,6 +31,14 @@
         <item name="colorAccent">@color/accent_material_light</item>
         <item name="android:textColor">@color/EsMaterial.Grey.700</item>
         <item name="android:textSize">@dimen/EsMaterial.Font.Medium</item>
+
+        <!-- CheckBox/RadioButton color -->
+        <item name="android:textColorPrimaryDisableOnly">@color/EsMaterial.Grey.750</item>
+        <!--test -->
+        <!--<item name="android:textColorPrimary">#FF0000</item>-->
+        <!--<item name="android:textColorSecondary">#FF0000</item>-->
+        <!--<item name="android:textColorTertiary">#FF0000</item>-->
+        <!--<item name="android:textColorHint">#FF0000</item>-->
     </style>
 
 
@@ -38,11 +46,6 @@
         <item name="android:height">@dimen/EsMaterial.Button.MinHeight</item>
         <item name="android:minWidth">@dimen/EsMaterial.Button.MinWidth</item>
     </style>
-
-    <style name="EsMaterial.Base.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorAccent">@color/accent_material_light</item>
-    </style>
-
 
     <style name="EsMaterial.Font.Normal" parent="EsMaterial.Base">
         <item name="android:textSize">@dimen/EsMaterial.Font.Medium</item>
