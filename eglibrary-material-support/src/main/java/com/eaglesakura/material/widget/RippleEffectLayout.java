@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.eaglesakura.android.thread.HandlerLoopController;
 import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.material.R;
 import com.eaglesakura.math.MathUtil;
+import com.eaglesakura.util.LogUtil;
 
 /**
  * Ripple風にくり抜きを行う
@@ -34,22 +36,39 @@ public class RippleEffectLayout extends FrameLayout {
      */
     protected HandlerLoopController loopController;
 
+    /**
+     * Round効果を行う場合はtrue
+     */
+    boolean enableRound = true;
+
 
     public RippleEffectLayout(Context context) {
         super(context);
+        initializeEffectLayer(context, null, 0, 0);
     }
 
     public RippleEffectLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        initializeEffectLayer(context, attrs, 0, 0);
     }
 
     public RippleEffectLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initializeEffectLayer(context, attrs, defStyleAttr, 0);
     }
 
     @SuppressLint("NewApi")
     public RippleEffectLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        initializeEffectLayer(context, attrs, defStyleAttr, defStyleRes);
+    }
+
+    protected void initializeEffectLayer(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            LogUtil.log("not supported LAYER_TYPE_HARDWARE clip");
+            // not support hardware clip
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
     }
 
 
@@ -71,6 +90,15 @@ public class RippleEffectLayout extends FrameLayout {
         }
 
         return super.drawChild(canvas, child, drawingTime);
+    }
+
+    /**
+     * ラウンド効果を有効にする場合はtrue
+     *
+     * @param enableRound
+     */
+    public void setRoundEnable(boolean enableRound) {
+        this.enableRound = enableRound;
     }
 
     /**
@@ -193,7 +221,12 @@ public class RippleEffectLayout extends FrameLayout {
             }
         }
 
-        void setupCanvas(Canvas canvas) {
+        /**
+         * clip用のpathを生成する
+         *
+         * @return
+         */
+        Path createPath() {
             final RectF TARGET_POS = new RectF(getLeft(), getTop(), getRight(), getBottom());
             float WEIGHT = getRenderWeight();
             float WEIGHT_INVERT = 1.0f - WEIGHT;
@@ -207,11 +240,20 @@ public class RippleEffectLayout extends FrameLayout {
             );
 
             // 半径を計算する
-            final float currentRadius = Math.min((currentPos.width() / 2) * WEIGHT_INVERT, (currentPos.height() / 2) * WEIGHT_INVERT);
+            float currentRadius = Math.min((currentPos.width() / 2) * WEIGHT_INVERT, (currentPos.height() / 2) * WEIGHT_INVERT);
+            if (!enableRound) {
+                // ちょっとだけroundさせることはやる
+                currentRadius = Math.min(currentRadius, Math.max(getWidth(), getHeight()) / 200);
+            }
 
             // パスのセットアップ
             Path path = new Path();
             path.addRoundRect(currentPos, currentRadius, currentRadius, Path.Direction.CW);
+            return path;
+        }
+
+        void setupCanvas(Canvas canvas) {
+            Path path = createPath();
             canvas.clipPath(path);
         }
     }
