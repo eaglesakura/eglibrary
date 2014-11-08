@@ -7,6 +7,7 @@ import android.widget.FrameLayout;
 /**
  *
  */
+@Deprecated
 public class FragmentContainerLayout extends FrameLayout {
     public FragmentContainerLayout(Context context) {
         super(context);

@@ -16,6 +16,7 @@ import java.util.Map;
 /**
  *
  */
+@Deprecated
 public final class FragmentChooser implements Parcelable {
     private List<FragmentCache> fragmentCaches = new ArrayList<FragmentCache>();
 

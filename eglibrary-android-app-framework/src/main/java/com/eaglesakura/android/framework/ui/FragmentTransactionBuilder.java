@@ -14,6 +14,7 @@ import java.util.List;
 /**
  * Fragment Transactionを制御する
  */
+@Deprecated
 public class FragmentTransactionBuilder {
     public enum AnimationType {
         /**

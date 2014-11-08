@@ -37,7 +37,7 @@ public abstract class BaseFragment extends Fragment {
      * @return
      */
     public String genTag() {
-        return getClass().getName() + "/" + hashCode();
+        return ((Object) this).getClass().getName() + "/" + hashCode();
     }
 
     /**
@@ -176,18 +176,17 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected void log(String fmt, Object... args) {
-        Log.i(getClass().getSimpleName(), String.format(fmt, args));
+        Log.i(((Object) this).getClass().getSimpleName(), String.format(fmt, args));
     }
 
     protected void logi(String fmt, Object... args) {
-        Log.i(getClass().getSimpleName(), String.format(fmt, args));
+        Log.i(((Object) this).getClass().getSimpleName(), String.format(fmt, args));
     }
 
     protected void logd(String fmt, Object... args) {
-        Log.d(getClass().getSimpleName(), String.format(fmt, args));
+        Log.d(((Object) this).getClass().getSimpleName(), String.format(fmt, args));
     }
 
-    @SuppressLint("NewApi")
     protected boolean hasChildBackStack() {
         return getChildFragmentManager().getBackStackEntryCount() > 1;
     }
@@ -197,13 +196,7 @@ public abstract class BaseFragment extends Fragment {
      *
      * @return ハンドリングを行えたらtrue
      */
-    @SuppressLint("NewApi")
     public boolean handleBackButton() {
-        if (!ContextUtil.supportedChildFragmentManager()) {
-            // no backstack
-            return false;
-        }
-
         if (hasChildBackStack()) {
             // backStackを解放する
             getChildFragmentManager().popBackStack();

@@ -18,6 +18,7 @@ import java.util.List;
 /**
  * FragmentListAdapterをサポートする
  */
+@Deprecated
 public class FragmentListAdapter extends FragmentPagerAdapter {
     FragmentChooser chooser;
     final List<FragmentCreater> creaters = new ArrayList<FragmentCreater>();

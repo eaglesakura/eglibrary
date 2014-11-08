@@ -23,6 +23,7 @@ import java.util.List;
  *
  */
 @EActivity
+@Deprecated
 public abstract class BaseActivity extends Activity implements FragmentChooser.Callback {
 
     protected BaseActivity() {
