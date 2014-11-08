@@ -1,5 +1,7 @@
 <resources>
 
+    <attr name="esmNavigationDrawerBackgroundColor" format="color" />
+
     <dimen name="EsMaterial.Font.SmallSmall">12sp</dimen>
     <dimen name="EsMaterial.Font.Small">14sp</dimen>
     <dimen name="EsMaterial.Font.Medium">16sp</dimen>
@@ -34,13 +36,16 @@
 
         <!-- CheckBox/RadioButton color -->
         <item name="android:textColorPrimaryDisableOnly">@color/EsMaterial.Grey.750</item>
+
+        <!-- EsMaterial attributes -->
+        <item name="esmNavigationDrawerBackgroundColor">@color/EsMaterial.Grey.400</item>
+
         <!--test -->
         <!--<item name="android:textColorPrimary">#FF0000</item>-->
         <!--<item name="android:textColorSecondary">#FF0000</item>-->
         <!--<item name="android:textColorTertiary">#FF0000</item>-->
         <!--<item name="android:textColorHint">#FF0000</item>-->
     </style>
-
 
     <style name="EsMaterial.Button.Base" parent="EsMaterial.Base">
         <item name="android:height">@dimen/EsMaterial.Button.MinHeight</item>
