@@ -36,7 +36,7 @@
         <inset
             android:insetLeft="1.5dp"
             android:insetTop="0.75dp"
-            android:insetRight="0.5dp"
+            android:insetRight="1.5dp"
             android:insetBottom="3dp">
             <shape android:shape="rectangle">
                 <corners android:radius="@dimen/EsMaterial.Dialog.ShadowRadius" />

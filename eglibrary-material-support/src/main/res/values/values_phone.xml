@@ -8,7 +8,7 @@
     <dimen name="EsMaterial.Margin.KeyLine1Horizontal">16dp</dimen>
     <dimen name="EsMaterial.Margin.KeyLine1Vertical">8dp</dimen>
     <!-- コンテンツ左右からメインコンテンツまでのマージン -->
-    <dimen name="EsMaterial.Margin.KeyLine2">72dp</dimen>
+    <dimen name="EsMaterial.Margin.KeyLine2Horizontal">80dp</dimen>
 
     <!-- NavigationDrawer -->
     <dimen name="EsMaterial.NaviDrawer.Width">240dp</dimen>

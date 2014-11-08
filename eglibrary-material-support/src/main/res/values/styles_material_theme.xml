@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="esmNavigationDrawerBackgroundColor" format="color" />
+    <attr name="esmNavigationDrawerTextColor" format="color" />
+    <attr name="esmSeparatorBarColor" format="color" />
+
+    <!-- Base -->
+    <style name="EsMaterial.Theme.Base" parent="EsMaterial.Base">
+        <!-- EsMaterial attributes -->
+        <item name="android:windowBackground">@color/EsMaterial.Grey.50</item>
+        <item name="esmNavigationDrawerBackgroundColor">@color/EsMaterial.Grey.50</item>
+        <item name="esmNavigationDrawerTextColor">@color/EsMaterial.Grey.700</item>
+        <item name="esmSeparatorBarColor">@color/EsMaterial.Grey.300</item>
+    </style>
+
+    <style name="EsMaterial.Theme.Red" parent="EsMaterial.Theme.Base">
+        <item name="drawerArrowStyle">@style/EsMaterial.Red.DrawerArrow</item>
+        <item name="colorPrimary">@color/EsMaterial.Red.500</item>
+        <item name="colorPrimaryDark">@color/EsMaterial.Red.600</item>
+    </style>
+
+    <style name="EsMaterial.Theme.Red.NoActionBar" parent="EsMaterial.Theme.Red">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+</resources>

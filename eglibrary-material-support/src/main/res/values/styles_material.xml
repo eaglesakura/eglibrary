@@ -1,13 +1,18 @@
 <resources>
 
-    <attr name="esmNavigationDrawerBackgroundColor" format="color" />
-
     <dimen name="EsMaterial.Font.SmallSmall">12sp</dimen>
     <dimen name="EsMaterial.Font.Small">14sp</dimen>
     <dimen name="EsMaterial.Font.Medium">16sp</dimen>
     <dimen name="EsMaterial.Font.Large">20sp</dimen>
     <dimen name="EsMaterial.Font.Title">28sp</dimen>
     <dimen name="EsMaterial.Font.LargeLarge">34sp</dimen>
+
+    <dimen name="EsMaterial.Separator.Height">8dp</dimen>
+    <dimen name="EsMaterial.Separator.Bar.Height">1dp</dimen>
+    <dimen name="EsMaterial.Navigation.Icon.Size">32dp</dimen>
+    <dimen name="EsMaterial.Navigation.MinHeight">48dp</dimen>
+
+    <dimen name="EsMaterial.Header.Icon.Size">24dp</dimen>
 
     <color name="EsMaterial.Button.Shadow">#7F000000</color>
     <dimen name="EsMaterial.Button.ShadowRadius">2dp</dimen>
@@ -31,14 +36,11 @@
 
     <style name="EsMaterial.Base" parent="Theme.AppCompat.Light">
         <item name="colorAccent">@color/accent_material_light</item>
-        <item name="android:textColor">@color/EsMaterial.Grey.700</item>
+        <item name="android:textColor">@color/EsMaterial.Grey.800</item>
         <item name="android:textSize">@dimen/EsMaterial.Font.Medium</item>
 
         <!-- CheckBox/RadioButton color -->
         <item name="android:textColorPrimaryDisableOnly">@color/EsMaterial.Grey.750</item>
-
-        <!-- EsMaterial attributes -->
-        <item name="esmNavigationDrawerBackgroundColor">@color/EsMaterial.Grey.400</item>
 
         <!--test -->
         <!--<item name="android:textColorPrimary">#FF0000</item>-->
@@ -61,10 +63,14 @@
         <item name="android:textSize">@dimen/EsMaterial.Font.Medium</item>
     </style>
 
+    <style name="EsMaterial.Font.Title.Card" parent="EsMaterial.Base">
+        <item name="android:textColor">@color/EsMaterial.Grey.900</item>
+        <item name="android:textSize">@dimen/EsMaterial.Font.Large</item>
+    </style>
+
     <style name="EsMaterial.Font.Title" parent="EsMaterial.Base">
         <item name="android:textColor">@color/EsMaterial.Grey.900</item>
         <item name="android:textSize">@dimen/EsMaterial.Font.Title</item>
     </style>
-
 
 </resources>
