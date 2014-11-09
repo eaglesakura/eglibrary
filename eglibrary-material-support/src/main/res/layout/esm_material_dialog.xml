@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content">
 
                 <Button
-                    style="@style/EsMaterial.FocusFlatButton.Blue"
+                    style="@style/EsMaterial.FlatButton.Blue"
                     android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
                     android:id="@+id/EsMaterial.Dialog.BasicButtons.Negative" />
 
                 <Button
-                    style="@style/EsMaterial.FocusFlatButton.Blue"
+                    style="@style/EsMaterial.FlatButton.Blue"
                     android:visibility="gone"
 
                     android:layout_width="wrap_content"

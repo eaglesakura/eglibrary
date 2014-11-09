@@ -27,6 +27,7 @@
     <dimen name="EsMaterial.Dialog.Content.MinHeight">96dp</dimen>
     <color name="EsMaterial.Dialog.Shadow">#0F000000</color>
     <dimen name="EsMaterial.Dialog.ShadowRadius">7dp</dimen>
+    <dimen name="EsMaterial.Dialog.License.Height">320dp</dimen>
 
     <color name="EsMaterial.Background.Base">@color/EsMaterial.Grey.50</color>
     <color name="EsMaterial.Background.BaseDropShadow">#05000000</color>

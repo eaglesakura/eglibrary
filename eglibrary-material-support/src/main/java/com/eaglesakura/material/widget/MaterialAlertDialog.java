@@ -22,6 +22,14 @@ public class MaterialAlertDialog extends MaterialDialogBase {
                 .id(R.id.EsMaterial_Dialog_Message).text(message).visible();
     }
 
+    public void setMessage(int stringRes) {
+        setMessage(getContext().getString(stringRes));
+    }
+
+    public void setPositiveButton(int stringRes, OnClickListener listener) {
+        setPositiveButton(getContext().getString(stringRes), listener);
+    }
+
     public void setPositiveButton(CharSequence button, final OnClickListener positiveListener) {
 
         new AQuery(root)

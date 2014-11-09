@@ -4,9 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Path;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -267,6 +270,9 @@ public class RippleEffectLayout extends FrameLayout {
      */
     public static Bundle saveFromView(View fromView, Bundle bundle) {
         return saveFromArea(new RectF(fromView.getLeft(), fromView.getTop(), fromView.getRight(), fromView.getBottom()), bundle);
+//        Rect area = new Rect();
+//        fromView.getGlobalVisibleRect(area);
+//        return saveFromArea(new RectF(area), bundle);
     }
 
     /**
@@ -284,5 +290,31 @@ public class RippleEffectLayout extends FrameLayout {
         bundle.putParcelable(BUNDLE_KEY_FROM_AREA, area);
 
         return bundle;
+    }
+
+    /**
+     * アニメーションを指定する
+     *
+     * @param transaction
+     */
+    public static void setRippleTransaction(FragmentTransaction transaction) {
+        transaction.setCustomAnimations(
+                R.anim.fragment_ripple_upper_enter,
+                R.anim.fragment_layer_dummy,
+                R.anim.fragment_layer_dummy,
+                R.anim.fragment_ripple_upper_exit
+        );
+    }
+
+    /**
+     * Rippleエフェクトを開始する
+     *
+     * @param transaction
+     * @param fromView
+     * @param targetFragment
+     */
+    public static void startRippleTransaction(FragmentTransaction transaction, View fromView, Fragment targetFragment) {
+        setRippleTransaction(transaction);
+        targetFragment.setArguments(saveFromView(fromView, targetFragment.getArguments()));
     }
 }
