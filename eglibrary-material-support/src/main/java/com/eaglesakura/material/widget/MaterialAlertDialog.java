@@ -47,6 +47,10 @@ public class MaterialAlertDialog extends MaterialDialogBase {
         ;
     }
 
+    public void setNegativeButton(int stirngRes, OnClickListener listener) {
+        setNegativeButton(getContext().getString(stirngRes), null);
+    }
+
     public void setNegativeButton(CharSequence button, final OnClickListener negativeListener) {
         new AQuery(root)
                 .id(R.id.EsMaterial_Dialog_BasicButtons_Negative).text(button).visible()

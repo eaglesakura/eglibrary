@@ -393,6 +393,9 @@ public class BasePropertiesDatabase {
         while (iterator.hasNext()) {
             Map.Entry<String, Property> entry = iterator.next();
             Property prop = entry.getValue();
+            if (prop.value != null && !prop.value.equals(prop.defaultValue)) {
+                prop.modified = true;
+            }
             prop.value = prop.defaultValue;
         }
     }
