@@ -188,7 +188,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected boolean hasChildBackStack() {
-        return getChildFragmentManager().getBackStackEntryCount() > 1;
+        return getChildFragmentManager().getBackStackEntryCount() > 0;
     }
 
     /**
