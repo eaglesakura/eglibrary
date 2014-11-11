@@ -405,7 +405,7 @@ public class ContextUtil {
     }
 
     /**
-     * 文字列名から取得する
+     * string xmlリソース名から文字列リソースを取得する
      *
      * @param context
      * @param resName
