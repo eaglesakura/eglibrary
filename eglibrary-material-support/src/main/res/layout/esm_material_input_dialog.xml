@@ -1,25 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        style="@style/EsMaterial.Font.Normal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/EsMaterial.Dialog.Input.Header" />
-
-    <EditText
-        android:layout_weight="1"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="@dimen/EsMaterial.Navigation.MinHeight"
-        android:id="@+id/EsMaterial.Dialog.Input.EditText" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            style="@style/EsMaterial.Font.Normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/EsMaterial.Dialog.Input.Header" />
+
+        <EditText
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/EsMaterial.Navigation.MinHeight"
+            android:id="@+id/EsMaterial.Dialog.Input.EditText" />
+
+        <TextView
+            style="@style/EsMaterial.Font.Normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/EsMaterial.Dialog.Input.Fooder" />
+    </LinearLayout>
+
 
     <TextView
         style="@style/EsMaterial.Font.Normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/EsMaterial.Dialog.Input.Fooder" />
+        android:id="@+id/EsMaterial.Dialog.Input.ValidateHint" />
+
+
 </LinearLayout>
