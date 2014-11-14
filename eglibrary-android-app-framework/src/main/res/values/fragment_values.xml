@@ -1,4 +1,6 @@
 <resources>
     <integer name="eglibrary.Fragment.Transition.Duration">1000</integer>
     <integer name="eglibrary.Fragment.Transition.Duration.Half">500</integer>
+
+    <string name="eglibrary.GoogleApi.Connecting">Googleアカウント認証準備中</string>
 </resources>
