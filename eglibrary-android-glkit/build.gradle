@@ -8,9 +8,9 @@ buildscript {
     }
 
     dependencies {
+        classpath 'com.android.tools.build:gradle:0.14.+'
         classpath 'com.eaglesakura:joint-connector-plugin:0.1.13'
-        classpath 'com.android.tools.build:gradle:0.12.+'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.3'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
     }
 }
 
@@ -20,10 +20,10 @@ apply plugin: 'android-apt'
 def APPLICATION_ID = "com.eaglesakura.android.glkit"
 
 if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
-    EGLIBRARY_MAVEN_LOCAL_PATH = ""
+    ext.EGLIBRARY_MAVEN_LOCAL_PATH = ""
 }
 if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
-    EGLIBRARY_ARTIFACT_VERSION = ""
+    ext.EGLIBRARY_ARTIFACT_VERSION = ""
 }
 
 configurations {

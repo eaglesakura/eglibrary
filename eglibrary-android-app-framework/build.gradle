@@ -4,8 +4,8 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.+'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.3'
+        classpath 'com.android.tools.build:gradle:0.14.+'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
     }
 }
 
@@ -18,10 +18,10 @@ def DATABASE_PACKAGE_NAME = "${APPLICATION_ID}.db"
 def DATABSE_FILE_NAME = "appfw.db";
 
 if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
-    EGLIBRARY_MAVEN_LOCAL_PATH = ""
+    ext.EGLIBRARY_MAVEN_LOCAL_PATH = ""
 }
 if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
-    EGLIBRARY_ARTIFACT_VERSION = ""
+    ext.EGLIBRARY_ARTIFACT_VERSION = ""
 }
 
 configurations {

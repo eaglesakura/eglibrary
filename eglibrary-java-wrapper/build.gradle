@@ -20,10 +20,10 @@ dependencies {
 apply plugin: 'maven'
 
 if(!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")){
-    EGLIBRARY_MAVEN_LOCAL_PATH = ""
+    ext.EGLIBRARY_MAVEN_LOCAL_PATH = ""
 }
 if(!hasProperty("EGLIBRARY_ARTIFACT_VERSION")){
-    EGLIBRARY_ARTIFACT_VERSION = ""
+    ext.EGLIBRARY_ARTIFACT_VERSION = ""
 }
 
 uploadArchives {
