@@ -9,8 +9,6 @@ import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.android.framework.R;
 import com.eaglesakura.android.framework.db.BasicSettings;
 import com.eaglesakura.android.framework.support.ui.BaseActivity;
-import com.eaglesakura.time.Timer;
-import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;

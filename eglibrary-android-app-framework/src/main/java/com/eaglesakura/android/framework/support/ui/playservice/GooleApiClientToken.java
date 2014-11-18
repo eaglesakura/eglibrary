@@ -1,7 +1,5 @@
 package com.eaglesakura.android.framework.support.ui.playservice;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.eaglesakura.android.thread.UIHandler;
