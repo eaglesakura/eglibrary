@@ -35,7 +35,17 @@
     <color name="EsMaterial.Transparent.Pressed">#0F000000</color>
     <color name="EsMaterial.Transparent.Ripple">#7F000000</color>
 
+    <style name="EsMaterial.Animation.Activity" parent="android:Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/fragment_fromlower_upper_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/fragment_layer_dummy</item>
+        <item name="android:activityCloseEnterAnimation">@anim/fragment_layer_dummy</item>
+        <item name="android:activityCloseExitAnimation">@anim/fragment_fromlower_upper_exit</item>
+    </style>
+
     <style name="EsMaterial.Base" parent="Theme.AppCompat.Light">
+        <!-- 上から下に登場するAnimation -->
+        <item name="android:windowAnimationStyle">@style/EsMaterial.Animation.Activity</item>
+
         <item name="colorAccent">@color/accent_material_light</item>
         <item name="android:textColor">@color/EsMaterial.Grey.800</item>
         <item name="android:textSize">@dimen/EsMaterial.Font.Medium</item>

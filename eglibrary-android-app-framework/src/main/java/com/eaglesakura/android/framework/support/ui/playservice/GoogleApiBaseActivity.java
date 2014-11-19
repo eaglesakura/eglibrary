@@ -192,6 +192,10 @@ public abstract class GoogleApiBaseActivity extends BaseActivity {
         if (resultCode == Activity.RESULT_OK) {
             // 再度ログイン処理
             loginOnBackground();
+        } else {
+            // キャンセルされた場合はログイン状態も解除しなければならない
+            FrameworkCentral.getSettings().setLoginGoogleClientApi(false);
+            FrameworkCentral.getSettings().commitAsync();
         }
         apiClientAuthInProgress = false;
     }

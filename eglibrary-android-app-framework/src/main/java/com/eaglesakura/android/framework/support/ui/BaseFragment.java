@@ -191,6 +191,10 @@ public abstract class BaseFragment extends Fragment {
         return getChildFragmentManager().getBackStackEntryCount() > 0;
     }
 
+    final public String createSimpleTag() {
+        return ((Object) this).getClass().getSimpleName();
+    }
+
     /**
      * 戻るボタンのハンドリングを行う
      *
