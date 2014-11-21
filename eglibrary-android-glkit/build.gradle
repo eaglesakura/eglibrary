@@ -38,13 +38,6 @@ android {
             jniLibs.srcDirs = ['../ndk/eglibrary-android-glkit/libs']
         }
     }
-
-    buildTypes {
-        release {
-            runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
 }
 
 // export cpp
