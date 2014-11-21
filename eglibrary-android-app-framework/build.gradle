@@ -1,15 +1,3 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.14.4'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
-    }
-}
-
-
 apply plugin: 'com.android.library'
 apply plugin: 'android-apt'
 
@@ -26,14 +14,6 @@ if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
 
 configurations {
     apt
-}
-
-repositories {
-    jcenter()
-    mavenCentral()
-    maven {
-        url "http://eaglesakura.github.io/maven/"
-    }
 }
 
 dependencies {
