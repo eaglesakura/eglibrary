@@ -79,6 +79,10 @@ public class GooleApiClientToken {
         client.registerConnectionCallbacks(callbacks);
     }
 
+    public void unregisterConnectionCallbacks(GoogleApiClient.ConnectionCallbacks callbacks) {
+        client.unregisterConnectionCallbacks(callbacks);
+    }
+
     /**
      * ログインが完了していたらtrueを返却する
      *
