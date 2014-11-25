@@ -9,16 +9,15 @@ import com.eaglesakura.util.Util;
  * 並列的に複数のタスクの実行を行う。<BR>
  * タスク数に制限はないが、限界は考えて使ったほうがいい。<BR>
  * タスクが開始される順番は確定されるが、終了する順番は保証されない。
- * 
+ *
  * @author TAKESHI YAMASHITA
- * 
  */
 public class MultiRunningTasks {
     public interface Task {
         /**
          * 開始時に呼ばれる。<BR>
          * この処理は同時に複数呼ばれることはない。
-         * 
+         *
          * @param runnner
          * @return falseを返した場合、タスクの実行を行わない。
          */
@@ -26,7 +25,7 @@ public class MultiRunningTasks {
 
         /**
          * 実際の処理を行わせる。
-         * 
+         *
          * @param runner
          */
         public void run(MultiRunningTasks runner);
@@ -34,7 +33,7 @@ public class MultiRunningTasks {
         /**
          * 終了時に呼ばれる。<BR>
          * この処理は同時に複数呼ばれることはない。
-         * 
+         *
          * @param runner
          */
         public void finish(MultiRunningTasks runner);
@@ -53,18 +52,42 @@ public class MultiRunningTasks {
 
     /**
      * タスクを後ろに追加する。
-     * 
+     *
      * @param task
      */
-    public synchronized void pushBack(Task task) {
+    public synchronized MultiRunningTasks pushBack(Task task) {
         synchronized (this) {
             tasks.add(task);
         }
+        return this;
+    }
+
+    /**
+     * タスクを後ろに追加する
+     *
+     * @param runnable
+     */
+    public MultiRunningTasks pushBack(final Runnable runnable) {
+        return pushBack(new Task() {
+            @Override
+            public boolean begin(MultiRunningTasks runnner) {
+                return true;
+            }
+
+            @Override
+            public void run(MultiRunningTasks runner) {
+                runnable.run();
+            }
+
+            @Override
+            public void finish(MultiRunningTasks runner) {
+            }
+        });
     }
 
     /**
      * タスクを前に追加する。
-     * 
+     *
      * @param task
      */
     public synchronized void pushFront(Task task) {
@@ -87,6 +110,7 @@ public class MultiRunningTasks {
 
     /**
      * スレッドを常にプールする場合はtrue、不要なスレッドを廃棄する場合はfalse
+     *
      * @param pool
      */
     public void setThreadPoolMode(boolean pool) {
@@ -131,7 +155,9 @@ public class MultiRunningTasks {
                     @Override
                     public void run() {
                         runTask(this);
-                    };
+                    }
+
+                    ;
                 });
                 threads.add(thread);
                 thread.setName(MultiRunningTasks.class.getName() + " :: ID " + threadId++);
@@ -142,7 +168,7 @@ public class MultiRunningTasks {
 
     /**
      * 次処理すべきタスクを取得する。
-     * 
+     *
      * @return
      */
     private synchronized Task nextTask() {
@@ -165,7 +191,7 @@ public class MultiRunningTasks {
 
     /**
      * タスクを終了させる。
-     * 
+     *
      * @param task
      */
     synchronized void finish(Task task) {
@@ -174,7 +200,7 @@ public class MultiRunningTasks {
 
     /**
      * 残タスク数を取得する。
-     * 
+     *
      * @return
      */
     public int getTaskCount() {
