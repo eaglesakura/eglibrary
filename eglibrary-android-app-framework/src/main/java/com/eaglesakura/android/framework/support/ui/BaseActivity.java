@@ -1,16 +1,12 @@
 package com.eaglesakura.android.framework.support.ui;
 
-import android.app.ProgressDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.widget.Toast;
 
 import com.eaglesakura.android.util.ContextUtil;
-import com.eaglesakura.util.LogUtil;
-import com.eaglesakura.util.StringUtil;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -18,13 +14,14 @@ import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.UiThread;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  *
  */
 @EActivity
 public abstract class BaseActivity extends ActionBarActivity implements FragmentChooser.Callback {
+
+    protected ActivityNotificationInterface activityInterface = new ActivityNotificationInterface(this);
 
     protected BaseActivity() {
         fragments.setCallback(this);
@@ -49,12 +46,7 @@ public abstract class BaseActivity extends ActionBarActivity implements Fragment
 
     @UiThread
     protected void toast(String msg) {
-        if (StringUtil.isEmpty(msg)) {
-            LogUtil.log("message is empty");
-            return;
-        }
-
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        activityInterface.toast(msg);
     }
 
     /**
@@ -66,9 +58,6 @@ public abstract class BaseActivity extends ActionBarActivity implements Fragment
         toast(getString(resId));
     }
 
-    private int progressNum = 0;
-    private ProgressDialog progressDialog = null;
-
     /**
      * show progress dialog
      *
@@ -79,21 +68,22 @@ public abstract class BaseActivity extends ActionBarActivity implements Fragment
     }
 
     /**
+     * 何らかの処理中であればtrue
+     *
+     * @return
+     */
+    public boolean isProgressing() {
+        return activityInterface.isProgressing();
+    }
+
+    /**
      * 処理を開始する
      *
      * @param message
      */
     @UiThread
     public void pushProgress(String message) {
-        if (progressNum == 0) {
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage(message);
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        } else {
-            progressDialog.setMessage(message);
-        }
-        ++progressNum;
+        activityInterface.pushProgress(message);
     }
 
     /**
@@ -101,16 +91,7 @@ public abstract class BaseActivity extends ActionBarActivity implements Fragment
      */
     @UiThread
     public void popProgress() {
-        --progressNum;
-
-        if (progressNum <= 0) {
-            if (progressDialog != null) {
-                progressDialog.dismiss();
-                progressDialog = null;
-            }
-
-            progressNum = 0;
-        }
+        activityInterface.popProgress();
     }
 
     @InstanceState
