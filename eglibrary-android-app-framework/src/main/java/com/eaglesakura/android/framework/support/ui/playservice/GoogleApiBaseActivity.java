@@ -13,6 +13,7 @@ import com.eaglesakura.util.Util;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.plus.Plus;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
@@ -121,6 +122,13 @@ public abstract class GoogleApiBaseActivity extends BaseActivity {
             if (result.isSuccess()) {
                 log("auth is success!");
                 basicSettings.setLoginGoogleClientApi(true);
+                // Emailを保存する
+                try {
+                    basicSettings.setLoginGoogleAccount(Plus.AccountApi.getAccountName(client));
+                    log("email connected success");
+                } catch (Exception e) {
+                    log("email connected fail");
+                }
                 basicSettings.commitAsync();
                 return;
             }
@@ -194,8 +202,10 @@ public abstract class GoogleApiBaseActivity extends BaseActivity {
             loginOnBackground();
         } else {
             // キャンセルされた場合はログイン状態も解除しなければならない
-            FrameworkCentral.getSettings().setLoginGoogleClientApi(false);
-            FrameworkCentral.getSettings().commitAsync();
+            BasicSettings settings = FrameworkCentral.getSettings();
+            settings.setLoginGoogleClientApi(false);
+            settings.setLoginGoogleAccount("");
+            settings.commitAsync();
         }
         apiClientAuthInProgress = false;
     }

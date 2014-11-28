@@ -11,6 +11,7 @@ public class BasicSettings extends com.eaglesakura.android.db.BasePropertiesData
         addProperty("BasicSettings.lastBootedAppVersionCode", "0");
         addProperty("BasicSettings.lastBootedAppVersionName", "");
         addProperty("BasicSettings.loginGoogleClientApi", "false");
+        addProperty("BasicSettings.loginGoogleAccount", "");
         
         load();
         
@@ -23,5 +24,7 @@ public class BasicSettings extends com.eaglesakura.android.db.BasePropertiesData
     public String getLastBootedAppVersionName(){ return getStringProperty("BasicSettings.lastBootedAppVersionName"); }
     public void setLoginGoogleClientApi(boolean set){ setProperty("BasicSettings.loginGoogleClientApi", set); }
     public boolean getLoginGoogleClientApi(){ return getBooleanProperty("BasicSettings.loginGoogleClientApi"); }
+    public void setLoginGoogleAccount(String set){ setProperty("BasicSettings.loginGoogleAccount", set); }
+    public String getLoginGoogleAccount(){ return getStringProperty("BasicSettings.loginGoogleAccount"); }
     
 }

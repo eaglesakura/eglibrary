@@ -21,7 +21,7 @@ import java.util.List;
 @EActivity
 public abstract class BaseActivity extends ActionBarActivity implements FragmentChooser.Callback {
 
-    protected ActivityNotificationInterface activityInterface = new ActivityNotificationInterface(this);
+    protected UserNotificationController userNotificationController = new UserNotificationController(this);
 
     protected BaseActivity() {
         fragments.setCallback(this);
@@ -44,9 +44,13 @@ public abstract class BaseActivity extends ActionBarActivity implements Fragment
         Log.d(((Object) this).getClass().getSimpleName(), String.format(fmt, args));
     }
 
+    public UserNotificationController getUserNotificationController() {
+        return userNotificationController;
+    }
+
     @UiThread
     protected void toast(String msg) {
-        activityInterface.toast(msg);
+        userNotificationController.toast(this, msg);
     }
 
     /**
@@ -73,7 +77,7 @@ public abstract class BaseActivity extends ActionBarActivity implements Fragment
      * @return
      */
     public boolean isProgressing() {
-        return activityInterface.isProgressing();
+        return userNotificationController.isProgressing();
     }
 
     /**
@@ -83,7 +87,7 @@ public abstract class BaseActivity extends ActionBarActivity implements Fragment
      */
     @UiThread
     public void pushProgress(String message) {
-        activityInterface.pushProgress(message);
+        userNotificationController.pushProgress(this, message);
     }
 
     /**
@@ -91,7 +95,7 @@ public abstract class BaseActivity extends ActionBarActivity implements Fragment
      */
     @UiThread
     public void popProgress() {
-        activityInterface.popProgress();
+        userNotificationController.popProgress(this);
     }
 
     @InstanceState

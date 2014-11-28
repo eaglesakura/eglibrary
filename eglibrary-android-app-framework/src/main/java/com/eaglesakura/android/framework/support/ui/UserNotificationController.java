@@ -10,13 +10,13 @@ import com.eaglesakura.util.StringUtil;
 /**
  * Activityが表示されている間に使用される共通UIを定義する
  */
-public class ActivityNotificationInterface {
+public class UserNotificationController {
     protected int progressNum = 0;
     private ProgressDialog progressDialog = null;
 
     protected Activity activity;
 
-    public ActivityNotificationInterface(Activity activity) {
+    public UserNotificationController(Activity activity) {
         this.activity = activity;
     }
 
@@ -34,7 +34,7 @@ public class ActivityNotificationInterface {
      *
      * @param message
      */
-    protected void showProgressInterface(String message) {
+    protected void showProgressInterface(Object sender, String message) {
         progressDialog = new ProgressDialog(activity);
         progressDialog.setMessage(message);
         progressDialog.setCancelable(false);
@@ -46,14 +46,14 @@ public class ActivityNotificationInterface {
      *
      * @param message
      */
-    protected void updateProgressInterface(String message) {
+    protected void updateProgressInterface(Object sender, String message) {
         progressDialog.setMessage(message);
     }
 
     /**
      * 処理中のUIを非表示にする
      */
-    protected void dismissProgressInterface() {
+    protected void dismissProgressInterface(Object sender) {
         if (progressDialog != null) {
             progressDialog.dismiss();
             progressDialog = null;
@@ -65,7 +65,7 @@ public class ActivityNotificationInterface {
      *
      * @param message
      */
-    public void toast(String message) {
+    public void toast(Object sender, String message) {
         if (StringUtil.isEmpty(message)) {
             LogUtil.log("message is empty");
             return;
@@ -79,11 +79,11 @@ public class ActivityNotificationInterface {
      *
      * @param message
      */
-    public void pushProgress(String message) {
+    public void pushProgress(Object sender, String message) {
         if (progressNum == 0) {
-            showProgressInterface(message);
+            showProgressInterface(sender, message);
         } else {
-            updateProgressInterface(message);
+            updateProgressInterface(sender, message);
         }
         ++progressNum;
     }
@@ -91,11 +91,11 @@ public class ActivityNotificationInterface {
     /**
      * 処理を終了する
      */
-    public void popProgress() {
+    public void popProgress(Object sender) {
         --progressNum;
 
         if (progressNum <= 0) {
-            dismissProgressInterface();
+            dismissProgressInterface(sender);
             progressNum = 0;
         }
     }

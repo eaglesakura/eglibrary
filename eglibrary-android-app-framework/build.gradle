@@ -85,4 +85,5 @@ task generateProp(type: com.eaglesakura.gradle.tasks.AndroidPropGenTask) {
 
     // Google Login
     booleanProperty "loginGoogleClientApi", false
+    stringProperty "loginGoogleAccount", ""
 }

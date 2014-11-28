@@ -32,15 +32,6 @@ public abstract class BaseFragment extends Fragment {
     protected boolean initializedViews = false;
 
     /**
-     * 一意に識別可能なタグを生成する
-     *
-     * @return
-     */
-    public String genTag() {
-        return ((Object) this).getClass().getName() + "/" + hashCode();
-    }
-
-    /**
      * 初回のみ呼び出される
      */
     protected void onInitializeViews() {
@@ -66,11 +57,11 @@ public abstract class BaseFragment extends Fragment {
 
     @UiThread
     protected void toast(String msg) {
-        if (StringUtil.isEmpty(msg)) {
-            LogUtil.log("message is empty");
-            return;
+        try {
+            ((BaseActivity) getActivity()).getUserNotificationController().toast(this, msg);
+        } catch (Exception e) {
         }
-        Toast.makeText(FrameworkCentral.getApplication(), msg, Toast.LENGTH_SHORT).show();
+
     }
 
     /**
@@ -98,9 +89,8 @@ public abstract class BaseFragment extends Fragment {
      */
     protected void pushProgress(String message) {
         try {
-            ((BaseActivity) getActivity()).pushProgress(message);
+            ((BaseActivity) getActivity()).getUserNotificationController().pushProgress(this, message);
         } catch (Exception e) {
-
         }
     }
 
@@ -109,7 +99,7 @@ public abstract class BaseFragment extends Fragment {
      */
     protected void popProgress() {
         try {
-            ((BaseActivity) getActivity()).popProgress();
+            ((BaseActivity) getActivity()).getUserNotificationController().popProgress(this);
         } catch (Exception e) {
 
         }
