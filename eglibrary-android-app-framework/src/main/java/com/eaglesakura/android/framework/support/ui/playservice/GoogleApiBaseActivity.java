@@ -109,7 +109,7 @@ public abstract class GoogleApiBaseActivity extends BaseActivity {
             pushProgress(R.string.eglibrary_GoogleApi_Connecting);
 
             // 初期ログインを待つ
-            apiClientToken.waitInitialGoogleLoginFinish(1000 * 60);
+            apiClientToken.waitInitialGoogleLoginFinish(1000 * 10);
 
             if (apiClientToken.isLoginCompleted()) {
                 log("login completed");
