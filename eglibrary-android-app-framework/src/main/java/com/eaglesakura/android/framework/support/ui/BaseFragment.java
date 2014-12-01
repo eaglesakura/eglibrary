@@ -87,6 +87,7 @@ public abstract class BaseFragment extends Fragment {
      *
      * @param message
      */
+    @UiThread
     protected void pushProgress(String message) {
         try {
             ((BaseActivity) getActivity()).getUserNotificationController().pushProgress(this, message);
@@ -97,6 +98,7 @@ public abstract class BaseFragment extends Fragment {
     /**
      * progress dialogを一段階引き下げる
      */
+    @UiThread
     protected void popProgress() {
         try {
             ((BaseActivity) getActivity()).getUserNotificationController().popProgress(this);
