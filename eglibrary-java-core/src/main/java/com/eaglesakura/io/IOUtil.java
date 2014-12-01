@@ -1,5 +1,10 @@
 package com.eaglesakura.io;
 
+import com.eaglesakura.util.EncodeUtil;
+import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.StringUtil;
+import com.eaglesakura.util.Util;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -18,11 +23,6 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import com.eaglesakura.util.EncodeUtil;
-import com.eaglesakura.util.LogUtil;
-import com.eaglesakura.util.StringUtil;
-import com.eaglesakura.util.Util;
 
 /**
  * File関連の便利メソッドを提供する
@@ -579,16 +579,15 @@ public class IOUtil {
     }
 
     /**
-     * ZIPの解凍を行う
+     * InputStream経由でUnzipを行う
      *
-     * @param zipFile
+     * @param stream
      * @param outDirectory
      * @throws IOException
      */
-    public static void unzip(File zipFile, File outDirectory) throws IOException {
-        ZipInputStream is = new ZipInputStream(new FileInputStream(zipFile));
-
-        ZipEntry entry = null;
+    public static void unzip(InputStream stream, File outDirectory) throws IOException {
+        ZipInputStream is = new ZipInputStream(stream);
+        ZipEntry entry;
         while ((entry = is.getNextEntry()) != null) {
             File outFile = outDirectory;
             List<String> path = Util.convert(entry.getName().split("/"));
@@ -612,7 +611,24 @@ public class IOUtil {
                 os.close();
             }
         }
+    }
 
-        is.close();
+    /**
+     * ZIPの解凍を行う
+     *
+     * @param zipFile
+     * @param outDirectory
+     * @throws IOException
+     */
+    public static void unzip(File zipFile, File outDirectory) throws IOException {
+        InputStream is = new FileInputStream(zipFile);
+        try {
+            unzip(is, outDirectory);
+        } finally {
+            try {
+                is.close();
+            } catch (Exception e) {
+            }
+        }
     }
 }
