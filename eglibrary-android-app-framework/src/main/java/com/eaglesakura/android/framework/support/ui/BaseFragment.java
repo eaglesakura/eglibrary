@@ -1,6 +1,7 @@
 package com.eaglesakura.android.framework.support.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -16,8 +17,14 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.UiThread;
 
+import java.util.List;
+
 /**
- *
+ * startActivityForResultを行う場合、ParentFragmentが存在していたらそちらのstartActivityForResultを呼び出す。
+ * <p/>
+ * これはchildFragmentの場合にonActivityResultが呼ばれない不具合を可能な限り回避するため。
+ * <p/>
+ * ただし、複数のonActivityResultがハンドリングされる恐れが有るため、RequestCodeの重複には十分に注意すること
  */
 @EFragment
 public abstract class BaseFragment extends Fragment {
@@ -199,6 +206,29 @@ public abstract class BaseFragment extends Fragment {
             return true;
         } else {
             return false;
+        }
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        if (getParentFragment() != null) {
+            getParentFragment().startActivityForResult(intent, requestCode);
+        } else {
+            super.startActivityForResult(intent, requestCode);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        List<Fragment> fragments = getChildFragmentManager().getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                if (fragment != null) {
+                    fragment.onActivityResult(requestCode, resultCode, data);
+                }
+            }
         }
     }
 }
