@@ -49,8 +49,8 @@ public abstract class BaseActivity extends ActionBarActivity implements Fragment
     }
 
     @UiThread
-    protected void toast(String msg) {
-        userNotificationController.toast(this, msg);
+    protected void toast(String fmt, Object... args) {
+        userNotificationController.toast(this, String.format(fmt, args));
     }
 
     /**
