@@ -8,7 +8,6 @@ if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
     compile project(':eglibrary-java-core')
 }
 
