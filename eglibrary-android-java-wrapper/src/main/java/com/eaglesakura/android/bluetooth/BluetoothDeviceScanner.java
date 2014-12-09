@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothAdapter.LeScanCallback;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.le.BluetoothLeScanner;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -395,6 +396,10 @@ public class BluetoothDeviceScanner {
             this.scanRecord = scanRecord;
             this.address = device.getAddress();
             this.updatedDate = new Date();
+        }
+
+        public String getAddress() {
+            return address;
         }
 
         /**
