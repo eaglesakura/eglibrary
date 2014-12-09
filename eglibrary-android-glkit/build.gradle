@@ -25,7 +25,6 @@ android {
     buildToolsVersion '21.1'
 
     defaultConfig {
-        applicationId APPLICATION_ID
         minSdkVersion 15
         targetSdkVersion 21
         versionCode 1
