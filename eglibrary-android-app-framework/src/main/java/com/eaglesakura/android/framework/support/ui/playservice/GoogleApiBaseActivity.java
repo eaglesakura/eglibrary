@@ -9,6 +9,9 @@ import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.android.framework.R;
 import com.eaglesakura.android.framework.db.BasicSettings;
 import com.eaglesakura.android.framework.support.ui.BaseActivity;
+import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.util.AndroidUtil;
+import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -19,6 +22,8 @@ import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.UiThread;
+
+import java.util.concurrent.locks.Lock;
 
 /**
  * API Base
@@ -41,10 +46,10 @@ public abstract class GoogleApiBaseActivity extends BaseActivity {
         outState.putBoolean("apiClientAuthInProgress", apiClientAuthInProgress);
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (savedInstanceState != null) {
             apiClientAuthInProgress = savedInstanceState.getBoolean("apiClientAuthInProgress");
         }
@@ -64,15 +69,10 @@ public abstract class GoogleApiBaseActivity extends BaseActivity {
             apiClientToken = new GooleApiClientToken(builder);
         }
 
-        apiClientToken.lock();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
+        GoogleApiClient client = apiClientToken.lock();
         // 既にログインが完了しているフラグが立っていたらバックグラウンドでログインを行う
         if (FrameworkCentral.getSettings().getLoginGoogleClientApi()) {
-            loginOnBackground();
+            client.connect();
         }
     }
 
@@ -105,18 +105,18 @@ public abstract class GoogleApiBaseActivity extends BaseActivity {
             return;
         }
 
+        // 初期ログインを待つ
+        apiClientToken.waitInitialGoogleLoginFinish(1000 * 10);
+
+        if (apiClientToken.isLoginCompleted()) {
+            log("login completed");
+            return;
+        }
+
+        // ブロッキングでログインを行う
         try {
             pushProgress(R.string.eglibrary_GoogleApi_Connecting);
 
-            // 初期ログインを待つ
-            apiClientToken.waitInitialGoogleLoginFinish(1000 * 10);
-
-            if (apiClientToken.isLoginCompleted()) {
-                log("login completed");
-                return;
-            }
-
-            // ブロッキングでログインを行う
             GoogleApiClient client = apiClientToken.lock();
             ConnectionResult result = client.blockingConnect();
             if (result.isSuccess()) {
@@ -135,20 +135,59 @@ public abstract class GoogleApiBaseActivity extends BaseActivity {
 
             if (result.hasResolution()) {
                 log("start auth dialog");
-
-                apiClientAuthInProgress = true;
                 showLoginDialog(result);
+                apiClientAuthInProgress = true;
 
-                // ログイン処理が完了するのを待つ
-                while (apiClientAuthInProgress) {
-                    Util.sleep(100);
-                }
             } else {
                 showErrorDialog(result);
             }
-            apiClientToken.unlock();
         } finally {
+            apiClientToken.unlock();
             popProgress();
+        }
+    }
+
+    private Object apiLock = new Object();
+
+    /**
+     * Google Apiの実行を行う。
+     * <p/>
+     * 裏スレッドから呼び出さなくてはならない。
+     *
+     * @param task
+     */
+    public <T> T executeGoogleApi(GoogleApiTask<T> task) {
+        if (AndroidUtil.isUIThread()) {
+            throw new IllegalStateException();
+        }
+
+        synchronized (apiLock) {
+            if (task.isCanceled()) {
+                return null;
+            }
+
+            try {
+                GoogleApiClient client = apiClientToken.lock();
+                if (!client.isConnected()) {
+                    ConnectionResult result = client.blockingConnect();
+                    if (result.hasResolution()) {
+                        showLoginDialog(result);
+                    }
+
+                    return task.connectedFailed(apiClientToken, client);
+                }
+
+                if (task.isCanceled()) {
+                    return null;
+                }
+
+                return task.executeTask(apiClientToken, client);
+            } catch (Exception e) {
+                LogUtil.log(e);
+                return null;
+            } finally {
+                apiClientToken.unlock();
+            }
         }
     }
 
@@ -165,6 +204,7 @@ public abstract class GoogleApiBaseActivity extends BaseActivity {
         } catch (IntentSender.SendIntentException e) {
             log("Exception while starting resolution activity", e);
             apiClientAuthInProgress = false;
+
         }
     }
 
