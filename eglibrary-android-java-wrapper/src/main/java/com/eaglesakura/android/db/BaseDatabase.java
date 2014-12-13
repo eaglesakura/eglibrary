@@ -58,10 +58,10 @@ public abstract class BaseDatabase<SessionClass extends AbstractDaoSession> {
     @SuppressWarnings("unchecked")
     public void open() {
         synchronized (refsLock) {
-            SQLiteOpenHelper helper = createHelper();
-            SQLiteDatabase db = helper.getWritableDatabase();
-
             if (daoMaster == null) {
+                SQLiteOpenHelper helper = createHelper();
+                SQLiteDatabase db = helper.getWritableDatabase();
+
                 try {
                     Constructor<? extends AbstractDaoMaster> constructor = daoMasterClass.getConstructor(SQLiteDatabase.class);
                     daoMaster = constructor.newInstance(db);
@@ -71,7 +71,6 @@ public abstract class BaseDatabase<SessionClass extends AbstractDaoSession> {
                     throw new IllegalStateException();
                 }
             }
-
             ++refs;
         }
     }

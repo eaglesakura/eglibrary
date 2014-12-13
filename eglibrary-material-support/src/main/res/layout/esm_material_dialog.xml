@@ -27,7 +27,6 @@
                 style="@style/EsMaterial.Font.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Title"
                 android:id="@+id/EsMaterial.Dialog.Title" />
         </LinearLayout>
 
@@ -63,6 +62,7 @@
             android:minHeight="@dimen/EsMaterial.Dialog.Button.Height"
             android:layout_marginLeft="@dimen/EsMaterial.Margin.KeyLine1Horizontal"
             android:layout_marginRight="@dimen/EsMaterial.Margin.KeyLine1Horizontal"
+            android:layout_marginBottom="@dimen/EsMaterial.Margin.KeyLine1Vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
