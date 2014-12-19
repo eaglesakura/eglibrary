@@ -166,6 +166,10 @@ public abstract class GoogleApiBaseActivity extends BaseActivity {
                 return null;
             }
 
+            if (apiClientToken == null) {
+                return null;
+            }
+
             try {
                 GoogleApiClient client = apiClientToken.lock();
                 if (!client.isConnected()) {

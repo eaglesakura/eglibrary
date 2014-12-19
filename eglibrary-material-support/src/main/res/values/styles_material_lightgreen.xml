@@ -11,11 +11,11 @@
     <color name="EsMaterial.LightGreen.800">#558B2F</color>
     <color name="EsMaterial.LightGreen.900">#33691E</color>
 
-    <color name="EsMaterial.LightGreen.Button.Disabled">@color/EsMaterial.LightGreen.400</color>
-    <color name="EsMaterial.LightGreen.Button.Normal">@color/EsMaterial.LightGreen.500</color>
-    <color name="EsMaterial.LightGreen.Button.Focused">@color/EsMaterial.LightGreen.500</color>
-    <color name="EsMaterial.LightGreen.Button.Pressed">@color/EsMaterial.LightGreen.800</color>
-    <color name="EsMaterial.LightGreen.Button.Ripple">@color/EsMaterial.LightGreen.900</color>
+    <color name="EsMaterial.LightGreen.Button.Disabled">@color/EsMaterial.LightGreen.300</color>
+    <color name="EsMaterial.LightGreen.Button.Normal">@color/EsMaterial.LightGreen.400</color>
+    <color name="EsMaterial.LightGreen.Button.Focused">@color/EsMaterial.LightGreen.400</color>
+    <color name="EsMaterial.LightGreen.Button.Pressed">@color/EsMaterial.LightGreen.700</color>
+    <color name="EsMaterial.LightGreen.Button.Ripple">@color/EsMaterial.LightGreen.800</color>
 
     <style name="EsMaterial.LightGreen.DrawerArrow" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="color">@color/EsMaterial.LightGreen.50</item>

@@ -21,6 +21,15 @@
         <item name="colorPrimaryDark">@color/EsMaterial.Red.600</item>
     </style>
 
+    <style name="EsMaterial.Red.Toolbar.ActionButtonOverflow" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">@drawable/abc_ic_menu_moreoverflow_mtrl_white</item>
+    </style>
+
+    <style name="EsMaterial.Red.Toolbar" parent="EsMaterial.Theme.Red">
+        <item name="android:textColorPrimary">@color/EsMaterial.Grey.50</item>
+        <item name="android:actionOverflowButtonStyle">@style/EsMaterial.Red.Toolbar.ActionButtonOverflow</item>
+    </style>
+
     <style name="EsMaterial.Theme.Red.NoActionBar" parent="EsMaterial.Theme.Red">
         <item name="windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>

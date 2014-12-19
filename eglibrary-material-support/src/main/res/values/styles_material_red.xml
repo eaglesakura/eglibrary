@@ -21,9 +21,9 @@
         <item name="color">@color/EsMaterial.Red.50</item>
     </style>
 
-    <style name="EsMaterial.Red.ToolbarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textColor">@color/EsMaterial.Red.50</item>
-    </style>
+    <!--<style name="EsMaterial.Red.ToolbarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">-->
+    <!--<item name="android:textColorPrimary">@color/EsMaterial.Red.50</item>-->
+    <!--</style>-->
 
     <style name="EsMaterial.Button.Red" parent="EsMaterial.Button.Base">
         <item name="android:background">@drawable/esm_button_red</item>
