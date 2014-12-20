@@ -24,6 +24,7 @@
     <style name="EsMaterial.Red.Toolbar" parent="EsMaterial.Theme.Red">
         <item name="android:textColorPrimary">@color/EsMaterial.Grey.50</item>
         <item name="android:textColorSecondary">@color/EsMaterial.Grey.50</item>
+        <item name="colorAccent">@color/EsMaterial.LightGreen.300</item>
     </style>
 
     <style name="EsMaterial.Theme.Red.NoActionBar" parent="EsMaterial.Theme.Red">
