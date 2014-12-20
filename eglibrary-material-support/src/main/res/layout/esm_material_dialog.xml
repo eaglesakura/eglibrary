@@ -75,6 +75,8 @@
                 <Button
                     style="@style/EsMaterial.FlatButton.Blue"
                     android:visibility="gone"
+                    android:layout_marginLeft="@dimen/EsMaterial.Button.Margin"
+                    android:layout_marginRight="@dimen/EsMaterial.Button.Margin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Negative"
@@ -83,7 +85,8 @@
                 <Button
                     style="@style/EsMaterial.FlatButton.Blue"
                     android:visibility="gone"
-
+                    android:layout_marginLeft="@dimen/EsMaterial.Button.Margin"
+                    android:layout_marginRight="@dimen/EsMaterial.Button.Margin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Neutral"
