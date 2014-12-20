@@ -166,6 +166,8 @@ public abstract class GoogleApiBaseActivity extends BaseActivity {
                 return null;
             }
 
+            GooleApiClientToken apiClientToken = this.apiClientToken;
+
             if (apiClientToken == null) {
                 return null;
             }
