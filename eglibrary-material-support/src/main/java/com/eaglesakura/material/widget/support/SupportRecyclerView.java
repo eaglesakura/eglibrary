@@ -116,11 +116,10 @@ public class SupportRecyclerView extends FrameLayout {
             emptyViewRoot.setVisibility(View.INVISIBLE);
         } else {
             progress.setVisibility(INVISIBLE);
+            recyclerView.setVisibility(VISIBLE);
             if (recyclerViewItemNum > 0) {
-                recyclerView.setVisibility(VISIBLE);
                 emptyViewRoot.setVisibility(INVISIBLE);
             } else {
-                recyclerView.setVisibility(INVISIBLE);
                 emptyViewRoot.setVisibility(VISIBLE);
             }
         }
