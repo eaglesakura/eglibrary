@@ -44,11 +44,11 @@ public abstract class MaterialInputDialog extends MaterialAlertDialog {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (validateInputText(inputText, validateText)) {
                     // OKを表示する
-                    findViewById(R.id.EsMaterial_Dialog_BasicButtons_Positive).setEnabled(true);
+//                    findViewById(R.id.EsMaterial_Dialog_BasicButtons_Positive).setVisibility(View.VISIBLE);
                     validateText.setVisibility(View.GONE);
                 } else {
                     // OKをdisable
-                    findViewById(R.id.EsMaterial_Dialog_BasicButtons_Positive).setEnabled(false);
+//                    findViewById(R.id.EsMaterial_Dialog_BasicButtons_Positive).setVisibility(View.INVISIBLE);
                     validateText.setVisibility(View.VISIBLE);
 
                 }
