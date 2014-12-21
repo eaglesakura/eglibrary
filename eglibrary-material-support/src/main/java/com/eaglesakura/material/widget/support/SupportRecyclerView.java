@@ -1,5 +1,6 @@
 package com.eaglesakura.material.widget.support;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.LayoutRes;
@@ -40,7 +41,7 @@ public class SupportRecyclerView extends FrameLayout {
         initialize(context, attrs, defStyleAttr, 0);
     }
 
-    @SuppressWarnings("all")
+    @TargetApi(21)
     public SupportRecyclerView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initialize(context, attrs, defStyleAttr, defStyleRes);
