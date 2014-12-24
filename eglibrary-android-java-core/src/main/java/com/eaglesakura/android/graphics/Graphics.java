@@ -139,6 +139,7 @@ public class Graphics {
      */
     public void setAntiAlias(boolean set) {
         paint.setAntiAlias(set);
+        paint.setFilterBitmap(true);
     }
 
     /**
