@@ -138,6 +138,10 @@ public class ImageGestureController implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        if (touchDetector == null || scaleGestureDetector == null) {
+            return true;
+        }
+
         touchDetector.onTouchEvent(event);
         scaleGestureDetector.onTouchEvent(event);
         if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
