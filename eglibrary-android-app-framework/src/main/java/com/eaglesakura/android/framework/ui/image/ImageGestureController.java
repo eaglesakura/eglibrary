@@ -56,6 +56,8 @@ public class ImageGestureController implements View.OnTouchListener {
      */
     Vector2 imageMoveVector = new Vector2();
 
+    ImageGestureListener listener;
+
 
     public ImageGestureController(Context context) {
         this.context = context.getApplicationContext();
@@ -81,7 +83,7 @@ public class ImageGestureController implements View.OnTouchListener {
      *
      * @return
      */
-    public boolean hasEffectUpdateRequest() {
+    private boolean hasEffectUpdateRequest() {
         if (imageMoveVector.length() > 0.0001) {
             return true;
         }
@@ -136,6 +138,10 @@ public class ImageGestureController implements View.OnTouchListener {
         }
     }
 
+    public void setListener(ImageGestureListener listener) {
+        this.listener = listener;
+    }
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (touchDetector == null || scaleGestureDetector == null) {
@@ -156,11 +162,14 @@ public class ImageGestureController implements View.OnTouchListener {
     private final GestureDetector.OnGestureListener singleTapListener = new GestureDetector.OnGestureListener() {
         @Override
         public boolean onDown(MotionEvent e) {
-            return false;
+            return true;
         }
 
         @Override
         public void onShowPress(MotionEvent e) {
+            if (listener != null) {
+                listener.onClick(ImageGestureController.this, e);
+            }
         }
 
         @Override
@@ -181,7 +190,6 @@ public class ImageGestureController implements View.OnTouchListener {
 
         @Override
         public void onLongPress(MotionEvent e) {
-
         }
 
         @Override
@@ -204,6 +212,9 @@ public class ImageGestureController implements View.OnTouchListener {
 
         @Override
         public boolean onDoubleTap(MotionEvent e) {
+            if (listener != null) {
+                return listener.onDoubleClick(ImageGestureController.this, e);
+            }
             return false;
         }
 
@@ -234,6 +245,39 @@ public class ImageGestureController implements View.OnTouchListener {
         @Override
         public void onScaleEnd(ScaleGestureDetector detector) {
             scaleInput = false;
+
+            if (listener != null) {
+                listener.onScaled(ImageGestureController.this, scaleCenter);
+            }
         }
     };
+
+    public interface ImageGestureListener {
+        /**
+         * 画像をクリックした
+         *
+         * @param gesture
+         * @param event
+         * @return 反応したらtrue
+         */
+        public boolean onClick(ImageGestureController gesture, MotionEvent event);
+
+        /**
+         * 画像をダブルクリックした
+         *
+         * @param gesture
+         * @param event
+         * @return 反応したらtrue
+         */
+        public boolean onDoubleClick(ImageGestureController gesture, MotionEvent event);
+
+        /**
+         * スケーリングを変更した
+         *
+         * @param gesture
+         * @param center
+         * @return 反応したらtrue
+         */
+        public boolean onScaled(ImageGestureController gesture, Vector2 center);
+    }
 }

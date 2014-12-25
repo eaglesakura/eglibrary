@@ -66,9 +66,9 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @UiThread
-    protected void toast(String msg) {
+    protected void toast(String fmt, Object... args) {
         try {
-            ((BaseActivity) getActivity()).getUserNotificationController().toast(this, msg);
+            ((BaseActivity) getActivity()).getUserNotificationController().toast(this, String.format(fmt, args));
         } catch (Exception e) {
         }
 
