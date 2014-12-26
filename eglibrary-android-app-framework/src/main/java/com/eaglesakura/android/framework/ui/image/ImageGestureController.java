@@ -167,14 +167,15 @@ public class ImageGestureController implements View.OnTouchListener {
 
         @Override
         public void onShowPress(MotionEvent e) {
-            if (listener != null) {
-                listener.onClick(ImageGestureController.this, e);
-            }
         }
 
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
-            return false;
+            if (listener != null) {
+                return listener.onClick(ImageGestureController.this, e);
+            } else {
+                return false;
+            }
         }
 
         @Override
