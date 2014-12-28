@@ -297,6 +297,16 @@ public class BasePropertiesDatabase {
         }).start();
     }
 
+    public void commitAsync(final PropsAsyncListener listener) {
+        (new Thread() {
+            @Override
+            public void run() {
+                commit();
+                listener.onAsyncCompleted(BasePropertiesDatabase.this);
+            }
+        }).start();
+    }
+
     /**
      * データをDBからロードする
      * <p/>
@@ -335,6 +345,20 @@ public class BasePropertiesDatabase {
                 load();
             }
         }).start();
+    }
+
+    public void loadAsync(final PropsAsyncListener listener) {
+        (new Thread() {
+            @Override
+            public void run() {
+                load();
+                listener.onAsyncCompleted(BasePropertiesDatabase.this);
+            }
+        }).start();
+    }
+
+    public interface PropsAsyncListener {
+        public void onAsyncCompleted(BasePropertiesDatabase database);
     }
 
     /**
