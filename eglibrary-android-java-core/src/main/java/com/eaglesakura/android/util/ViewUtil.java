@@ -1,5 +1,6 @@
 package com.eaglesakura.android.util;
 
+import android.text.Editable;
 import android.text.InputType;
 import android.widget.EditText;
 
@@ -7,6 +8,19 @@ import android.widget.EditText;
  * View系の便利メソッド
  */
 public class ViewUtil {
+
+    /**
+     * カーソル位置にテキストを挿入する
+     *
+     * @param editText
+     * @param text
+     */
+    public static void insertTextInCursor(EditText editText, String text) {
+        int start = editText.getSelectionStart();
+        int end = editText.getSelectionEnd();
+        Editable editable = editText.getText();
+        editable.replace(Math.min(start, end), Math.max(start, end), text);
+    }
 
     /**
      * 入力を整数に限るようにする
