@@ -1,9 +1,5 @@
 package com.eaglesakura.android.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.security.MessageDigest;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -19,6 +15,9 @@ import com.eaglesakura.android.graphics.Graphics;
 import com.eaglesakura.io.IOUtil;
 import com.eaglesakura.math.MathUtil;
 import com.eaglesakura.util.LogUtil;
+
+import java.io.ByteArrayOutputStream;
+import java.security.MessageDigest;
 
 public class ImageUtil {
 
