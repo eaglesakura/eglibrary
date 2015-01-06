@@ -56,6 +56,15 @@ public class FragmentListAdapter extends FragmentPagerAdapter {
         pager.setAdapter(this);
     }
 
+    @Override
+    public CharSequence getPageTitle(int position) {
+        Fragment item = getItem(position);
+        if (item instanceof IFragmentPagerTitle) {
+            return ((IFragmentPagerTitle) item).getTitle();
+        }
+        return super.getPageTitle(position);
+    }
+
     /**
      * Fragment管理を行う
      * Callbackを自動で設定するため、事前に設定したCallbackが呼び出されないことに注意すること。
