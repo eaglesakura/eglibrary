@@ -20,6 +20,7 @@ import org.androidannotations.annotations.UiThread;
  *
  */
 @EFragment
+@Deprecated
 public abstract class BaseFragment extends Fragment {
 
     public static final int BACKSTACK_NONE = 0xFEFEFEFE;

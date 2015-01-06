@@ -2,13 +2,6 @@ apply plugin: 'java'
 
 sourceCompatibility = 1.6
 
-repositories {
-    mavenCentral()
-    maven {
-        url "http://eaglesakura.github.io/maven/"
-    }
-}
-
 dependencies {
     compile 'com.eaglesakura:joint-connector-annotation:0.1.13'
 }
@@ -16,10 +9,10 @@ dependencies {
 apply plugin: 'maven'
 
 if(!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")){
-    EGLIBRARY_MAVEN_LOCAL_PATH = ""
+    ext.EGLIBRARY_MAVEN_LOCAL_PATH = ""
 }
 if(!hasProperty("EGLIBRARY_ARTIFACT_VERSION")){
-    EGLIBRARY_ARTIFACT_VERSION = ""
+    ext.EGLIBRARY_ARTIFACT_VERSION = ""
 }
 
 uploadArchives {

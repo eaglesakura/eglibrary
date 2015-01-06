@@ -23,13 +23,22 @@ public class Resources {
 
     /**
      * 画面サイズを取得する
+     *
      * @return
      */
     public static int[] displaySize() {
-        if (displaySize == null) {
-            displaySize = ContextUtil.getDisplaySize(FrameworkCentral.getApplication());
-        }
+//        if (displaySize == null) {
+//        }
+        displaySize = ContextUtil.getDisplaySize(FrameworkCentral.getApplication());
         return displaySize;
+    }
+
+    public static int displayWidth() {
+        return displaySize()[0];
+    }
+
+    public static int displayHeight() {
+        return displaySize()[1];
     }
 
     public static AssetManager assets() {

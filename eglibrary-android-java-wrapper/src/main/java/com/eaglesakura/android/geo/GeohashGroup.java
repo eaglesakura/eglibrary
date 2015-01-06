@@ -164,6 +164,10 @@ public class GeohashGroup {
         this.geohashLength = geohashLength;
     }
 
+    public int getGeohashLength() {
+        return geohashLength;
+    }
+
     /**
      *
      */

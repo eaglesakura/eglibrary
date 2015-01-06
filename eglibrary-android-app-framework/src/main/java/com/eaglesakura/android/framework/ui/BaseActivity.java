@@ -23,6 +23,7 @@ import java.util.List;
  *
  */
 @EActivity
+@Deprecated
 public abstract class BaseActivity extends Activity implements FragmentChooser.Callback {
 
     protected BaseActivity() {
@@ -35,15 +36,15 @@ public abstract class BaseActivity extends Activity implements FragmentChooser.C
     }
 
     protected void log(String fmt, Object... args) {
-        Log.i(getClass().getSimpleName(), String.format(fmt, args));
+        Log.i(((Object) this).getClass().getSimpleName(), String.format(fmt, args));
     }
 
     protected void logi(String fmt, Object... args) {
-        Log.i(getClass().getSimpleName(), String.format(fmt, args));
+        Log.i(((Object) this).getClass().getSimpleName(), String.format(fmt, args));
     }
 
     protected void logd(String fmt, Object... args) {
-        Log.d(getClass().getSimpleName(), String.format(fmt, args));
+        Log.d(((Object) this).getClass().getSimpleName(), String.format(fmt, args));
     }
 
     @UiThread

@@ -161,7 +161,9 @@ public class StringUtil {
         return a.compareTo(b);
     }
 
-    private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-hh:mm:ss.SS");
+    private static final SimpleDateFormat DEFAULT_FORMATTER = new SimpleDateFormat("yyyyMMdd-HH:mm:ss.SS");
+
+    private static final SimpleDateFormat EXIF_FORMATTER = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
 
     /**
      * 指定時刻を文字列に変換する
@@ -171,7 +173,7 @@ public class StringUtil {
      * @return
      */
     public static String toString(Date date) {
-        return formatter.format(date);
+        return DEFAULT_FORMATTER.format(date);
     }
 
     /**
@@ -182,7 +184,21 @@ public class StringUtil {
      */
     public static Date toDate(String date) {
         try {
-            return formatter.parse(date);
+            return DEFAULT_FORMATTER.parse(date);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    /**
+     * EXIF記録されている時刻から日時に変換する
+     *
+     * @param exifDate
+     * @return
+     */
+    public static Date toExifDate(String exifDate) {
+        try {
+            return EXIF_FORMATTER.parse(exifDate);
         } catch (ParseException e) {
             return null;
         }

@@ -3,6 +3,7 @@
 
     <string name="Common.Dialog.Title.Error">エラー</string>
     <string name="Common.Cancel">キャンセル</string>
+    <string name="Common.OK">OK</string>
 
     <!--  -->
     <string name="Common.App.Finish">アプリを終了する</string>

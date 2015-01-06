@@ -13,7 +13,9 @@ repositories {
 
 dependencies {
     // build groovy
-    groovy "org.codehaus.groovy:groovy:2.0.+"
+//    groovy "org.codehaus.groovy:groovy:2.0.+"
+    compile gradleApi()
+//    groovy localGroovy()
 
     compile project(':eglibrary-java-wrapper')
 }
@@ -21,10 +23,10 @@ dependencies {
 apply plugin: 'maven'
 
 if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
-    EGLIBRARY_MAVEN_LOCAL_PATH = ""
+    ext.EGLIBRARY_MAVEN_LOCAL_PATH = ""
 }
 if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
-    EGLIBRARY_ARTIFACT_VERSION = ""
+    ext.EGLIBRARY_ARTIFACT_VERSION = ""
 }
 
 uploadArchives {

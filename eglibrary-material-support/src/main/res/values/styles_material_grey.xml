@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="EsMaterial.Grey.0">#FFFFFF</color>
+    <color name="EsMaterial.Grey.50">#FAFAFA</color>
+    <color name="EsMaterial.Grey.100">#F5F5F5</color>
+    <color name="EsMaterial.Grey.200">#EEEEEE</color>
+    <color name="EsMaterial.Grey.300">#E0E0E0</color>
+    <color name="EsMaterial.Grey.350">#CDCDCD</color>
+    <color name="EsMaterial.Grey.400">#BDBDBD</color>
+    <color name="EsMaterial.Grey.450">#AEAEAE</color>
+    <color name="EsMaterial.Grey.500">#9E9E9E</color>
+    <color name="EsMaterial.Grey.600">#757575</color>
+    <color name="EsMaterial.Grey.700">#616161</color>
+    <color name="EsMaterial.Grey.750">#515151</color>
+    <color name="EsMaterial.Grey.800">#424242</color>
+    <color name="EsMaterial.Grey.900">#212121</color>
+
+    <color name="EsMaterial.Grey.Button.Disabled">@color/EsMaterial.Grey.100</color>
+    <color name="EsMaterial.Grey.Button.Normal">@color/EsMaterial.Grey.350</color>
+    <color name="EsMaterial.Grey.Button.Focused">@color/EsMaterial.Grey.350</color>
+    <color name="EsMaterial.Grey.Button.Pressed">@color/EsMaterial.Grey.600</color>
+    <color name="EsMaterial.Grey.Button.Ripple">@color/EsMaterial.Grey.700</color>
+
+    <color name="EsMaterial.White.Button.Disabled">@color/EsMaterial.Grey.0</color>
+    <color name="EsMaterial.White.Button.Normal">@color/EsMaterial.Grey.50</color>
+    <color name="EsMaterial.White.Button.Focused">@color/EsMaterial.Grey.200</color>
+    <color name="EsMaterial.White.Button.Pressed">@color/EsMaterial.Grey.500</color>
+    <color name="EsMaterial.White.Button.Ripple">@color/EsMaterial.Grey.600</color>
+
+    <style name="EsMaterial.Button.Grey" parent="EsMaterial.Button.Base">
+        <item name="android:background">@drawable/esm_button_grey</item>
+    </style>
+
+</resources>

@@ -4,8 +4,6 @@ import java.lang.reflect.Method;
 
 /**
  * ログ出力を制御する。
- *
- * @author TAKESHI YAMASHITA
  */
 public final class LogUtil {
     static String tag = "eglib";

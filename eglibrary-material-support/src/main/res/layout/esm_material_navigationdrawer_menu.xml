@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/esm_button_window_white"
+    android:layout_width="match_parent"
+    android:minHeight="@dimen/EsMaterial.Navigation.MinHeight"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_marginLeft="@dimen/EsMaterial.Margin.KeyLine1Horizontal"
+        android:layout_width="@dimen/EsMaterial.Navigation.Icon.Size"
+        android:layout_height="@dimen/EsMaterial.Navigation.Icon.Size"
+        android:id="@+id/EsMaterial.Navigation.Icon"
+        android:layout_gravity="left|center_vertical" />
+
+    <TextView
+        android:layout_marginLeft="@dimen/EsMaterial.Margin.KeyLine2Horizontal"
+        android:layout_marginRight="@dimen/EsMaterial.Margin.KeyLine1Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Title"
+        android:id="@+id/EsMaterial.Navigation.Title"
+        android:layout_gravity="left|center_vertical" />
+</FrameLayout>

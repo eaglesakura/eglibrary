@@ -26,6 +26,10 @@ public abstract class BaseDatabase<SessionClass extends AbstractDaoSession> {
 
     protected SessionClass session;
 
+    final private Object refsLock = new Object();
+
+    private int refs = 0;
+
     /**
      * 新規に生成する
      *
@@ -53,18 +57,21 @@ public abstract class BaseDatabase<SessionClass extends AbstractDaoSession> {
 
     @SuppressWarnings("unchecked")
     public void open() {
-        SQLiteOpenHelper helper = createHelper();
-        SQLiteDatabase db = helper.getWritableDatabase();
+        synchronized (refsLock) {
+            if (daoMaster == null) {
+                SQLiteOpenHelper helper = createHelper();
+                SQLiteDatabase db = helper.getWritableDatabase();
 
-        if (daoMaster == null) {
-            try {
-                Constructor<? extends AbstractDaoMaster> constructor = daoMasterClass.getConstructor(SQLiteDatabase.class);
-                daoMaster = constructor.newInstance(db);
-                session = (SessionClass) daoMaster.newSession();
-            } catch (Exception e) {
-                LogUtil.d(e);
-                throw new IllegalStateException();
+                try {
+                    Constructor<? extends AbstractDaoMaster> constructor = daoMasterClass.getConstructor(SQLiteDatabase.class);
+                    daoMaster = constructor.newInstance(db);
+                    session = (SessionClass) daoMaster.newSession();
+                } catch (Exception e) {
+                    LogUtil.d(e);
+                    throw new IllegalStateException();
+                }
             }
+            ++refs;
         }
     }
 
@@ -82,9 +89,17 @@ public abstract class BaseDatabase<SessionClass extends AbstractDaoSession> {
      *
      */
     public void close() {
-        if (daoMaster != null) {
-            daoMaster.getDatabase().close();
-            daoMaster = null;
+        synchronized (refsLock) {
+            --refs;
+            if (refs > 0) {
+                // まだ開いているセッションがあるため、閉じる必要はない
+                return;
+            }
+
+            if (daoMaster != null) {
+                daoMaster.getDatabase().close();
+                daoMaster = null;
+            }
         }
     }
 

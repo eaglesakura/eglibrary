@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false" android:color="@color/EsMaterial.Blue.Button.Disabled"></item>
+    <item android:state_focused="true" android:color="@color/EsMaterial.Blue.Button.Pressed"></item>
+    <item android:state_pressed="true" android:color="@color/EsMaterial.Blue.Button.Pressed"></item>
+    <item android:color="@color/EsMaterial.Blue.FlatButton.Normal"></item>
+</selector>

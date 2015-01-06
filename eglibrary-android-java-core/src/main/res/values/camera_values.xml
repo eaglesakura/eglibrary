@@ -12,6 +12,8 @@
     <string name="Camera.Scene.sports">スポーツ</string>
     <string name="Camera.Scene.party">パーティ</string>
     <string name="Camera.Scene.document">ドキュメント</string>
+    <string name="Camera.Scene.fireworks">花火</string>
+    <string name="Camera.Scene.barcode">バーコード</string>
 
     <!-- ホワイトバランス設定 -->
     <string name="Camera.WhiteBarance.auto">自動</string>

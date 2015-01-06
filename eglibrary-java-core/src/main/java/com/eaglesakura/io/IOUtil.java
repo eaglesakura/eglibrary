@@ -1,5 +1,11 @@
 package com.eaglesakura.io;
 
+import com.eaglesakura.util.EncodeUtil;
+import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.StringUtil;
+import com.eaglesakura.util.Util;
+
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,9 +19,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-
-import com.eaglesakura.util.EncodeUtil;
-import com.eaglesakura.util.StringUtil;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * File関連の便利メソッドを提供する
@@ -41,6 +48,29 @@ public class IOUtil {
 
         input.close();
         output.close();
+    }
+
+    /**
+     * inputのバッファを全てoutputへコピーする。 完了した時点でストリームはcloseされる。
+     *
+     * @param input
+     * @param output
+     * @throws IOException
+     */
+    public static void copyTo(InputStream input, boolean closeInput, OutputStream output, boolean closeOutput) throws IOException {
+        byte[] buffer = new byte[1024 * 128];
+        int length = 0;
+
+        while ((length = input.read(buffer)) > 0) {
+            output.write(buffer, 0, length);
+        }
+
+        if (closeInput) {
+            input.close();
+        }
+        if (closeOutput) {
+            output.close();
+        }
     }
 
     /**
@@ -75,6 +105,29 @@ public class IOUtil {
     public static String toString(InputStream is, boolean close) throws IOException {
         byte[] buffer = toByteArray(is, close);
         return new String(buffer);
+    }
+
+    /**
+     * ファイルを文字列 or null
+     *
+     * @param file
+     * @return
+     */
+    public static String toStringOrNull(File file) {
+        FileInputStream is = null;
+        try {
+            is = new FileInputStream(file);
+            return toString(is, false);
+        } catch (Exception e) {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (Exception e2) {
+
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -474,5 +527,108 @@ public class IOUtil {
             return false;
         }
         return a.getAbsolutePath().equals(b.getAbsolutePath());
+    }
+
+    /**
+     * GZIPバッファであればtrueを返却する。
+     * <p/>
+     * ただし、これはヘッダのみをチェックするため、簡易的なチェックしか行えない。
+     *
+     * @param buffer
+     * @return
+     */
+    public static boolean isGzip(byte[] buffer) {
+        return buffer.length > 2 && buffer[0] == (byte) 0x1F && buffer[1] == (byte) 0x8B;
+    }
+
+    /**
+     * rawバッファをGZIPに圧縮して返却する
+     *
+     * @param raw
+     */
+    public static byte[] compressGzip(byte[] raw) {
+        try {
+            ByteArrayOutputStream bufferStream = new ByteArrayOutputStream();
+            GZIPOutputStream gzipOutputStream = new GZIPOutputStream(bufferStream);
+            gzipOutputStream.write(raw);
+
+            gzipOutputStream.flush();
+            gzipOutputStream.close();
+
+            return bufferStream.toByteArray();
+        } catch (Exception e) {
+            LogUtil.log(e);
+            throw new IllegalStateException(e);
+        }
+    }
+
+    /**
+     * GZIPバッファをデコードする。失敗したらnullを返却する。
+     *
+     * @param gzip
+     * @return
+     */
+    public static byte[] decompressGzipOrNull(byte[] gzip) {
+        try {
+            GZIPInputStream is = new GZIPInputStream(new ByteArrayInputStream(gzip));
+            return toByteArray(is, true);
+        } catch (Exception e) {
+            LogUtil.log(e);
+            return null;
+        }
+    }
+
+    /**
+     * InputStream経由でUnzipを行う
+     *
+     * @param stream
+     * @param outDirectory
+     * @throws IOException
+     */
+    public static void unzip(InputStream stream, File outDirectory) throws IOException {
+        ZipInputStream is = new ZipInputStream(stream);
+        ZipEntry entry;
+        while ((entry = is.getNextEntry()) != null) {
+            File outFile = outDirectory;
+            List<String> path = Util.convert(entry.getName().split("/"));
+
+            // "/"で区切られていたら、パスを追加する
+            while (path.size() > 1) {
+                outFile = new File(outFile, path.remove(0));
+            }
+
+            // パスを生成する
+            outFile.mkdirs();
+
+            // ファイル名を確定する
+            outFile = new File(outFile, path.get(0));
+            LogUtil.log("  unzip(%s)", outFile.getAbsolutePath());
+
+            if (!entry.isDirectory()) {
+                // ファイルへ書き込む
+                FileOutputStream os = new FileOutputStream(outFile);
+                copyTo(is, false, os, false);
+                os.close();
+            }
+        }
+    }
+
+    /**
+     * ZIPの解凍を行う
+     *
+     * @param zipFile
+     * @param outDirectory
+     * @throws IOException
+     */
+    public static void unzip(File zipFile, File outDirectory) throws IOException {
+        InputStream is = new FileInputStream(zipFile);
+        try {
+            unzip(is, outDirectory);
+        } finally {
+            try {
+                is.close();
+            } catch (Exception e) {
+            }
+        }
     }
 }

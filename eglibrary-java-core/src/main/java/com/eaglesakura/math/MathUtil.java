@@ -240,4 +240,17 @@ public class MathUtil {
         return (flg & check) == 0;
     }
 
+    /**
+     * 特定のフォーマットに合う数値に変換する
+     * <p/>
+     * %.1f, 0.111111 -> 0.1
+     *
+     * @param format
+     * @param value
+     * @return
+     */
+    public static final double valueOf(String format, String value) {
+        double temp = Double.valueOf(value);
+        return Double.valueOf(String.format(format, temp));
+    }
 }

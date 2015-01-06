@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/EsMaterial.Separator.Height">
+
+    <View
+        android:layout_gravity="center_vertical"
+        android:background="?attr/esmSeparatorBarColor"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/EsMaterial.Separator.Bar.Height"></View>
+
+</FrameLayout>

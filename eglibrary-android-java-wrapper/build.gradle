@@ -1,46 +1,21 @@
-buildscript {
-    repositories {
-        mavenCentral()
-
-        maven {
-            url "http://eaglesakura.github.io/maven/"
-        }
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.+'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.3'
-    }
-}
-
 apply plugin: 'com.android.library'
 apply plugin: 'android-apt'
 
 if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
-    EGLIBRARY_MAVEN_LOCAL_PATH = ""
+    ext.EGLIBRARY_MAVEN_LOCAL_PATH = ""
 }
 if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
-    EGLIBRARY_ARTIFACT_VERSION = ""
-}
-if (!hasProperty("EGLIBRARY_ANDROID_BUILDTOOL_VERSION")) {
-    EGLIBRARY_ANDROID_BUILDTOOL_VERSION = "20.0.0"
+    ext.EGLIBRARY_ARTIFACT_VERSION = ""
 }
 
 configurations {
     apt
 }
 
-repositories {
-    mavenCentral()
-    maven {
-        url "http://eaglesakura.github.io/maven/"
-    }
-}
-
 dependencies {
     apt "org.androidannotations:androidannotations:3.0.+"
     compile "org.androidannotations:androidannotations-api:3.0.+"
-    compile "com.googlecode.android-query:android-query:0.25.+"
+    compile "com.googlecode.android-query:android-query:+"
 
     // greendao
     compile 'de.greenrobot:greendao:1.3.+'
@@ -48,14 +23,13 @@ dependencies {
     // protobuf
     compile 'com.google.protobuf:protobuf-java:2.5.+'
 
-    compile fileTree(dir: 'libs', include: '*.jar')
     compile project(':eglibrary-java-wrapper')
     compile project(':eglibrary-android-java-core')
 }
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion EGLIBRARY_ANDROID_BUILDTOOL_VERSION
+    compileSdkVersion 21
+    buildToolsVersion '21.1.2'
 
     sourceSets {
         main {

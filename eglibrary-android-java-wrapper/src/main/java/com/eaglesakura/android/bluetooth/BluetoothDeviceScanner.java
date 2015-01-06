@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothAdapter.LeScanCallback;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.le.BluetoothLeScanner;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -125,6 +126,25 @@ public class BluetoothDeviceScanner {
         cleanDeviceCaches();
         synchronized (cacheLock) {
             return new ArrayList<BluetoothDeviceCache>(deviceCaches);
+        }
+    }
+
+    /**
+     * キャッシュから指定したデバイスを削除する
+     *
+     * @param device
+     */
+    public void remove(BluetoothDevice device) {
+        cleanDeviceCaches();
+        synchronized (cacheLock) {
+            Iterator<BluetoothDeviceCache> iterator = deviceCaches.iterator();
+            while (iterator.hasNext()) {
+                BluetoothDeviceCache cache = iterator.next();
+                if (cache.device == device) {
+                    iterator.remove();
+                    return;
+                }
+            }
         }
     }
 
@@ -378,6 +398,10 @@ public class BluetoothDeviceScanner {
             this.updatedDate = new Date();
         }
 
+        public String getAddress() {
+            return address;
+        }
+
         /**
          * キャッシュが有効であればtrue
          */
@@ -563,7 +587,7 @@ public class BluetoothDeviceScanner {
 
     /**
      * 最も近い位置にあるデバイスを取得する
-     *
+     * <p/>
      * 精度を上げるため、平均RSSIを使用してチェックする。
      *
      * @param devices 検索対象のデバイス一覧

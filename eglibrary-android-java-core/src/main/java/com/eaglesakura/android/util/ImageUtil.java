@@ -1,9 +1,5 @@
 package com.eaglesakura.android.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.security.MessageDigest;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -19,6 +15,9 @@ import com.eaglesakura.android.graphics.Graphics;
 import com.eaglesakura.io.IOUtil;
 import com.eaglesakura.math.MathUtil;
 import com.eaglesakura.util.LogUtil;
+
+import java.io.ByteArrayOutputStream;
+import java.security.MessageDigest;
 
 public class ImageUtil {
 
@@ -165,6 +164,23 @@ public class ImageUtil {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
             bitmap.compress(CompressFormat.PNG, 100, os);
+            return os.toByteArray();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Jpeg画像にエンコードする
+     *
+     * @param bitmap
+     * @param quality
+     * @return
+     */
+    public static byte[] encodeJpeg(Bitmap bitmap, int quality) {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            bitmap.compress(CompressFormat.JPEG, quality, os);
             return os.toByteArray();
         } catch (Exception e) {
             return null;

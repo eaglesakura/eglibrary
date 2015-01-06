@@ -65,6 +65,18 @@ public class JSON {
     /**
      * 文字列をクラスへデコードする
      */
+    public static <T> T decodeOrNull(InputStream json, Class<T> clazz) {
+        try {
+            return new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).readValue(json, clazz);
+        } catch (Throwable e) {
+            //            LogUtil.log(e);
+            return null;
+        }
+    }
+
+    /**
+     * 文字列をクラスへデコードする
+     */
     public static <T> T decode(InputStream is, Class<T> clazz) throws JsonProcessingException, IOException {
         return new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).readValue(is, clazz);
     }

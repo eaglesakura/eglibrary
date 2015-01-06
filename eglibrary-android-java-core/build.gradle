@@ -1,31 +1,25 @@
 apply plugin: 'com.android.library'
 
 if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
-    EGLIBRARY_MAVEN_LOCAL_PATH = ""
+    ext.EGLIBRARY_MAVEN_LOCAL_PATH = ""
 }
 if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
-    EGLIBRARY_ARTIFACT_VERSION = ""
-}
-if (!hasProperty("EGLIBRARY_ANDROID_BUILDTOOL_VERSION")) {
-    EGLIBRARY_ANDROID_BUILDTOOL_VERSION = "20.0.0"
-}
-
-repositories {
-    mavenCentral()
-    maven {
-        url "http://eaglesakura.github.io/maven/"
-    }
+    ext.EGLIBRARY_ARTIFACT_VERSION = ""
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
     compile project(':eglibrary-java-core')
 }
 
 android {
-    compileSdkVersion 15
-    buildToolsVersion = EGLIBRARY_ANDROID_BUILDTOOL_VERSION
-
+    compileSdkVersion 21
+    buildToolsVersion '21.1.2'
+    defaultConfig {
+        minSdkVersion 15
+        versionCode 1
+        versionName "1.0"
+        targetSdkVersion 21
+    }
     sourceSets {
         main {
         }

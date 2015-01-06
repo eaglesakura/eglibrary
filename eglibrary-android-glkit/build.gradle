@@ -1,44 +1,17 @@
-buildscript {
-    repositories {
-        jcenter()
-        mavenCentral()
-        maven {
-            url "http://eaglesakura.github.io/maven/"
-        }
-    }
-
-    dependencies {
-        classpath 'com.eaglesakura:joint-connector-plugin:0.1.13'
-        classpath 'com.android.tools.build:gradle:0.12.+'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.3'
-    }
-}
-
 apply plugin: 'com.android.library'
 apply plugin: 'android-apt'
 
 def APPLICATION_ID = "com.eaglesakura.android.glkit"
 
 if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
-    EGLIBRARY_MAVEN_LOCAL_PATH = ""
+    ext.EGLIBRARY_MAVEN_LOCAL_PATH = ""
 }
 if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
-    EGLIBRARY_ARTIFACT_VERSION = ""
-}
-if (!hasProperty("EGLIBRARY_ANDROID_BUILDTOOL_VERSION")) {
-    EGLIBRARY_ANDROID_BUILDTOOL_VERSION = "20.0.0"
+    ext.EGLIBRARY_ARTIFACT_VERSION = ""
 }
 
 configurations {
     apt
-}
-
-repositories {
-    jcenter()
-    mavenCentral()
-    maven {
-        url "http://eaglesakura.github.io/maven/"
-    }
 }
 
 dependencies {
@@ -48,13 +21,12 @@ dependencies {
 
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion EGLIBRARY_ANDROID_BUILDTOOL_VERSION
+    compileSdkVersion 21
+    buildToolsVersion '21.1.2'
 
     defaultConfig {
-        applicationId APPLICATION_ID
         minSdkVersion 15
-        targetSdkVersion 19
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
@@ -63,13 +35,6 @@ android {
         main {
             manifest.srcFile 'AndroidManifest.xml'
             jniLibs.srcDirs = ['../ndk/eglibrary-android-glkit/libs']
-        }
-    }
-
-    buildTypes {
-        release {
-            runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }

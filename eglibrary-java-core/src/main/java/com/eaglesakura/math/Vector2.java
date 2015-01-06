@@ -1,8 +1,8 @@
 package com.eaglesakura.math;
 
 /**
- * 
- * 
+ *
+ *
  */
 public final class Vector2 {
     /**
@@ -23,11 +23,10 @@ public final class Vector2 {
 
     /**
      * 値を指定して初期化する。
-     * 
+     *
      * @param x
      * @param y
      * @param z
-     * 
      */
     public Vector2(float x, float y) {
         this.x = x;
@@ -36,9 +35,8 @@ public final class Vector2 {
 
     /**
      * コピーを行う。
-     * 
+     *
      * @param origin
-     * 
      */
     public Vector2(Vector2 origin) {
         set(origin);
@@ -46,7 +44,7 @@ public final class Vector2 {
 
     /**
      * 値のコピーを行う。
-     * 
+     *
      * @param origin
      */
     public void set(Vector2 origin) {
@@ -56,7 +54,7 @@ public final class Vector2 {
 
     /**
      * 値のコピーを行う。
-
+     *
      * @param origin
      */
     public void set(float x, float y) {
@@ -66,11 +64,9 @@ public final class Vector2 {
 
     /**
      * 内積を取得する。
-     * 
-     * 
+     *
      * @param v
      * @return
-     * 
      */
     public float dot(Vector2 v) {
         return (x * v.x) + (y * v.y);
@@ -78,7 +74,7 @@ public final class Vector2 {
 
     /**
      * XYをmul倍する。
-     * 
+     *
      * @param mul
      */
     public void mul(float mul) {
@@ -88,7 +84,7 @@ public final class Vector2 {
 
     /**
      * 長さを取得する。
-     * 
+     *
      * @return
      */
     public float length() {
@@ -96,8 +92,6 @@ public final class Vector2 {
     }
 
     /**
-     * 
-     * 
      * @param p
      * @return
      */
@@ -107,8 +101,6 @@ public final class Vector2 {
     }
 
     /**
-     * 
-     * 
      * @param p
      * @return
      */
@@ -117,11 +109,20 @@ public final class Vector2 {
         return (float) Math.sqrt((double) ((tx * tx) + (ty * ty)));
     }
 
+    public static float length(final float px0, final float py0, final float px1, final float py1) {
+        float tx = px0 - px1;
+        float ty = py0 - py1;
+        return (float) Math.sqrt((double) ((tx * tx) + (ty * ty)));
+    }
+
+    public static double length(final double px0, final double py0, final double px1, final double py1) {
+        double tx = px0 - px1;
+        double ty = py0 - py1;
+        return Math.sqrt(((tx * tx) + (ty * ty)));
+    }
+
     /**
      * ベクトルの長さを正規化する。
-     * 
-     * 
-     * 
      */
     public void normalize() {
         final float len = length();
@@ -134,10 +135,8 @@ public final class Vector2 {
 
     /**
      * 整合性確認。
-     * 
-     * 
+     *
      * @param obj
-     * 
      */
     @Override
     public boolean equals(Object obj) {
@@ -152,10 +151,8 @@ public final class Vector2 {
 
     /**
      * 文字列変換を行う。
-     * 
-     * 
+     *
      * @return
-     * 
      */
     @Override
     public String toString() {
