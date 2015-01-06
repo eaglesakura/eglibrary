@@ -10,6 +10,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 
 import com.eaglesakura.material.R;
@@ -126,4 +127,13 @@ public class SupportRecyclerView extends FrameLayout {
         }
     }
 
+    public static void layoutMatchParent(View view) {
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        if (params == null) {
+            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        } else {
+            params.width = params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        }
+        view.setLayoutParams(params);
+    }
 }
