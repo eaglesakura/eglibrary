@@ -77,6 +77,19 @@ public class Util {
     }
 
     /**
+     * アイテムを追加し、追加したインデックスを返す
+     *
+     * @param list
+     * @param item
+     * @param <T>
+     * @return
+     */
+    public static <T> int addUniqueRequestIndex(List<T> list, T item) {
+        addUnique(list, item);
+        return list.indexOf(item);
+    }
+
+    /**
      * @see Collection#toArray(Object[])
      */
     public static <T> T[] convert(Collection<T> c, T[] array) {
