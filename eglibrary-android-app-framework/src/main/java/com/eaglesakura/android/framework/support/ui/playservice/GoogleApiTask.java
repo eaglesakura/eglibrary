@@ -1,7 +1,5 @@
 package com.eaglesakura.android.framework.support.ui.playservice;
 
-import android.content.Intent;
-
 import com.google.android.gms.common.api.GoogleApiClient;
 
 /**

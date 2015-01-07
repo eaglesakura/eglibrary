@@ -3,4 +3,5 @@
     <integer name="eglibrary.Fragment.Transition.Duration.Half">500</integer>
 
     <string name="eglibrary.GoogleApi.Connecting">Google ログイン</string>
+    <string name="eglibrary.Gcm.SenderID"></string>
 </resources>
