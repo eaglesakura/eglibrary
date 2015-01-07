@@ -1,4 +1,4 @@
-package com.eaglesakura.android.geo;
+package com.eaglesakura.geo;
 
 // Geohash.java
 // Geohash library for Java

@@ -1,4 +1,4 @@
-package com.eaglesakura.android.geo;
+package com.eaglesakura.geo;
 
 import com.eaglesakura.util.StringUtil;
 
