@@ -15,6 +15,7 @@ import com.eaglesakura.util.LogUtil;
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.AbstractDaoMaster;
 import de.greenrobot.dao.AbstractDaoSession;
+import de.greenrobot.dao.Property;
 
 public abstract class BaseDatabase<SessionClass extends AbstractDaoSession> {
 
@@ -154,5 +155,26 @@ public abstract class BaseDatabase<SessionClass extends AbstractDaoSession> {
             LogUtil.d(e);
             return null;
         }
+    }
+
+    protected static void addIntegerColumn(SQLiteDatabase db, String tableName, Property property) {
+        String sql = "ALTER" +
+                " TABLE " + tableName + "" +
+                " ADD COLUMN '" + property.columnName + "' INTEGER;";
+        db.execSQL(sql);
+    }
+
+    protected static void addDoubleColumn(SQLiteDatabase db, String tableName, Property property) {
+        String sql = "ALTER" +
+                " TABLE " + tableName + "" +
+                " ADD COLUMN '" + property.columnName + "' REAL;";
+        db.execSQL(sql);
+    }
+
+    protected static void addStringColumn(SQLiteDatabase db, String tableName, Property property) {
+        String sql = "ALTER" +
+                " TABLE " + tableName + "" +
+                " ADD COLUMN '" + property.columnName + "' TEXT;";
+        db.execSQL(sql);
     }
 }
