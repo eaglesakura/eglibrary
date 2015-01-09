@@ -66,6 +66,22 @@ public class BeaconData {
         return minor;
     }
 
+
+    /**
+     * 受信したBeaconを可能な限り一意に特定するIDを生成する
+     *
+     * @param device Bluetooth
+     * @param beacon Beacon
+     * @return
+     */
+    public static String createUniqueID(BluetoothDevice device, BeaconData beacon) {
+        return String.format("%s/%d/%d/%s/",
+                beacon.getUuid().toString().toUpperCase(),
+                beacon.getMajor(),
+                beacon.getMinor(),
+                device.getAddress().toUpperCase());
+    }
+
     public static BeaconData createInstance(BluetoothDevice device, int rssi, byte[] scanRecord) throws Exception {
         if (scanRecord.length < 30) {
             throw new IllegalArgumentException("scanRecord.length < 30");
