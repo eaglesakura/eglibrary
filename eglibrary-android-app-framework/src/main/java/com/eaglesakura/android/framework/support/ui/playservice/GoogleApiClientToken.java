@@ -3,6 +3,7 @@ package com.eaglesakura.android.framework.support.ui.playservice;
 import android.os.Bundle;
 
 import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.util.AndroidUtil;
 import com.eaglesakura.time.Timer;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
@@ -12,7 +13,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 /**
  *
  */
-public class GooleApiClientToken {
+public class GoogleApiClientToken {
     private int refs;
 
     private GoogleApiClient client;
@@ -22,6 +23,11 @@ public class GooleApiClientToken {
      */
     private boolean initialLoginCompleted;
 
+    /**
+     * 初期接続を開始していればtrue
+     */
+    private boolean initialConnectStarted;
+
     private final Object lock = new Object();
 
     /**
@@ -29,12 +35,19 @@ public class GooleApiClientToken {
      */
     private ConnectionResult connectionResult;
 
-    public GooleApiClientToken(GoogleApiClient.Builder builder) {
+    public GoogleApiClientToken(GoogleApiClient.Builder builder) {
         CallbackImpl impl = new CallbackImpl();
         builder.addOnConnectionFailedListener(impl);
         builder.addConnectionCallbacks(impl);
 
         this.client = builder.build();
+    }
+
+    public void startInitialConnect() {
+        if (!initialConnectStarted) {
+            client.connect();
+            initialConnectStarted = true;
+        }
     }
 
     /**
@@ -126,11 +139,17 @@ public class GooleApiClientToken {
         Timer timer = new Timer();
         timer.start();
 
-        while (!initialLoginCompleted && client.isConnecting()) {
+        do {
             if (timer.end() > timeoutMs) {
                 return false;
             }
+            Util.sleep(10);
+        } while (!initialConnectStarted);
 
+        while (!client.isConnected() && connectionResult == null) {
+            if (timer.end() > timeoutMs) {
+                return false;
+            }
             Util.sleep(100);
         }
 
@@ -176,4 +195,40 @@ public class GooleApiClientToken {
             }
         }
     };
+
+    /**
+     * Google Apiの実行を行う。
+     * <p/>
+     * 裏スレッドから呼び出さなくてはならない。
+     *
+     * @param task
+     */
+    public <T> T executeGoogleApi(GoogleApiTask<T> task) {
+        if (AndroidUtil.isUIThread()) {
+            throw new IllegalStateException();
+        }
+
+        if (task.isCanceled()) {
+            return null;
+        }
+
+        waitInitialGoogleLoginFinish(1000 * 30);
+        if (!isLoginCompleted()) {
+            return task.connectedFailed(null, getConnectionResult());
+        }
+
+        try {
+            GoogleApiClient apiClient = this.lock();
+            if (task.isCanceled()) {
+                return null;
+            }
+            return task.executeTask(apiClient);
+        } catch (Exception e) {
+            LogUtil.log(e);
+            return null;
+        } finally {
+            this.unlock();
+        }
+    }
+
 }

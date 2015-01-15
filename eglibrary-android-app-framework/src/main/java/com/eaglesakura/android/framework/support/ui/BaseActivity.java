@@ -6,12 +6,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 
+import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiClientToken;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiTask;
-import com.eaglesakura.android.util.AndroidUtil;
 import com.eaglesakura.android.util.ContextUtil;
-import com.eaglesakura.util.LogUtil;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -28,8 +25,41 @@ public abstract class BaseActivity extends ActionBarActivity implements Fragment
 
     protected UserNotificationController userNotificationController = new UserNotificationController(this);
 
+    protected GoogleApiClientToken googleApiClientToken;
+
     protected BaseActivity() {
         fragments.setCallback(this);
+    }
+
+    public void setGoogleApiClientToken(GoogleApiClientToken googleApiClientToken) {
+        if (this.googleApiClientToken != null) {
+            this.googleApiClientToken.unlock();
+        }
+        this.googleApiClientToken = googleApiClientToken;
+        if (this.googleApiClientToken != null) {
+            this.googleApiClientToken.lock();
+        }
+    }
+
+    public GoogleApiClientToken getGoogleApiClientToken() {
+        return googleApiClientToken;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (googleApiClientToken != null) {
+            googleApiClientToken.startInitialConnect();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (googleApiClientToken != null) {
+            googleApiClientToken.unlock();
+        }
     }
 
     @AfterViews
@@ -186,30 +216,8 @@ public abstract class BaseActivity extends ActionBarActivity implements Fragment
      *
      * @param task
      */
-    public <T> T executeGoogleApi(GoogleApiTask<T> task, GoogleApiClient client) {
-        if (AndroidUtil.isUIThread()) {
-            throw new IllegalStateException();
-        }
-
-        if (task.isCanceled()) {
-            return null;
-        }
-
-        client.blockingConnect();
-        try {
-            if (!client.isConnected()) {
-                ConnectionResult result = client.blockingConnect();
-                return task.connectedFailed(client, result);
-            }
-            if (task.isCanceled()) {
-                return null;
-            }
-
-            return task.executeTask(client);
-        } catch (Exception e) {
-            LogUtil.log(e);
-            return null;
-        }
+    public <T> T executeGoogleApi(final GoogleApiTask<T> task) {
+        return googleApiClientToken.executeGoogleApi(task);
     }
 
 }

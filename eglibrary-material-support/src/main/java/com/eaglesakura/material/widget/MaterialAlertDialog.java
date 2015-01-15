@@ -48,7 +48,7 @@ public class MaterialAlertDialog extends MaterialDialogBase {
     }
 
     public void setNegativeButton(int stirngRes, OnClickListener listener) {
-        setNegativeButton(getContext().getString(stirngRes), null);
+        setNegativeButton(getContext().getString(stirngRes), listener);
     }
 
     public void setNegativeButton(CharSequence button, final OnClickListener negativeListener) {

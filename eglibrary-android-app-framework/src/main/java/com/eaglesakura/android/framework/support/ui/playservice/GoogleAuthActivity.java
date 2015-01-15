@@ -42,7 +42,13 @@ public abstract class GoogleAuthActivity extends BaseActivity {
         setContentView(R.layout.activity_google_auth);
         super.onCreate(savedInstanceState);
 
-        loginOnBackground();
+        setGoogleApiClientToken(new GoogleApiClientToken(newGoogleApiClient()));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        initialLogout();
     }
 
     /**
@@ -52,47 +58,75 @@ public abstract class GoogleAuthActivity extends BaseActivity {
      */
     protected abstract GoogleApiClient.Builder newGoogleApiClient();
 
+    @Background
+    protected void initialLogout() {
+        getGoogleApiClientToken().executeGoogleApi(new GoogleApiTask<Object>() {
+            @Override
+            public Object executeTask(GoogleApiClient client) throws Exception {
+                Plus.AccountApi.revokeAccessAndDisconnect(client).await();
+                client.clearDefaultAccountAndReconnect().await();
+                return null;
+            }
+
+            @Override
+            public Object connectedFailed(GoogleApiClient client, ConnectionResult connectionResult) {
+                return null;
+            }
+
+            @Override
+            public boolean isCanceled() {
+                return false;
+            }
+        });
+        loginOnBackground();
+    }
+
     /**
      * バックグラウンドでログインを行う
      */
     @Background
-    public void loginOnBackground() {
+    protected void loginOnBackground() {
         if (apiClientAuthInProgress) {
             // ログイン処理中なら何もしない
             return;
         }
 
         // ブロッキングログインを行う
-
-        final BasicSettings basicSettings = FrameworkCentral.getSettings();
-        GoogleApiClient apiClient = newGoogleApiClient().build();
-
-        Timer timer = new Timer();
-        ConnectionResult connect = apiClient.blockingConnect();
-        log("loginTime (%d ms)", timer.end());
-
-        if (connect.isSuccess()) {
-            log("login completed");
-            basicSettings.setLoginGoogleClientApi(true);
-            // Emailを保存する
-            try {
-                basicSettings.setLoginGoogleAccount(Plus.AccountApi.getAccountName(apiClient));
-                log("email connected success");
-            } catch (Exception e) {
-                log("email connected fail");
+        getGoogleApiClientToken().executeGoogleApi(new GoogleApiTask<Object>() {
+            @Override
+            public Object executeTask(GoogleApiClient client) throws Exception {
+                final BasicSettings basicSettings = FrameworkCentral.getSettings();
+                log("login completed");
+                basicSettings.setLoginGoogleClientApi(true);
+                // Emailを保存する
+                try {
+                    basicSettings.setLoginGoogleAccount(Plus.AccountApi.getAccountName(client));
+                    log("email connected success");
+                } catch (Exception e) {
+                    log("email connected fail");
+                }
+                basicSettings.commit();
+                onSuccess();
+                return null;
             }
-            basicSettings.commit();
-            onSuccess();
-            return;
-        }
 
-        if (connect.hasResolution()) {
-            apiClientAuthInProgress = true;
-            log("start auth dialog");
-            showLoginDialog(connect);
-        } else {
-            onFailed(connect.getErrorCode());
-        }
+            @Override
+            public Object connectedFailed(GoogleApiClient client, ConnectionResult connectionResult) {
+                if (connectionResult.hasResolution()) {
+                    apiClientAuthInProgress = true;
+                    log("start auth dialog");
+                    showLoginDialog(connectionResult);
+                } else {
+                    onFailed(connectionResult.getErrorCode());
+                }
+                return null;
+            }
+
+            @Override
+            public boolean isCanceled() {
+                return false;
+            }
+        });
     }
 
     /**
@@ -153,6 +187,9 @@ public abstract class GoogleAuthActivity extends BaseActivity {
         apiClientAuthInProgress = false;
         if (resultCode == Activity.RESULT_OK) {
             // 再度ログイン処理
+//            loginOnBackground();
+            setGoogleApiClientToken(new GoogleApiClientToken(newGoogleApiClient()));
+            getGoogleApiClientToken().startInitialConnect();
             loginOnBackground();
         } else {
             // キャンセルされた場合はログイン状態も解除しなければならない

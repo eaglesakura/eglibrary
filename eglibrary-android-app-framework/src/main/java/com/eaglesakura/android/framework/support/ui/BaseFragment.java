@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import com.eaglesakura.android.framework.FrameworkCentral;
+import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiClientToken;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiTask;
 import com.eaglesakura.android.util.ContextUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -232,11 +233,20 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    public <T> T executeGoogleApi(GoogleApiTask<T> task, GoogleApiClient client) {
+    public <T> T executeGoogleApi(GoogleApiTask<T> task) {
         Activity activity = getActivity();
         if (activity == null || !(activity instanceof BaseActivity)) {
             return null;
         }
-        return ((BaseActivity) activity).executeGoogleApi(task, client);
+        return ((BaseActivity) activity).executeGoogleApi(task);
+    }
+
+    public GoogleApiClientToken getGoogleApiClientToken() {
+        Activity activity = getActivity();
+        if (activity == null || !(activity instanceof BaseActivity)) {
+            return null;
+        }
+
+        return ((BaseActivity) activity).getGoogleApiClientToken();
     }
 }
