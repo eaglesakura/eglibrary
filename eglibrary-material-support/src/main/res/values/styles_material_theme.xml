@@ -15,6 +15,15 @@
         <item name="esmSeparatorBarColor">@color/EsMaterial.Grey.300</item>
     </style>
 
+    <style name="EsMaterial.Transparent" parent="EsMaterial.Theme.Base">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
     <style name="EsMaterial.Theme.Red" parent="EsMaterial.Theme.Base">
         <item name="drawerArrowStyle">@style/EsMaterial.Red.DrawerArrow</item>
         <item name="colorPrimary">@color/EsMaterial.Red.500</item>

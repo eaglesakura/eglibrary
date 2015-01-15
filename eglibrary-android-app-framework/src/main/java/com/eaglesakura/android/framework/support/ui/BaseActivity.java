@@ -6,7 +6,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 
+import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiTask;
+import com.eaglesakura.android.util.AndroidUtil;
 import com.eaglesakura.android.util.ContextUtil;
+import com.eaglesakura.util.LogUtil;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -173,4 +178,38 @@ public abstract class BaseActivity extends ActionBarActivity implements Fragment
 
         return true;
     }
+
+    /**
+     * Google Apiの実行を行う。
+     * <p/>
+     * 裏スレッドから呼び出さなくてはならない。
+     *
+     * @param task
+     */
+    public <T> T executeGoogleApi(GoogleApiTask<T> task, GoogleApiClient client) {
+        if (AndroidUtil.isUIThread()) {
+            throw new IllegalStateException();
+        }
+
+        if (task.isCanceled()) {
+            return null;
+        }
+
+        client.blockingConnect();
+        try {
+            if (!client.isConnected()) {
+                ConnectionResult result = client.blockingConnect();
+                return task.connectedFailed(client, result);
+            }
+            if (task.isCanceled()) {
+                return null;
+            }
+
+            return task.executeTask(client);
+        } catch (Exception e) {
+            LogUtil.log(e);
+            return null;
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.eaglesakura.android.framework.support.ui.playservice;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 /**
@@ -9,19 +10,15 @@ public interface GoogleApiTask<T> {
     /**
      * タスクを実行する
      *
-     * @param lockedToken
      * @param client
      * @throws Exception
      */
-    T executeTask(GooleApiClientToken lockedToken, GoogleApiClient client) throws Exception;
+    T executeTask(GoogleApiClient client) throws Exception;
 
     /**
      * コネクションに失敗した
-     *
-     * @param lockedToken
-     * @param client
      */
-    T connectedFailed(GooleApiClientToken lockedToken, GoogleApiClient client);
+    T connectedFailed(GoogleApiClient client, ConnectionResult connectionResult);
 
     /**
      * キャンセル済みであればtrue
