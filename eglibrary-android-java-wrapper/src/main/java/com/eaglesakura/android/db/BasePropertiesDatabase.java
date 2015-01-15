@@ -308,6 +308,43 @@ public class BasePropertiesDatabase {
     }
 
     /**
+     * 指定したキーのみをDBからロードする
+     *
+     * @param key
+     */
+    public void load(String key) {
+        load(new String[]{key});
+    }
+
+    /**
+     * 指定したキーのみをDBからロードする
+     *
+     * @param keys
+     */
+    public void load(String[] keys) {
+        // Contextを持たないため読込が行えない
+        if (context == null || databaseFile == null || keys.length == 0) {
+            return;
+        }
+
+        TextKeyValueStore kvs = new TextKeyValueStore(context, databaseFile);
+        try {
+            kvs.open();
+
+            for (String key : keys) {
+                Property property = propMap.get(key);
+                if (property != null) {
+                    property.value = kvs.get(property.key, property.defaultValue);
+                    property.modified = false;
+                }
+            }
+
+        } finally {
+            kvs.close();
+        }
+    }
+
+    /**
      * データをDBからロードする
      * <p/>
      * 既存のキャッシュはクリーンされる
