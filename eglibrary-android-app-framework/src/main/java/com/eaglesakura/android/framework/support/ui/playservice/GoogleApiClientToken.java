@@ -35,7 +35,10 @@ public class GoogleApiClientToken {
      */
     private ConnectionResult connectionResult;
 
+    private final GoogleApiClient.Builder builder;
+
     public GoogleApiClientToken(GoogleApiClient.Builder builder) {
+        this.builder = builder;
         CallbackImpl impl = new CallbackImpl();
         builder.addOnConnectionFailedListener(impl);
         builder.addConnectionCallbacks(impl);
@@ -44,6 +47,13 @@ public class GoogleApiClientToken {
     }
 
     public void startInitialConnect() {
+        if (client == null) {
+            initialConnectStarted = false;
+            initialLoginCompleted = false;
+            connectionResult = null;
+            client = builder.build();
+        }
+
         if (!initialConnectStarted) {
             client.connect();
             initialConnectStarted = true;
@@ -187,7 +197,7 @@ public class GoogleApiClientToken {
         public void run() {
             synchronized (lock) {
                 if (refs == 0) {
-                    if (client.isConnected()) {
+                    if (client.isConnected() || client.isConnecting()) {
                         client.disconnect();
                         client = null;
                     }
