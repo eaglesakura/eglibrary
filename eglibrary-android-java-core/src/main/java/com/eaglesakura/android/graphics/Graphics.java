@@ -304,6 +304,8 @@ public class Graphics {
      * @param flags
      */
     public void drawString(String str, int x, int y, int start, int end, int flags) {
+        paint.setStyle(Style.FILL);
+
         if (start < 0 || end < 0) {
             start = 0;
             end = str.length();
