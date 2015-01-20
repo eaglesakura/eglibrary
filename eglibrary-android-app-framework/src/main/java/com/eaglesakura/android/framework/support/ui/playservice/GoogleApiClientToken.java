@@ -149,6 +149,10 @@ public class GoogleApiClientToken {
         Timer timer = new Timer();
         timer.start();
 
+        if (client == null) {
+            startInitialConnect();
+        }
+
         do {
             if (timer.end() > timeoutMs) {
                 return false;
