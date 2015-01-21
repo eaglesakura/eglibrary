@@ -1,6 +1,7 @@
 package com.eaglesakura.android.framework.ui.image;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -12,6 +13,7 @@ import com.eaglesakura.android.thread.HandlerLoopController;
 import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.math.MathUtil;
 import com.eaglesakura.math.Vector2;
+import com.eaglesakura.time.Timer;
 import com.eaglesakura.util.LogUtil;
 
 /**
@@ -57,6 +59,15 @@ public class ImageGestureController implements View.OnTouchListener {
     Vector2 imageMoveVector = new Vector2();
 
     ImageGestureListener listener;
+
+    /**
+     * 移動速度
+     */
+    Vector2 lookAtSpeed;
+
+    int lookAtFrames;
+
+    Timer freeTimer = new Timer();
 
 
     public ImageGestureController(Context context) {
@@ -116,38 +127,82 @@ public class ImageGestureController implements View.OnTouchListener {
 
 
         // 位置補正
-        if (!touchNow && imageCorrector.getPixelScale() >= 1.0f) {
-            final float CENTER_X = imageCorrector.getRenderAreaCenterX();
-            final float CENTER_Y = imageCorrector.getRenderAreaCenterY();
+        if (!touchNow && imageCorrector.getPixelScale() > 1.0f) {
+            Vector2 lookAtSpeed = this.lookAtSpeed;
 
-            float boundMoveSpeed = imageCorrector.getRenderAreaWidth() / 15;
+            if (lookAtSpeed != null && lookAtFrames-- > 0) {
+                imageCorrector.offset(lookAtSpeed.x, lookAtSpeed.y);
+            } else {
+                final float CENTER_X = imageCorrector.getRenderAreaCenterX();
+                final float CENTER_Y = imageCorrector.getRenderAreaCenterY();
+                float boundMoveSpeed = imageCorrector.getRenderAreaWidth() / 15;
 
-            if (imageCorrector.getImageAreaLeft() > CENTER_X) {
-                imageCorrector.moveToTargetLeft(CENTER_X, boundMoveSpeed);
-            }
-            if (imageCorrector.getImageAreaRight() < CENTER_X) {
-                imageCorrector.moveToTargetRight(CENTER_X, boundMoveSpeed);
-            }
+                if (imageCorrector.getImageAreaLeft() > CENTER_X) {
+                    imageCorrector.moveToTargetLeft(CENTER_X, boundMoveSpeed);
+                }
+                if (imageCorrector.getImageAreaRight() < CENTER_X) {
+                    imageCorrector.moveToTargetRight(CENTER_X, boundMoveSpeed);
+                }
 
-            if (imageCorrector.getImageAreaTop() > CENTER_Y) {
-                imageCorrector.moveToTargetTop(CENTER_X, boundMoveSpeed);
-            }
-            if (imageCorrector.getImageAreaBottom() < CENTER_Y) {
-                imageCorrector.moveToTargetBottom(CENTER_X, boundMoveSpeed);
+                if (imageCorrector.getImageAreaTop() > CENTER_Y) {
+                    imageCorrector.moveToTargetTop(CENTER_X, boundMoveSpeed);
+                }
+                if (imageCorrector.getImageAreaBottom() < CENTER_Y) {
+                    imageCorrector.moveToTargetBottom(CENTER_X, boundMoveSpeed);
+                }
             }
         }
+    }
+
+    public void clearLookAt() {
+        lookAtSpeed = null;
+        lookAtFrames = 0;
+    }
+
+    /**
+     * 注目点を指定する
+     *
+     * @param newCenterRenderPosX
+     * @param newCenterRenderPosY
+     * @param frame
+     */
+    public void setLookAtRenderPos(int newCenterRenderPosX, int newCenterRenderPosY, int frame) {
+        Rect area = imageCorrector.getRenderArea(new Rect());
+        int currentCenterX = area.centerX();
+        int currentCenterY = area.centerY();
+
+        float diffX = newCenterRenderPosX - currentCenterX;
+        float diffY = newCenterRenderPosY - currentCenterY;
+
+        lookAtSpeed = new Vector2(-diffX / (float) frame, -diffY / (float) frame);
+        lookAtFrames = frame;
     }
 
     public void setListener(ImageGestureListener listener) {
         this.listener = listener;
     }
 
+    /**
+     * タッチを放置している時間を取得する。
+     * <p/>
+     * タッチ中の場合は負の値を返却する
+     *
+     * @return
+     */
+    public long getFreeTimeMs() {
+        if (touchNow) {
+            return -1;
+        }
+        return freeTimer.end();
+    }
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        freeTimer.start();
         if (touchDetector == null || scaleGestureDetector == null) {
             return true;
         }
-
+        clearLookAt();
         touchDetector.onTouchEvent(event);
         scaleGestureDetector.onTouchEvent(event);
         if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {

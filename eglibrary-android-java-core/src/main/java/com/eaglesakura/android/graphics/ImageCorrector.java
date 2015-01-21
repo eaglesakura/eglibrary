@@ -291,6 +291,8 @@ public class ImageCorrector {
 
     /**
      * 画像エリアを取得する。
+     * <p/>
+     * 画像はこの領域に対して描画する
      *
      * @param result
      * @return
@@ -427,11 +429,39 @@ public class ImageCorrector {
         imageArea.top += offsetValue;
     }
 
-    public void moveToTargetTop(float targetX, float move) {
+    public void moveToTargetTop(float targetY, float move) {
         float oldValue = imageArea.top;
-        imageArea.top = MathUtil.targetMove(imageArea.top, move, targetX);
+        imageArea.top = MathUtil.targetMove(imageArea.top, move, targetY);
         float offsetValue = imageArea.top - oldValue;
         imageArea.bottom += offsetValue;
+    }
+
+    public void moveToTargetCenterX(float targetX, float move) {
+        float centerX = imageArea.centerX();
+        float diff = targetX - centerX;
+        float width = imageArea.width();
+        if (Math.abs(diff) < move) {
+            // 位置を決着させる
+            imageArea.left = targetX - (width / 2);
+            imageArea.right = imageArea.left + width;
+        } else {
+            // 位置を移動させる
+            moveToTargetLeft(targetX - (width / 2), move);
+        }
+    }
+
+    public void moveToTargetCenterY(float targetY, float move) {
+        float centerY = imageArea.centerY();
+        float diff = targetY - centerY;
+        float height = imageArea.height();
+        if (Math.abs(diff) < move) {
+            // 位置を決着させる
+            imageArea.top = targetY - (height / 2);
+            imageArea.bottom = imageArea.top + height;
+        } else {
+            // 位置を移動させる
+            moveToTargetTop(targetY - (height / 2), move);
+        }
     }
 
     /**
