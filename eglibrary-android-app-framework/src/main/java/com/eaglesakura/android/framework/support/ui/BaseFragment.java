@@ -175,6 +175,10 @@ public abstract class BaseFragment extends Fragment {
         return destroyed;
     }
 
+    public boolean isDestroyedView() {
+        return isDestroyed() || getActivity() == null || getView() == null;
+    }
+
     protected void log(String fmt, Object... args) {
         Log.i(((Object) this).getClass().getSimpleName(), String.format(fmt, args));
     }
