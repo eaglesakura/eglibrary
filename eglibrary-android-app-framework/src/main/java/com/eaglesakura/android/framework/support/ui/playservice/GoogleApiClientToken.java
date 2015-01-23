@@ -2,6 +2,8 @@ package com.eaglesakura.android.framework.support.ui.playservice;
 
 import android.os.Bundle;
 
+import com.eaglesakura.android.framework.FrameworkCentral;
+import com.eaglesakura.android.framework.db.BasicSettings;
 import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.AndroidUtil;
 import com.eaglesakura.time.Timer;
@@ -193,6 +195,13 @@ public class GoogleApiClientToken {
 
             initialLoginCompleted = true;
             connectionResult = result;
+
+//            if (false) {
+//                BasicSettings settings = FrameworkCentral.getSettings();
+//                settings.setLoginGoogleClientApi(false);
+//                settings.setLoginGoogleAccount("");
+//                settings.commit();
+//            }
         }
     }
 
