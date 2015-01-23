@@ -11,9 +11,11 @@ import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.android.framework.R;
 import com.eaglesakura.android.framework.db.BasicSettings;
 import com.eaglesakura.android.framework.support.ui.BaseActivity;
+import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.material.widget.MaterialAlertDialog;
 import com.eaglesakura.time.Timer;
+import com.eaglesakura.util.Util;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
@@ -36,6 +38,11 @@ public abstract class GoogleAuthActivity extends BaseActivity {
 
     @InstanceState
     protected boolean apiClientAuthInProgress = false;
+
+    @InstanceState
+    protected int loginTryCount = 0;
+
+    int sleepTimeMs = 1000 * 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +70,16 @@ public abstract class GoogleAuthActivity extends BaseActivity {
         getGoogleApiClientToken().executeGoogleApi(new GoogleApiTask<Object>() {
             @Override
             public Object executeTask(GoogleApiClient client) throws Exception {
-                Plus.AccountApi.revokeAccessAndDisconnect(client).await();
-                client.clearDefaultAccountAndReconnect().await();
+                try {
+                    Plus.AccountApi.revokeAccessAndDisconnect(client).await();
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    client.clearDefaultAccountAndReconnect().await();
+                } catch (Exception e) {
+                }
                 return null;
             }
 
@@ -91,6 +106,12 @@ public abstract class GoogleAuthActivity extends BaseActivity {
             return;
         }
 
+        // 適当にスリープをかける
+        Util.sleep(sleepTimeMs);
+        if (isFinishing()) {
+            return;
+        }
+
         // ブロッキングログインを行う
         getGoogleApiClientToken().executeGoogleApi(new GoogleApiTask<Object>() {
             @Override
@@ -112,7 +133,9 @@ public abstract class GoogleAuthActivity extends BaseActivity {
 
             @Override
             public Object connectedFailed(GoogleApiClient client, ConnectionResult connectionResult) {
-                if (connectionResult.hasResolution()) {
+                if (connectionResult.hasResolution() && loginTryCount == 0) {
+                    // 試行は一度だけ許される
+                    ++loginTryCount;
                     apiClientAuthInProgress = true;
                     log("start auth dialog");
                     showLoginDialog(connectionResult);
@@ -160,6 +183,12 @@ public abstract class GoogleAuthActivity extends BaseActivity {
         dialog.setPositiveButton(R.string.eglibrary_GoogleApi_Error_Retry, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                // ユーザーが一度操作しているから回数リセット
+                loginTryCount = 0;
+                if (sleepTimeMs < 1000 * 5) {
+                    // back off
+                    sleepTimeMs += 1000;
+                }
                 loginOnBackground();
             }
         });
