@@ -16,6 +16,8 @@ import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.util.LogUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -549,7 +551,7 @@ public class BluetoothDeviceScanner {
      * <p/>
      * 事前に BluetoothDeviceCache.parseBeaconを呼んでおく必要がある
      */
-    public static void filterBeacons(List<BluetoothDeviceCache> list) {
+    public static List<BluetoothDeviceCache> filterBeacons(List<BluetoothDeviceCache> list) {
         Iterator<BluetoothDeviceCache> iterator = list.iterator();
         while (iterator.hasNext()) {
             BluetoothDeviceCache cache = iterator.next();
@@ -557,6 +559,7 @@ public class BluetoothDeviceScanner {
                 iterator.remove();
             }
         }
+        return list;
     }
 
     /**
@@ -608,5 +611,32 @@ public class BluetoothDeviceScanner {
         }
 
         return result;
+    }
+
+    /**
+     * 距離が近い順番にソートする
+     *
+     * @param devices
+     * @return
+     */
+    public static List<BluetoothDeviceCache> softNearDevices(List<BluetoothDeviceCache> devices) {
+
+        Collections.sort(devices, new Comparator<BluetoothDeviceCache>() {
+            @Override
+            public int compare(BluetoothDeviceCache lhs, BluetoothDeviceCache rhs) {
+                double lDist = lhs.calcDeviceDistanceMeter(true);
+                double rDist = rhs.calcDeviceDistanceMeter(true);
+
+                if (lDist < rDist) {
+                    return -1;
+                } else if (lDist > rDist) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
+        return devices;
     }
 }
