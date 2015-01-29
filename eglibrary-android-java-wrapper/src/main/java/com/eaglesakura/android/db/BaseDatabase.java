@@ -177,4 +177,11 @@ public abstract class BaseDatabase<SessionClass extends AbstractDaoSession> {
                 " ADD COLUMN '" + property.columnName + "' TEXT;";
         db.execSQL(sql);
     }
+
+    protected static void addByteArrayColumn(SQLiteDatabase db, String tableName, Property property) {
+        String sql = "ALTER" +
+                " TABLE " + tableName + "" +
+                " ADD COLUMN '" + property.columnName + "' BLOB;";
+        db.execSQL(sql);
+    }
 }
