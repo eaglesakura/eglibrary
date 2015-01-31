@@ -1,8 +1,4 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.eaglesakura.android.java.core">
 
-    <uses-sdk
-        android:minSdkVersion="15"
-        android:targetSdkVersion="19" />
-    <application />
 </manifest>
