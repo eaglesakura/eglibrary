@@ -22,8 +22,11 @@ public class BluetoothServer extends BluetoothP2PConnector {
      */
     long serverRequestTimeoutMs = 1000 * 60 * 5;
 
+    BluetoothAdapter adapter;
+
     public BluetoothServer(Context context) {
         this.context = context;
+        this.adapter = BluetoothAdapter.getDefaultAdapter();
     }
 
     /**
@@ -41,7 +44,6 @@ public class BluetoothServer extends BluetoothP2PConnector {
     @Override
     protected void requestConnecting(UUID protocol) {
         try {
-            BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
             BluetoothServerSocket serverSocket = adapter.listenUsingInsecureRfcommWithServiceRecord(context.getPackageName(), protocol);
 
             socket = serverSocket.accept((int) serverRequestTimeoutMs);
