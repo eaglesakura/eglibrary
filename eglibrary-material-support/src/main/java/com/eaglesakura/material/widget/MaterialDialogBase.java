@@ -16,7 +16,7 @@ import com.eaglesakura.material.R;
  */
 public class MaterialDialogBase extends Dialog {
 
-    View root;
+    protected View root;
 
     public MaterialDialogBase(Context context) {
         super(context);
