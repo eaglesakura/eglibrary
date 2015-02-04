@@ -1,11 +1,14 @@
 package com.eaglesakura.android.camera;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
+import android.os.Build;
 import android.view.SurfaceHolder;
 import android.view.TextureView;
 
+import com.eaglesakura.android.java.core.BuildConfig;
 import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.jc.annotation.JCClass;
@@ -123,8 +126,13 @@ public class CameraManager implements Camera.AutoFocusCallback {
      * @param enable true=有効、false=無効
      * @return 切り替えに成功したらtrue
      */
+    @SuppressLint("NewApi")
     @JCMethod
     public boolean requestStabilization(boolean enable) {
+        if (Build.VERSION.SDK_INT < 15) {
+            return false;
+        }
+
         try {
             if (parameters.isVideoStabilizationSupported()) {
                 parameters.setVideoStabilization(enable);
@@ -452,13 +460,13 @@ public class CameraManager implements Camera.AutoFocusCallback {
      */
     public boolean startPreview(Object surface) {
         try {
-            if (surface instanceof TextureView) {
+            if (Build.VERSION.SDK_INT >= 14 && surface instanceof TextureView) {
                 surface = ((TextureView) surface).getSurfaceTexture();
             }
 
             if (surface instanceof SurfaceHolder) {
                 camera.setPreviewDisplay((SurfaceHolder) surface);
-            } else if (surface instanceof SurfaceTexture) {
+            } else if (Build.VERSION.SDK_INT >= 11 && surface instanceof SurfaceTexture) {
                 camera.setPreviewTexture((SurfaceTexture) surface);
             } else {
                 LogUtil.log("not support preview(%s)", surface.getClass().getName());

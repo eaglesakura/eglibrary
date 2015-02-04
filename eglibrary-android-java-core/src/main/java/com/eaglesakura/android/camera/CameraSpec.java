@@ -1,6 +1,8 @@
 package com.eaglesakura.android.camera;
 
+import android.annotation.SuppressLint;
 import android.hardware.Camera;
+import android.os.Build;
 
 import com.eaglesakura.util.LogUtil;
 
@@ -19,12 +21,18 @@ public class CameraSpec {
     /**
      * カメラのプレビューサイズ
      */
-    private List<PictureSizeSpec> previewSizes = new ArrayList<PictureSizeSpec>();
+    private List<PictureSizeSpec> previewSizes = new ArrayList<>();
 
     /**
      * カメラの撮影サイズ
      */
-    private List<PictureSizeSpec> shotSizes = new ArrayList<PictureSizeSpec>();
+    private List<PictureSizeSpec> shotSizes = new ArrayList<>();
+
+    /**
+     * ビデオの撮影サイズ
+     */
+    private List<PictureSizeSpec> videoSizes = new ArrayList<>();
+
     /**
      * サポートしているシーン
      */
@@ -45,6 +53,12 @@ public class CameraSpec {
      */
     private final List<FlashModeSpec> flashModeSpecs;
 
+    /**
+     * ビデオ手ぶれ補正
+     */
+    private boolean videoStabilizationSupported;
+
+    @SuppressLint("NewApi")
     public CameraSpec(CameraType type, Camera camera) {
         this.type = type;
 
@@ -61,6 +75,23 @@ public class CameraSpec {
             List<Camera.Size> sizeList = parameters.getSupportedPictureSizes();
             for (Camera.Size size : sizeList) {
                 shotSizes.add(new PictureSizeSpec(size));
+            }
+        }
+        // ビデオ関係のセットアップ
+        {
+            List<Camera.Size> sizeList;
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD) {
+                sizeList = parameters.getSupportedVideoSizes();
+            } else {
+                sizeList = parameters.getSupportedPreviewSizes();
+            }
+            for (Camera.Size size : sizeList) {
+                videoSizes.add(new PictureSizeSpec(size));
+            }
+
+            if (Build.VERSION.SDK_INT >= 15) {
+                // ビデオ手ぶれ補正
+                videoStabilizationSupported = parameters.isVideoStabilizationSupported();
             }
         }
 
@@ -88,6 +119,10 @@ public class CameraSpec {
         return shotSizes;
     }
 
+    public List<PictureSizeSpec> getVideoSizes() {
+        return videoSizes;
+    }
+
     /**
      * シーンをサポートしていたらtrue
      *
@@ -112,6 +147,10 @@ public class CameraSpec {
 
     public List<FocusModeSpec> getFocusModeSpecs() {
         return focusModeSpecs;
+    }
+
+    public boolean isVideoStabilizationSupported() {
+        return videoStabilizationSupported;
     }
 
     /**
@@ -160,6 +199,21 @@ public class CameraSpec {
      */
     public PictureSizeSpec getShotSize(String id) {
         for (PictureSizeSpec size : shotSizes) {
+            if (size.getId().equals(id)) {
+                return size;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * IDから撮影サイズを逆引きする
+     *
+     * @param id
+     * @return
+     */
+    public PictureSizeSpec getVideoSize(String id) {
+        for (PictureSizeSpec size : videoSizes) {
             if (size.getId().equals(id)) {
                 return size;
             }
