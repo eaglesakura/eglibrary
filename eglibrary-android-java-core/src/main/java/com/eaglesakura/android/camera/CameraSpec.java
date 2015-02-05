@@ -93,6 +93,7 @@ public class CameraSpec {
                 // ビデオ手ぶれ補正
                 videoStabilizationSupported = parameters.isVideoStabilizationSupported();
             }
+
         }
 
         sceneSpecs = SceneSpec.list(parameters.getSupportedSceneModes());   // シーンモード

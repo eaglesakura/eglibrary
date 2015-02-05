@@ -1,5 +1,6 @@
 package com.eaglesakura.android.glkit.media;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 
@@ -120,8 +121,9 @@ public class CameraShotRequest {
      *
      * @param sceneMode
      */
-    public void scene(SceneSpec sceneMode) {
+    public CameraShotRequest scene(SceneSpec sceneMode) {
         this.sceneSpec = sceneMode;
+        return this;
     }
 
     /**
@@ -129,8 +131,9 @@ public class CameraShotRequest {
      *
      * @param shotSizeId
      */
-    public void shotSizeId(String shotSizeId) {
+    public CameraShotRequest shotSizeId(String shotSizeId) {
         this.shotSizeId = shotSizeId;
+        return this;
     }
 
     private static int genPreviewTexture() {
@@ -152,6 +155,7 @@ public class CameraShotRequest {
      * @param request
      * @return
      */
+    @SuppressLint("NewApi")
     public static byte[] takePictureSync(Context context, CameraShotRequest request) {
         if (AndroidUtil.isUIThread()) {
             throw new IllegalStateException("call Background!!");

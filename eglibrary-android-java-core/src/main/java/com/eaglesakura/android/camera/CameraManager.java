@@ -458,6 +458,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
      * @param surface
      * @return
      */
+    @SuppressLint("NewApi")
     public boolean startPreview(Object surface) {
         try {
             if (Build.VERSION.SDK_INT >= 14 && surface instanceof TextureView) {
