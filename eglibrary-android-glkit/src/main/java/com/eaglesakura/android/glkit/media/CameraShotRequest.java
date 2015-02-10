@@ -136,24 +136,13 @@ public class CameraShotRequest {
         return this;
     }
 
-    private static int genPreviewTexture() {
-        int[] temp = new int[1];
-        glGenTextures(1, temp, 0);
-        int texture = temp[0];
-        return texture;
-    }
-
-    private static void deletePreviewTexture(int texture) {
-        glDeleteTextures(1, new int[]{texture}, 0);
-    }
-
     /**
      * 同期的にカメラで撮影を行う。
      * <p/>
-     * UIThreadからは呼び出してはいけない
+     * UIThreadからは呼び出してはいけない。
      *
      * @param request
-     * @return
+     * @return 撮影されたJpeg画像
      */
     @SuppressLint("NewApi")
     public static byte[] takePictureSync(Context context, CameraShotRequest request) {
@@ -161,8 +150,8 @@ public class CameraShotRequest {
             throw new IllegalStateException("call Background!!");
         }
 
+        OffscreenPreviewSurface surface = new OffscreenPreviewSurface(context);
         CameraManager cameraManager = null;
-        IEGLDevice eglDevice = null;
 
         try {
             cameraManager = new CameraManager(context);
@@ -172,8 +161,6 @@ public class CameraShotRequest {
                 LogUtil.log("Camera Connect(%s) fail", request.cameraType);
                 return null;
             }
-
-            CameraSpec spec = cameraManager.getSpecs();
 
             cameraManager.setJpegQuality(request.jpegQuality);
             LogUtil.log("set Jpeg Quality(%d)", request.jpegQuality);
@@ -214,20 +201,8 @@ public class CameraShotRequest {
             }
 
             // EGL初期化する
-            final EGL11Manager eglManager = new EGL11Manager(context);
-            EGLSpecRequest eglSpecRequest = new EGLSpecRequest();
-            eglSpecRequest.version = GLESVersion.GLES20;
-            eglManager.initialize(eglSpecRequest);
-            eglDevice = eglManager.newDevice(null);
-            eglDevice.createPBufferSurface(1, 1);
-            if (!eglDevice.bind()) {
-                throw new IllegalStateException("EGL initialize failed");
-            }
-
-            int texture = genPreviewTexture();
-            SurfaceTexture surfaceTexture = new SurfaceTexture(texture);
-
-            cameraManager.startPreview(surfaceTexture);
+            SurfaceTexture texture = surface.initialize();
+            cameraManager.startPreview(texture);
 
             if (request.autoFocus) {
                 int autoFocusRetry = request.autoFocusRetry;
@@ -247,10 +222,6 @@ public class CameraShotRequest {
             // 撮影
             byte[] jpeg = cameraManager.takePictureSync();
             LogUtil.log("capture Jpeg size(%.1f MB)", (float) jpeg.length / 1024.0f / 1024.0f);
-
-            surfaceTexture.release();
-            deletePreviewTexture(texture);
-
             return jpeg;
         } catch (Exception e) {
             LogUtil.log(e);
@@ -258,9 +229,8 @@ public class CameraShotRequest {
             if (cameraManager != null) {
                 cameraManager.disconnect();
             }
-            if (eglDevice != null) {
-                eglDevice.unbind();
-                eglDevice.dispose();
+            if (surface != null) {
+                surface.dispose();
             }
         }
         return null;
