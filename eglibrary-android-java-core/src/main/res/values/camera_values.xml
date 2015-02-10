@@ -14,6 +14,11 @@
     <string name="Camera.Scene.document">ドキュメント</string>
     <string name="Camera.Scene.fireworks">花火</string>
     <string name="Camera.Scene.barcode">バーコード</string>
+    <string name="Camera.Scene.theatre">シアター</string>
+    <string name="Camera.Scene.action">アクション</string>
+    <string name="Camera.Scene.steadyphoto">SteadyPhoto</string>
+    <string name="Camera.Scene.candlelight">キャンドル</string>
+    <string name="Camera.Scene.sunset">夕暮れ</string>
 
     <!-- ホワイトバランス設定 -->
     <string name="Camera.WhiteBarance.auto">自動</string>
