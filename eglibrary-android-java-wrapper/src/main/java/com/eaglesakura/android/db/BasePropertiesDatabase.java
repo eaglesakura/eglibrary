@@ -107,6 +107,14 @@ public class BasePropertiesDatabase {
     }
 
     public boolean getBooleanProperty(String key) {
+        String value = getStringProperty(key);
+
+        // 保存速度を向上するため、0|1判定にも対応する
+        if ("0".equals(value)) {
+            return false;
+        } else if ("1".equals(value)) {
+            return true;
+        }
         return Boolean.parseBoolean(getStringProperty(key));
     }
 
@@ -224,6 +232,9 @@ public class BasePropertiesDatabase {
             } catch (Exception e) {
                 value = null;
             }
+        } else if (value instanceof Boolean) {
+            // trueならば"1"、falseならば"0"としてしまう
+            value = Boolean.TRUE.equals(value) ? "1" : "0";
         }
 
         if (value instanceof byte[]) {
