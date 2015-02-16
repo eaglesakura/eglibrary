@@ -27,6 +27,8 @@ public abstract class BaseActivity extends ActionBarActivity implements Fragment
 
     protected GoogleApiClientToken googleApiClientToken;
 
+    protected boolean resumed;
+
     protected BaseActivity() {
         fragments.setCallback(this);
     }
@@ -52,6 +54,22 @@ public abstract class BaseActivity extends ActionBarActivity implements Fragment
         if (googleApiClientToken != null) {
             googleApiClientToken.startInitialConnect();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        resumed = true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        resumed = false;
+    }
+
+    public boolean isResumed() {
+        return resumed;
     }
 
     @Override
