@@ -20,8 +20,16 @@ public class AndroidUtil {
             throw new IllegalStateException("is not ui thread!!");
         }
     }
+
+    public static void assertBackgroundThread() {
+        if (isUIThread()) {
+            throw new IllegalStateException("is not background thread!!");
+        }
+    }
+
     /**
      * Handlerに関連付けられていたThreadで動作している場合はtrueを返す。
+     *
      * @param handler 確認対象のHandler
      * @return Handlerに関連付けられていたThreadで動作している場合はtrueを返す。
      */
