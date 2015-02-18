@@ -10,7 +10,10 @@ import android.util.Log;
 import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiClientToken;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiTask;
+import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.ContextUtil;
+import com.eaglesakura.util.LogUtil;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.androidannotations.annotations.AfterViews;
@@ -243,6 +246,41 @@ public abstract class BaseFragment extends Fragment {
             return null;
         }
         return ((BaseActivity) activity).executeGoogleApi(task);
+    }
+
+    public void executeGoogleApiUiThread(final GoogleApiTask<?> task) {
+        executeGoogleApi(new GoogleApiTask<Object>() {
+            @Override
+            public Object executeTask(final GoogleApiClient client) throws Exception {
+                UIHandler.postUI(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            task.executeTask(client);
+                        } catch (Exception e) {
+                            LogUtil.log(e);
+                        }
+                    }
+                });
+                return null;
+            }
+
+            @Override
+            public Object connectedFailed(final GoogleApiClient client, final ConnectionResult connectionResult) {
+                UIHandler.postUI(new Runnable() {
+                    @Override
+                    public void run() {
+                        task.connectedFailed(client, connectionResult);
+                    }
+                });
+                return null;
+            }
+
+            @Override
+            public boolean isCanceled() {
+                return task.isCanceled();
+            }
+        });
     }
 
     public GoogleApiClientToken getGoogleApiClientToken() {

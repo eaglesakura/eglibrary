@@ -30,6 +30,8 @@ public class GoogleApiClientToken {
      */
     private boolean initialConnectStarted;
 
+    private Bundle connectedHint;
+
     private final Object lock = new Object();
 
     /**
@@ -172,12 +174,15 @@ public class GoogleApiClientToken {
         return true;
     }
 
+    public Bundle getConnectedHint() {
+        return connectedHint;
+    }
 
     private class CallbackImpl implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
         @Override
         public void onConnected(Bundle bundle) {
             LogUtil.log("onConnected bundle(%s)", "" + bundle);
-
+            connectedHint = bundle;
             initialLoginCompleted = true;
             connectionResult = null;
         }
