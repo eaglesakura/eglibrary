@@ -37,6 +37,10 @@ android {
             jniLibs.srcDirs = ['../ndk/eglibrary-android-glkit/libs']
         }
     }
+
+    lintOptions {
+        disable "NewApi"
+    }
 }
 
 // export cpp

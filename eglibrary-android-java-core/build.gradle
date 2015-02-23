@@ -24,6 +24,10 @@ android {
         main {
         }
     }
+
+    lintOptions {
+        disable "NewApi"
+    }
 }
 
 apply plugin: 'maven'

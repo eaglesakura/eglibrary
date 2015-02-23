@@ -27,6 +27,7 @@ import com.eaglesakura.util.Util;
  * 処理はウィンドウサーフェイスを持つ必要がなく、オフスクリーンレンダリングを可能とする。
  */
 @JCClass(cppNamespace = "es.glkit")
+@SuppressWarnings("NewApi")
 public abstract class GLProcessingManager {
     protected final IEGLManager eglManager;
 
