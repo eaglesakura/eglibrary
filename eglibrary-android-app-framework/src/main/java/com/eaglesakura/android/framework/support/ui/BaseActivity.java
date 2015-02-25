@@ -1,5 +1,7 @@
 package com.eaglesakura.android.framework.support.ui;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
@@ -9,6 +11,8 @@ import android.view.KeyEvent;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiClientToken;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiTask;
 import com.eaglesakura.android.util.ContextUtil;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -23,11 +27,15 @@ import java.util.List;
 @EActivity
 public abstract class BaseActivity extends ActionBarActivity implements FragmentChooser.Callback {
 
+    protected static final int REQUEST_GOOGLEPLAYSERVICE_RECOVER = 0x1100;
+
     protected UserNotificationController userNotificationController = new UserNotificationController(this);
 
     protected GoogleApiClientToken googleApiClientToken;
 
     protected boolean activityResumed;
+
+    protected boolean playServiceCheck = false;
 
     protected BaseActivity() {
         fragments.setCallback(this);
@@ -60,6 +68,30 @@ public abstract class BaseActivity extends ActionBarActivity implements Fragment
     protected void onResume() {
         super.onResume();
         activityResumed = true;
+
+        if (playServiceCheck) {
+            final int statusCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+
+            if (statusCode != ConnectionResult.SUCCESS) {
+                Dialog dialog = GooglePlayServicesUtil.getErrorDialog(statusCode, this, REQUEST_GOOGLEPLAYSERVICE_RECOVER, new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        onGooglePlayServiceRecoverCanceled(statusCode);
+                    }
+                });
+                dialog.show();
+            } else {
+                log("Google Play Service OK!");
+            }
+        }
+    }
+
+    /**
+     * Google Play Serviceの復旧を取りやめた場合
+     *
+     * @param errorCode
+     */
+    protected void onGooglePlayServiceRecoverCanceled(int errorCode) {
     }
 
     @Override
