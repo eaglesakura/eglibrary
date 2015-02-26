@@ -2,12 +2,25 @@ package com.eaglesakura.android.util;
 
 import android.text.Editable;
 import android.text.InputType;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 
 /**
  * View系の便利メソッド
  */
 public class ViewUtil {
+
+    /**
+     * CardView配下のitemを横幅に合わせてマッチングする
+     *
+     * @param itemView
+     */
+    public static void matchCardWidth(View itemView) {
+        if (itemView.getLayoutParams() == null) {
+            itemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        }
+    }
 
     /**
      * カーソル位置にテキストを挿入する
