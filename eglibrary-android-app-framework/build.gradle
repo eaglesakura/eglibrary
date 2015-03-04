@@ -17,9 +17,8 @@ configurations {
 }
 
 dependencies {
-//    compile 'com.google.android.gms:play-services:6.5.+'
     compile "com.google.android.gms:play-services-plus:6.5.+"
-//    compile "com.google.android.gms:play-services-identity:6.5.+"
+    compile 'com.mcxiaoke.volley:library-aar:1.0.0'
 
     compile project(':eglibrary-android-java-wrapper')
     compile project(':eglibrary-material-support')
