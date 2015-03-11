@@ -1,15 +1,17 @@
 package com.eaglesakura.android.thread;
 
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 
 import com.eaglesakura.thread.Holder;
 
 public class AsyncHandler extends Handler {
-    Thread thread;
+    final HandlerThread thread;
 
-    public AsyncHandler() {
-        super();
+    public AsyncHandler(HandlerThread thread) {
+        super(thread.getLooper());
+        this.thread = thread;
     }
 
     /**
@@ -19,8 +21,7 @@ public class AsyncHandler extends Handler {
     public void dispose() {
         try {
             boolean handlerThread = isHandlerThread();
-            Thread thread = getLooper().getThread();
-            getLooper().quit();
+            thread.quit();
             if (!handlerThread) {
                 thread.join();
             }
@@ -31,6 +32,7 @@ public class AsyncHandler extends Handler {
 
     /**
      * 所属しているスレッドを取得する。
+     *
      * @return
      */
     public Thread getThread() {
@@ -39,6 +41,7 @@ public class AsyncHandler extends Handler {
 
     /**
      * ハンドラと同じスレッドの場合はtrue
+     *
      * @return
      */
     public boolean isHandlerThread() {
@@ -47,20 +50,25 @@ public class AsyncHandler extends Handler {
 
     /**
      * ハンドラを生成する。
+     *
      * @return
      */
     public static AsyncHandler createInstance(String name) {
-        final Holder<AsyncHandler> holder = new Holder<AsyncHandler>();
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                Looper.prepare();
-                holder.set(new AsyncHandler());
-                Looper.loop();
-            }
-        };
-        thread.setName(name);
+        HandlerThread thread = new HandlerThread(name);
         thread.start();
-        return holder.getWithWait();
+        return new AsyncHandler(thread);
+
+//        final Holder<AsyncHandler> holder = new Holder<AsyncHandler>();
+//        Thread thread = new Thread() {
+//            @Override
+//            public void run() {
+//                Looper.prepare();
+//                holder.set(new AsyncHandler());
+//                Looper.loop();
+//            }
+//        };
+//        thread.setName(name);
+//        thread.start();
+//        return holder.getWithWait();
     }
 }
