@@ -2,7 +2,11 @@ package com.eaglesakura.android.glkit.media;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.WindowManager;
 
 import com.eaglesakura.android.camera.CameraManager;
 import com.eaglesakura.android.camera.CameraSpec;
@@ -15,8 +19,10 @@ import com.eaglesakura.android.glkit.egl.EGLSpecRequest;
 import com.eaglesakura.android.glkit.egl.GLESVersion;
 import com.eaglesakura.android.glkit.egl.IEGLDevice;
 import com.eaglesakura.android.glkit.egl11.EGL11Manager;
+import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.AndroidUtil;
 import com.eaglesakura.math.Vector2;
+import com.eaglesakura.thread.Holder;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.StringUtil;
 
@@ -145,7 +151,7 @@ public class CameraShotRequest {
      * @return 撮影されたJpeg画像
      */
     @SuppressLint("NewApi")
-    public static byte[] takePictureSync(Context context, CameraShotRequest request) {
+    public static byte[] takePictureSync(final Context context, CameraShotRequest request) {
         if (AndroidUtil.isUIThread()) {
             throw new IllegalStateException("call Background!!");
         }
@@ -200,9 +206,8 @@ public class CameraShotRequest {
                 cameraManager.setGpsData(request.gps[0], request.gps[1]);
             }
 
-            // EGL初期化する
-            SurfaceTexture texture = surface.initialize();
-            cameraManager.startPreview(texture);
+            Object sur = surface.createSurface();
+            cameraManager.startPreview(sur);
 
             if (request.autoFocus) {
                 int autoFocusRetry = request.autoFocusRetry;

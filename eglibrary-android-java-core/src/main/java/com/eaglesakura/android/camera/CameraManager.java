@@ -6,6 +6,7 @@ import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.Build;
 import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.TextureView;
 
 import com.eaglesakura.android.java.core.BuildConfig;
@@ -463,6 +464,8 @@ public class CameraManager implements Camera.AutoFocusCallback {
         try {
             if (Build.VERSION.SDK_INT >= 14 && surface instanceof TextureView) {
                 surface = ((TextureView) surface).getSurfaceTexture();
+            } else if (surface instanceof SurfaceView) {
+                surface = ((SurfaceView) surface).getHolder();
             }
 
             if (surface instanceof SurfaceHolder) {

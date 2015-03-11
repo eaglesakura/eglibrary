@@ -1,5 +1,6 @@
 package com.eaglesakura.android.util;
 
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -35,6 +36,14 @@ public class AndroidUtil {
      */
     public static boolean isHandlerThread(Handler handler) {
         return Thread.currentThread().equals(handler.getLooper().getThread());
+    }
+
+    public static boolean isSupportedSurfaceTexture() {
+        return Build.VERSION.SDK_INT >= 11;
+    }
+
+    public static boolean isSupportedTextureView() {
+        return Build.VERSION.SDK_INT >= 14;
     }
 
 }

@@ -2,6 +2,7 @@ package com.eaglesakura.android.glkit.media;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.view.Surface;
@@ -233,7 +234,7 @@ public class VideoRecordRequest {
                 recorder.setPreviewDisplay((Surface) request.previewSurface);
             } else {
                 surface = new OffscreenPreviewSurface(context);
-                rawSurface = new Surface(surface.initialize());
+                rawSurface = new Surface((SurfaceTexture) surface.createSurface());
                 recorder.setPreviewDisplay(rawSurface);
             }
 

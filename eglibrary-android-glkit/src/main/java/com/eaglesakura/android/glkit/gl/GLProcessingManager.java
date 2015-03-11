@@ -112,17 +112,17 @@ public abstract class GLProcessingManager {
         }
 
         if (windowSurface instanceof SurfaceHolder) {
-            LogUtil.log("initialize / SurfacHolder");
+            LogUtil.log("createSurface / SurfacHolder");
             // for SurfaceView/SurfaceHolder
             SurfaceHolder holder = (SurfaceHolder) windowSurface;
             holder.setFormat(PixelFormat.RGBA_8888);
             holder.addCallback(new SurfaceHolderCallback2Impl());
         } else if (windowSurface instanceof Window) {
-            LogUtil.log("initialize / Window");
+            LogUtil.log("createSurface / Window");
             // for ActivityDirect
             ((Window) windowSurface).takeSurface(new SurfaceHolderCallback2Impl());
         } else if (windowSurface instanceof TextureView) {
-            LogUtil.log("initialize / TextureView");
+            LogUtil.log("createSurface / TextureView");
             // for TextureView
             ((TextureView) windowSurface).setSurfaceTextureListener(new SurfaceTextureListenerImpl());
         } else {

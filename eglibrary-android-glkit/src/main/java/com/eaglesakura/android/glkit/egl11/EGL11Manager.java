@@ -164,7 +164,7 @@ public class EGL11Manager implements IEGLManager {
     public IEGLDevice newDevice(IEGLContextGroup contextGroup) {
         // プロセス全体のデバイス数を増加させる
         if (EGLProcessState.incrementDevice()) {
-            log("initialize EGL1.0 / GLES(%s)", getGLESVersion().name());
+            log("createSurface EGL1.0 / GLES(%s)", getGLESVersion().name());
 
             if (!egl.eglInitialize(display, eglVersion)) {
                 GLKitUtil.printEglError(egl.eglGetError());
