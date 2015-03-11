@@ -75,11 +75,29 @@ public class BeaconData {
      * @return
      */
     public static String createUniqueID(BluetoothDevice device, BeaconData beacon) {
-        return String.format("%s/%d/%d/%s/",
-                beacon.getUuid().toString().toUpperCase(),
+        return createUniqueID(
+                beacon.getUuid().toString(),
                 beacon.getMajor(),
                 beacon.getMinor(),
-                device.getAddress().toUpperCase());
+                device.getAddress()
+        );
+    }
+
+    /**
+     * 各種情報から一意のIDを生成する
+     *
+     * @param uuid
+     * @param major
+     * @param minor
+     * @param address
+     * @return
+     */
+    public static String createUniqueID(String uuid, int major, int minor, String address) {
+        return String.format("%s/%d/%d/%s/",
+                uuid.toUpperCase(),
+                major,
+                minor,
+                address.toUpperCase());
     }
 
     public static BeaconData createInstance(BluetoothDevice device, int rssi, byte[] scanRecord) throws Exception {

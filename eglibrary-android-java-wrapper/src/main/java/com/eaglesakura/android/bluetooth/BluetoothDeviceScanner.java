@@ -474,6 +474,18 @@ public class BluetoothDeviceScanner {
         }
 
         /**
+         * Beacon情報をパースする
+         *
+         * @param cacheClear 既に取得済みのBeacon情報のキャッシュを廃棄する
+         */
+        public void parseBeacon(boolean cacheClear) throws Exception {
+            if (cacheClear) {
+                beacon = null;
+            }
+            parseBeacon();
+        }
+
+        /**
          * ビーコン情報をパースする
          */
         public BeaconData getBeacon() {
