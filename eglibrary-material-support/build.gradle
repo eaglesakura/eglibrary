@@ -24,10 +24,10 @@ dependencies {
     /**
      * support libs
      */
-    compile 'com.android.support:support-v4:21.+'
-    compile 'com.android.support:appcompat-v7:21.+'
-    compile 'com.android.support:cardview-v7:21.+'
-    compile 'com.android.support:recyclerview-v7:21.+'
+    compile 'com.android.support:support-v4:22.+'
+    compile 'com.android.support:appcompat-v7:22.+'
+    compile 'com.android.support:cardview-v7:22.+'
+    compile 'com.android.support:recyclerview-v7:22.+'
 //    compile 'com.android.support:support-v13:21.+'
 
     /**
