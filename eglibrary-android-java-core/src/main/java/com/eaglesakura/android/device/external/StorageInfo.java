@@ -18,23 +18,23 @@ public class StorageInfo {
     /**
      * 外部接続されたストレージであればtrue
      */
-    final boolean sdcard;
+    private final boolean sdcard;
 
     /**
      * ストレージのRootパス
      */
-    final File path;
+    private final File path;
 
 
     /**
      * ストレージの空き容量
      */
-    long freeSize = -1;
+    private long freeSize = -1;
 
     /**
      * ストレージの最大容量
      */
-    long maxSize = -1;
+    private long maxSize = -1;
 
     private StorageInfo(boolean external, File path) {
         this.sdcard = external;
@@ -93,6 +93,10 @@ public class StorageInfo {
             // Android 4.4標準パスから検索
             result.add(new StorageInfo(true, check));
             result.add(new StorageInfo(true, new File("/storage/sdcard0")));
+        } else if ((check = new File("/mnt/sdcard/external_sd")).exists()) {
+            // for Xperia GX
+            result.add(new StorageInfo(true, check));
+            result.add(new StorageInfo(true, Environment.getExternalStorageDirectory()));
         } else {
             String path = null;
             final String[] ENV_LIST = {
@@ -100,7 +104,6 @@ public class StorageInfo {
                     "EXTERNAL_STORAGE2",
                     "EXTERNAL_STORAGE"
             };
-
             for (String env : ENV_LIST) {
                 String envPath = System.getenv(env);
                 if (!StringUtil.isEmpty(envPath)) {
