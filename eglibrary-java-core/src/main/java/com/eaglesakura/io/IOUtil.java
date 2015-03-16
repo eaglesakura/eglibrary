@@ -26,8 +26,6 @@ import java.util.zip.ZipInputStream;
 
 /**
  * File関連の便利メソッドを提供する
- *
- * @author TAKESHI YAMASHITA
  */
 public class IOUtil {
 
