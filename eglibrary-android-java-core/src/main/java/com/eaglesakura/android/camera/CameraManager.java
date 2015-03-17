@@ -11,6 +11,7 @@ import android.view.TextureView;
 
 import com.eaglesakura.android.java.core.BuildConfig;
 import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.util.AndroidUtil;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.jc.annotation.JCClass;
 import com.eaglesakura.jc.annotation.JCMethod;
@@ -169,15 +170,25 @@ public class CameraManager implements Camera.AutoFocusCallback {
     }
 
     private Camera.Size chooseShotSize(List<Camera.Size> targetSizes, int width, int height, int minWidth, int minHeight) {
-        final float TARGET_ASPECT = (float) Math.max(1, width) / (float) Math.max(1, height);
+
+        final float reqLargeValue = Math.max(width, height);
+        final float reqSmallValue = Math.min(width, height);
+        final float lowerSizeLarge = Math.max(minWidth, minHeight);
+        final float lowerSizeSmall = Math.min(minWidth, minHeight);
+
+        final float TARGET_ASPECT = Math.max(1, reqLargeValue) / Math.max(1, reqSmallValue);
+
         try {
             Camera.Size target = null;
             float current_diff = 999999999;
 
             for (Camera.Size size : targetSizes) {
-                // 最低限のフォーマットは保つ
-                if (size.width >= minWidth && size.height >= minHeight) {
-                    float aspect_diff = ((float) size.width / (float) size.height) - TARGET_ASPECT;
+                final float checkLargeValue = Math.max(size.width, size.height);
+                final float checkSmallValue = Math.min(size.width, size.height);
+
+                // 最低限のサイズは保つ
+                if (checkLargeValue >= lowerSizeLarge && checkSmallValue >= lowerSizeSmall) {
+                    float aspect_diff = (checkLargeValue / checkSmallValue) - TARGET_ASPECT;
 
                     // アスペクト比の差分が小さい＝近い構成をコピーする
                     // 基本的に奥へ行くほど解像度が低いため、最低限の要求を満たせる解像度を探す
@@ -462,7 +473,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
     @SuppressLint("NewApi")
     public boolean startPreview(Object surface) {
         try {
-            if (Build.VERSION.SDK_INT >= 14 && surface instanceof TextureView) {
+            if (AndroidUtil.isTextureView(surface)) {
                 surface = ((TextureView) surface).getSurfaceTexture();
             } else if (surface instanceof SurfaceView) {
                 surface = ((SurfaceView) surface).getHolder();
@@ -470,7 +481,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
             if (surface instanceof SurfaceHolder) {
                 camera.setPreviewDisplay((SurfaceHolder) surface);
-            } else if (Build.VERSION.SDK_INT >= 11 && surface instanceof SurfaceTexture) {
+            } else if (AndroidUtil.isSurfaceTexture(surface)) {
                 camera.setPreviewTexture((SurfaceTexture) surface);
             } else {
                 LogUtil.log("not support preview(%s)", surface.getClass().getName());
