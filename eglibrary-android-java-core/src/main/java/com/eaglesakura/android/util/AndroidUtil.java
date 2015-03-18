@@ -1,8 +1,10 @@
 package com.eaglesakura.android.util;
 
+import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.TextureView;
 
 public class AndroidUtil {
 
@@ -36,6 +38,14 @@ public class AndroidUtil {
      */
     public static boolean isHandlerThread(Handler handler) {
         return Thread.currentThread().equals(handler.getLooper().getThread());
+    }
+
+    public static boolean isSurfaceTexture(Object obj) {
+        return Build.VERSION.SDK_INT >= 11 && obj instanceof SurfaceTexture;
+    }
+
+    public static boolean isTextureView(Object obj) {
+        return Build.VERSION.SDK_INT >= 14 && obj instanceof TextureView;
     }
 
     public static boolean isSupportedSurfaceTexture() {

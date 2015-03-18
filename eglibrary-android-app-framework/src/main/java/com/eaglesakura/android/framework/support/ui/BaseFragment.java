@@ -42,6 +42,8 @@ public abstract class BaseFragment extends Fragment {
     @InstanceState
     protected boolean initializedViews = false;
 
+    protected boolean fragmentResumed = false;
+
     /**
      * 初回のみ呼び出される
      */
@@ -64,6 +66,22 @@ public abstract class BaseFragment extends Fragment {
         } else {
             onRestoreViews();
         }
+    }
+
+    public boolean isFragmentResumed() {
+        return fragmentResumed;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fragmentResumed = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        fragmentResumed = false;
     }
 
     @UiThread

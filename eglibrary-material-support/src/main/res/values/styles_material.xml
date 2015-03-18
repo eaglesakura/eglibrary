@@ -63,6 +63,7 @@
     <style name="EsMaterial.Button.Base" parent="EsMaterial.Base">
         <item name="android:height">@dimen/EsMaterial.Button.MinHeight</item>
         <item name="android:minWidth">@dimen/EsMaterial.Button.MinWidth</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <style name="EsMaterial.Font.Normal" parent="EsMaterial.Base">
