@@ -424,4 +424,20 @@ public class ContextUtil {
             return null;
         }
     }
+
+    /**
+     * CPUのスリープを不許可にする。
+     * <p/>
+     * 戻り値のWakeLockは既にacquire()済みのため、releaseのみに気をつけること。
+     *
+     * @param context
+     * @param sender
+     * @return
+     */
+    public static PowerManager.WakeLock cpuWakeLock(Context context, Object sender) {
+        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, sender.getClass().getSimpleName());
+        wakeLock.acquire();
+        return wakeLock;
+    }
 }
