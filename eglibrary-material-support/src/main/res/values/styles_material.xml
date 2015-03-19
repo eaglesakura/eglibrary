@@ -66,6 +66,10 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="EsMaterial.Font.Small" parent="EsMaterial.Base">
+        <item name="android:textSize">@dimen/EsMaterial.Font.Small</item>
+    </style>
+
     <style name="EsMaterial.Font.Normal" parent="EsMaterial.Base">
         <item name="android:textSize">@dimen/EsMaterial.Font.Medium</item>
     </style>
