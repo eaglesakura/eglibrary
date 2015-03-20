@@ -153,6 +153,7 @@ public class GoogleApiClientToken {
         Timer timer = new Timer();
         timer.start();
 
+        GoogleApiClient client = this.client;
         if (client == null) {
             startInitialConnect();
         }
