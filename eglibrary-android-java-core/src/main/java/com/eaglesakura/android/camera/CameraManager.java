@@ -505,6 +505,8 @@ public class CameraManager implements Camera.AutoFocusCallback {
     @JCMethod
     public boolean stopPreview() {
         try {
+            camera.setPreviewCallback(null);
+            camera.setOneShotPreviewCallback(null);
             camera.stopPreview();
             return true;
         } catch (Exception e) {
