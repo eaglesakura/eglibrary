@@ -77,7 +77,7 @@ public class StorageInfo {
             if (this.maxSize < 0) {
                 this.maxSize = stat.getBlockSize() * stat.getBlockCount();
             }
-            this.freeSize = stat.getBlockSize() * stat.getFreeBlocks();
+            this.freeSize = ((long) stat.getBlockSize() & 0xFFFFFFFFL) * ((long) stat.getFreeBlocks() & 0xFFFFFFFFL);
         }
     }
 
