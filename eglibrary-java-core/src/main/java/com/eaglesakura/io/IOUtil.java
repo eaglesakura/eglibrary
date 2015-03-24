@@ -629,4 +629,14 @@ public class IOUtil {
             }
         }
     }
+
+    public static void close(InputStream is) {
+        if (is == null) {
+            return;
+        }
+        try {
+            is.close();
+        } catch (Exception e) {
+        }
+    }
 }
