@@ -83,6 +83,10 @@ public class SupportRecyclerView extends FrameLayout {
     }
 
     public void setEmptyView(View view) {
+        if (emptyViewRoot == null) {
+            return;
+        }
+
         if (emptyViewRoot.getChildCount() != 0) {
             // 子を殺す
             emptyViewRoot.removeAllViews();
