@@ -2,31 +2,17 @@ package com.eaglesakura.android.glkit.media;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.PixelFormat;
-import android.graphics.SurfaceTexture;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.WindowManager;
 
 import com.eaglesakura.android.camera.CameraManager;
-import com.eaglesakura.android.camera.CameraSpec;
 import com.eaglesakura.android.camera.CameraType;
 import com.eaglesakura.android.camera.FlashModeSpec;
 import com.eaglesakura.android.camera.FocusModeSpec;
 import com.eaglesakura.android.camera.SceneSpec;
 import com.eaglesakura.android.camera.WhiteBaranceSpec;
-import com.eaglesakura.android.glkit.egl.EGLSpecRequest;
-import com.eaglesakura.android.glkit.egl.GLESVersion;
-import com.eaglesakura.android.glkit.egl.IEGLDevice;
-import com.eaglesakura.android.glkit.egl11.EGL11Manager;
-import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.AndroidUtil;
 import com.eaglesakura.math.Vector2;
-import com.eaglesakura.thread.Holder;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.StringUtil;
-
-import static android.opengl.GLES20.*;
 
 /**
  * 撮影時の条件を列挙する
@@ -40,7 +26,7 @@ public class CameraShotRequest {
     /**
      * カメラ起動からオートフォーカスまでの猶予時間
      */
-    long cameraSleepTimeMs = 300;
+    long cameraSleepTimeMs = 100;
 
     /**
      * フラッシュは自動
@@ -55,7 +41,7 @@ public class CameraShotRequest {
     /**
      * オートフォーカスのリトライ試行回数
      */
-    int autoFocusRetry = 10;
+    int autoFocusRetry = 20;
 
     /**
      * カメラの指定
@@ -104,6 +90,22 @@ public class CameraShotRequest {
 
     public CameraShotRequest autoFocus(boolean enable) {
         this.autoFocus = enable;
+        return this;
+    }
+
+    public CameraShotRequest focusMode(FocusModeSpec mode) {
+        this.focusModeSpec = mode;
+        return this;
+    }
+
+    public CameraShotRequest maxAutoFocus(int num) {
+        if (num <= 0) {
+            this.autoFocus = false;
+            this.autoFocusRetry = 0;
+        } else {
+            this.autoFocus = true;
+            this.autoFocusRetry = Math.max(1, num);
+        }
         return this;
     }
 
@@ -210,6 +212,7 @@ public class CameraShotRequest {
             cameraManager.startPreview(sur);
 
             if (request.autoFocus) {
+
                 int autoFocusRetry = request.autoFocusRetry;
                 boolean autofucsCompleted = false;
                 while (autoFocusRetry > 0 && !autofucsCompleted) {
