@@ -10,8 +10,6 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
 
-import javax.crypto.spec.GCMParameterSpec;
-
 /**
  *
  */
