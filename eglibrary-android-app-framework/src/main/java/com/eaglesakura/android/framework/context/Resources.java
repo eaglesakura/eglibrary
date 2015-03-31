@@ -93,4 +93,12 @@ public class Resources {
     public static Drawable drawable(int drawableId) {
         return app().getDrawable(drawableId);
     }
+
+    public static byte[] raw(int rawId) {
+        try {
+            return IOUtil.toByteArray(app().openRawResource(rawId), true);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
