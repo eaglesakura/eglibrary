@@ -297,4 +297,54 @@ public class StringUtil {
             return result;
         }
     }
+
+    /**
+     * 16進数変換を行う
+     *
+     * @param intHex
+     * @param defValue
+     * @return
+     */
+    public static long parseHex(String intHex, long defValue) {
+        if (StringUtil.isEmpty(intHex)) {
+            return defValue;
+        }
+
+        intHex = intHex.toUpperCase();
+        if (intHex.startsWith("0X")) {
+            // Program
+            intHex = intHex.substring(2);
+        } else if (intHex.startsWith("#")) {
+            // WebColor
+            intHex = intHex.substring(1);
+        }
+
+        try {
+            return Long.parseLong(intHex, 16);
+        } catch (Exception e) {
+            return defValue;
+        }
+    }
+
+    /**
+     * WebColor RGBをARGB形式に変換する
+     *
+     * @param webColor
+     * @return
+     */
+    public static int parseWebColorRGB2XRGB(String webColor) {
+        int rgb = (int) (parseHex(webColor, 0x00000000FFFFFFFF) & 0x0000000000FFFFFFL);
+        return 0xFF000000 | rgb;
+    }
+
+    /**
+     * WebColor ARGBをARGB形式に変換する
+     *
+     * @param webColor
+     * @return
+     */
+    public static int parseWebColorARGB2ARGB(String webColor) {
+        int argb = (int) (parseHex(webColor, 0x00000000FFFFFFFF) & 0x00000000FFFFFFFFL);
+        return argb;
+    }
 }
