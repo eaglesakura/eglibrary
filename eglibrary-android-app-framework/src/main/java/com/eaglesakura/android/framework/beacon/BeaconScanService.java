@@ -200,6 +200,7 @@ public class BeaconScanService extends BaseService {
         scanner.setRssiCacheTimeMs(rssiCacheTimeMs);
 
         // スキャン開始
+        scanner.cleanDeviceCaches();
         scanner.startScan(scanTimeMs);
         updateLoopController = new HandlerLoopController(UIHandler.getInstance()) {
             long nextUpdateTime = System.currentTimeMillis() + updateCallIntervalTimeMs;

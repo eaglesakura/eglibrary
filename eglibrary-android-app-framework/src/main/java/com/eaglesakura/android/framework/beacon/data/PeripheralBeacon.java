@@ -46,6 +46,16 @@ public class PeripheralBeacon implements Parcelable {
         this.readFromParcel(in);
     }
 
+    /**
+     * Beaconを一意に識別可能なIDを生成する
+     *
+     * @return
+     */
+    public String createUniqueId() {
+        BeaconData data = createBeaconData();
+        return BeaconData.createUniqueID(data.getUuid().toString(), data.getMajor(), data.getMinor(), this.macAddress);
+    }
+
     public BeaconData createBeaconData() {
         try {
             return BeaconData.createInstance(record);

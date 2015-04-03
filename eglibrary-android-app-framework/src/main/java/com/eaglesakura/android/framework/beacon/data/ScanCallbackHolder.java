@@ -27,7 +27,7 @@ public class ScanCallbackHolder {
 
 
     public ScanCallbackHolder(IBeaconScanCallback callbacks) {
-        if(callbacks == null) {
+        if (callbacks == null) {
             throw new IllegalStateException();
         }
         this.callback = callbacks;
@@ -75,6 +75,7 @@ public class ScanCallbackHolder {
         try {
             if (!callback.isIgnoreBeacon(beacon)) {
                 beacons.add(cache);
+                callback.onFoundBeacon(beacon);
             }
         } catch (RemoteException re) {
             LogUtil.log(re);
@@ -85,11 +86,11 @@ public class ScanCallbackHolder {
      * スキャンが正常完了した
      */
     public void onScanUpdated(long scanStartedTime) {
-//        try {
-//            callback.on scanStartedTime, createIdlBeaconList());
-//        } catch (RemoteException e) {
-//            LogUtil.log(e);
-//        }
+        try {
+            callback.onScanUpdated(scanStartedTime, createIdlBeaconList());
+        } catch (RemoteException e) {
+            LogUtil.log(e);
+        }
     }
 
     /**
