@@ -73,6 +73,8 @@ public class BeaconScanService extends BaseService {
 
     @Override
     public IBinder onBind(Intent intent) {
+        requestNextAlarmDelayed(ALARM_REQUEST_SCANSTART, null, 500);
+
         return new IBeaconScanService.Stub() {
             @Override
             public void setScanInterval(long newScanTimeMs, long newSleepTimeMs) throws RemoteException {
@@ -123,18 +125,6 @@ public class BeaconScanService extends BaseService {
             }
         };
 //        return null;
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        UIHandler.postUI(new Runnable() {
-            @Override
-            public void run() {
-                // 遅延させてスキャンを開始する
-                startScan();
-            }
-        });
-        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override

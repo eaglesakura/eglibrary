@@ -27,6 +27,9 @@ public class ScanCallbackHolder {
 
 
     public ScanCallbackHolder(IBeaconScanCallback callbacks) {
+        if(callbacks == null) {
+            throw new IllegalStateException();
+        }
         this.callback = callbacks;
     }
 
