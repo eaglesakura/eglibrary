@@ -100,7 +100,7 @@ public class BeaconData {
                 address.toUpperCase());
     }
 
-    public static BeaconData createInstance(BluetoothDevice device, int rssi, byte[] scanRecord) throws Exception {
+    public static BeaconData createInstance(byte[] scanRecord) throws Exception {
         if (scanRecord.length < 30) {
             throw new IllegalArgumentException("scanRecord.length < 30");
         }
@@ -164,5 +164,9 @@ public class BeaconData {
         result.txPower = dis.readS8();
 
         return result;
+    }
+
+    public static BeaconData createInstance(BluetoothDevice device, int rssi, byte[] scanRecord) throws Exception {
+        return createInstance(scanRecord);
     }
 }

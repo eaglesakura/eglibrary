@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothAdapter.LeScanCallback;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
-import android.bluetooth.le.BluetoothLeScanner;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -627,11 +626,24 @@ public class BluetoothDeviceScanner {
 
     /**
      * 距離が近い順番にソートする
+     * <p/>
+     * typoのため非推奨
      *
      * @param devices
      * @return
      */
+    @Deprecated
     public static List<BluetoothDeviceCache> softNearDevices(List<BluetoothDeviceCache> devices) {
+        return sortNearDevices(devices);
+    }
+
+    /**
+     * 距離が近い順番にソートする
+     *
+     * @param devices
+     * @return
+     */
+    public static List<BluetoothDeviceCache> sortNearDevices(List<BluetoothDeviceCache> devices) {
 
         Collections.sort(devices, new Comparator<BluetoothDeviceCache>() {
             @Override
