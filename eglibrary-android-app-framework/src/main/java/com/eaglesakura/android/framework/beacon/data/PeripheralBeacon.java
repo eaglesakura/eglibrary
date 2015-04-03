@@ -31,6 +31,8 @@ public class PeripheralBeacon implements Parcelable {
      */
     private String macAddress;
 
+    private BeaconData beacon;
+
     public PeripheralBeacon(String name, String macAddress, byte[] record, double distanceMeter) {
         this.name = StringUtil.isEmpty(name) ? "BeaconStub" : name;
         this.macAddress = macAddress.toUpperCase();
@@ -51,17 +53,20 @@ public class PeripheralBeacon implements Parcelable {
      *
      * @return
      */
-    public String createUniqueId() {
-        BeaconData data = createBeaconData();
+    public String getUniqueId() {
+        BeaconData data = getBeaconData();
         return BeaconData.createUniqueID(data.getUuid().toString(), data.getMajor(), data.getMinor(), this.macAddress);
     }
 
-    public BeaconData createBeaconData() {
-        try {
-            return BeaconData.createInstance(record);
-        } catch (Exception e) {
-            throw new IllegalStateException();
+    public BeaconData getBeaconData() {
+        if (beacon == null) {
+            try {
+                beacon = BeaconData.createInstance(record);
+            } catch (Exception e) {
+                throw new IllegalStateException();
+            }
         }
+        return beacon;
     }
 
     public String getName() {

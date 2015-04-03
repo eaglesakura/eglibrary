@@ -250,6 +250,21 @@ public class StringUtil {
         }
     }
 
+    public static int toInteger(String value, int def) {
+        try {
+            return Integer.valueOf(value);
+        } catch (Exception e) {
+            return def;
+        }
+    }
+
+    public static double toDouble(String value, double def) {
+        try {
+            return Double.valueOf(value);
+        } catch (Exception e) {
+            return def;
+        }
+    }
 
     /**
      * base64エンコードする
