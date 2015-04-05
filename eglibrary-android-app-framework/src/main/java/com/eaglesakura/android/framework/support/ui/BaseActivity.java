@@ -71,7 +71,6 @@ public abstract class BaseActivity extends ActionBarActivity implements Fragment
 
         if (playServiceCheck) {
             final int statusCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-
             if (statusCode != ConnectionResult.SUCCESS) {
                 Dialog dialog = GooglePlayServicesUtil.getErrorDialog(statusCode, this, REQUEST_GOOGLEPLAYSERVICE_RECOVER, new DialogInterface.OnCancelListener() {
                     @Override
