@@ -1,6 +1,7 @@
 package com.eaglesakura.android.framework;
 
 import android.app.Application;
+import android.support.annotation.Nullable;
 
 import com.eaglesakura.android.framework.db.BasicSettings;
 import com.eaglesakura.android.util.ContextUtil;
