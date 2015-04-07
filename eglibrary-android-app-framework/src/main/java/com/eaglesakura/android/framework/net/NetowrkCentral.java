@@ -564,4 +564,14 @@ public class NetowrkCentral {
          */
         Map<String, String> getHttpHeaders(String url, String method);
     }
+
+    /**
+     * 何も返さないParser
+     */
+    public static RequestParser<Object> VOID_REQUEST = new RequestParser<Object>() {
+        @Override
+        public Object parse(NetworkResponse response, byte[] data) throws Exception {
+            return new Object();
+        }
+    };
 }
