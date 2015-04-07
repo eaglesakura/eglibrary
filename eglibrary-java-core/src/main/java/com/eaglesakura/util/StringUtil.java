@@ -10,6 +10,22 @@ public class StringUtil {
     public static final String SHIT_JIS = "Shift_JIS";
 
     /**
+     * 引数全ての文字列が有効であればtrueを返す
+     *
+     * @param args
+     * @return
+     */
+    public static boolean allNotEmpty(String... args) {
+        for (String arg : args) {
+            if (StringUtil.isEmpty(arg)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * 文字列がnullか空文字だったらtrueを返す。
      *
      * @param str
