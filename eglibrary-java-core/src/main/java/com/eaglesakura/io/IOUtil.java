@@ -639,4 +639,16 @@ public class IOUtil {
         } catch (Exception e) {
         }
     }
+
+    public static void close(OutputStream os) {
+        if (os == null) {
+            return;
+        }
+
+        try {
+            os.close();
+        } catch (Exception e) {
+
+        }
+    }
 }

@@ -22,6 +22,8 @@ public class BlobKeyValueStore extends BaseDatabase<DaoSession> {
 
     private final File dbFilePath;
 
+    private static final long NOT_TIMEOUT = 0x6FFFFFFFFFFFFFFFL;
+
     public BlobKeyValueStore(Context context, File file) {
         super(context, DaoMaster.class);
         this.dbFilePath = file;
@@ -41,7 +43,6 @@ public class BlobKeyValueStore extends BaseDatabase<DaoSession> {
         return session.queryBuilder(DbKeyValueData.class).where(DbKeyValueDataDao.Properties.Key.eq(key)).count() == 1;
     }
 
-
     /**
      * 値を取得する
      *
@@ -49,10 +50,40 @@ public class BlobKeyValueStore extends BaseDatabase<DaoSession> {
      * @return
      */
     public byte[] get(String key) {
+        return get(key, 0x6FFFFFFFFFFFFFFFL);
+    }
+
+    /**
+     * 値を取得する。
+     * <p/>
+     * ただし、データを保存してからの期間がタイムアウト時間を超えている場合、このメソッドはnullを返却する。
+     *
+     * @param key
+     * @param timeoutMs
+     * @return
+     */
+    public byte[] get(String key, long timeoutMs) {
         DbKeyValueData data = session.load(DbKeyValueData.class, key);
-        if (data != null) {
+        if (data != null && (System.currentTimeMillis() - data.getDate().getTime()) < timeoutMs) {
             return data.getValue();
         } else {
+            return null;
+        }
+    }
+
+    /**
+     * 画像として読みだす
+     * <p/>
+     * ただし、データを保存してからの期間がタイムアウト時間を超えている場合、このメソッドはnullを返却する。
+     *
+     * @param key PNG画像のキー
+     * @return 画像 or NULL
+     */
+    public Bitmap getImage(String key, long timeoutMs) {
+        try {
+            byte[] buffer = get(key, timeoutMs);
+            return BitmapFactory.decodeStream(new ByteArrayInputStream(buffer));
+        } catch (Exception e) {
             return null;
         }
     }
@@ -64,13 +95,7 @@ public class BlobKeyValueStore extends BaseDatabase<DaoSession> {
      * @return 画像 or NULL
      */
     public Bitmap getImage(String key) {
-        try {
-            byte[] buffer = get(key);
-            return BitmapFactory.decodeStream(new ByteArrayInputStream(buffer));
-        } catch (Exception e) {
-//            LogUtil.log(e);
-            return null;
-        }
+        return getImage(key, NOT_TIMEOUT);
     }
 
     /**
@@ -120,6 +145,24 @@ public class BlobKeyValueStore extends BaseDatabase<DaoSession> {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
 
             put(key, os.toByteArray());
+        } catch (Exception e) {
+            LogUtil.log(e);
+        }
+    }
+
+    /**
+     * 画像を指定されたフォーマットで保存する
+     *
+     * @param key    キー
+     * @param bitmap 保存する画像。PNG化される
+     */
+    public void put(String key, Bitmap bitmap, Bitmap.CompressFormat format, int quality) {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            bitmap.compress(format, quality, os);
+            os.flush();
+            byte[] bytes = os.toByteArray();
+            put(key, bytes);
         } catch (Exception e) {
             LogUtil.log(e);
         }

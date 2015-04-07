@@ -44,6 +44,8 @@ public class MultiRunningTasks {
 
     boolean exit = false;
 
+    String threadName = MultiRunningTasks.class.getName();
+
     public MultiRunningTasks(int maxThreads) {
         this.maxThreads = maxThreads;
     }
@@ -142,6 +144,10 @@ public class MultiRunningTasks {
      */
     private static int threadId = 0;
 
+    public void setThreadName(String threadName) {
+        this.threadName = threadName;
+    }
+
     /**
      * スレッドを開始させる。<BR>
      * {@link #exit()} or {@link #waitTaskFinished()}させない限りスレッドは待機し続ける。
@@ -158,7 +164,7 @@ public class MultiRunningTasks {
                     ;
                 });
                 threads.add(thread);
-                thread.setName(MultiRunningTasks.class.getName() + " :: ID " + threadId++);
+                thread.setName(threadName + " :: ID " + threadId++);
                 thread.start();
             }
         }
