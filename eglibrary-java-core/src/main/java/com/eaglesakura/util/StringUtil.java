@@ -282,6 +282,14 @@ public class StringUtil {
         }
     }
 
+    public static boolean toBoolean(String value, boolean def) {
+        try {
+            return Boolean.valueOf(value);
+        } catch (Exception e) {
+            return def;
+        }
+    }
+
     /**
      * base64エンコードする
      *
