@@ -43,8 +43,14 @@ public class NetowrkCentral {
      */
     private static RetryPolycyFactory retryPolycyFactory = new RetryPolycyFactory() {
         @Override
-        public RetryPolicy newRetryPolycy(String url) {
-            return new DefaultRetryPolicy(1000, 10, 1.2f);
+        public RetryPolicy newRetryPolycy(final String url) {
+            return new DefaultRetryPolicy(1000, 10, 1.2f) {
+                @Override
+                public void retry(VolleyError error) throws VolleyError {
+                    LogUtil.log("NetowrkCentral retry(%s)", url);
+                    super.retry(error);
+                }
+            };
         }
     };
 
