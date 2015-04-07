@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
+import com.eaglesakura.android.bluetooth.BluetoothUtil;
 import com.eaglesakura.android.framework.beacon.BeaconScanService;
 import com.eaglesakura.android.framework.beacon.IBeaconScanCallback;
 import com.eaglesakura.android.framework.beacon.IBeaconScanService;
@@ -29,6 +30,11 @@ public class BeaconScanServiceController {
     }
 
     public void connect(IBeaconScanCallback callback) {
+        if (!BluetoothUtil.isSupportedBluetoothLE(context)) {
+            // ble not supported
+            return;
+        }
+
         if (!(callback instanceof IBeaconScanCallback.Stub)) {
             throw new IllegalStateException("!= extends IBeaconScanCallback.Stub");
         }

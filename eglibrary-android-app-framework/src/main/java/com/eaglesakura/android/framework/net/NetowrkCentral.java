@@ -2,6 +2,7 @@ package com.eaglesakura.android.framework.net;
 
 import android.graphics.Bitmap;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -22,8 +23,9 @@ import com.eaglesakura.util.LogUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * ネットワーク処理の中枢系
@@ -41,9 +43,14 @@ public class NetowrkCentral {
     /**
      * システムデフォルトのポリシー指定
      */
-    private static RetryPolycyFactory retryPolycyFactory = new RetryPolycyFactory() {
+    private static NetworkFactory factory = new NetworkFactory() {
         @Override
-        public RetryPolicy newRetryPolycy(final String url) {
+        public Map<String, String> getHttpHeaders(String url, String method) {
+            return Collections.emptyMap();
+        }
+
+        @Override
+        public RetryPolicy newRetryPolycy(final String url, String method) {
             return new DefaultRetryPolicy(1000, 10, 1.2f) {
                 @Override
                 public void retry(VolleyError error) throws VolleyError {
@@ -240,7 +247,7 @@ public class NetowrkCentral {
      * @return
      * @throws IOException
      */
-    public static Bitmap getCachedImage(String url, ImageOption option) throws IOException {
+    public static Bitmap getCachedImage(final String url, ImageOption option) throws IOException {
         AndroidUtil.assertBackgroundThread();
 
         // オプションを組み立てる
@@ -281,8 +288,15 @@ public class NetowrkCentral {
                         log(volleyError);
                         finishedHolder.set(true);
                     }
-                });
-        request.setRetryPolicy(retryPolycyFactory.newRetryPolycy(url));
+                }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                return factory.getHttpHeaders(url, "GET");
+            }
+
+        };
+        request.setRetryPolicy(factory.newRetryPolycy(url, "GET"));
         getVolleyRequests().add(request);
         getVolleyRequests().start();
 
@@ -360,10 +374,10 @@ public class NetowrkCentral {
     /**
      * グローバルに適用されるリトライ規定
      *
-     * @param retryPolycyFactory
+     * @param factory
      */
-    public static void setRetryPolycyFactory(RetryPolycyFactory retryPolycyFactory) {
-        NetowrkCentral.retryPolycyFactory = retryPolycyFactory;
+    public static void setFactory(NetworkFactory factory) {
+        NetowrkCentral.factory = factory;
     }
 
     /**
@@ -390,7 +404,7 @@ public class NetowrkCentral {
      * @return
      * @throws Exception
      */
-    public static <T> T getSync(String url, final RequestParser<T> parser, long cacheTimeoutMs) throws IOException {
+    public static <T> T getSync(final String url, final RequestParser<T> parser, long cacheTimeoutMs) throws IOException {
         AndroidUtil.assertBackgroundThread();
 
         // 早期ローカルキャッシュをチェックする
@@ -428,6 +442,11 @@ public class NetowrkCentral {
             }
         }) {
             @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                return factory.getHttpHeaders(url, "GET");
+            }
+
+            @Override
             protected Response<T> parseNetworkResponse(NetworkResponse networkResponse) {
                 try {
                     rawHolder.set(Arrays.copyOf(networkResponse.data, networkResponse.data.length));
@@ -443,7 +462,7 @@ public class NetowrkCentral {
                 finishedHolder.set(true);
             }
         };
-        request.setRetryPolicy(retryPolycyFactory.newRetryPolycy(url));
+        request.setRetryPolicy(factory.newRetryPolycy(url, "GET"));
         getVolleyRequests().add(request);
         getVolleyRequests().start();
 
@@ -464,6 +483,70 @@ public class NetowrkCentral {
         }
     }
 
+    /**
+     * 同期的にPostを行う
+     * <p/>
+     * postはキャッシュを行わない。
+     *
+     * @param url
+     * @param parser
+     * @param params
+     * @param <T>
+     * @return
+     * @throws IOException
+     */
+    public static <T> T postSync(final String url, final RequestParser<T> parser, final Map<String, String> params) throws IOException {
+        AndroidUtil.assertBackgroundThread();
+
+        final Holder<T> responceHolder = new Holder<>();
+        final Holder<Boolean> finishedHolder = new Holder<>();
+
+        Request<T> request = new Request<T>(Request.Method.POST, url, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                log(volleyError);
+                finishedHolder.set(true);
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                return factory.getHttpHeaders(url, "POST");
+            }
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return params;
+            }
+
+            @Override
+            protected Response<T> parseNetworkResponse(NetworkResponse networkResponse) {
+                try {
+                    return Response.success(parser.parse(networkResponse, networkResponse.data), getCacheEntry());
+                } catch (Exception e) {
+                    return Response.error(new VolleyError("parse error"));
+                }
+            }
+
+            @Override
+            protected void deliverResponse(T object) {
+                responceHolder.set(object);
+                finishedHolder.set(true);
+            }
+        };
+
+        request.setRetryPolicy(factory.newRetryPolycy(url, "POST"));
+        getVolleyRequests().add(request);
+        getVolleyRequests().start();
+
+        finishedHolder.getWithWait();
+
+        if (responceHolder.get() == null) {
+            throw new IOException("Volley Resp Error");
+        } else {
+            return responceHolder.get();
+        }
+    }
+
     public interface RequestParser<T> {
         T parse(NetworkResponse response, byte[] data) throws Exception;
     }
@@ -471,7 +554,14 @@ public class NetowrkCentral {
     /**
      * RetryPolycyの生成を行わせる
      */
-    public interface RetryPolycyFactory {
-        RetryPolicy newRetryPolycy(String url);
+    public interface NetworkFactory {
+        RetryPolicy newRetryPolycy(String url, String method);
+
+        /**
+         * Http認証に必要なヘッダを指定
+         *
+         * @return
+         */
+        Map<String, String> getHttpHeaders(String url, String method);
     }
 }
