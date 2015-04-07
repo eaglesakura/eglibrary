@@ -2,10 +2,12 @@ package com.eaglesakura.android.framework.net;
 
 import android.graphics.Bitmap;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
@@ -20,22 +22,54 @@ import com.eaglesakura.util.LogUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 /**
  * ネットワーク処理の中枢系
+ * <p/>
+ * 早期ローカルキャッシュに対応し、むやみにネットワークアクセスを行わないようにする
  */
 public class NetowrkCentral {
 
-    public static final long IMAGE_NO_TIMEOUT = 0x6FFFFFFFFFFFFFFFL;
+    public static final long NOT_TIMEOUT = 0x6FFFFFFFFFFFFFFFL;
 
     private static RequestQueue requests;
 
     private static final Object lock = new Object();
 
     /**
+     * システムデフォルトのポリシー指定
+     */
+    private static RetryPolycyFactory retryPolycyFactory = new RetryPolycyFactory() {
+        @Override
+        public RetryPolicy newRetryPolycy(String url) {
+            return new DefaultRetryPolicy(1000, 10, 1.2f);
+        }
+    };
+
+    /**
      * UIスレッドから呼び出しを行うためのタスクキュー
      */
     private static MultiRunningTasks tasks = new MultiRunningTasks(3);
+
+    static {
+        tasks.setThreadPoolMode(false);
+        tasks.setThreadName("NetworkCentral");
+    }
+
+    private static BlobKeyValueStore getCacheDatabase() {
+        File cacheFile = new File(FrameworkCentral.getApplication().getCacheDir(), "app-vlc.db");
+        if (!cacheFile.getParentFile().exists()) {
+            cacheFile.getParentFile().mkdirs();
+        }
+
+        return new BlobKeyValueStore(FrameworkCentral.getApplication(), cacheFile);
+    }
+
+    private static String toCacheKey(String url) {
+        return EncodeUtil.genSHA1(url.getBytes());
+    }
 
     public static RequestQueue getVolleyRequests() {
         synchronized (lock) {
@@ -90,8 +124,6 @@ public class NetowrkCentral {
 
         public Bitmap.CompressFormat cacheFormat = Bitmap.CompressFormat.PNG;
 
-        public File cacheDb = null;
-
         /**
          * 画像キャッシュのタイムアウトはデフォルト24時間
          */
@@ -136,6 +168,17 @@ public class NetowrkCentral {
     }
 
     /**
+     * UIスレッドで簡易に受け取れるようにするためのオプション
+     *
+     * @param <T>
+     */
+    public interface DataListener<T> {
+        void onDataLoaded(String url, T data);
+
+        void onDataLoadFailed(String url, IOException exception);
+    }
+
+    /**
      * 非同期に読み込みを行わせる
      *
      * @param url
@@ -143,6 +186,8 @@ public class NetowrkCentral {
      * @param uiListener
      */
     public static void getCachedImageAsync(final String url, final ImageOption option, final ImageListener uiListener) {
+        AndroidUtil.assertUIThread();
+
         tasks.setThreadPoolMode(false);
         tasks.pushBack(new Runnable() {
             @Override
@@ -161,6 +206,8 @@ public class NetowrkCentral {
      * @param uiListner
      */
     public static void getCachedImage(final String url, ImageOption option, final ImageListener uiListner) {
+        AndroidUtil.assertBackgroundThread();
+
         try {
             final Bitmap image = getCachedImage(url, option);
             UIHandler.postUI(new Runnable() {
@@ -188,24 +235,22 @@ public class NetowrkCentral {
      * @throws IOException
      */
     public static Bitmap getCachedImage(String url, ImageOption option) throws IOException {
+        AndroidUtil.assertBackgroundThread();
+
         // オプションを組み立てる
         if (option == null) {
             option = new ImageOption();
         }
-        if (option.cacheDb == null) {
-            option.cacheDb = new File(FrameworkCentral.getApplication().getCacheDir(), "netimage.db");
-        }
-        option.cacheDb.getParentFile().mkdirs();
-        BlobKeyValueStore imageDb = new BlobKeyValueStore(FrameworkCentral.getApplication(), option.cacheDb);
+        BlobKeyValueStore imageDb = getCacheDatabase();
 
-        final String CACHE_IMAGE_KEY = EncodeUtil.genSHA1(url.getBytes());
+        final String CACHE_KEY = toCacheKey(url);
 
         // キャッシュを読み込む
         try {
             imageDb.open();
-            Bitmap cache = imageDb.getImage(CACHE_IMAGE_KEY, option.cacheTimeoutMs);
+            Bitmap cache = imageDb.getImage(CACHE_KEY, option.cacheTimeoutMs);
             if (cache != null) {
-                LogUtil.log("Volley has cache(%s)", url);
+                LogUtil.log("NetworkCentral has cache(%s)", url);
                 return cache;
             }
         } finally {
@@ -231,6 +276,7 @@ public class NetowrkCentral {
                         finishedHolder.set(true);
                     }
                 });
+        request.setRetryPolicy(retryPolycyFactory.newRetryPolycy(url));
         getVolleyRequests().add(request);
         getVolleyRequests().start();
 
@@ -246,13 +292,87 @@ public class NetowrkCentral {
             // キャッシュに保存する
             try {
                 imageDb.open();
-                imageDb.put(CACHE_IMAGE_KEY, bitmap, option.cacheFormat, option.cacheQuality);
+                imageDb.put(CACHE_KEY, bitmap, option.cacheFormat, option.cacheQuality);
             } finally {
                 imageDb.close();
             }
 
             return responceHolder.get();
         }
+    }
+
+    /**
+     * UIスレッドから非同期でデータを得る
+     *
+     * @param url
+     * @param parser
+     * @param cacheTimeoutMs
+     * @param uiListener
+     * @param <T>
+     */
+    public static <T> void getAsync(final String url, final RequestParser<T> parser, final long cacheTimeoutMs, final DataListener<T> uiListener) {
+        AndroidUtil.assertUIThread();
+
+        tasks.pushBack(new Runnable() {
+            @Override
+            public void run() {
+                getSync(url, parser, cacheTimeoutMs, uiListener);
+            }
+        }).start();
+    }
+
+    /**
+     * 同期的にデータを取得し、UIスレッドで通知を受け取る
+     *
+     * @param url
+     * @param parser
+     * @param cacheTimeoutMs
+     * @param uiListener
+     * @param <T>
+     */
+    public static <T> void getSync(final String url, RequestParser<T> parser, long cacheTimeoutMs, final DataListener<T> uiListener) {
+        AndroidUtil.assertBackgroundThread();
+
+        try {
+            final T data = getSync(url, parser, cacheTimeoutMs);
+            UIHandler.postUI(new Runnable() {
+                @Override
+                public void run() {
+                    uiListener.onDataLoaded(url, data);
+                }
+            });
+        } catch (final IOException e) {
+            UIHandler.postUI(new Runnable() {
+                @Override
+                public void run() {
+                    uiListener.onDataLoadFailed(url, e);
+                }
+            });
+        }
+    }
+
+    /**
+     * グローバルに適用されるリトライ規定
+     *
+     * @param retryPolycyFactory
+     */
+    public static void setRetryPolycyFactory(RetryPolycyFactory retryPolycyFactory) {
+        NetowrkCentral.retryPolycyFactory = retryPolycyFactory;
+    }
+
+    /**
+     * 同期的にデータを得る。
+     * <p/>
+     * ローカルキャッシュは基本的に利用しない。
+     *
+     * @param url
+     * @param parser
+     * @param <T>
+     * @return
+     * @throws IOException
+     */
+    public static <T> T getSync(String url, final RequestParser<T> parser) throws IOException {
+        return getSync(url, parser, 0);
     }
 
     /**
@@ -264,12 +384,34 @@ public class NetowrkCentral {
      * @return
      * @throws Exception
      */
-    public static <T> T getSync(String url, final RequestParser<T> parser) throws IOException {
-        if (AndroidUtil.isUIThread()) {
-            throw new IllegalStateException("call background");
+    public static <T> T getSync(String url, final RequestParser<T> parser, long cacheTimeoutMs) throws IOException {
+        AndroidUtil.assertBackgroundThread();
+
+        // 早期ローカルキャッシュをチェックする
+        final String CACHE_KEY = toCacheKey(url);
+        BlobKeyValueStore store = getCacheDatabase();
+        try {
+            store.open();
+
+            byte[] data = store.get(CACHE_KEY, cacheTimeoutMs);
+            if (data != null) {
+                LogUtil.log("NetworkCentral has cache(%s) data(%d bytes)", url, data.length);
+                try {
+                    T result = parser.parse(null, data);
+                    if (result != null) {
+                        return result;
+                    }
+                } catch (Exception e) {
+                    LogUtil.log(e);
+                }
+            }
+        } finally {
+            store.close();
         }
 
+
         final Holder<T> responceHolder = new Holder<>();
+        final Holder<byte[]> rawHolder = new Holder<>();
         final Holder<Boolean> finishedHolder = new Holder<>();
 
         Request<T> request = new Request<T>(Request.Method.GET, url, new Response.ErrorListener() {
@@ -282,7 +424,8 @@ public class NetowrkCentral {
             @Override
             protected Response<T> parseNetworkResponse(NetworkResponse networkResponse) {
                 try {
-                    return Response.success(parser.parse(networkResponse), getCacheEntry());
+                    rawHolder.set(Arrays.copyOf(networkResponse.data, networkResponse.data.length));
+                    return Response.success(parser.parse(networkResponse, networkResponse.data), getCacheEntry());
                 } catch (Exception e) {
                     return Response.error(new VolleyError("parse error"));
                 }
@@ -294,6 +437,7 @@ public class NetowrkCentral {
                 finishedHolder.set(true);
             }
         };
+        request.setRetryPolicy(retryPolycyFactory.newRetryPolycy(url));
         getVolleyRequests().add(request);
         getVolleyRequests().start();
 
@@ -302,11 +446,26 @@ public class NetowrkCentral {
         if (responceHolder.get() == null) {
             throw new IOException("Volley Resp Error");
         } else {
+            // キャッシュに追加する
+            try {
+                store.open();
+                store.put(CACHE_KEY, rawHolder.get());
+            } finally {
+                store.close();
+            }
+
             return responceHolder.get();
         }
     }
 
     public interface RequestParser<T> {
-        T parse(NetworkResponse response) throws Exception;
+        T parse(NetworkResponse response, byte[] data) throws Exception;
+    }
+
+    /**
+     * RetryPolycyの生成を行わせる
+     */
+    public interface RetryPolycyFactory {
+        RetryPolicy newRetryPolycy(String url);
     }
 }
