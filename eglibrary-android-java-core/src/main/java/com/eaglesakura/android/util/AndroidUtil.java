@@ -4,6 +4,10 @@ import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -92,4 +96,37 @@ public class AndroidUtil {
 
         throw new IllegalStateException();
     }
+
+    public static void playDefaultNotification(Context context) {
+        playSound(context, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+    }
+
+    /**
+     * サウンドを一度だけ鳴らす
+     *
+     * @param context
+     * @param uri
+     */
+    public static void playSound(Context context, Uri uri) {
+        final MediaPlayer player = new MediaPlayer();
+        try {
+            player.setDataSource(context.getApplicationContext(), uri);
+            player.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
+            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.start();
+                }
+            });
+            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    player.release();
+                }
+            });
+            player.prepareAsync();
+        } catch (Exception e) {
+        }
+    }
+
 }
