@@ -1,10 +1,15 @@
 package com.eaglesakura.android.util;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.TextureView;
+
+import java.util.List;
 
 public class AndroidUtil {
 
@@ -56,4 +61,35 @@ public class AndroidUtil {
         return Build.VERSION.SDK_INT >= 14;
     }
 
+    /**
+     * 自分自身がTop Applicationとして起動している場合はtrue
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isTopApplicationSelf(Context context) {
+        return context.getPackageName().equals(getTopApplicationPackage(context));
+    }
+
+    /**
+     * トップに起動しているActivityのpackage nameを指定する
+     *
+     * @param context
+     * @return
+     */
+    public static String getTopApplicationPackage(Context context) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> processes = activityManager.getRunningAppProcesses();
+        for (ActivityManager.RunningAppProcessInfo info : processes) {
+            if (info.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                if (info.importanceReasonComponent != null) {
+                    return info.importanceReasonComponent.getPackageName();
+                } else {
+                    return info.pkgList[0];
+                }
+            }
+        }
+
+        throw new IllegalStateException();
+    }
 }
