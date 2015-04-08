@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 
-import com.eaglesakura.android.annotations.AnnotationUtil;
 import com.eaglesakura.android.framework.support.ui.FragmentChooser;
 import com.eaglesakura.android.framework.support.ui.SupportAnnotationUtil;
 import com.eaglesakura.util.LogUtil;
@@ -31,6 +30,10 @@ public class FragmentListAdapter extends FragmentPagerAdapter {
     }
 
     String genFragmentId(int index) {
+        return "android:switcher:" + containerViewId + ":" + index;
+    }
+
+    private static String genFragmentId(int containerViewId, int index) {
         return "android:switcher:" + containerViewId + ":" + index;
     }
 
@@ -159,6 +162,29 @@ public class FragmentListAdapter extends FragmentPagerAdapter {
         @Override
         public Fragment newFragment(FragmentListAdapter adapter, int index) {
             return initialize(SupportAnnotationUtil.newFragment(clazz));
+        }
+    }
+
+
+    public static class SimpleFragmentCreater2 extends SimpleFragmentCreater {
+        /**
+         * 登録先のセレクタ
+         */
+        final FragmentChooser parentChooser;
+        final int containerViewId;
+
+        public SimpleFragmentCreater2(Class<? extends Fragment> clazz, ViewPager pager, FragmentChooser parentChooser) {
+            super(clazz);
+            this.parentChooser = parentChooser;
+            this.containerViewId = pager.getId();
+        }
+
+        @Override
+        public Fragment newFragment(FragmentListAdapter adapter, int index) {
+            Fragment result = super.newFragment(adapter, index);
+            parentChooser.compact();
+            parentChooser.addFragment(FragmentChooser.ReferenceType.Weak, result, genFragmentId(containerViewId, index), 0);
+            return result;
         }
     }
 }
