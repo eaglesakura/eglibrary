@@ -49,6 +49,10 @@ public class SupportRecyclerView extends FrameLayout {
     }
 
     private void initialize(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        if (isInEditMode()) {
+            return;
+        }
+
         View view = View.inflate(context, R.layout.esm_support_recyclerview, null);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.EsMaterial_SupportRecyclerView_Content);
