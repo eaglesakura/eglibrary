@@ -80,7 +80,10 @@ public class NetowrkCentral {
      */
     public static void deleteCacheDb() {
         Context context = FrameworkCentral.getApplication();
-        IOUtil.delete(new File(context.getCacheDir(), "volley"));
+        File volleyDir = new File(context.getCacheDir(), "volley");
+        IOUtil.delete(volleyDir);
+        volleyDir.mkdirs();
+
         BlobKeyValueStore store = getCacheDatabase();
         try {
             store.open();
