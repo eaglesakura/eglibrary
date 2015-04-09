@@ -170,21 +170,26 @@ public class FragmentListAdapter extends FragmentPagerAdapter {
         /**
          * 登録先のセレクタ
          */
-        final FragmentChooser parentChooser;
+        final FragmentChooserRef chooserRef;
         final int containerViewId;
 
-        public SimpleFragmentCreater2(Class<? extends Fragment> clazz, ViewPager pager, FragmentChooser parentChooser) {
+        public SimpleFragmentCreater2(Class<? extends Fragment> clazz, ViewPager pager, FragmentChooserRef chooserRef) {
             super(clazz);
-            this.parentChooser = parentChooser;
+            this.chooserRef = chooserRef;
             this.containerViewId = pager.getId();
         }
 
         @Override
         public Fragment newFragment(FragmentListAdapter adapter, int index) {
             Fragment result = super.newFragment(adapter, index);
+            FragmentChooser parentChooser = chooserRef.getFragmentChooser();
             parentChooser.compact();
             parentChooser.addFragment(FragmentChooser.ReferenceType.Weak, result, genFragmentId(containerViewId, index), 0);
             return result;
         }
+    }
+
+    public interface FragmentChooserRef {
+        FragmentChooser getFragmentChooser();
     }
 }
