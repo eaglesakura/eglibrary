@@ -135,13 +135,17 @@ public class SupportRecyclerView extends FrameLayout {
         }
     }
 
-    public static void layoutMatchParent(View view) {
-        ViewGroup.LayoutParams params = view.getLayoutParams();
-        if (params == null) {
-            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        } else {
-            params.width = params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+    /**
+     * Adapterの選択位置を取得する
+     *
+     * @param view
+     * @return
+     */
+    public static int getSelectedAdapterPosition(RecyclerView view) {
+        if (view == null || view.getChildCount() <= 0) {
+            return -1;
         }
-        view.setLayoutParams(params);
+
+        return view.getChildAdapterPosition(view.getChildAt(0));
     }
 }

@@ -1,5 +1,6 @@
 package com.eaglesakura.android.framework.net;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.android.volley.AuthFailureError;
@@ -17,6 +18,7 @@ import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.android.thread.MultiRunningTasks;
 import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.AndroidUtil;
+import com.eaglesakura.io.IOUtil;
 import com.eaglesakura.thread.Holder;
 import com.eaglesakura.util.EncodeUtil;
 import com.eaglesakura.util.LogUtil;
@@ -69,6 +71,23 @@ public class NetowrkCentral {
     static {
         tasks.setThreadPoolMode(false);
         tasks.setThreadName("NetworkCentral");
+    }
+
+    /**
+     * キャッシュを削除する
+     * <p/>
+     * DB / Volley
+     */
+    public static void deleteCacheDb() {
+        Context context = FrameworkCentral.getApplication();
+        IOUtil.delete(new File(context.getCacheDir(), "volley"));
+        BlobKeyValueStore store = getCacheDatabase();
+        try {
+            store.open();
+            store.drop();
+        } finally {
+            store.close();
+        }
     }
 
     private static BlobKeyValueStore getCacheDatabase() {
