@@ -202,6 +202,7 @@ public class NetworkConnector {
 
                     @Override
                     protected Response<Bitmap> parseNetworkResponse(NetworkResponse response) {
+                        LogUtil.log("%s volley received(%s) %.1f KB", NetworkConnector.this.getClass().getSimpleName(), url, response.data == null ? 0 : (float) response.data.length / 1024.0f);
                         respHeades = response.headers;
                         return super.parseNetworkResponse(response);
                     }
@@ -333,7 +334,7 @@ public class NetworkConnector {
                 }) {
                     @Override
                     protected Map<String, String> getParams() throws AuthFailureError {
-                        if (params != null && params.isEmpty()) {
+                        if (params != null && !params.isEmpty()) {
                             return params;
                         }
                         return super.getParams();
@@ -347,6 +348,7 @@ public class NetworkConnector {
                     @Override
                     protected Response<T> parseNetworkResponse(NetworkResponse networkResponse) {
                         try {
+                            LogUtil.log("%s volley received(%s) %.1f KB", NetworkConnector.this.getClass().getSimpleName(), url, networkResponse.data == null ? 0 : (float) networkResponse.data.length / 1024.0f);
                             Response<T> result = Response.success(parser.parse(networkResponse.data), getCacheEntry());
 
                             // キャッシュに追加する
