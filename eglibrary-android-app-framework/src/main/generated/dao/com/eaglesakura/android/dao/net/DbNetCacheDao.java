@@ -31,6 +31,7 @@ public class DbNetCacheDao extends AbstractDao<DbNetCache, String> {
         public final static Property CacheTime = new Property(5, java.util.Date.class, "cacheTime", false, "CACHE_TIME");
         public final static Property CacheLimit = new Property(6, java.util.Date.class, "cacheLimit", false, "CACHE_LIMIT");
         public final static Property Etag = new Property(7, String.class, "etag", false, "ETAG");
+        public final static Property Hash = new Property(8, String.class, "hash", false, "HASH");
     };
 
 
@@ -53,7 +54,8 @@ public class DbNetCacheDao extends AbstractDao<DbNetCache, String> {
                 "'METHOD' TEXT NOT NULL ," + // 4: method
                 "'CACHE_TIME' INTEGER NOT NULL ," + // 5: cacheTime
                 "'CACHE_LIMIT' INTEGER NOT NULL ," + // 6: cacheLimit
-                "'ETAG' TEXT);"); // 7: etag
+                "'ETAG' TEXT," + // 7: etag
+                "'HASH' TEXT);"); // 8: hash
     }
 
     /** Drops the underlying database table. */
@@ -82,6 +84,11 @@ public class DbNetCacheDao extends AbstractDao<DbNetCache, String> {
         if (etag != null) {
             stmt.bindString(8, etag);
         }
+ 
+        String hash = entity.getHash();
+        if (hash != null) {
+            stmt.bindString(9, hash);
+        }
     }
 
     /** @inheritdoc */
@@ -101,7 +108,8 @@ public class DbNetCacheDao extends AbstractDao<DbNetCache, String> {
             cursor.getString(offset + 4), // method
             new java.util.Date(cursor.getLong(offset + 5)), // cacheTime
             new java.util.Date(cursor.getLong(offset + 6)), // cacheLimit
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7) // etag
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // etag
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8) // hash
         );
         return entity;
     }
@@ -117,6 +125,7 @@ public class DbNetCacheDao extends AbstractDao<DbNetCache, String> {
         entity.setCacheTime(new java.util.Date(cursor.getLong(offset + 5)));
         entity.setCacheLimit(new java.util.Date(cursor.getLong(offset + 6)));
         entity.setEtag(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setHash(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
      }
     
     /** @inheritdoc */

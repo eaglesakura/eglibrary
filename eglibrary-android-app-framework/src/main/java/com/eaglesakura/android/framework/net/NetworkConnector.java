@@ -24,6 +24,7 @@ import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.android.thread.MultiRunningTasks;
 import com.eaglesakura.android.util.ImageUtil;
 import com.eaglesakura.io.IOUtil;
+import com.eaglesakura.util.EncodeUtil;
 import com.eaglesakura.util.LogUtil;
 
 import java.io.ByteArrayOutputStream;
@@ -158,7 +159,7 @@ public class NetworkConnector {
             Map<String, String> respHeades;
 
             boolean loadFromCache() {
-                byte[] bytes = getCache(url, cacheTimeoutMs);
+                byte[] bytes = loadCache(url, cacheTimeoutMs);
                 if (bytes == null) {
                     return false;
                 }
@@ -310,7 +311,7 @@ public class NetworkConnector {
 
             boolean loadFromCache() throws Exception {
 
-                byte[] cache = getCache(url, cacheTimeoutMs);
+                byte[] cache = loadCache(url, cacheTimeoutMs);
                 if (cache == null) {
                     return false;
                 }
@@ -423,7 +424,7 @@ public class NetworkConnector {
      * @param timeoutMs
      * @return
      */
-    protected byte[] getCache(String url, long timeoutMs) {
+    protected byte[] loadCache(String url, long timeoutMs) {
         CacheDatabase db = getCacheDatabase();
         try {
             db.open();
@@ -439,7 +440,14 @@ public class NetworkConnector {
                 return null;
             }
 
-            LogUtil.log("%s hasCache(%s) %.1f KB", getClass().getSimpleName(), url, (float) cache.getBodySize() / 1024.0f);
+            LogUtil.log("%s hasCache(%s) %.1f KB ETag(%s) hash(%s)",
+                    getClass().getSimpleName(),
+                    url,
+                    (float) cache.getBodySize() / 1024.0f,
+                    cache.getEtag(),
+                    cache.getHash()
+            );
+
             return cache.getBody();
         } catch (Exception e) {
             return null;
@@ -458,6 +466,10 @@ public class NetworkConnector {
      * @param timeoutMs
      */
     protected void putCache(final String url, final Map<String, String> headers, final String method, final byte[] body, final long timeoutMs) {
+        if (body == null || body.length == 0) {
+            return;
+        }
+
         tasks.pushFront(new Runnable() {
             @Override
             public void run() {
@@ -469,6 +481,11 @@ public class NetworkConnector {
                 cache.setMethod(method.toUpperCase());
                 cache.setCacheTime(new Date());
                 cache.setCacheLimit(new Date(System.currentTimeMillis() + timeoutMs));
+
+                if (headers != null && !headers.isEmpty()) {
+                    cache.setEtag(headers.get("ETag"));
+                }
+                cache.setHash(EncodeUtil.genMD5(body));
 
                 CacheDatabase db = getCacheDatabase();
                 try {
@@ -494,7 +511,7 @@ public class NetworkConnector {
         return cacheDatabase;
     }
 
-    private static final int SUPPORTED_DATABASE_VERSION = 1;
+    private static final int SUPPORTED_DATABASE_VERSION = 2;
 
     protected class CacheDatabase extends BaseDatabase<DaoSession> {
         public CacheDatabase() {
@@ -552,6 +569,8 @@ public class NetworkConnector {
             return new SQLiteOpenHelper(context, cacheFile != null ? cacheFile.getAbsolutePath() : null, null, SUPPORTED_DATABASE_VERSION) {
                 @Override
                 public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+                    // バージョンアップしたら、ローカルキャッシュは削除してしまって差し支えない
+                    LogUtil.log("%s db update(%d -> %d) drop", NetworkConnector.this.getClass().getSimpleName(), oldVersion, newVersion);
                     DaoMaster.dropAllTables(db, true);
                     DaoMaster.createAllTables(db, false);
                 }

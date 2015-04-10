@@ -18,6 +18,7 @@ public class DbNetCache {
     /** Not-null value. */
     private java.util.Date cacheLimit;
     private String etag;
+    private String hash;
 
     public DbNetCache() {
     }
@@ -26,7 +27,7 @@ public class DbNetCache {
         this.url = url;
     }
 
-    public DbNetCache(String url, int cacheType, int bodySize, byte[] body, String method, java.util.Date cacheTime, java.util.Date cacheLimit, String etag) {
+    public DbNetCache(String url, int cacheType, int bodySize, byte[] body, String method, java.util.Date cacheTime, java.util.Date cacheLimit, String etag, String hash) {
         this.url = url;
         this.cacheType = cacheType;
         this.bodySize = bodySize;
@@ -35,6 +36,7 @@ public class DbNetCache {
         this.cacheTime = cacheTime;
         this.cacheLimit = cacheLimit;
         this.etag = etag;
+        this.hash = hash;
     }
 
     /** Not-null value. */
@@ -107,6 +109,14 @@ public class DbNetCache {
 
     public void setEtag(String etag) {
         this.etag = etag;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
 }
