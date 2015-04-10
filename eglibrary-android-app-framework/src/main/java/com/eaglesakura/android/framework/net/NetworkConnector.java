@@ -21,6 +21,7 @@ import com.eaglesakura.android.dao.net.DbNetCache;
 import com.eaglesakura.android.dao.net.DbNetCacheDao;
 import com.eaglesakura.android.db.BaseDatabase;
 import com.eaglesakura.android.framework.FrameworkCentral;
+import com.eaglesakura.android.framework.context.Resources;
 import com.eaglesakura.android.thread.MultiRunningTasks;
 import com.eaglesakura.android.util.ImageUtil;
 import com.eaglesakura.io.IOUtil;
@@ -662,6 +663,36 @@ public class NetworkConnector {
                 bitmap.recycle();
             }
             return scaled;
+        }
+    }
+
+    public static class ScaledAlphaImageParser implements RequestParser<Bitmap> {
+        int maxWidth;
+        int maxHeight;
+        int alphaImageDrawable;
+        final Context context;
+
+        public ScaledAlphaImageParser(final Context context, int maxWidth, int maxHeight, int alphaImageDrawable) {
+            this.maxWidth = maxWidth;
+            this.maxHeight = maxHeight;
+            this.context = context.getApplicationContext();
+            this.alphaImageDrawable = alphaImageDrawable;
+        }
+
+        @Override
+        public Bitmap parse(byte[] data) throws Exception {
+            Bitmap bitmap = ImageUtil.decode(data);
+            Bitmap scaled = ImageUtil.toScaledImage(bitmap, maxWidth, maxHeight);
+            if (bitmap != scaled) {
+                bitmap.recycle();
+            }
+
+            Bitmap alpha = ImageUtil.decode(context, alphaImageDrawable);
+            Bitmap blend = ImageUtil.blendAlpha(scaled, alpha);
+            scaled.recycle();
+            alpha.recycle();
+
+            return blend;
         }
     }
 }

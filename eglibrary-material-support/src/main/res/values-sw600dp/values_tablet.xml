@@ -3,6 +3,7 @@
 
     <dimen name="EsMaterial.Margin.KeyLine1Horizontal">24dp</dimen>
     <dimen name="EsMaterial.Margin.KeyLine1Vertical">16dp</dimen>
+    <dimen name="EsMaterial.Margin.KeyLine1Vertical.Half">8dp</dimen>
     <dimen name="EsMaterial.Margin.KeyLine2Horizontal">80dp</dimen>
 
     <!-- NavigationDrawer -->

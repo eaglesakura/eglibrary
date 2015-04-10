@@ -7,6 +7,7 @@
     <!-- コンテンツ左右の基本マージン -->
     <dimen name="EsMaterial.Margin.KeyLine1Horizontal">16dp</dimen>
     <dimen name="EsMaterial.Margin.KeyLine1Vertical">8dp</dimen>
+    <dimen name="EsMaterial.Margin.KeyLine1Vertical.Half">4dp</dimen>
     <!-- コンテンツ左右からメインコンテンツまでのマージン -->
     <dimen name="EsMaterial.Margin.KeyLine2Horizontal">80dp</dimen>
 
