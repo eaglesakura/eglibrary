@@ -39,7 +39,7 @@ android {
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src/main/java', 'src/main/dao', 'src/main/gen-prop']
+            java.srcDirs = ['src/main/java', 'src/main/dao', 'src/main/gen-prop', 'src/main/generated/dao']
         }
     }
 }
@@ -64,23 +64,5 @@ buildscript {
 
 apply plugin: 'com.eaglesakura.android-support'
 
-/**
- * 設定ファイルを出力する
- */
-task generateProp(type: com.eaglesakura.gradle.tasks.AndroidPropGenTask) {
-    outDirectory = file("src/main/gen-prop").absoluteFile
 
-    classPackageName DATABASE_PACKAGE_NAME
-    className "BasicSettings"
-    dbFileName DATABSE_FILE_NAME
-
-    stringProperty "gcmToken", ""; // アプリが持つGCMトークン
-
-    // バージョンキャッシュ
-    intProperty "lastBootedAppVersionCode", 0; // 最後に起動した時のアプリバージョンコード
-    stringProperty "lastBootedAppVersionName", ""; // 最後に起動した時のアプリバージョン名
-
-    // Google Login
-    booleanProperty "loginGoogleClientApi", false
-    stringProperty "loginGoogleAccount", ""
-}
+apply from: "generator.gradle"
