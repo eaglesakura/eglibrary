@@ -96,6 +96,24 @@ public class MultiRunningTasks {
         }
     }
 
+    public void pushFront(final Runnable runnable) {
+        pushFront(new Task() {
+            @Override
+            public boolean begin(MultiRunningTasks runnner) {
+                return true;
+            }
+
+            @Override
+            public void run(MultiRunningTasks runner) {
+                runnable.run();
+            }
+
+            @Override
+            public void finish(MultiRunningTasks runner) {
+            }
+        });
+    }
+
     /**
      * 全てのタスクが終わるのを明示的に待つ。<BR>
      * メソッドを抜けた次点で全てのタスクが完了している。

@@ -227,7 +227,11 @@ public class NetworkConnector {
      * @param timeoutMs
      */
     protected void putCache(final String url, final Map<String, String> headers, final String method, final byte[] body, final long timeoutMs) {
-        tasks.pushBack(new Runnable() {
+        if (timeoutMs < 10) {
+            // 一定よりも小さな時間のキャッシュは不要
+            return;
+        }
+        tasks.pushFront(new Runnable() {
             @Override
             public void run() {
                 DbNetCache cache = new DbNetCache();
