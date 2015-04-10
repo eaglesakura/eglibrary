@@ -29,8 +29,11 @@ import com.eaglesakura.util.LogUtil;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -236,6 +239,8 @@ public class NetworkConnector {
 
     /**
      * ネットワーク経由でデータを取得する
+     * <p/>
+     * iteratorが常にKey => Valueの順番で取得できることが前提となる
      *
      * @param url
      * @param parser
@@ -243,8 +248,65 @@ public class NetworkConnector {
      * @param <T>
      * @return
      */
-    public <T> NetworkResult<T> get(final String url, final RequestParser<T> parser, final long cacheTimeoutMs) {
+    public <T> NetworkResult<T> get(String url, RequestParser<T> parser, long cacheTimeoutMs) {
+        return connect(url, parser, Request.Method.GET, cacheTimeoutMs, null);
+    }
+
+    public static Map<String, String> asMap(Collection<String> keyValues) {
+        if (keyValues.size() % 2 != 0) {
+            throw new IllegalArgumentException("keyValues size");
+        }
+
+        Map<String, String> result = new HashMap<>();
+        Iterator<String> iterator = keyValues.iterator();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            String value = iterator.next();
+
+            result.put(key, value);
+        }
+
+        return result;
+    }
+
+    /**
+     * ネットワーク経由でデータを送信する
+     *
+     * @param url
+     * @param parser
+     * @param cacheTimeoutMs
+     * @param <T>
+     * @return
+     */
+    public <T> NetworkResult<T> post(String url, RequestParser<T> parser, Map<String, String> params, long cacheTimeoutMs) {
+        return connect(url, parser, Request.Method.POST, cacheTimeoutMs, params);
+    }
+
+    /**
+     * ネットワーク経由でデータを送信する
+     *
+     * @param url
+     * @param parser
+     * @param <T>
+     * @return
+     */
+    public <T> NetworkResult<T> post(String url, RequestParser<T> parser, Map<String, String> params) {
+        return connect(url, parser, Request.Method.POST, 0, params);
+    }
+
+    /**
+     * ネットワーク経由でデータを取得する
+     *
+     * @param url
+     * @param parser
+     * @param cacheTimeoutMs
+     * @param <T>
+     * @return
+     */
+    protected <T> NetworkResult<T> connect(final String url, final RequestParser<T> parser, final int volleyMethod, final long cacheTimeoutMs, final Map<String, String> params) {
         final NetworkResult<T> result = new NetworkResult<T>() {
+            String httpMethod = volleyMethod == Request.Method.GET ? "GET" : "POST";
+
             boolean loadFromCache() throws Exception {
 
                 byte[] cache = getCache(url, cacheTimeoutMs);
@@ -262,7 +324,7 @@ public class NetworkConnector {
             }
 
             void loadFromNetwork() {
-                Request<T> volleyRequest = new Request<T>(Request.Method.GET, url, new Response.ErrorListener() {
+                Request<T> volleyRequest = new Request<T>(volleyMethod, url, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         log(volleyError);
@@ -270,8 +332,16 @@ public class NetworkConnector {
                     }
                 }) {
                     @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        if (params != null && params.isEmpty()) {
+                            return params;
+                        }
+                        return super.getParams();
+                    }
+
+                    @Override
                     public Map<String, String> getHeaders() throws AuthFailureError {
-                        return factory.newHttpHeaders(url, "GET");
+                        return factory.newHttpHeaders(url, httpMethod);
                     }
 
                     @Override
@@ -281,7 +351,7 @@ public class NetworkConnector {
 
                             // キャッシュに追加する
                             if (cacheTimeoutMs > 10) {
-                                putCache(url, networkResponse.headers, "GET", Arrays.copyOf(networkResponse.data, networkResponse.data.length), cacheTimeoutMs);
+                                putCache(url, networkResponse.headers, httpMethod, Arrays.copyOf(networkResponse.data, networkResponse.data.length), cacheTimeoutMs);
                             }
                             return result;
                         } catch (Exception e) {
@@ -294,7 +364,7 @@ public class NetworkConnector {
                         onReceived(data);
                     }
                 };
-                volleyRequest.setRetryPolicy(factory.newRetryPolycy(url, "GET"));
+                volleyRequest.setRetryPolicy(factory.newRetryPolycy(url, httpMethod));
                 requests.add(volleyRequest);
             }
 
@@ -533,4 +603,14 @@ public class NetworkConnector {
         Map<String, String> newHttpHeaders(String url, String method);
     }
 
+
+    /**
+     * 何も返さないParser
+     */
+    public static RequestParser<Object> VOID_REQUEST = new RequestParser<Object>() {
+        @Override
+        public Object parse(byte[] data) throws Exception {
+            return new Object();
+        }
+    };
 }
