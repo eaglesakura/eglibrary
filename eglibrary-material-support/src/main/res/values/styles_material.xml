@@ -44,7 +44,7 @@
 
     <style name="EsMaterial.Base" parent="Theme.AppCompat.Light">
         <!-- 上から下に登場するAnimation -->
-        <item name="android:windowAnimationStyle">@style/EsMaterial.Animation.Activity</item>
+        <!--<item name="android:windowAnimationStyle">@style/EsMaterial.Animation.Activity</item>-->
 
         <item name="colorAccent">@color/accent_material_light</item>
         <item name="android:textColor">@color/EsMaterial.Grey.800</item>
