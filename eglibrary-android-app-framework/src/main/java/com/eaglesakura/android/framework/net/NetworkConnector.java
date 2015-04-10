@@ -153,6 +153,16 @@ public class NetworkConnector {
         }
     }
 
+    /**
+     * 画像をスケーリングしたままキャッシュして取得する
+     * <p/>
+     * 大きな画像を小さく保持する場合、かつ常に同じ大きさで使用する場合に有効
+     *
+     * @param url
+     * @param option
+     * @param cacheTimeoutMs
+     * @return
+     */
     public NetworkResult<Bitmap> get(final String url, final ImageOption option, final long cacheTimeoutMs) {
         NetworkResult<Bitmap> result = new NetworkResult<Bitmap>() {
 
@@ -634,4 +644,24 @@ public class NetworkConnector {
             return new Object();
         }
     };
+
+    public static class ScaledImageParser implements RequestParser<Bitmap> {
+        int maxWidth;
+        int maxHeight;
+
+        public ScaledImageParser(int maxWidth, int maxHeight) {
+            this.maxWidth = maxWidth;
+            this.maxHeight = maxHeight;
+        }
+
+        @Override
+        public Bitmap parse(byte[] data) throws Exception {
+            Bitmap bitmap = ImageUtil.decode(data);
+            Bitmap scaled = ImageUtil.toScaledImage(bitmap, maxWidth, maxHeight);
+            if (bitmap != scaled) {
+                bitmap.recycle();
+            }
+            return scaled;
+        }
+    }
 }

@@ -213,6 +213,42 @@ public class ImageUtil {
     }
 
     /**
+     * 指定した最大サイズに収まるようにスケーリングする
+     * <p/>
+     * 元のsrcオブジェクトをそのまま返す場合があるので注意。
+     *
+     * @param src
+     * @param maxWidth
+     * @param maxHeight
+     * @return
+     */
+    public static Bitmap toScaledImage(Bitmap src, int maxWidth, int maxHeight) {
+        int originWidth = src.getWidth();
+        int originHeight = src.getHeight();
+        if (originWidth <= maxWidth && originHeight <= maxHeight) {
+            return src;
+        }
+
+        double scaleWidth = (double) maxWidth / (double) originWidth;
+        double scaleHeight = (double) maxHeight / (double) originHeight;
+
+        int newWidth;
+        int newHeight;
+        if (scaleWidth < scaleHeight) {
+            // 幅に合わせる
+            newWidth = maxWidth;
+            newHeight = (int) (scaleWidth * originHeight);
+        } else {
+            // 高さに合わせる
+            newWidth = (int) (scaleHeight * originWidth);
+            newHeight = maxHeight;
+        }
+
+        // スケーリングしたBitmapを返す
+        return Bitmap.createScaledBitmap(src, newWidth, newHeight, true);
+    }
+
+    /**
      * 正方形画像へ変形する。
      * <p/>
      * 強制的に変形を行うため、srcは破棄して問題ない。
