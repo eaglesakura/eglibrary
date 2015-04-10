@@ -34,6 +34,7 @@ import java.util.Map;
  * <p/>
  * 早期ローカルキャッシュに対応し、むやみにネットワークアクセスを行わないようにする
  */
+@Deprecated
 public class NetowrkCentral {
 
     public static final long NOT_TIMEOUT = 0x6FFFFFFFFFFFFFFFL;
