@@ -165,7 +165,7 @@ public class NetworkConnector {
      * @return
      */
     public NetworkResult<Bitmap> get(final String url, final ImageOption option, final long cacheTimeoutMs) {
-        NetworkResult<Bitmap> result = new NetworkResult<Bitmap>() {
+        NetworkResult<Bitmap> result = new NetworkResult<Bitmap>(url) {
 
             Map<String, String> respHeades;
 
@@ -317,7 +317,7 @@ public class NetworkConnector {
      * @return
      */
     protected <T> NetworkResult<T> connect(final String url, final RequestParser<T> parser, final int volleyMethod, final long cacheTimeoutMs, final Map<String, String> params) {
-        final NetworkResult<T> result = new NetworkResult<T>() {
+        final NetworkResult<T> result = new NetworkResult<T>(url) {
             String httpMethod = volleyMethod == Request.Method.GET ? "GET" : "POST";
 
             boolean loadFromCache() throws Exception {

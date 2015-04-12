@@ -3,6 +3,10 @@ package com.eaglesakura.android.util;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -73,6 +77,31 @@ public class AndroidUtil {
      */
     public static boolean isTopApplicationSelf(Context context) {
         return context.getPackageName().equals(getTopApplicationPackage(context));
+    }
+
+    /**
+     * ランチャー一覧を取得する
+     *
+     * @param context
+     * @return
+     */
+    public static List<ResolveInfo> listLauncherApplications(Context context) {
+        PackageManager pm = context.getPackageManager();
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        return pm.queryIntentActivities(intent, 0);
+    }
+
+    /**
+     * インストールされているアプリのpackage名一覧を取得する
+     *
+     * @param context
+     * @return
+     */
+    public static List<ApplicationInfo> listInstallApplications(Context context) {
+        PackageManager pm = context.getPackageManager();
+        List<ApplicationInfo> infos = pm.getInstalledApplications(0);
+        return infos;
     }
 
     /**

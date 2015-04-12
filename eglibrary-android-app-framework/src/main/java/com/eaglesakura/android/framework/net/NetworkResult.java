@@ -32,6 +32,16 @@ public abstract class NetworkResult<T> {
 
     protected Listener<T> listener;
 
+    protected final String url;
+
+    public NetworkResult(String url) {
+        this.url = url;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
     public NetworkResult<T> timeout(long timeoutMs) {
         this.dataTimeoutMs = timeoutMs;
         return this;
