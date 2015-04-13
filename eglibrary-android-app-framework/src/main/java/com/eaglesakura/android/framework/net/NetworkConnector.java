@@ -190,6 +190,22 @@ public class NetworkConnector {
     }
 
     /**
+     * URLエラーが発生した場合のハンドリングResultを返す
+     *
+     * @param url
+     * @param <T>
+     * @return
+     */
+    protected <T> NetworkResult<T> newUrlErrorResult(final String url) {
+        return new NetworkResult<T>(url) {
+            @Override
+            void startDownloadFromBackground() {
+                onError(new IllegalStateException("URL error :: " + url));
+            }
+        };
+    }
+
+    /**
      * ネットワーク経由でデータを取得する
      *
      * @param url
@@ -199,6 +215,10 @@ public class NetworkConnector {
      * @return
      */
     protected <T> NetworkResult<T> connect(final String url, final RequestParser<T> parser, final int volleyMethod, final long cacheTimeoutMs, final Map<String, String> params) {
+        if (!url.startsWith("http")) {
+            return newUrlErrorResult(url);
+        }
+
         final NetworkResult<T> result = new NetworkResult<T>(url) {
             String httpMethod = volleyMethod == Request.Method.GET ? "GET" : "POST";
 
