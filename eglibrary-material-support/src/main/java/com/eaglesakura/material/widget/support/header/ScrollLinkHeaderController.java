@@ -57,7 +57,7 @@ public class ScrollLinkHeaderController {
         this.context = context.getApplicationContext();
     }
 
-    public void setHeaderView(View headerView, final View spacerView) {
+    public void setHeaderView(final View headerView, final View spacerView) {
         this.headerViewContainer = headerView;
         this.spacerView = spacerView;
         openHeight = headerView.getMeasuredHeight();
@@ -66,7 +66,7 @@ public class ScrollLinkHeaderController {
         headerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if (openHeight == 0) {
+                if (openHeight != headerViewContainer.getHeight()) {
                     onLayoutChanged(0);
                 }
             }
