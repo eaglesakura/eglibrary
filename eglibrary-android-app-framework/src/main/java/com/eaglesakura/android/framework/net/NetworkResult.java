@@ -41,6 +41,16 @@ public abstract class NetworkResult<T> {
      */
     protected boolean streamAutoClose = true;
 
+    /**
+     * 古いデータのハッシュ値
+     */
+    protected String oldDataHash;
+
+    /**
+     * 新しいデータのハッシュ
+     */
+    protected String currentDataHash;
+
     public NetworkResult(String url) {
         this.url = url;
     }
@@ -52,6 +62,19 @@ public abstract class NetworkResult<T> {
     public NetworkResult<T> timeout(long timeoutMs) {
         this.dataTimeoutMs = timeoutMs;
         return this;
+    }
+
+    /**
+     * データが変更されている場合trueを返却する
+     *
+     * @return
+     */
+    public boolean isDataModified() {
+        if (oldDataHash == null) {
+            return true;
+        } else {
+            return !oldDataHash.equals(currentDataHash);
+        }
     }
 
     public void setStreamAutoClose(boolean streamAutoClose) {

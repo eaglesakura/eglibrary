@@ -13,7 +13,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
 import com.eaglesakura.android.dao.net.DaoMaster;
 import com.eaglesakura.android.dao.net.DaoSession;
@@ -21,7 +20,6 @@ import com.eaglesakura.android.dao.net.DbNetCache;
 import com.eaglesakura.android.dao.net.DbNetCacheDao;
 import com.eaglesakura.android.db.BaseDatabase;
 import com.eaglesakura.android.framework.FrameworkCentral;
-import com.eaglesakura.android.framework.context.Resources;
 import com.eaglesakura.android.thread.MultiRunningTasks;
 import com.eaglesakura.android.util.ImageUtil;
 import com.eaglesakura.io.IOUtil;
@@ -30,7 +28,6 @@ import com.eaglesakura.util.EncodeUtil;
 import com.eaglesakura.util.LogUtil;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -125,7 +122,7 @@ public class NetworkConnector {
     /**
      * 時間制限の切れたキャッシュをクリーンアップして軽量化する
      */
-    public void cleanTimeoutCache() {
+    public void deleteTimeoutCache() {
         CacheDatabase database = getCacheDatabase();
         try {
             database.open();
@@ -133,124 +130,6 @@ public class NetworkConnector {
         } finally {
             database.close();
         }
-    }
-
-
-    public static class ImageOption {
-        public int maxWidth = 1024;
-
-        public int maxHeight = 1024;
-
-        public Bitmap.Config imageFormat = Bitmap.Config.ARGB_8888;
-
-        public int cacheQuality = 100;
-
-        public Bitmap.CompressFormat cacheFormat = Bitmap.CompressFormat.PNG;
-
-        public ImageOption() {
-
-        }
-
-        public ImageOption(int maxWidth, int maxHeight) {
-            this.maxWidth = maxWidth;
-            this.maxHeight = maxHeight;
-        }
-    }
-
-    /**
-     * 画像をスケーリングしたままキャッシュして取得する
-     * <p/>
-     * 大きな画像を小さく保持する場合、かつ常に同じ大きさで使用する場合に有効
-     *
-     * @param url
-     * @param option
-     * @param cacheTimeoutMs
-     * @return
-     */
-    public NetworkResult<Bitmap> get(final String url, final ImageOption option, final long cacheTimeoutMs) {
-        NetworkResult<Bitmap> result = new NetworkResult<Bitmap>(url) {
-
-            Map<String, String> respHeades;
-
-            boolean loadFromCache() {
-                byte[] bytes = loadCache(url, cacheTimeoutMs);
-                if (bytes == null) {
-                    return false;
-                }
-
-                Bitmap image = ImageUtil.decode(bytes);
-                if (image != null) {
-                    onReceived(image);
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-
-            void loadFromNetwork() {
-                ImageRequest req = new ImageRequest(url,
-                        new Response.Listener<Bitmap>() {
-
-                            @Override
-                            public void onResponse(Bitmap bitmap) {
-
-                                // キャッシュに追加
-                                if (cacheTimeoutMs > 10) {
-                                    ByteArrayOutputStream os = new ByteArrayOutputStream();
-                                    try {
-                                        bitmap.compress(option.cacheFormat, option.cacheQuality, os);
-                                        os.flush();
-                                        putCache(url, respHeades, "GET", os.toByteArray(), cacheTimeoutMs);
-                                    } catch (Exception e) {
-                                    }
-                                }
-
-                                onReceived(bitmap);
-                            }
-                        }, option.maxWidth, option.maxHeight, option.imageFormat,
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError volleyError) {
-                                onError(volleyError);
-                            }
-                        }) {
-
-                    @Override
-                    protected Response<Bitmap> parseNetworkResponse(NetworkResponse response) {
-                        LogUtil.log("%s volley received(%s) %.1f KB", NetworkConnector.this.getClass().getSimpleName(), url, response.data == null ? 0 : (float) response.data.length / 1024.0f);
-                        respHeades = response.headers;
-                        return super.parseNetworkResponse(response);
-                    }
-
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        return factory.newHttpHeaders(url, "GET");
-                    }
-                };
-                req.setRetryPolicy(factory.newRetryPolycy(url, "GET"));
-                requests.add(req);
-            }
-
-            @Override
-            void startDownloadFromBackground() {
-                if (isCanceled()) {
-                    return;
-                }
-
-                if (loadFromCache()) {
-                    return;
-                }
-
-                if (isCanceled()) {
-                    return;
-                }
-
-                loadFromNetwork();
-            }
-        };
-
-        start(result);
-        return result;
     }
 
     /**
@@ -328,14 +207,26 @@ public class NetworkConnector {
             }
 
             boolean loadFromCache() throws Exception {
+                DbNetCache cache = loadCache(url);
 
-                byte[] cache = loadCache(url, cacheTimeoutMs);
                 if (cache == null) {
                     return false;
                 }
 
-                T parse = parser.parse(this, new ByteArrayInputStream(cache));
+                // キャッシュDrop前にハッシュを保存する
+                oldDataHash = cache.getHash();
+
+                if (dropTimeoutCache(cache, cacheTimeoutMs)) {
+                    return false;
+                }
+
+                T parse = parser.parse(this, new ByteArrayInputStream(cache.getBody()));
                 if (parse != null) {
+                    currentDataHash = oldDataHash;
+//                    LogUtil.log("data(%s) hash old(%s) -> new(%s) modified(false : local)",
+//                            url,
+//                            oldDataHash, currentDataHash
+//                    );
                     onReceived(parse);
                     return true;
                 } else {
@@ -373,8 +264,14 @@ public class NetworkConnector {
                                     networkResponse.data == null ? 0 : (float) networkResponse.data.length / 1024.0f);
 
 
-                            Response<T> result = Response.success(parser.parse(self(), new ByteArrayInputStream(networkResponse.data)), getCacheEntry());
+                            currentDataHash = EncodeUtil.genMD5(networkResponse.data);
+                            LogUtil.log("data(%s) hash old(%s) -> new(%s) modified(%s)",
+                                    url,
+                                    oldDataHash, currentDataHash,
+                                    "" + isDataModified()
+                            );
 
+                            Response<T> result = Response.success(parser.parse(self(), new ByteArrayInputStream(networkResponse.data)), getCacheEntry());
                             // キャッシュに追加する
                             if (cacheTimeoutMs > 10) {
                                 putCache(url, networkResponse.headers, httpMethod, Arrays.copyOf(networkResponse.data, networkResponse.data.length), cacheTimeoutMs);
@@ -441,25 +338,43 @@ public class NetworkConnector {
     }
 
     /**
-     * URLを指定してキャッシュを取得する
+     * タイムアウトチェックを行い、必要であればdropする
      *
-     * @param url
+     * @param cache
      * @param timeoutMs
      * @return
      */
-    protected byte[] loadCache(String url, long timeoutMs) {
+    protected boolean dropTimeoutCache(DbNetCache cache, long timeoutMs) {
+        if ((cache.getCacheTime().getTime() + timeoutMs) < System.currentTimeMillis()) {
+            // 現在時刻がリミット時刻を超えてしまっている
+            LogUtil.log("%s dropCache(%s) %d ms over", getClass().getSimpleName(), cache.getUrl(), timeoutMs);
+
+            CacheDatabase db = getCacheDatabase();
+            try {
+                db.open();
+                db.delete(cache.getUrl());
+            } finally {
+                db.close();
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * URLを指定してキャッシュを取得する
+     *
+     * @param url
+     * @return
+     */
+    protected DbNetCache loadCache(String url) {
         CacheDatabase db = getCacheDatabase();
         try {
             db.open();
-            DbNetCache cache = db.getIfExist(url);
+            DbNetCache cache = db.get(url);
+            // キャッシュが無効な場合は何もしない
             if (cache == null) {
-                return null;
-            }
-
-            if ((cache.getCacheTime().getTime() + timeoutMs) < System.currentTimeMillis()) {
-                // 現在時刻がリミット時刻を超えてしまっている
-                db.delete(url);
-                LogUtil.log("%s dropCache(%s) %d ms over", getClass().getSimpleName(), url, timeoutMs);
                 return null;
             }
 
@@ -470,8 +385,7 @@ public class NetworkConnector {
                     cache.getEtag(),
                     cache.getHash()
             );
-
-            return cache.getBody();
+            return cache;
         } catch (Exception e) {
             return null;
         } finally {
