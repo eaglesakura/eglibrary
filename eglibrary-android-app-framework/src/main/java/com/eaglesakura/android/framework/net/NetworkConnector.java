@@ -25,11 +25,14 @@ import com.eaglesakura.android.framework.context.Resources;
 import com.eaglesakura.android.thread.MultiRunningTasks;
 import com.eaglesakura.android.util.ImageUtil;
 import com.eaglesakura.io.IOUtil;
+import com.eaglesakura.json.JSON;
 import com.eaglesakura.util.EncodeUtil;
 import com.eaglesakura.util.LogUtil;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -320,6 +323,10 @@ public class NetworkConnector {
         final NetworkResult<T> result = new NetworkResult<T>(url) {
             String httpMethod = volleyMethod == Request.Method.GET ? "GET" : "POST";
 
+            NetworkResult<T> self() {
+                return this;
+            }
+
             boolean loadFromCache() throws Exception {
 
                 byte[] cache = loadCache(url, cacheTimeoutMs);
@@ -327,7 +334,7 @@ public class NetworkConnector {
                     return false;
                 }
 
-                T parse = parser.parse(cache);
+                T parse = parser.parse(this, new ByteArrayInputStream(cache));
                 if (parse != null) {
                     onReceived(parse);
                     return true;
@@ -360,8 +367,13 @@ public class NetworkConnector {
                     @Override
                     protected Response<T> parseNetworkResponse(NetworkResponse networkResponse) {
                         try {
-                            LogUtil.log("%s volley received(%s) %.1f KB", NetworkConnector.this.getClass().getSimpleName(), url, networkResponse.data == null ? 0 : (float) networkResponse.data.length / 1024.0f);
-                            Response<T> result = Response.success(parser.parse(networkResponse.data), getCacheEntry());
+                            LogUtil.log("%s volley received(%s) %.1f KB",
+                                    NetworkConnector.this.getClass().getSimpleName(),
+                                    url,
+                                    networkResponse.data == null ? 0 : (float) networkResponse.data.length / 1024.0f);
+
+
+                            Response<T> result = Response.success(parser.parse(self(), new ByteArrayInputStream(networkResponse.data)), getCacheEntry());
 
                             // キャッシュに追加する
                             if (cacheTimeoutMs > 10) {
@@ -600,7 +612,7 @@ public class NetworkConnector {
      * @param <T>
      */
     public interface RequestParser<T> {
-        T parse(byte[] data) throws Exception;
+        T parse(NetworkResult<T> sender, InputStream data) throws Exception;
     }
 
     private static void log(VolleyError error) {
@@ -639,12 +651,41 @@ public class NetworkConnector {
     /**
      * 何も返さないParser
      */
-    public static RequestParser<Object> VOID_REQUEST = new RequestParser<Object>() {
+    public static RequestParser<Object> VOID_PARSER = new RequestParser<Object>() {
         @Override
-        public Object parse(byte[] data) throws Exception {
+        public Object parse(NetworkResult<Object> sender, InputStream data) throws Exception {
             return new Object();
         }
     };
+
+
+    /**
+     * 文字列にパースする
+     */
+    public static RequestParser<String> STRING_PARSER = new RequestParser<String>() {
+        @Override
+        public String parse(NetworkResult<String> sender, InputStream data) throws Exception {
+            return new String(IOUtil.toString(data, false));
+        }
+    };
+
+    /**
+     * JSONを単純にパースする
+     *
+     * @param <T>
+     */
+    public static class JsonParser<T> implements RequestParser<T> {
+        final Class<T> clazz;
+
+        public JsonParser(Class<T> clazz) {
+            this.clazz = clazz;
+        }
+
+        @Override
+        public T parse(NetworkResult<T> sender, InputStream data) throws Exception {
+            return JSON.decode(data, clazz);
+        }
+    }
 
     public static class ScaledImageParser implements RequestParser<Bitmap> {
         int maxWidth;
@@ -656,7 +697,7 @@ public class NetworkConnector {
         }
 
         @Override
-        public Bitmap parse(byte[] data) throws Exception {
+        public Bitmap parse(NetworkResult<Bitmap> sender, InputStream data) throws Exception {
             Bitmap bitmap = ImageUtil.decode(data);
             Bitmap scaled = ImageUtil.toScaledImage(bitmap, maxWidth, maxHeight);
             if (bitmap != scaled) {
@@ -680,7 +721,7 @@ public class NetworkConnector {
         }
 
         @Override
-        public Bitmap parse(byte[] data) throws Exception {
+        public Bitmap parse(NetworkResult<Bitmap> sender, InputStream data) throws Exception {
             Bitmap bitmap = ImageUtil.decode(data);
             Bitmap scaled = ImageUtil.toScaledImage(bitmap, maxWidth, maxHeight);
             if (bitmap != scaled) {

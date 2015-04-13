@@ -2,10 +2,12 @@ package com.eaglesakura.android.framework.net;
 
 import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.AndroidUtil;
+import com.eaglesakura.io.IOUtil;
 import com.eaglesakura.time.Timer;
 import com.eaglesakura.util.Util;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * ネットワークの戻り値を管理する
@@ -34,6 +36,11 @@ public abstract class NetworkResult<T> {
 
     protected final String url;
 
+    /**
+     * 自動でストリームを閉じる場合はtrue
+     */
+    protected boolean streamAutoClose = true;
+
     public NetworkResult(String url) {
         this.url = url;
     }
@@ -45,6 +52,14 @@ public abstract class NetworkResult<T> {
     public NetworkResult<T> timeout(long timeoutMs) {
         this.dataTimeoutMs = timeoutMs;
         return this;
+    }
+
+    public void setStreamAutoClose(boolean streamAutoClose) {
+        this.streamAutoClose = streamAutoClose;
+    }
+
+    public boolean isStreamAutoClose() {
+        return streamAutoClose;
     }
 
     /**

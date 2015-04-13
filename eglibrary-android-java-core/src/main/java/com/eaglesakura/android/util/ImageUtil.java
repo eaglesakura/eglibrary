@@ -17,6 +17,7 @@ import com.eaglesakura.math.MathUtil;
 import com.eaglesakura.util.LogUtil;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.security.MessageDigest;
 
 public class ImageUtil {
@@ -150,6 +151,20 @@ public class ImageUtil {
             return BitmapFactory.decodeFile(pathName);
         } catch (Exception e) {
             LogUtil.log(e);
+        }
+        return null;
+    }
+
+    /**
+     * デコードする
+     *
+     * @param stream
+     * @return
+     */
+    public static Bitmap decode(InputStream stream) {
+        try {
+            return BitmapFactory.decodeStream(stream);
+        } catch (Exception e) {
         }
         return null;
     }
