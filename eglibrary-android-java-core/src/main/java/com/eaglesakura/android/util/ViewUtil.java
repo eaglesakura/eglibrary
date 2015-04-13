@@ -1,10 +1,13 @@
 package com.eaglesakura.android.util;
 
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.text.Editable;
 import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 /**
  * View系の便利メソッド
@@ -20,6 +23,42 @@ public class ViewUtil {
         if (itemView.getLayoutParams() == null) {
             itemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         }
+    }
+
+    /**
+     * ImageViewの横幅いっぱいになるようにセットする
+     * <p/>
+     * Viewの高さは画像に合わせて変更される。
+     *
+     * @param view
+     * @param image
+     */
+    public static void setWidthMatchImage(ImageView view, Bitmap image) {
+        Matrix matrix = new Matrix();
+        float scale = (float) view.getWidth() / (float) image.getWidth();
+        int newHeight = (int) (scale * image.getHeight());
+        matrix.postScale(
+                scale, scale
+        );
+        view.setScaleType(ImageView.ScaleType.MATRIX);
+        view.setImageMatrix(matrix);
+        setViewHeight(view, newHeight);
+
+        // 画像を再設定する
+        view.setImageBitmap(image);
+
+    }
+
+    /**
+     * Viewの高さを再設定する
+     *
+     * @param itemView
+     * @param height
+     */
+    public static void setViewHeight(View itemView, int height) {
+        ViewGroup.LayoutParams params = itemView.getLayoutParams();
+        params.height = height;
+        itemView.setLayoutParams(params);
     }
 
     /**
