@@ -66,6 +66,7 @@ public class RippleEffectLayout extends FrameLayout {
         initializeEffectLayer(context, attrs, defStyleAttr, defStyleRes);
     }
 
+    @SuppressLint("NewApi")
     protected void initializeEffectLayer(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
             LogUtil.log("not supported LAYER_TYPE_HARDWARE clip");
@@ -83,6 +84,7 @@ public class RippleEffectLayout extends FrameLayout {
         super.draw(canvas);
     }
 
+    @SuppressLint("NewApi")
     @Override
     protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
         if (rippleState != null) {
@@ -150,7 +152,7 @@ public class RippleEffectLayout extends FrameLayout {
                     stopEffect();
                 }
                 invalidate();
-
+                LogUtil.log("invalidate");
             }
         };
         loopController.setFrameRate(60);
@@ -269,7 +271,9 @@ public class RippleEffectLayout extends FrameLayout {
      * @return
      */
     public static Bundle saveFromView(View fromView, Bundle bundle) {
-        return saveFromArea(new RectF(fromView.getLeft(), fromView.getTop(), fromView.getRight(), fromView.getBottom()), bundle);
+        Rect position = new Rect();
+        fromView.getGlobalVisibleRect(position);
+        return saveFromArea(new RectF(position), bundle);
 //        Rect area = new Rect();
 //        fromView.getGlobalVisibleRect(area);
 //        return saveFromArea(new RectF(area), bundle);
@@ -308,6 +312,8 @@ public class RippleEffectLayout extends FrameLayout {
 
     /**
      * Rippleエフェクトを開始する
+     * <p/>
+     * このメソッドはTransaction.replaceを行う前に呼び出さなければならない
      *
      * @param transaction
      * @param fromView
