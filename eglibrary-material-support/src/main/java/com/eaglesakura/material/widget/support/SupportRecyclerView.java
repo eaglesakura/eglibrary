@@ -107,7 +107,7 @@ public class SupportRecyclerView extends FrameLayout {
      * @param <T>
      * @return
      */
-    public <T extends View> T getEmptyView() {
+    public <T extends View> T getEmptyView(Class<T> clazz) {
         if (emptyViewRoot.getChildCount() == 0) {
             return null;
         }

@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.SystemClock;
@@ -34,7 +35,10 @@ public abstract class BaseService extends Service {
 
     private String ACTION_SELF_WAKEUP_BROADCAST;
 
-    boolean nonSleepService;
+    /**
+     * CPU稼働保証を行うカウント
+     */
+    int wakeUpRef;
 
     AlarmManager alarmManager;
 
@@ -46,7 +50,7 @@ public abstract class BaseService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         this.ACTION_SELF_WAKEUP_BROADCAST = getPackageName() + "/" + getClass().getName() + ".ACTION_SELF_WAKEUP_BROADCAST" + "/" + hashCode();
         registerReceiver(wakeupBroadcastReceiver, new IntentFilter(ACTION_SELF_WAKEUP_BROADCAST));
@@ -55,7 +59,14 @@ public abstract class BaseService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        stopNonSleep();
+        synchronized (this) {
+            // 強制的にCPU稼働を停止させる
+            if (wakeLock != null) {
+                wakeLock.release();
+                wakeLock = null;
+                wakeUpRef = 0;
+            }
+        }
         unregisterReceiver(wakeupBroadcastReceiver);
         destroyed = true;
     }
@@ -65,29 +76,34 @@ public abstract class BaseService extends Service {
     }
 
     /**
-     * Serviceの休止を許可する
+     * CPU稼働参照を減らす
      */
-    public void stopNonSleep() {
-        if (nonSleepService) {
-            // Serviceの休止を停止させる
-            nonSleepService = false;
+    public void popCpuWakeup() {
+        synchronized (this) {
+            if (wakeUpRef <= 0) {
+                // 強制停止がかかっている場合があるため、参照カウント0の場合は何もしない
+                return;
+            }
 
-            wakeLock.release();
-            wakeLock = null;
+            --wakeUpRef;
+            if (wakeUpRef == 0) {
+                wakeLock.release();
+                wakeLock = null;
+            }
         }
     }
 
     /**
-     * Serviceの休止を許さなくする
+     * CPU稼働参照を増やす
      */
-    public void requestNonSleep() {
-        if (nonSleepService) {
-            return;
+    public void pushCpuWakeup() {
+        synchronized (this) {
+            if (wakeLock == null) {
+                wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getSimpleName());
+                wakeLock.acquire();
+            }
+            ++wakeUpRef;
         }
-
-        nonSleepService = true;
-        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getSimpleName());
-        wakeLock.acquire();
     }
 
     /**
@@ -100,6 +116,20 @@ public abstract class BaseService extends Service {
      * @param delayTimeMs     遅延時間
      */
     protected void requestNextAlarmDelayed(int requestCode, Bundle requestArgments, long delayTimeMs) {
+        requestNextAlarmDelayed(requestCode, requestArgments, delayTimeMs, true);
+    }
+
+    /**
+     * 指定したミリ秒後、再度CPUを叩き起こす。
+     * <p/>
+     * 繰り返しには対応しない。
+     *
+     * @param requestCode     呼び出しリクエスト
+     * @param requestArgments コールバックに呼び出される引数
+     * @param delayTimeMs     遅延時間
+     * @param extract         時間保証を有効にする場合はtrue
+     */
+    protected void requestNextAlarmDelayed(int requestCode, Bundle requestArgments, long delayTimeMs, boolean extract) {
         Intent intent = new Intent(ACTION_SELF_WAKEUP_BROADCAST);
         intent.putExtra(EXTRA_WAKEUP_REQUEST_CODE, requestCode);
         if (requestArgments != null) {
@@ -111,7 +141,12 @@ public abstract class BaseService extends Service {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 this, requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT
         );
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, current + delayTimeMs, pendingIntent);
+
+        if (extract && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, current + delayTimeMs, pendingIntent);
+        } else {
+            alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, current + delayTimeMs, pendingIntent);
+        }
     }
 
     /**

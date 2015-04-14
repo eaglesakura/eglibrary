@@ -53,8 +53,16 @@ public class ScrollLinkHeaderController {
 
     private final Context context;
 
+    ScrollListener listener;
+
+    int currentScrollPosition;
+
     public ScrollLinkHeaderController(Context context) {
         this.context = context.getApplicationContext();
+    }
+
+    public void setListener(ScrollListener listener) {
+        this.listener = listener;
     }
 
     public void setHeaderView(final View headerView, final View spacerView) {
@@ -67,7 +75,7 @@ public class ScrollLinkHeaderController {
             @Override
             public void onGlobalLayout() {
                 if (openHeight != headerViewContainer.getHeight()) {
-                    onLayoutChanged(0);
+                    onLayoutChanged(currentScrollPosition);
                 }
             }
         });
@@ -133,21 +141,53 @@ public class ScrollLinkHeaderController {
     public void onScrollY(int currentY) {
         // オーバースクロールには対応しない
         currentY = Math.max(0, currentY);
+
+        if (currentY == currentScrollPosition) {
+            return;
+        }
+
         LogUtil.log("onScrollY(%d)", currentY);
+        currentScrollPosition = currentY;
 
         // スクロール量に合わせてヘッダを透過する
         float scrollLevel = Math.min(1, (float) currentY / (float) openHeight);
+        float headerAlpha = 1.0f;
         if (Build.VERSION.SDK_INT >= 14) {
-            headerViewContainer.setAlpha(1.0f - scrollLevel);
+            headerAlpha = 1.0f - scrollLevel;
+            headerViewContainer.setAlpha(headerAlpha);
         }
 
         // 適度にスクロールさせる
+        int viewScrollY;
         {
             int scrollOffset = (openHeight - closeHeight);
-            int viewScrollY = (int) (scrollLevel * headerScrollDelay * scrollOffset);
+            viewScrollY = (int) (scrollLevel * headerScrollDelay * scrollOffset);
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) headerViewContainer.getLayoutParams();
-            layoutParams.topMargin = -viewScrollY;
+
+            viewScrollY = -viewScrollY;
+            layoutParams.topMargin = viewScrollY;
             headerViewContainer.setLayoutParams(layoutParams);
         }
+
+        if (listener != null) {
+            listener.onHeaderStateChanged(headerAlpha, viewScrollY);
+        }
+    }
+
+    public interface ScrollListener {
+        /**
+         * スクロール位置のコントロールを要求する
+         *
+         * @param newPosition
+         */
+        void requestScrollPosition(int newPosition);
+
+        /**
+         * ヘッダViewの値が変更になった
+         *
+         * @param alpha
+         * @param scroll
+         */
+        void onHeaderStateChanged(float alpha, int scroll);
     }
 }

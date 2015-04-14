@@ -187,7 +187,7 @@ public class BeaconScanService extends BaseService {
         }
 
         // CPUを叩き起こす
-        requestNonSleep();
+        pushCpuWakeup();
 
         // スキャナを生成
         if (scanner == null) {
@@ -238,7 +238,7 @@ public class BeaconScanService extends BaseService {
         scanner.stopScan();
         scanning = false;
         requestNextAlarmDelayed(ALARM_REQUEST_SCANSTART, null, scanSleepTimeMs);
-        stopNonSleep();
+        popCpuWakeup();
     }
 
 }
