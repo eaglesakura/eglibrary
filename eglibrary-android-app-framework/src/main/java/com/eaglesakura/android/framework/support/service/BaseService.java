@@ -12,6 +12,11 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.util.AndroidUtil;
+import com.eaglesakura.google.spreadsheet.generic.StringField;
 
 /**
  * 便利系メソッドを固めたUtilクラス
@@ -200,5 +205,19 @@ public abstract class BaseService extends Service {
 
     protected void logd(String fmt, Object... args) {
         Log.d(((Object) this).getClass().getSimpleName(), String.format(fmt, args));
+    }
+
+    protected void toast(final String fmt, final Object... args) {
+        if (!AndroidUtil.isUIThread()) {
+            UIHandler.postUI(new Runnable() {
+                @Override
+                public void run() {
+                    toast(fmt, args);
+                }
+            });
+            return;
+        }
+
+        Toast.makeText(this, String.format(fmt, args), Toast.LENGTH_SHORT).show();
     }
 }

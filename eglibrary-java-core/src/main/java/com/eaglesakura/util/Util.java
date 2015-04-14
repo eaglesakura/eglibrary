@@ -5,7 +5,9 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Util {
 
@@ -139,6 +141,27 @@ public class Util {
      */
     public static <T> T[] copy(T[] array) {
         return Arrays.copyOf(array, array.length);
+    }
+
+    /**
+     * Mapに変換する
+     *
+     * @param values
+     * @param keyCreator
+     * @param <Key>
+     * @param <Value>
+     * @return
+     */
+    public static <Key, Value> Map<Key, Value> asMap(Collection<Value> values, KeyCreator<Key, Value> keyCreator) {
+        Map<Key, Value> result = new HashMap<Key, Value>();
+        for (Value value : values) {
+            result.put(keyCreator.createKey(value), value);
+        }
+        return result;
+    }
+
+    public interface KeyCreator<Key, Value> {
+        Key createKey(Value value);
     }
 
 }
