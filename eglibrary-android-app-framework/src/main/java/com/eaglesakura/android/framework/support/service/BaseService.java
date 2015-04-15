@@ -1,5 +1,6 @@
 package com.eaglesakura.android.framework.support.service;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -134,6 +135,7 @@ public abstract class BaseService extends Service {
      * @param delayTimeMs     遅延時間
      * @param extract         時間保証を有効にする場合はtrue
      */
+    @SuppressLint("NewApi")
     protected void requestNextAlarmDelayed(int requestCode, Bundle requestArgments, long delayTimeMs, boolean extract) {
         Intent intent = new Intent(ACTION_SELF_WAKEUP_BROADCAST);
         intent.putExtra(EXTRA_WAKEUP_REQUEST_CODE, requestCode);
@@ -147,7 +149,7 @@ public abstract class BaseService extends Service {
                 this, requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT
         );
 
-        if (extract && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (extract && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, current + delayTimeMs, pendingIntent);
         } else {
             alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, current + delayTimeMs, pendingIntent);
