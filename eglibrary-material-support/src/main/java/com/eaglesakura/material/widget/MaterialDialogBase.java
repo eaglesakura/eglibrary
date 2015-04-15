@@ -58,6 +58,18 @@ public class MaterialDialogBase extends Dialog {
         setDialogContent(View.inflate(getContext(), layout, null));
     }
 
+    public View getPositiveButton() {
+        return findViewById(R.id.EsMaterial_Dialog_BasicButtons_Positive);
+    }
+
+    public View getNegativeButton() {
+        return findViewById(R.id.EsMaterial_Dialog_BasicButtons_Negative);
+    }
+
+    public View getNeutralButton() {
+        return findViewById(R.id.EsMaterial_Dialog_BasicButtons_Neutral);
+    }
+
     /**
      * コンテンツ本体を指定する
      *

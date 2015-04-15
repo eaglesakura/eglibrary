@@ -66,6 +66,10 @@ public class MaterialAlertDialog extends MaterialDialogBase {
                 .id(R.id.EsMaterial_Dialog_BasicButtons_Root).visible();
     }
 
+    public void setNeutralButton(int stringRes, OnClickListener listener) {
+        setNeutralButton(getContext().getString(stringRes), listener);
+    }
+
     public void setNeutralButton(CharSequence button, final OnClickListener neutralListener) {
         new AQuery(root)
                 .id(R.id.EsMaterial_Dialog_BasicButtons_Neutral).text(button).visible()
