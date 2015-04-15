@@ -152,7 +152,7 @@ public class RippleEffectLayout extends FrameLayout {
                     stopEffect();
                 }
                 invalidate();
-                LogUtil.log("invalidate");
+//                LogUtil.log("invalidate");
             }
         };
         loopController.setFrameRate(60);
