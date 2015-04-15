@@ -202,6 +202,11 @@ public class NetworkConnector {
             void startDownloadFromBackground() {
                 onError(new IllegalStateException("URL error :: " + url));
             }
+
+            @Override
+            void abortRequest() {
+
+            }
         };
     }
 
@@ -221,6 +226,8 @@ public class NetworkConnector {
 
         final NetworkResult<T> result = new NetworkResult<T>(url) {
             String httpMethod = volleyMethod == Request.Method.GET ? "GET" : "POST";
+
+            Request<T> volleyRequest;
 
             NetworkResult<T> self() {
                 return this;
@@ -255,7 +262,7 @@ public class NetworkConnector {
             }
 
             void loadFromNetwork() {
-                Request<T> volleyRequest = new Request<T>(volleyMethod, url, new Response.ErrorListener() {
+                volleyRequest = new Request<T>(volleyMethod, url, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         log(volleyError);
@@ -309,6 +316,14 @@ public class NetworkConnector {
                 };
                 volleyRequest.setRetryPolicy(factory.newRetryPolycy(url, httpMethod));
                 requests.add(volleyRequest);
+            }
+
+            @Override
+            void abortRequest() {
+                if (volleyRequest != null) {
+                    volleyRequest.cancel();
+                    volleyRequest = null;
+                }
             }
 
             @Override

@@ -101,6 +101,8 @@ public abstract class NetworkResult<T> {
             } else if (canceled) {
                 throw new ConnectCanceledException("canceled");
             } else if (timer.end() >= dataTimeoutMs) {
+                // 時間切れは強制的に終了させる
+                abortRequest();
                 throw new IOException("data timeout");
             }
             Util.sleep(10);
@@ -189,6 +191,11 @@ public abstract class NetworkResult<T> {
      * @return
      */
     abstract void startDownloadFromBackground();
+
+    /**
+     * リクエストをキャンセルする
+     */
+    abstract void abortRequest();
 
     /**
      * データの受け取りをハンドリングする
