@@ -89,7 +89,12 @@ public class RippleEffectLayout extends FrameLayout {
     protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
         if (rippleState != null) {
             float alpha = rippleState.getRenderWeight();
-            child.setAlpha(alpha);
+            alpha *= 2;
+            if (alpha < 1) {
+                child.setAlpha(0);
+            } else {
+                child.setAlpha(alpha - 1.0f);
+            }
         } else {
             child.setAlpha(1.0f);
         }
@@ -233,7 +238,7 @@ public class RippleEffectLayout extends FrameLayout {
          */
         Path createPath() {
             final RectF TARGET_POS = new RectF(getLeft(), getTop(), getRight(), getBottom());
-            float WEIGHT = getRenderWeight();
+            float WEIGHT = Math.min(1.0f, getRenderWeight() * 2);
             float WEIGHT_INVERT = 1.0f - WEIGHT;
 
             // 位置を計算する
