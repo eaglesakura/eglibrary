@@ -1,5 +1,7 @@
 package com.eaglesakura.android.framework.support.ui.license;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,9 +29,26 @@ import java.util.List;
 
 /**
  * 各種ライブラリのLicenseを自動で表示するためのActivity
+ * <p/>
+ * AndroidManifest.xmlに下記を追加する
+ * <pre>
+ *
+ * <activity
+ * android:name="com.eaglesakura.android.framework.support.ui.license.LicenseViewActivity"
+ * android:theme="@style/EsMaterial.Theme.Grey.NoActionBar"
+ * android:screenOrientation="portrait">
+ * <intent-filter>
+ * <action android:name="android.intent.action.MAIN" />
+ * </intent-filter>
+ * </activity>
+ *
+ * </pre>
  */
 public class LicenseViewActivity extends BaseActivity {
 
+    /**
+     * 読み込んだライセンス一覧
+     */
     List<LicenseItem> licenseList = new ArrayList<>();
 
     SupportRecyclerView listRoot;
@@ -242,5 +261,14 @@ public class LicenseViewActivity extends BaseActivity {
                 q.id(R.id.eglibrary_License_Loading).gone();
             }
         }.start();
+    }
+
+    /**
+     * 表示を開始する
+     *
+     * @param context
+     */
+    public static void startContent(Context context) {
+        context.startActivity(new Intent(context, LicenseViewActivity.class));
     }
 }
