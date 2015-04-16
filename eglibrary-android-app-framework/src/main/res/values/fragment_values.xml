@@ -9,4 +9,7 @@
     <string name="eglibrary.GoogleApi.Error.Message">再度ログインを行いますか？</string>
     <string name="eglibrary.GoogleApi.Error.Retry">リトライ</string>
     <string name="eglibrary.GoogleApi.Error.Cancel">キャンセル</string>
+
+
+    <string name="eglibrary.License.Activity.Title">オープンソースライセンス</string>
 </resources>

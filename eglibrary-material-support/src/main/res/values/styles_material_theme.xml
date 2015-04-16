@@ -37,6 +37,20 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="EsMaterial.Theme.Grey.NoActionBar" parent="EsMaterial.Theme.Base">
+        <item name="drawerArrowStyle">@style/EsMaterial.Grey.DrawerArrow</item>
+        <item name="colorPrimary">@color/EsMaterial.Grey.500</item>
+        <item name="colorPrimaryDark">@color/EsMaterial.Grey.600</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="EsMaterial.Theme.Grey.Toolbar" parent="EsMaterial.Theme.Grey.NoActionBar">
+        <item name="android:textColorPrimary">@color/EsMaterial.Grey.800</item>
+        <item name="android:textColorSecondary">@color/EsMaterial.Grey.800</item>
+        <item name="colorAccent">@color/EsMaterial.LightGreen.300</item>
+    </style>
+
     <style name="EsMaterial.Theme.Red" parent="EsMaterial.Theme.Base">
         <item name="drawerArrowStyle">@style/EsMaterial.Red.DrawerArrow</item>
         <item name="colorPrimary">@color/EsMaterial.Red.500</item>

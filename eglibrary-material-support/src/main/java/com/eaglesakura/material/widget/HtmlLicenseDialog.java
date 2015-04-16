@@ -35,9 +35,9 @@ public class HtmlLicenseDialog extends MaterialAlertDialog {
     /**
      * 読み込みのURLを指定する
      *
-     * @param url ライセンスのURL
+     * @param uri ライセンスのURI
      */
-    public void setLicense(String url) {
-        webView.loadUrl(url);
+    public void setLicense(String uri) {
+        webView.loadUrl(uri);
     }
 }

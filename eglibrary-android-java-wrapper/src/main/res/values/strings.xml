@@ -7,5 +7,6 @@
 
     <!--  -->
     <string name="Common.App.Finish">アプリを終了する</string>
+    <string name="Common.App.File.Load">読み込み中</string>
 
 </resources>
