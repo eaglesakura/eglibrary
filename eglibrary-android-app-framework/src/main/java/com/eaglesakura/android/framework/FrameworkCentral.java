@@ -10,6 +10,7 @@ import com.eaglesakura.util.StringUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 /**
  *
@@ -100,6 +101,29 @@ public class FrameworkCentral {
 
     public static Application getApplication() {
         return application;
+    }
+
+    /**
+     * Deploygateのインストールを行う。
+     * <p/>
+     * dependenciesが設定されていない場合、このメソッドはfalseを返す
+     * <p/>
+     * debugCompile 'com.deploygate:sdk:3.1'
+     *
+     * @return 成功したらtrue
+     */
+    public static boolean requestDeploygateInstall() {
+        try {
+            Class<?> clazz = Class.forName("com.deploygate.sdk.DeployGate");
+            Method installMethod = clazz.getMethod("install", Application.class);
+
+            installMethod.invoke(clazz, getApplication());
+            LogUtil.log("install success Deploygate");
+            return true;
+        } catch (Exception e) {
+            LogUtil.log("not dependencies Deploygate");
+            return false;
+        }
     }
 
     /**
