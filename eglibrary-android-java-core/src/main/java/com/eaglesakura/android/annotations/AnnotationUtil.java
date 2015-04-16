@@ -1,5 +1,6 @@
 package com.eaglesakura.android.annotations;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.view.View;
@@ -14,6 +15,7 @@ public class AnnotationUtil {
      * Annotationのコンバートクラスに変換する
      *
      * @param clazz
+     *
      * @return
      */
     public static <T> Class<? extends T> annotation(Class<T> clazz) {
@@ -34,6 +36,7 @@ public class AnnotationUtil {
      * Annotation付きのフラグメントへ変換する
      *
      * @param clazz
+     *
      * @return
      */
     public static Fragment newFragment(String clazz) {
@@ -53,12 +56,14 @@ public class AnnotationUtil {
      * Annotation付きのフラグメントへ変換する
      *
      * @param clazz
+     *
      * @return
      */
     @SuppressWarnings("unchecked")
+    @SuppressLint("NewApi")
     public static <T extends Fragment> T newFragment(Class<T> clazz) {
         try {
-            return (T) (annotation(clazz).newInstance());
+            return (annotation(clazz).newInstance());
         } catch (Exception e) {
             LogUtil.d(e);
             return null;
@@ -71,6 +76,7 @@ public class AnnotationUtil {
      *
      * @param clazz
      * @param <T>
+     *
      * @return
      */
     @SuppressWarnings("unchecked")

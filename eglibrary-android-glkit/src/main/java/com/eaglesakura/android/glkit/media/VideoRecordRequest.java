@@ -28,7 +28,7 @@ import java.io.File;
 public class VideoRecordRequest {
     /**
      * ビデオのビットレートを指定する
-     * <p/>
+     * <br>
      * default = 18Mbps
      */
     int videoBitrate = 1024 * 1024 * 18;
@@ -40,14 +40,14 @@ public class VideoRecordRequest {
 
     /**
      * サウンドのビットレートを指定する
-     * <p/>
+     * <br>
      * default = 128kbps
      */
     int audioBitrate = 1024 * 128;
 
     /**
      * サウンドのサンプリングレートを指定する
-     * <p/>
+     * <br>
      * default = 44kHz
      */
     int audioSamplingRate = 44100;
@@ -59,14 +59,14 @@ public class VideoRecordRequest {
 
     /**
      * 録画時間
-     * <p/>
+     * <br>
      * default = 60秒
      */
     long recoredMilliSec = 1000 * 60;
 
     /**
      * 撮影サイズの直接指定
-     * <p/>
+     * <br>
      * default=FULL-HD
      */
     Vector2 size = new Vector2(1980, 1080);

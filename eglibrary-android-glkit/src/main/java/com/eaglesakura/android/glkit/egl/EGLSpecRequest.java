@@ -53,7 +53,7 @@ public class EGLSpecRequest {
 
     /**
      * GLバージョンを指定する。
-     * <p/>
+     * <br>
      * デフォルトは多くの環境で動作可能なES20
      */
     public GLESVersion version;

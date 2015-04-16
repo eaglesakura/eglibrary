@@ -94,7 +94,7 @@ public class PictureSizeSpec {
 
         /**
          * アスペクト比のテキストを取得する
-         * <p/>
+         * <br>
          * 例：16:9
          *
          * @return
@@ -158,11 +158,11 @@ public class PictureSizeSpec {
 
     /**
      * ユーザー表示用のメガピクセル数を取得する。
-     * <p/>
+     * <br>
      * 小数点第一位まで計算する
-     * <p/>
+     * <br>
      * 例) 5.0
-     * <p/>
+     * <br>
      * 例)13.1
      *
      * @return 表示用のメガピクセル

@@ -51,13 +51,13 @@ public final class SceneSpec {
 
     /**
      * ビーチ
-     * ビーチ & スノー by XperiaGX
+     * ビーチ ＆ スノー by XperiaGX
      */
     public final static SceneSpec SETTING_BEACH;
 
     /**
      * 雪景色
-     * ビーチ & スノー by XperiaGX
+     * ビーチ ＆ スノー by XperiaGX
      */
     public final static SceneSpec SETTING_SNOW;
 

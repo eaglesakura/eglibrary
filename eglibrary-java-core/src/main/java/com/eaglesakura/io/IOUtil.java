@@ -32,8 +32,9 @@ public class IOUtil {
     /**
      * inputのバッファを全てoutputへコピーする。 完了した時点でストリームはcloseされる。
      *
-     * @param input
-     * @param output
+     * @param input  コピー元
+     * @param output コピー先
+     *
      * @throws IOException
      */
     public static void copyTo(InputStream input, OutputStream output) throws IOException {
@@ -51,8 +52,11 @@ public class IOUtil {
     /**
      * inputのバッファを全てoutputへコピーする。 完了した時点でストリームはcloseされる。
      *
-     * @param input
-     * @param output
+     * @param input       コピー元
+     * @param closeInput  終了時にinputを閉じる
+     * @param output      コピー先
+     * @param closeOutput 終了時にoutputを閉じる
+     *
      * @throws IOException
      */
     public static void copyTo(InputStream input, boolean closeInput, OutputStream output, boolean closeOutput) throws IOException {
@@ -72,16 +76,25 @@ public class IOUtil {
     }
 
     /**
-     * Byte配列に変換する。
+     * int配列をbit状態を保ってbyte配列へ変換する
      *
-     * @param array
-     * @return
+     * @param array 　変換元のint配列
+     *
+     * @return コピーされたbyte配列
      */
     public static final byte[] toByteArray(int[] array) {
         byte[] result = new byte[array.length * 4];
         return toByteArray(array, result);
     }
 
+    /**
+     * int配列をbit状態を保ってbyte配列へ変換する
+     *
+     * @param array  変換元のint配列
+     * @param result 変換先のbyte配列
+     *
+     * @return resultオブジェクト
+     */
     public static final byte[] toByteArray(int[] array, byte[] result) {
         for (int i = 0; i < array.length; ++i) {
             result[i * 4 + 0] = (byte) ((array[i] >> 24) & 0xff);
@@ -95,9 +108,11 @@ public class IOUtil {
     /**
      * InputStreamから文字列へ変換する
      *
-     * @param is
-     * @param close
-     * @return
+     * @param is    読み込み対象のstream
+     * @param close closeする場合はtrue
+     *
+     * @return 読み取った文字列
+     *
      * @throws IOException
      */
     public static String toString(InputStream is, boolean close) throws IOException {
@@ -108,8 +123,9 @@ public class IOUtil {
     /**
      * ファイルを文字列 or null
      *
-     * @param file
-     * @return
+     * @param file ファイルパス
+     *
+     * @return 文字列に変換できれば文字列
      */
     public static String toStringOrNull(File file) {
         FileInputStream is = null;
@@ -131,9 +147,11 @@ public class IOUtil {
     /**
      * InputStreamを全てメモリ上に展開する。 isの長さがOOMにならないように調整すること。
      *
-     * @param is
-     * @param close
-     * @return
+     * @param is    読み込み対象
+     * @param close isを閉じるならtrue
+     *
+     * @return 読み込んだbyte配列
+     *
      * @throws IOException
      */
     public static byte[] toByteArray(InputStream is, boolean close) throws IOException {
@@ -160,9 +178,8 @@ public class IOUtil {
     /**
      * 指定箇所へファイルをコピーする。
      *
-     * @param src
-     * @param dst
-     * @return
+     * @param src コピー元
+     * @param dst コピー先
      */
     public static final void copy(File src, File dst) throws IOException {
         mkdir(dst.getParentFile());
@@ -188,8 +205,9 @@ public class IOUtil {
     /**
      * コピー先が存在しない、もしくはMD5が一致しない場合のみコピーを行い、それ以外はコピーを行わない
      *
-     * @param src
-     * @param dst
+     * @param src コピー元
+     * @param dst コピー先
+     *
      * @throws IOException
      */
     public static final void copyOrUpdate(File src, File dst) throws IOException {
@@ -211,8 +229,9 @@ public class IOUtil {
     /**
      * ファイルからMD5を求める。
      *
-     * @param file
-     * @return
+     * @param file 生成元ファイル
+     *
+     * @return MD5
      */
     public static String genMD5(File file) {
         try {
@@ -249,8 +268,10 @@ public class IOUtil {
      * 末尾・先端のバイト列を用いた単純なハッシュを生成する
      * ファイルフォーマットによっては衝突の可能性が非常に高いため、利用する場合は十分に検討を行うこと。
      *
-     * @param file
-     * @return
+     * @param file        ファイルパス
+     * @param checkLength 確認容量
+     *
+     * @return ハッシュ値
      */
     public static String genShortHash(File file, int checkLength) {
         if (!file.isFile()) {
@@ -291,10 +312,11 @@ public class IOUtil {
     }
 
     /**
-     * ファイルからMD5を求める。
+     * ファイルからSHA1を求める。
      *
-     * @param file
-     * @return
+     * @param file 生成するファイル
+     *
+     * @return SHA1
      */
     public static String genSHA1(File file) {
         try {
@@ -330,7 +352,7 @@ public class IOUtil {
     /**
      * ディレクトリを再帰的に削除する。
      *
-     * @param root
+     * @param root 削除するディレクトリ
      */
     public static void delete(File root) {
         if (root.isFile()) {
@@ -349,8 +371,9 @@ public class IOUtil {
     /**
      * ファイル拡張子を取得する。
      *
-     * @param fileName
-     * @return
+     * @param fileName ファイル名
+     *
+     * @return ドットを含まない拡張子
      */
     public static String getFileExt(String fileName) {
         if (fileName == null)
@@ -368,6 +391,7 @@ public class IOUtil {
      * 拡張子付のファイル名からファイル名のみを抜き出す
      *
      * @param fileName ファイル名
+     *
      * @return 拡張子を取り除いたファイル名
      */
     public static String getFileName(final String fileName) {
@@ -385,8 +409,9 @@ public class IOUtil {
     /**
      * ファイルパスからSHA1を得る。
      *
-     * @param file
-     * @return
+     * @param file 生成するファイル
+     *
+     * @return SHA1
      */
     public static String genPathSHA1(final File file) {
         String path = file.getAbsolutePath();
@@ -397,12 +422,17 @@ public class IOUtil {
     /**
      * カレントディレクトリのパスを取得する。
      *
-     * @return
+     * @return 現在のディレクトリ
      */
     public static String getCurrentDirectoryPath() {
         return (new File(".").getAbsoluteFile().getParent());
     }
 
+    /**
+     * 現在のディレクトリを取得する
+     *
+     * @return カレントディレクトリ
+     */
     public static File getCurrentDirectory() {
         return (new File(".")).getAbsoluteFile().getParentFile();
     }
@@ -411,8 +441,9 @@ public class IOUtil {
      * ファイルを名前順にソートする。
      * inの中身がソートされるため、戻り値は同じ参照となる。
      *
-     * @param files
-     * @return
+     * @param files ファイルを名前順にソートする
+     *
+     * @return filesオブジェクト
      */
     public static File[] sort(File[] files) {
         if (files == null) {
@@ -442,8 +473,9 @@ public class IOUtil {
     /**
      * 比較等の処理を行うために文字列を正規化する
      *
-     * @param origin
-     * @return
+     * @param origin 元の文字列
+     *
+     * @return 比較用に変換した文字列
      */
     public static String normalizeFileName(String origin) {
         origin = StringUtil.zenkakuEngToHankakuEng(origin);
@@ -457,10 +489,13 @@ public class IOUtil {
 
     /**
      * そこまでの道を含めてディレクトリを作成する。
+     * {@link File#mkdirs()} を使用すべき
      *
      * @param dir
+     *
      * @return
      */
+    @Deprecated
     public static File mkdir(File dir) {
         // 作成済みだったら何もしない
         if (dir.isDirectory()) {
@@ -482,12 +517,13 @@ public class IOUtil {
      * 戻り値にtargetとparentも含まれる。
      * 階層が上にあるFileがindexの0に近くなる。
      *
-     * @param target
-     * @param parent
-     * @return
+     * @param target 探すファイル
+     * @param parent 親ディレクトリ
+     *
+     * @return 探索できた全てのファイル
      */
     public static List<File> getDirectoryRoute(File target, File parent) {
-        List<File> result = new LinkedList<File>();
+        List<File> result = new LinkedList<>();
         File current = target;
         while (!equals(current, parent)) {
             result.add(0, current);
@@ -501,24 +537,26 @@ public class IOUtil {
      * ディレクトリの中身を完全削除する。
      * dirフォルダ自体は残る。
      *
-     * @param dir
-     * @return
+     * @param dir 削除対象のディレクトリ
+     *
+     * @return dirオブジェクト
      */
     public static File cleanDirectory(File dir) {
         if (dir.isFile()) {
             return null;
         }
         delete(dir);
-        mkdir(dir);
+        dir.mkdirs();
         return dir;
     }
 
     /**
      * 同じ内容を指していた場合はtrue
      *
-     * @param a
-     * @param b
-     * @return
+     * @param a ファイルA
+     * @param b ファイルB
+     *
+     * @return 同じパスである場合はtrue
      */
     public static boolean equals(File a, File b) {
         if (a == null || b == null) {
@@ -529,11 +567,12 @@ public class IOUtil {
 
     /**
      * GZIPバッファであればtrueを返却する。
-     * <p/>
+     * <br>
      * ただし、これはヘッダのみをチェックするため、簡易的なチェックしか行えない。
      *
-     * @param buffer
-     * @return
+     * @param buffer ヘッダ
+     *
+     * @return GZIPであればtrue
      */
     public static boolean isGzip(byte[] buffer) {
         return buffer.length > 2 && buffer[0] == (byte) 0x1F && buffer[1] == (byte) 0x8B;
@@ -542,7 +581,9 @@ public class IOUtil {
     /**
      * rawバッファをGZIPに圧縮して返却する
      *
-     * @param raw
+     * @param raw 元ファイル配列
+     *
+     * @return GZIP配列
      */
     public static byte[] compressGzip(byte[] raw) {
         try {
@@ -563,8 +604,9 @@ public class IOUtil {
     /**
      * GZIPバッファをデコードする。失敗したらnullを返却する。
      *
-     * @param gzip
-     * @return
+     * @param gzip GZIPバッファ
+     *
+     * @return 解凍したバッファ
      */
     public static byte[] decompressGzipOrNull(byte[] gzip) {
         try {
@@ -579,8 +621,9 @@ public class IOUtil {
     /**
      * InputStream経由でUnzipを行う
      *
-     * @param stream
-     * @param outDirectory
+     * @param stream       読み込み対象
+     * @param outDirectory 書き込み対象
+     *
      * @throws IOException
      */
     public static void unzip(InputStream stream, File outDirectory) throws IOException {
@@ -614,8 +657,9 @@ public class IOUtil {
     /**
      * ZIPの解凍を行う
      *
-     * @param zipFile
-     * @param outDirectory
+     * @param zipFile      ZIPファイル
+     * @param outDirectory 解凍ディレクトリ
+     *
      * @throws IOException
      */
     public static void unzip(File zipFile, File outDirectory) throws IOException {
@@ -630,6 +674,11 @@ public class IOUtil {
         }
     }
 
+    /**
+     * Streamを閉じる
+     *
+     * @param is 対象
+     */
     public static void close(InputStream is) {
         if (is == null) {
             return;
@@ -640,6 +689,11 @@ public class IOUtil {
         }
     }
 
+    /**
+     * Streamを閉じる
+     *
+     * @param os 対象
+     */
     public static void close(OutputStream os) {
         if (os == null) {
             return;

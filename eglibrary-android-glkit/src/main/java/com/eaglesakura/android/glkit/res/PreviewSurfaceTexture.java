@@ -60,7 +60,7 @@ public class PreviewSurfaceTexture extends SurfaceTexture implements SurfaceText
 
     /**
      * テクスチャ行列を取得する。
-     * <p/>
+     * <br>
      * 行列が取得できていない状態の場合、nullptrを返す。
      *
      * @return

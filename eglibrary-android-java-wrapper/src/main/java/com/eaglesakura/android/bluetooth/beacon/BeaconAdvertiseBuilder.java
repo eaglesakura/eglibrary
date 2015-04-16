@@ -22,7 +22,7 @@ public class BeaconAdvertiseBuilder {
 
     /**
      * 企業データを指定する
-     * <p/>
+     * <br>
      * default
      * ** high = 0x4C
      * ** low  = 0x00

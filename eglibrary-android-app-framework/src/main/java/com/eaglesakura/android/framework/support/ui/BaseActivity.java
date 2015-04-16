@@ -187,7 +187,7 @@ public abstract class BaseActivity extends ActionBarActivity implements Fragment
 
     /**
      * Fragmentがアタッチされたタイミングで呼び出される。
-     * <p/>
+     * <br>
      * このFragmentは最上位階層のみが扱われる。
      *
      * @param fragment
@@ -260,7 +260,7 @@ public abstract class BaseActivity extends ActionBarActivity implements Fragment
 
     /**
      * Google Apiの実行を行う。
-     * <p/>
+     * <br>
      * 裏スレッドから呼び出さなくてはならない。
      *
      * @param task

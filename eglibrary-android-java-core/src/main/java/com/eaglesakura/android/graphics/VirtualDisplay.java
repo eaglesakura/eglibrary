@@ -200,8 +200,8 @@ public class VirtualDisplay {
 
     /**
      * 仮想ディスプレイに対して、実ディスプレイが何倍あるかのスケーリング値を取得する。<BR>
-     * 仮想ディスプレイのほうが小さい場合、 > 1.0f<BR>
-     * 実ディスプレイのほうが小さい場合、 < 1.0f<BR>
+     * 仮想ディスプレイのほうが小さい場合、 ＞ 1.0f<BR>
+     * 実ディスプレイのほうが小さい場合、 ＜ 1.0f<BR>
      * となる。
      * 
      * @return　デバイスのスケーリング率
@@ -267,8 +267,7 @@ public class VirtualDisplay {
 
     /**
      * 仮想ディスプレイの外だったらtrueを返す
-     * 
-     * @param area
+
      * @return
      */
     public boolean isOutsideVirtual(int left, int top, int width, int height) {

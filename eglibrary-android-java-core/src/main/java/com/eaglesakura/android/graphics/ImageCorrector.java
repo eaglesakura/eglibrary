@@ -161,6 +161,7 @@ public class ImageCorrector {
      *
      * @param fitting
      * @param result
+     *
      * @return
      */
     public RectF getDefaultRenderArea(FitType fitting, RectF result) {
@@ -203,6 +204,7 @@ public class ImageCorrector {
      * 画像エリアを取得する。
      *
      * @param result
+     *
      * @return
      */
     public RectF getImageArea(RectF result) {
@@ -291,10 +293,11 @@ public class ImageCorrector {
 
     /**
      * 画像エリアを取得する。
-     * <p/>
+     * <br>
      * 画像はこの領域に対して描画する
      *
      * @param result
+     *
      * @return
      */
     public Rect getImageArea(Rect result) {
@@ -306,6 +309,7 @@ public class ImageCorrector {
      * レンダリング領域を取得する。
      *
      * @param result
+     *
      * @return
      */
     public RectF getRenderArea(RectF result) {
@@ -317,6 +321,7 @@ public class ImageCorrector {
      * レンダリング領域を取得する
      *
      * @param result
+     *
      * @return
      */
     public Rect getRenderArea(Rect result) {
@@ -328,6 +333,7 @@ public class ImageCorrector {
      * ピクセル座標からU座標に変換する。
      *
      * @param x
+     *
      * @return
      */
     public float pixToImageU(float x) {
@@ -346,6 +352,7 @@ public class ImageCorrector {
      * ピクセル座標からV座標に変換する。
      *
      * @param y
+     *
      * @return
      */
     public float pixToImageV(float y) {
@@ -381,10 +388,6 @@ public class ImageCorrector {
 
     /**
      * 画像エリア地点を中心としてスケーリングを行う。
-     *
-     * @param x
-     * @param y
-     * @param scale
      */
     public void scale(float scale) {
         Matrix m = new Matrix();

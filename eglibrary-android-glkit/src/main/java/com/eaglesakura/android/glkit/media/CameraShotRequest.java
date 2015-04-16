@@ -146,7 +146,7 @@ public class CameraShotRequest {
 
     /**
      * 同期的にカメラで撮影を行う。
-     * <p/>
+     * <br>
      * UIThreadからは呼び出してはいけない。
      *
      * @param request

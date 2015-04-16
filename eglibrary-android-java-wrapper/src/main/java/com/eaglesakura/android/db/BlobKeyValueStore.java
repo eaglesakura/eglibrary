@@ -55,7 +55,7 @@ public class BlobKeyValueStore extends BaseDatabase<DaoSession> {
 
     /**
      * 値を取得する。
-     * <p/>
+     * <br>
      * ただし、データを保存してからの期間がタイムアウト時間を超えている場合、このメソッドはnullを返却する。
      *
      * @param key
@@ -73,7 +73,7 @@ public class BlobKeyValueStore extends BaseDatabase<DaoSession> {
 
     /**
      * 画像として読みだす
-     * <p/>
+     * <br>
      * ただし、データを保存してからの期間がタイムアウト時間を超えている場合、このメソッドはnullを返却する。
      *
      * @param key PNG画像のキー

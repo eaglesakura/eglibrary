@@ -274,7 +274,7 @@ public class EGL11Device implements IEGLDevice {
 
     /**
      * 廃棄リクエストを持っているならばtrue
-     * <p/>
+     * <br>
      * trueの場合、速やかにunbindとdestroyを行わなければならない
      *
      * @return

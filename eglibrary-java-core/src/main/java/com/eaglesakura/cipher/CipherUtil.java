@@ -20,9 +20,11 @@ public class CipherUtil {
 
     /**
      * 平文を暗号化する
-     * @param buffer
-     * @param encodeKey
-     * @return
+     *
+     * @param buffer    暗号化するバッファ
+     * @param encodeKey 暗号化キー
+     *
+     * @return 暗号化されたバッファ
      */
     public static byte[] encode(byte[] buffer, Key encodeKey) {
         try {
@@ -40,9 +42,11 @@ public class CipherUtil {
 
     /**
      * 暗号化された文章を平文に直す
-     * @param buffer
-     * @param decodeKey
-     * @return
+     *
+     * @param buffer    暗号化されたバッファ
+     * @param decodeKey 復号化するキー
+     *
+     * @return 復号化されたバッファ
      */
     public static byte[] decode(byte[] buffer, Key decodeKey) {
         try {
@@ -60,7 +64,8 @@ public class CipherUtil {
 
     /**
      * ランダム要素でキーペアを作成する
-     * @return
+     *
+     * @return ランダムなキーペア
      */
     public static KeyPair generateKeyPair() {
         try {
@@ -77,8 +82,14 @@ public class CipherUtil {
 
     /**
      * 事前に作成した秘密鍵を読み込む
+     * <br>
      * $ openssl genrsa -out private_key.pem 2048
+     * <br>
      * $ openssl pkcs8 -in private.pem -outform der -out private.p8.der -topk8 -nocrypt
+     *
+     * @param derFileBuffer consoleで生成された*.derファイルのバッファ
+     *
+     * @return 秘密鍵
      */
     public static PrivateKey loadPrivateKey(byte[] derFileBuffer) {
         try {
@@ -95,9 +106,12 @@ public class CipherUtil {
 
     /**
      * 事前に作成した公開鍵を読み込む
+     * <br>
      * $ openssl rsa -in private.pem -pubout -outform DER -out public.der
-     * @param derFileBuffer
-     * @return
+     *
+     * @param derFileBuffer consoleで生成された*.derファイルのバッファ
+     *
+     * @return 公開鍵
      */
     public static PublicKey loadPublicKey(byte[] derFileBuffer) {
         try {

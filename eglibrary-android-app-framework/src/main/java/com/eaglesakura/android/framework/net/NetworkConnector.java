@@ -41,9 +41,9 @@ import java.util.Map;
 
 /**
  * シンプルにNetのAPI接続を行えるようにするクラス
- * <p/>
+ <br>
  * 要件に応じてカスタマイズが行えるようにする。
- * <p/>
+ <br>
  * リクエストの発行と同期を別途行えるようになったため、通信・処理速度が向上する。
  */
 public class NetworkConnector {
@@ -134,8 +134,8 @@ public class NetworkConnector {
 
     /**
      * ネットワーク経由でデータを取得する
-     * <p/>
-     * iteratorが常にKey => Valueの順番で取得できることが前提となる
+     * <br>
+     * iteratorが常にKey - Valueの順番で取得できることが前提となる
      *
      * @param url
      * @param parser

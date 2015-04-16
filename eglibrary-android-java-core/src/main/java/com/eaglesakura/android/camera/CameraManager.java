@@ -9,8 +9,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.TextureView;
 
-import com.eaglesakura.android.java.core.BuildConfig;
-import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.AndroidUtil;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.jc.annotation.JCClass;
@@ -122,7 +120,7 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
     /**
      * 手ぶれ補正の有効化を行わせる
-     * <p/>
+     * <br>
      * この機能はプレビュー時及びビデオ撮影時のみに有効となる
      *
      * @param enable true=有効、false=無効

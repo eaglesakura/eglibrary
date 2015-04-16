@@ -49,8 +49,8 @@ public class SoundManager {
      *
      * @param id     再生に利用する効果音ID
      * @param source 音源URI
+     *
      * @return 成功した場合true
-     * @throws IOException
      */
     public boolean load(Object id, Uri source) {
         unload(id);
@@ -129,6 +129,7 @@ public class SoundManager {
      * ロード済みだったらtrueを返す。
      *
      * @param id
+     *
      * @return
      */
     public boolean isLoaded(Object id) {

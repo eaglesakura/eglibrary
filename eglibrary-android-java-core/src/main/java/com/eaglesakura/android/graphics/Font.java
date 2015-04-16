@@ -226,7 +226,7 @@ public class Font {
 
     /**
      * 特定サイズに収めることができる文字を生成する。
-     * <p/>
+     * <br>
      * height/widthの値は変更せず、オーバーする場合は折り返しを行う
      *
      * @param baseText

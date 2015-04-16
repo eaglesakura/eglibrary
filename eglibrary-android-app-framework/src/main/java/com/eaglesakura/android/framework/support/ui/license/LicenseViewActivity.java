@@ -29,19 +29,12 @@ import java.util.List;
 
 /**
  * 各種ライブラリのLicenseを自動で表示するためのActivity
- * <p/>
+ * <br>
  * AndroidManifest.xmlに下記を追加する
  * <pre>
- *
- * <activity
  * android:name="com.eaglesakura.android.framework.support.ui.license.LicenseViewActivity"
  * android:theme="@style/EsMaterial.Theme.Grey.NoActionBar"
- * android:screenOrientation="portrait">
- * <intent-filter>
- * <action android:name="android.intent.action.MAIN" />
- * </intent-filter>
- * </activity>
- *
+ * android:screenOrientation="portrait"
  * </pre>
  */
 public class LicenseViewActivity extends BaseActivity {

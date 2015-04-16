@@ -71,8 +71,6 @@ public final class Vector3 {
 
     /**
      * 値のコピーを行う。
-     *
-     * @param origin
      */
     public void set(float x, float y, float z) {
         this.x = x;
@@ -84,6 +82,7 @@ public final class Vector3 {
      * 内積を取得する。
      *
      * @param v
+     *
      * @return
      */
     public float dot(Vector3 v) {
@@ -96,6 +95,7 @@ public final class Vector3 {
      * @param _x
      * @param _y
      * @param _z
+     *
      * @return
      */
     public float dot(float _x, float _y, float _z) {
@@ -107,6 +107,7 @@ public final class Vector3 {
      *
      * @param v
      * @param result
+     *
      * @return
      */
     public Vector3 cross(Vector3 v, Vector3 result) {
@@ -174,6 +175,7 @@ public final class Vector3 {
      * ベクトル間の距離を取得する。
      *
      * @param v
+     *
      * @return
      */
     public float length(Vector3 v) {

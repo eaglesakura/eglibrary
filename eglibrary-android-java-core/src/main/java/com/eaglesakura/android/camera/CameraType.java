@@ -24,7 +24,7 @@ public class CameraType {
 
     /**
      * サブカメラ
-     * <p/>
+     * <br>
      * ただし、カメラが物理的に１つしか無い場合はnullとなる
      */
     @JCField

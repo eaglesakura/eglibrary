@@ -114,7 +114,7 @@ public abstract class BaseService extends Service {
 
     /**
      * 指定したミリ秒後、再度CPUを叩き起こす。
-     * <p/>
+     * <br>
      * 繰り返しには対応しない。
      *
      * @param requestCode     呼び出しリクエスト
@@ -127,7 +127,7 @@ public abstract class BaseService extends Service {
 
     /**
      * 指定したミリ秒後、再度CPUを叩き起こす。
-     * <p/>
+     * <br>
      * 繰り返しには対応しない。
      *
      * @param requestCode     呼び出しリクエスト
@@ -187,7 +187,7 @@ public abstract class BaseService extends Service {
 
     /**
      * AlarmManagerによってCPUが叩き起こされたタイミングで呼び出される
-     * <p/>
+     * <br>
      * このメソッドは必ずonReceiveの中で呼び出されることを保証する。
      *
      * @param requestCode     呼び出しリクエスト

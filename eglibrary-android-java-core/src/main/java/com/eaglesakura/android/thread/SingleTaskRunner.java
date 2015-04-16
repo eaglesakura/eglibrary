@@ -10,7 +10,7 @@ import java.util.Iterator;
 
 /**
  * 1Contextに対し、重複したタスクを実行しないようにするRunner
- * <p/>
+ * <br>
  * 重複チェックはrunの時点で行われ、既に同一タスクが実行中である場合は何もしない
  */
 public abstract class SingleTaskRunner implements MultiRunningTasks.Task {

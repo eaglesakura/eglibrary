@@ -18,14 +18,14 @@ import static javax.microedition.khronos.egl.EGL10.*;
 public class EGL11ContextGroup implements IEGLContextGroup {
     /**
      * Sharedの中心となるEGLContext
-     * <p/>
+     * <br>
      * 最初に生成されたContextをマスターコンテキストとして認識する。
      */
     EGLContext masterContext;
 
     /**
      * 生成したデバイス数
-     * <p/>
+     * <br>
      * 破棄を続けて0になったら開放処理を行う
      */
     int deviceNum;

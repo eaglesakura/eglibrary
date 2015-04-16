@@ -105,9 +105,9 @@ public class FrameworkCentral {
 
     /**
      * Deploygateのインストールを行う。
-     * <p/>
+     * <br>
      * dependenciesが設定されていない場合、このメソッドはfalseを返す
-     * <p/>
+     * <br>
      * debugCompile 'com.deploygate:sdk:3.1'
      *
      * @return 成功したらtrue

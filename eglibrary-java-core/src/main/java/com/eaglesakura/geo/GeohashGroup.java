@@ -25,9 +25,9 @@ public class GeohashGroup {
     /**
      * 隣接ジオハッシュ
      */
-    private List<String> adjustGeohash = new ArrayList<String>();
+    private List<String> adjustGeohash = new ArrayList<>();
 
-    private Set<GeohashGroupListener> listeners = new HashSet<GeohashGroupListener>();
+    private Set<GeohashGroupListener> listeners = new HashSet<>();
 
     public GeohashGroup() {
     }
@@ -35,9 +35,9 @@ public class GeohashGroup {
     /**
      * ジオハッシュに変換する
      *
-     * @param lat
-     * @param lng
-     * @return
+     * @param lat 緯度
+     * @param lng 経度
+     * @return ジオハッシュ
      */
     public String toGeohash(double lat, double lng) {
         return Geohash.encode(lat, lng).substring(0, geohashLength);
@@ -46,9 +46,9 @@ public class GeohashGroup {
     /**
      * 隣接ジオハッシュを求める
      *
-     * @param base
-     * @param direction
-     * @return
+     * @param base      中心のジオハッシュ
+     * @param direction 隣接方向
+     * @return 隣接しているジオハッシュ
      */
     public String calculateAdjacent(String base, int direction) {
         return Geohash.calculateAdjacent(base, direction).substring(0, geohashLength);
@@ -106,9 +106,7 @@ public class GeohashGroup {
     }
 
     /**
-     * 中心点のジオハッシュ
-     *
-     * @return
+     * 中心点のジオハッシュを取得する
      */
     public String getCenterGeohash() {
         return centerGeohash;
@@ -119,8 +117,6 @@ public class GeohashGroup {
      * 0, 1, 2
      * 3, C, 4,
      * 5, 6, 7
-     *
-     * @return
      */
     public List<String> getAdjustGeohash() {
         return adjustGeohash;
@@ -128,8 +124,6 @@ public class GeohashGroup {
 
     /**
      * 全てのジオハッシュ値を取得する
-     *
-     * @return
      */
     public List<String> allGeohash() {
         List<String> result = new ArrayList<String>();
@@ -143,8 +137,7 @@ public class GeohashGroup {
     /**
      * 指定したジオハッシュを内包している場合true
      *
-     * @param geohash
-     * @return
+     * @param geohash 確認するジオハッシュ
      */
     public boolean hasGeohash(String geohash) {
         if (geohash.equals(centerGeohash)) {
@@ -158,18 +151,21 @@ public class GeohashGroup {
     /**
      * ジオハッシュの計算精度を指定する
      *
-     * @param geohashLength
+     * @param geohashLength ジオハッシュの長さ
      */
     public void setGeohashLength(int geohashLength) {
         this.geohashLength = geohashLength;
     }
 
+    /**
+     * ジオハッシュの長さを取得する
+     */
     public int getGeohashLength() {
         return geohashLength;
     }
 
     /**
-     *
+     * ジオハッシュ更新時の通知を受け取る
      */
     public interface GeohashGroupListener {
         /**
@@ -179,6 +175,6 @@ public class GeohashGroup {
          * @param oldGeohash 古いジオハッシュ
          * @param newGeohash 新しいジオハッシュ
          */
-        public void onGeohashChanged(GeohashGroup group, String oldGeohash, String newGeohash);
+        void onGeohashChanged(GeohashGroup group, String oldGeohash, String newGeohash);
     }
 }

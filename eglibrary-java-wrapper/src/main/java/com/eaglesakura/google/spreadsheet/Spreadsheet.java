@@ -83,7 +83,7 @@ public class Spreadsheet extends NonProguardModel {
 
     /**
      * Spreadsheet APIアクセス用URLを生成する
-     * <p/>
+     * <br>
      * JSONが基本となる
      *
      * @param key Spreadsheetキー

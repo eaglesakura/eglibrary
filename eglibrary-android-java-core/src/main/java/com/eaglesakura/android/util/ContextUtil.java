@@ -195,7 +195,7 @@ public class ContextUtil {
     }
 
     /**
-     * DP->Pixを変換して返す。
+     * DP-＞Pixを変換して返す。
      *
      * @param dp
      * @param context
@@ -427,7 +427,7 @@ public class ContextUtil {
 
     /**
      * CPUのスリープを不許可にする。
-     * <p/>
+     * <br>
      * 戻り値のWakeLockは既にacquire()済みのため、releaseのみに気をつけること。
      *
      * @param context

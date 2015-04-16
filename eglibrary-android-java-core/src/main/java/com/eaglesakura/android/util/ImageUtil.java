@@ -24,9 +24,9 @@ public class ImageUtil {
 
     /**
      * ある特定の色の補色を計算する
-     * <p/>
+     * <br>
      * 計算はIllustrator方式で行う
-     * <p/>
+     * <br>
      * http://appakumaturi.hatenablog.com/entry/20120121/1327143125
      *
      * @param xrgb
@@ -229,7 +229,7 @@ public class ImageUtil {
 
     /**
      * 指定した最大サイズに収まるようにスケーリングする
-     * <p/>
+     * <br>
      * 元のsrcオブジェクトをそのまま返す場合があるので注意。
      *
      * @param src
@@ -265,7 +265,7 @@ public class ImageUtil {
 
     /**
      * 正方形画像へ変形する。
-     * <p/>
+     * <br>
      * 強制的に変形を行うため、srcは破棄して問題ない。
      *
      * @param src  元画像

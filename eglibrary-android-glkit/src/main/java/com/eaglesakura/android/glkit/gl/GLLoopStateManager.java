@@ -17,7 +17,7 @@ import java.lang.ref.WeakReference;
 public abstract class GLLoopStateManager extends GLProcessingManager {
     /**
      * このオブジェクトを管理しているオーナー
-     * <p/>
+     * <br>
      * weak refが切れた時点でdestroyと同じ扱いとなる
      */
     protected WeakReference<Object> owner;

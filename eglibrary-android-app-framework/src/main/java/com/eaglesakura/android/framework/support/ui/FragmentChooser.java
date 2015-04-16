@@ -155,7 +155,7 @@ public final class FragmentChooser implements Parcelable {
 
     /**
      * Fragment一覧を生成する。
-     * <p/>
+     * <br>
      * 参照切れのFragmentは登録しない
      *
      * @return

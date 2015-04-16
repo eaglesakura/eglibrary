@@ -26,7 +26,6 @@ public final class Vector2 {
      *
      * @param x
      * @param y
-     * @param z
      */
     public Vector2(float x, float y) {
         this.x = x;
@@ -54,8 +53,6 @@ public final class Vector2 {
 
     /**
      * 値のコピーを行う。
-     *
-     * @param origin
      */
     public void set(float x, float y) {
         this.x = x;
@@ -66,6 +63,7 @@ public final class Vector2 {
      * 内積を取得する。
      *
      * @param v
+     *
      * @return
      */
     public float dot(Vector2 v) {
@@ -91,19 +89,11 @@ public final class Vector2 {
         return (float) Math.sqrt((double) ((x * x) + (y * y)));
     }
 
-    /**
-     * @param p
-     * @return
-     */
     public float length(Vector2 p) {
         float tx = x - p.x, ty = y - p.y;
         return (float) Math.sqrt((double) ((tx * tx) + (ty * ty)));
     }
 
-    /**
-     * @param p
-     * @return
-     */
     public float length(final float px, final float py) {
         float tx = x - px, ty = y - py;
         return (float) Math.sqrt((double) ((tx * tx) + (ty * ty)));

@@ -26,7 +26,7 @@ import static javax.microedition.khronos.egl.EGL10.EGL_STENCIL_SIZE;
 
 /**
  * EGL1.1相当の機能を許可するコントローラー
- * <p/>
+ * <br>
  * 古いバージョンでも動作するが、細かい動作は行えない。
  */
 public class EGL11Manager implements IEGLManager {

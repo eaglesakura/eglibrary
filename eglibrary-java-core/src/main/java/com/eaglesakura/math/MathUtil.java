@@ -20,7 +20,7 @@ public class MathUtil {
 
 
     /**
-     * min <= result <= maxとなるようにnowを補正する。
+     * min ＜＝ result ＜＝ maxとなるようにnowを補正する。
      *
      * @param min
      * @param max
@@ -36,7 +36,7 @@ public class MathUtil {
     }
 
     /**
-     * min <= result <= maxとなるようにnowを補正する。
+     * min ＜＝ result ＜＝ maxとなるようにnowを補正する。
      *
      * @param min
      * @param max
@@ -61,8 +61,8 @@ public class MathUtil {
 
     /**
      * 360度系の正規化を行う。
-     * <p/>
-     * 0 <= now < 360 となる
+     * <br>
+     * 0 ＜＝ now ＜ 360 となる
      *
      * @param now 現在の360度系角度
      * @return 正規化された360度系角度
@@ -81,8 +81,8 @@ public class MathUtil {
 
     /**
      * 360度系の正規化を行う。
-     * <p/>
-     * 0 <= return < 360 となる
+     * <br>
+     * 0 ＜＝ return ＜ 360 となる
      *
      * @param now 現在の360度系角度
      * @return 正規化された360度系角度
@@ -101,10 +101,10 @@ public class MathUtil {
 
     /**
      * targetの角度を向かせるためにちょうどいい角度を算出する。
-     * <p/>
+     * <br>
      * targetへの角度が180度を超える場合、正負反転させた角度を選択する
-     * <p/>
-     * -360 < return <= 360 となる。
+     * <br>
+     * -360 ＜ return ＜＝ 360 となる。
      *
      * @param now
      * @param target
@@ -190,8 +190,8 @@ public class MathUtil {
     /**
      * 係数ブレンドを行い、結果を返す。
      * 1.0に近いほどaに近い値となる。
-     * blend == 1 -> a
-     * blend == 0 -> b
+     * blend == 1 -＞ a
+     * blend == 0 -＞ b
      *
      * @param a     遷移後の値
      * @param b     遷移前の値
@@ -206,8 +206,8 @@ public class MathUtil {
     /**
      * 係数ブレンドを行い、結果を返す。
      * 1.0に近いほどaに近い値となる。
-     * blend == 1 -> a
-     * blend == 0 -> b
+     * blend == 1 -＞ a
+     * blend == 0 -＞ b
      *
      * @param a     遷移後の値
      * @param b     遷移前の値
@@ -242,8 +242,8 @@ public class MathUtil {
 
     /**
      * 特定のフォーマットに合う数値に変換する
-     * <p/>
-     * %.1f, 0.111111 -> 0.1
+     * <br>
+     * %.1f, 0.111111 -＞0.1
      *
      * @param format
      * @param value

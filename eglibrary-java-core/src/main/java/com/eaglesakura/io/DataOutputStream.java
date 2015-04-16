@@ -20,11 +20,10 @@ public final class DataOutputStream {
      */
     private boolean writerClose = true;
 
-    @Deprecated
-    public DataOutputStream(OutputStream os) {
-        writer = os;
-    }
-
+    /**
+     * @param os        書き込み対象
+     * @param withClose {@link #dispose()}でosをcloseする場合はtrue
+     */
     public DataOutputStream(OutputStream os, boolean withClose) {
         writer = os;
         writerClose = withClose;
@@ -51,9 +50,9 @@ public final class DataOutputStream {
     /**
      * 実際のバッファへ書き込みを行う。
      *
-     * @param buf
-     * @param position
-     * @param length
+     * @param buf      書き込み対象のバッファ
+     * @param position buf[position]
+     * @param length   書き込みbyte数
      */
     public void writeBuffer(byte[] buf, int position, int length) throws IOException {
         writer.write(buf, position, length);
@@ -61,8 +60,6 @@ public final class DataOutputStream {
 
     /**
      * 1バイト整数を保存する。
-     *
-     * @param n
      */
     public void writeS8(byte n) throws IOException {
         byte[] buf = {
@@ -72,7 +69,8 @@ public final class DataOutputStream {
     }
 
     /**
-     * @param b
+     * boolとして書き込む
+     *
      * @throws IOException
      */
     public void writeBoolean(boolean b) throws IOException {
@@ -82,7 +80,7 @@ public final class DataOutputStream {
     /**
      * 2バイト整数を保存する。
      *
-     * @param n
+     * @throws IOException
      */
     public void writeS16(short n) throws IOException {
         byte[] buf = {
@@ -94,7 +92,7 @@ public final class DataOutputStream {
     /**
      * 4バイト整数を保存する。
      *
-     * @param n
+     * @throws IOException
      */
     public void writeS32(int n) throws IOException {
         byte[] buf = {
@@ -107,7 +105,7 @@ public final class DataOutputStream {
     /**
      * 8バイト整数を保存する。
      *
-     * @param n
+     * @throws IOException
      */
     public void writeS64(long n) throws IOException {
         byte[] buf = {
@@ -128,7 +126,7 @@ public final class DataOutputStream {
     /**
      * 4バイト整数の配列を保存する。
      *
-     * @param buffer
+     * @throws IOException
      */
     public final void writeS32Array(final int[] buffer) throws IOException {
         byte[] temp = new byte[buffer.length * 4];
@@ -149,7 +147,7 @@ public final class DataOutputStream {
     /**
      * 4バイト整数の配列を保存する。
      *
-     * @param buffer
+     * @throws IOException
      */
     public final void writeS32ArrayWithLength(final int[] buffer) throws IOException {
         writeS32(buffer.length);
@@ -171,7 +169,7 @@ public final class DataOutputStream {
     /**
      * 8バイト整数の配列を保存する。
      *
-     * @param buffer
+     * @throws IOException
      */
     public final void writeS64Array(final long[] buffer) throws IOException {
         final byte[] temp = new byte[buffer.length * 8];
@@ -200,7 +198,7 @@ public final class DataOutputStream {
     /**
      * 8バイト整数の配列を保存する。
      *
-     * @param buffer
+     * @throws IOException
      */
     public final void writeS64ArrayWithLength(final long[] buffer) throws IOException {
         writeS32(buffer.length);
@@ -230,7 +228,7 @@ public final class DataOutputStream {
     /**
      * 浮動小数点配列を保存する。
      *
-     * @param buffer
+     * @throws IOException
      */
     public void writeFloatArray(float[] buffer) throws IOException {
         byte[] temp = new byte[buffer.length * 4];
@@ -251,8 +249,10 @@ public final class DataOutputStream {
 
     /**
      * 浮動小数値をGL形式の固定小数として保存する。
+     * <br>
+     * このメソッドは少数精度を著しく悪くすることに注意すること。
      *
-     * @param f
+     * @throws IOException
      */
     public void writeGLFloat(float f) throws IOException {
         int n = (int) (f * (float) 0x10000);
@@ -267,20 +267,21 @@ public final class DataOutputStream {
     /**
      * 浮動小数値を書き込む。
      *
-     * @param f
+     * @throws IOException
      */
     public void writeFloat(float f) throws IOException {
         writeS32(Float.floatToIntBits(f));
     }
 
     /**
-     * 文字列を書き込む。<BR>
-     * エンコードはShiftJISとして保存する。
+     * 文字列を書き込む。
+     * <br>
+     * エンコードはUTF-8として保存する。
      *
      * @param str
      */
     public void writeString(String str) throws IOException {
-        byte[] buf = str.getBytes("Shift_JIS");
+        byte[] buf = str.getBytes("UTF-8");
         //! 文字列の長さを保存。
         writeS16((short) buf.length);
         //! 文字列本体を保存。
@@ -289,20 +290,23 @@ public final class DataOutputStream {
 
     /**
      * 書き込みを行った場合の保存バイト数を計算する。
-     *
-     * @param str
-     * @return
      */
     public static int getWriteSize(String str) {
-        byte[] buf = str.getBytes();
-        return buf.length + 2;
+        try {
+            byte[] buf = str.getBytes("UTF-8");
+            return buf.length + 2;
+        } catch (Exception e) {
+            byte[] buf = str.getBytes();
+            return buf.length + 2;
+        }
     }
 
     /**
-     * 配列の大きさと本体を保存する。<BR>
+     * 配列の大きさと本体を保存する。
+     * <br>
      * bufferがnullである場合、0バイトのファイルとして保存する。
      *
-     * @param buffer
+     * @param buffer 書き込むファイル
      */
     public void writeFile(byte[] buffer) throws IOException {
         if (buffer == null) {

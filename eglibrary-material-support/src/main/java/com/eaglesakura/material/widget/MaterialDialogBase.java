@@ -31,7 +31,7 @@ public class MaterialDialogBase extends Dialog {
 
     /**
      * タイトルの表示・非表示を設定する
-     * <p/>
+     * <br>
      * default = visible
      */
     public void setTitleVisibility(boolean visible) {

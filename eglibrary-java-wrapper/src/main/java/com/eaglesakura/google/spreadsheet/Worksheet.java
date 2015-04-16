@@ -28,11 +28,11 @@ public class Worksheet extends NonProguardModel {
     public String version;
 
     public static class Feed extends NonProguardModel {
-        public List<Author> author = new ArrayList<Author>();
+        public List<Author> author = new ArrayList<>();
 
-        public List<Category> category = new ArrayList<Category>();
+        public List<Category> category = new ArrayList<>();
 
-        public List<Cell> entry = new ArrayList<Cell>();
+        public List<Cell> entry = new ArrayList<>();
 
         public Title title;
 
@@ -53,7 +53,7 @@ public class Worksheet extends NonProguardModel {
 
     public static class Cell extends NonProguardModel {
 
-        public List<Category> category = new ArrayList<Category>();
+        public List<Category> category = new ArrayList<>();
 
         @JsonProperty("gs$cell")
         public CellValue value;
@@ -62,7 +62,7 @@ public class Worksheet extends NonProguardModel {
 
         public StringField id;
 
-        public List<Link> link = new ArrayList<Link>();
+        public List<Link> link = new ArrayList<>();
 
         public StringField updated;
 
@@ -96,8 +96,9 @@ public class Worksheet extends NonProguardModel {
      * 指定セルから特定範囲のみを抽出する
      *
      * @param cells
-     * @param minXIndex 最小のX方向のインデックス。(col >= (minXIndex+1)) となったセルのみを返却する
-     * @param maxXIndex 最大のX方向のインデックス。(col <= (maxXIndex+1)) となったセルのみを返却する
+     * @param minXIndex 最小のX方向のインデックス。(col ＞= (minXIndex+1)) となったセルのみを返却する
+     * @param maxXIndex 最大のX方向のインデックス。(col ＜= (maxXIndex+1)) となったセルのみを返却する
+     *
      * @return
      */
     public static List<Cell> filterColRange(List<Cell> cells, int minXIndex, int maxXIndex) {
@@ -122,8 +123,9 @@ public class Worksheet extends NonProguardModel {
      * 指定セルから特定範囲のみを抽出する
      *
      * @param cells
-     * @param minYIndex 最小のY方向のインデックス。(row >= (minXIndex+1)) となったセルのみを返却する
-     * @param maxYIndex 最大のY方向のインデックス。(row <= (maxXIndex+1)) となったセルのみを返却する
+     * @param minYIndex 最小のY方向のインデックス。(row ＞= (minXIndex+1)) となったセルのみを返却する
+     * @param maxYIndex 最大のY方向のインデックス。(row ＜= (maxXIndex+1)) となったセルのみを返却する
+     *
      * @return
      */
     public static List<Cell> filterRowRange(List<Cell> cells, int minYIndex, int maxYIndex) {
@@ -149,6 +151,7 @@ public class Worksheet extends NonProguardModel {
      *
      * @param worksheet 読み込み対象のワークシート
      * @param xIndex    X方向のインデックス。0以上
+     *
      * @return 読み込んだセルリスト。何も読み込めなかったら要素が0となり、nullにはならない。
      */
     public static List<Cell> listCol(Worksheet worksheet, int xIndex) {
@@ -172,6 +175,7 @@ public class Worksheet extends NonProguardModel {
      *
      * @param worksheet 読み込み対象のワークシート
      * @param yIndex    Y方向のインデックス。0以上
+     *
      * @return 読み込んだセルリスト。何も読み込めなかったら要素が0となり、nullにはならない。
      */
     public static List<Cell> listRow(Worksheet worksheet, int yIndex) {
@@ -196,6 +200,7 @@ public class Worksheet extends NonProguardModel {
      * @param worksheet 読み込み対象のワークシート
      * @param xIndex    X方向のインデックス。0以上
      * @param yIndex    Y方向のインデックス。0以上
+     *
      * @return 成功した場合セル、それ以外はnull
      */
     public static Cell find(Worksheet worksheet, int xIndex, int yIndex) {
@@ -220,6 +225,7 @@ public class Worksheet extends NonProguardModel {
      *
      * @param cells  検索対象のセル
      * @param xIndex X方向のインデックス。0以上
+     *
      * @return 成功した場合セル、それ以外はnull
      */
     public static Cell findCol(List<Cell> cells, int xIndex) {
@@ -239,6 +245,7 @@ public class Worksheet extends NonProguardModel {
      *
      * @param worksheet 検索対象のワークシート
      * @param cellName  検索対象のセル名称
+     *
      * @return 成功した場合セル、それ以外はnull
      */
     public static Cell find(Worksheet worksheet, String cellName) {
@@ -260,6 +267,7 @@ public class Worksheet extends NonProguardModel {
      *
      * @param cells セル一覧
      * @param up    昇順である場合true
+     *
      * @return
      */
     public static List<Cell> sortRow(List<Cell> cells, final boolean up) {
@@ -289,6 +297,7 @@ public class Worksheet extends NonProguardModel {
      *
      * @param cells セル一覧
      * @param up    昇順である場合true
+     *
      * @return
      */
     public static List<Cell> sortCol(List<Cell> cells, final boolean up) {

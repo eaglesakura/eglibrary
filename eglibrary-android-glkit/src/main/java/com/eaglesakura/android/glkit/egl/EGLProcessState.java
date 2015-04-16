@@ -8,7 +8,7 @@ import com.eaglesakura.util.LogUtil;
 public class EGLProcessState {
     /**
      * 管理しているデバイス数
-     * <p/>
+     * <br>
      * 0になったら自動的に廃棄させる
      */
     private static int deviceNum = 0;
@@ -33,7 +33,7 @@ public class EGLProcessState {
 
     /**
      * 有効なEGLデバイス数を減らす
-     * <p/>
+     * <br>
      * デバイスが0になったらeglTerminateを行うべき
      */
     public static boolean decrementDevice() {

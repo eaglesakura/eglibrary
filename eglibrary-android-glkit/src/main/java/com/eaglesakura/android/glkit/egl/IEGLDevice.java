@@ -65,7 +65,7 @@ public interface IEGLDevice {
 
     /**
      * 実行しているスレッドがbindを行ったthreadであればtrueを返す
-     * <p/>
+     * <br>
      * bindされていない、もしくは別スレッドでbindされていたらfalseを返す。
      */
     @JCMethod

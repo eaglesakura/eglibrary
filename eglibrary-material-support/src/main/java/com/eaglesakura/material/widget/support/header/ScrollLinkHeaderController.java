@@ -13,13 +13,13 @@ import com.eaglesakura.util.LogUtil;
 
 /**
  * スクロールにリンクしてヘッダ用のView位置や透過等を制御する
- * <p/>
+ * <br>
  * Scroll本体とヘッダはFrameLayoutの前後になるようにして、お互いの影響を与えないように注意する。
  */
 public class ScrollLinkHeaderController {
     /**
      * ScrollView等でスペーサーとして機能させる空のView
-     * <p/>
+     * <br>
      * ViewやFrameLayout等で位置指定に使用する
      */
     View spacerView;

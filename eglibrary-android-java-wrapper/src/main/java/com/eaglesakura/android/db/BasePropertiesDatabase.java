@@ -357,7 +357,7 @@ public class BasePropertiesDatabase {
 
     /**
      * データをDBからロードする
-     * <p/>
+     * <br>
      * 既存のキャッシュはクリーンされる
      */
     public void load() {

@@ -27,7 +27,7 @@ public abstract class NetworkResult<T> {
 
     /**
      * データダウンロード待ちのタイムアウト
-     * <p/>
+     <br>
      * 標準で3分
      */
     protected long dataTimeoutMs = 1000 * 60 * 3;

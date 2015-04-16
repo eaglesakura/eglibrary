@@ -25,9 +25,9 @@ import java.util.List;
 
 /**
  * startActivityForResultを行う場合、ParentFragmentが存在していたらそちらのstartActivityForResultを呼び出す。
- * <p/>
+ * <br>
  * これはchildFragmentの場合にonActivityResultが呼ばれない不具合を可能な限り回避するため。
- * <p/>
+ * <br>
  * ただし、複数のonActivityResultがハンドリングされる恐れが有るため、RequestCodeの重複には十分に注意すること
  */
 @EFragment

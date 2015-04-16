@@ -18,7 +18,7 @@ import com.eaglesakura.util.LogUtil;
 
 /**
  * 一枚絵を基本として、下記の機能を扱うベースを対応する。
- * <p/>
+ * <br>
  * これは操作系等を統一しているのみで、レンダリングは無関係となる。
  */
 public class ImageGestureController implements View.OnTouchListener {
@@ -184,7 +184,7 @@ public class ImageGestureController implements View.OnTouchListener {
 
     /**
      * タッチを放置している時間を取得する。
-     * <p/>
+     * <br>
      * タッチ中の場合は負の値を返却する
      *
      * @return

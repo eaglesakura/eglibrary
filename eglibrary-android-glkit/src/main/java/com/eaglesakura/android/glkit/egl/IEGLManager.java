@@ -7,7 +7,7 @@ import com.eaglesakura.jc.annotation.JCMethod;
 
 /**
  * EGL操作を抽象化するクラス
- * <p/>
+ * <br>
  * EGL操作にはウィンドウサーフェイスが必須ではなく、ウィンドウサーフェイス無しで動作することも許可する。
  */
 @JCClass(cppNamespace = "es.glkit")

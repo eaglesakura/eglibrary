@@ -17,6 +17,7 @@ public class MultiRunningTasks {
          * この処理は同時に複数呼ばれることはない。
          *
          * @param runnner
+         *
          * @return falseを返した場合、タスクの実行を行わない。
          */
         public boolean begin(MultiRunningTasks runnner);
@@ -168,7 +169,8 @@ public class MultiRunningTasks {
 
     /**
      * スレッドを開始させる。<BR>
-     * {@link #exit()} or {@link #waitTaskFinished()}させない限りスレッドは待機し続ける。
+     * <br>
+     * {@link #setThreadPoolMode(boolean)}にtrueを指定している場合、{@link #waitTaskFinished()}させない限りスレッドは待機し続ける。
      */
     public void start() {
         synchronized (threads) {

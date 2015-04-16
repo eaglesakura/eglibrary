@@ -21,9 +21,9 @@ import com.eaglesakura.util.Util;
 
 /**
  * GL処理管理を行う。
- * <p/>
+ * <br>
  * 処理は必ず別スレッドが用意されるため、もしUIスレッドで同期的な処理を行いたい場合は自前実装が必要になる。
- * <p/>
+ * <br>
  * 処理はウィンドウサーフェイスを持つ必要がなく、オフスクリーンレンダリングを可能とする。
  */
 @JCClass(cppNamespace = "es.glkit")
@@ -200,7 +200,7 @@ public abstract class GLProcessingManager {
 
     /**
      * 裏スレッドでの描画を行う。
-     * <p/>
+     * <br>
      * 呼び出しを行った時点でEGLDeviceがバインド可能であることを保証するが、その後廃棄される等の事情は加味されない。
      */
     protected abstract void onBackgroundProcessing();

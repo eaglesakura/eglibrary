@@ -1,7 +1,5 @@
 /**
  * データの入力を補助する。
- * 
- * 
  */
 package com.eaglesakura.io;
 
@@ -13,11 +11,8 @@ import java.io.InputStream;
 
 /**
  * データ入力を補助するクラス。
- *
- * 
- * 
  */
-public final class DataInputStream  {
+public final class DataInputStream {
     /**
      * 読み取りに使用するリーダー。
      */
@@ -34,10 +29,10 @@ public final class DataInputStream  {
     private boolean readerClose = true;
 
     /**
+     * ストリームを生成する
      *
-     * 
-     * @param is
-     * 
+     * @param is          データソース
+     * @param streamClsoe {@link #dispose()}でStreamを閉じる場合はtrue
      */
     public DataInputStream(InputStream is, boolean streamClsoe) {
         reader = is;
@@ -46,7 +41,6 @@ public final class DataInputStream  {
 
     /**
      * データの到達待ちのタイムアウトを指定する
-     * @param dataWaitTimeMs
      */
     public void setDataWaitTimeMs(long dataWaitTimeMs) {
         this.dataWaitTimeMs = dataWaitTimeMs;
@@ -54,14 +48,10 @@ public final class DataInputStream  {
 
     /**
      * バッファから１バイト読み取る。
-     *
-     * 
-     * @return
-     * 
      */
     public byte readS8() throws IOException {
         byte[] n = {
-            0
+                0
         };
         readBuffer(n, 0, n.length);
         return n[0];
@@ -69,10 +59,6 @@ public final class DataInputStream  {
 
     /**
      * バッファから2バイト読み取る。
-     *
-     * 
-     * @return
-     * 
      */
     public short readS16() throws IOException {
         byte[] n = {
@@ -87,12 +73,9 @@ public final class DataInputStream  {
     }
 
     /**
-     * バッファから3バイト読み取る。<BR>
+     * バッファから3バイト読み取る。
+     * <br>
      * 色情報等に利用可能。
-     *
-     * 
-     * @return
-     * 
      */
     public int readS24() throws IOException {
         byte[] n = {
@@ -106,9 +89,7 @@ public final class DataInputStream  {
     /**
      * １バイト整数を取得し、読み込み位置を１バイト進める。
      *
-     * 
      * @return １バイト符号無整数。ただし、符号無を表現する関係上、戻りはint型となる。
-     * 
      */
     public int readU8() throws IOException {
         return (((int) readS8()) & 0xff);
@@ -117,9 +98,7 @@ public final class DataInputStream  {
     /**
      * ２バイト整数を取得し、読み込み位置を２バイト進める。
      *
-     * 
      * @return ２バイト符号無整数。ただし、符号無を表現する関係上、戻りはint型となる。
-     * 
      */
     public int readU16() throws IOException {
         return (((int) readS16()) & 0xffff);
@@ -127,10 +106,6 @@ public final class DataInputStream  {
 
     /**
      * バッファから4バイト読み取る。
-     *
-     * 
-     * @return
-     * 
      */
     public int readS32() throws IOException {
         byte[] n = {
@@ -148,10 +123,6 @@ public final class DataInputStream  {
 
     /**
      * バッファから８バイト整数を読み取る。
-     *
-     * 
-     * @return
-     * 
      */
     public long readS64() throws IOException {
         byte[] n = {
@@ -174,7 +145,7 @@ public final class DataInputStream  {
 
     /**
      * write64Arrayした配列を取り出す。
-     * @return
+     *
      * @throws IOException
      */
     public long[] readS64Array() throws IOException {
@@ -199,24 +170,18 @@ public final class DataInputStream  {
     }
 
     /**
-     * 固定小数をfloat変換して取得する。<BR>
+     * 固定小数をfloat変換して取得する。
+     * <br>
      * GL仕様のため、符号1 整数15 小数16の固定小数を使用する。
-     *
-     * 
-     * @return
-     * 
      */
     public float readGLFixedFloat() throws IOException {
         return ((float) readS32()) / (float) 0x10000;
     }
 
     /**
-     * 固定小数をdouble変換して取得する。<BR>
+     * 固定小数をdouble変換して取得する。
+     * <br>
      * GL仕様のため、符号1 整数47 小数16の固定小数を使用する。
-     *
-     * 
-     * @return
-     * 
      */
     public double readGLFixedDouble() throws IOException {
         return ((double) readS64()) / (double) 0x10000;
@@ -225,10 +190,7 @@ public final class DataInputStream  {
     /**
      * IEEE754形式のビット列をfloatに変換し、取得する。
      *
-     * 
-     * @return
      * @throws IOException
-     * 
      */
     public float readFloat() throws IOException {
         return Float.intBitsToFloat(readS32());
@@ -237,36 +199,29 @@ public final class DataInputStream  {
     /**
      * IEEE754形式のビット列をdoubleに変換し、取得する。
      *
-     * 
-     * @return
      * @throws IOException
-     * 
      */
     public double readDouble() throws IOException {
         return Double.longBitsToDouble(readS64());
     }
 
     /**
-     * 真偽の値を取得する。<BR>
+     * 真偽の値を取得する。
+     * <br>
      * 1byte読み取り、0ならfalse、それ以外ならtrueを返す。
      *
-     * 
-     * @return
      * @throws IOException
-     * 
      */
     public boolean readBoolean() throws IOException {
         return readS8() == 0 ? false : true;
     }
 
     /**
-     * 文字列を読み取る。<BR>
-     * エンコードはShiftJISである必要がある。<BR>
+     * 文字列を読み取る。
+     * <br>
+     * エンコードはShiftJISである必要がある。
+     * <br>
      * 頭2byteが文字数、後に文字配列が続く。
-     *
-     * 
-     * @return
-     * 
      */
     public String readString() throws IOException {
         int len = readS16();
@@ -282,10 +237,8 @@ public final class DataInputStream  {
     /**
      * バッファを直接読み取る。
      *
-     * 
-     * @param length
-     * @return
-     * 
+     * @param length 読み取るバイト数
+     * @return 読み取ったバッファ
      */
     public byte[] readBuffer(int length) throws IOException {
         byte[] ret = new byte[length];
@@ -296,9 +249,7 @@ public final class DataInputStream  {
     /**
      * ファイルを作成する。
      *
-     * 
-     * @return
-     * 
+     * @return 読み取ったファイルバッファ
      */
     public byte[] readFile() throws IOException {
         int len = readS32();
@@ -310,22 +261,19 @@ public final class DataInputStream  {
     /**
      * バッファから必要な長さを読み取る。
      *
-     * 
-     * @param buf
-     * @param length
-     * 
+     * @param buf    書き込み対象のバッファ
+     * @param length バッファの長さ
      */
     public void readBuffer(byte[] buf, int length) throws IOException {
         readBuffer(buf, 0, length);
     }
 
     /**
+     * 必要な容量を読み取る
      *
-     * 
-     * @param buf
-     * @param index
-     * @param length
-     * 
+     * @param buf    書き込み対象のバッファ
+     * @param index  書き込み対象インデックス
+     * @param length 書き込み対象の長さ
      */
     public int readBuffer(byte[] buf, int index, int length) throws IOException {
         final int requestLength = length;
@@ -363,8 +311,9 @@ public final class DataInputStream  {
     }
 
     /**
-     * 資源の解放を行う。<BR>
-     * 内部管理する{@link #reader}のdispose()を行う。
+     * 資源の解放を行う。
+     * <br>
+     * 必要であれば、内部管理する{@link #reader}のdispose()を行う。
      */
     public void dispose() {
         if (readerClose) {
@@ -382,10 +331,8 @@ public final class DataInputStream  {
     /**
      * 読み取り位置を指定する。
      *
-     * 
-     * @param type
-     * @param pos
-     * 
+     * @param type シークの種類
+     * @param pos  シークの位置(byte)
      */
     public void seek(SeekType type, int pos) throws IOException {
         type.set(reader, pos);
@@ -393,8 +340,6 @@ public final class DataInputStream  {
 
     /**
      * シークの種類を定義する。
-     * @author TAKESHI YAMASHITA
-     *
      */
     public enum SeekType {
         /**

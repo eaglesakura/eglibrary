@@ -118,9 +118,9 @@ public class BluetoothDeviceScanner {
 
     /**
      * キャッシュしているデバイスを全て取得する。
-     * <p/>
+     * <br>
      * このメソッドはコピーを返すため、外部の影響を受けない。
-     * <p/>
+     * <br>
      * その際、無効なデバイスは排除する。
      */
     public List<BluetoothDeviceCache> getExistDeviceCaches() {
@@ -442,7 +442,7 @@ public class BluetoothDeviceScanner {
 
         /**
          * デバイスからの距離をメートル単位で算出する。
-         * <p/>
+         * <br>
          * 距離は概算となる。また、揺らぎがかなり大きいので、参考値程度に考える。
          *
          * @param fromAverage trueの場合、平均のRSSIを使用する。falseの場合は最新のRSSIを使用する
@@ -559,7 +559,7 @@ public class BluetoothDeviceScanner {
 
     /**
      * ビーコンのみをフィルタリングする
-     * <p/>
+     * <br>
      * 事前に BluetoothDeviceCache.parseBeaconを呼んでおく必要がある
      */
     public static List<BluetoothDeviceCache> filterBeacons(List<BluetoothDeviceCache> list) {
@@ -575,7 +575,7 @@ public class BluetoothDeviceScanner {
 
     /**
      * BLEデバイスへの距離を計算する。
-     * <p/>
+     * <br>
      * この距離は揺らぎが大きいため、参考値程度に考える
      *
      * @param rssi    電波強度
@@ -601,7 +601,7 @@ public class BluetoothDeviceScanner {
 
     /**
      * 最も近い位置にあるデバイスを取得する
-     * <p/>
+     * <br>
      * 精度を上げるため、平均RSSIを使用してチェックする。
      *
      * @param devices 検索対象のデバイス一覧
@@ -626,7 +626,7 @@ public class BluetoothDeviceScanner {
 
     /**
      * 距離が近い順番にソートする
-     * <p/>
+     * <br>
      * typoのため非推奨
      *
      * @param devices

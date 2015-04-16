@@ -22,7 +22,7 @@ import com.eaglesakura.util.LogUtil;
 
 /**
  * Ripple風にくり抜きを行う
- * <p/>
+ * <br>
  * clipが行える場合はround rectを利用し、行えない場合はrectで動作する
  */
 public class RippleEffectLayout extends FrameLayout {
@@ -317,7 +317,7 @@ public class RippleEffectLayout extends FrameLayout {
 
     /**
      * Rippleエフェクトを開始する
-     * <p/>
+     * <br>
      * このメソッドはTransaction.replaceを行う前に呼び出さなければならない
      *
      * @param transaction

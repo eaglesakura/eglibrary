@@ -31,6 +31,7 @@ public class Util {
      * 指定日の開始時刻を取得する
      *
      * @param date
+     *
      * @return
      */
     public static Date getDateStart(Date date) {
@@ -44,6 +45,7 @@ public class Util {
      * 指定日の終了時刻を取得する
      *
      * @param date
+     *
      * @return
      */
     public static Date getDateEnd(Date date) {
@@ -90,6 +92,7 @@ public class Util {
      *
      * @param list
      * @param item
+     *
      * @return
      */
     public static <T> boolean addUnique(List<T> list, T item) {
@@ -107,6 +110,7 @@ public class Util {
      * @param list
      * @param item
      * @param <T>
+     *
      * @return
      */
     public static <T> int addUniqueRequestIndex(List<T> list, T item) {
@@ -122,22 +126,17 @@ public class Util {
     }
 
     /**
-     * @see ArrayList(Collection)
-     * @see Arrays#asList(Object...)
+     * @param array 変換元配列
+     * @param <T>   type
+     *
+     * @return 変換したList
      */
     public static <T> List<T> convert(T[] array) {
         return new ArrayList<T>(Arrays.asList(array));
     }
 
     /**
-     * @see Collection
-     */
-    public static <T> List<T> copy(Collection<T> c) {
-        return new ArrayList<T>(c);
-    }
-
-    /**
-     * @see Arrays#copyOf(Object[], int)
+     * 2つの配列をコピーする
      */
     public static <T> T[] copy(T[] array) {
         return Arrays.copyOf(array, array.length);
@@ -150,10 +149,11 @@ public class Util {
      * @param keyCreator
      * @param <Key>
      * @param <Value>
+     *
      * @return
      */
     public static <Key, Value> Map<Key, Value> asMap(Collection<Value> values, KeyCreator<Key, Value> keyCreator) {
-        Map<Key, Value> result = new HashMap<Key, Value>();
+        Map<Key, Value> result = new HashMap<>();
         for (Value value : values) {
             result.put(keyCreator.createKey(value), value);
         }

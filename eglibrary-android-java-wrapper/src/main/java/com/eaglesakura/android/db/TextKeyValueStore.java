@@ -73,7 +73,7 @@ public class TextKeyValueStore extends BaseDatabase<DaoSession> {
 
     /**
      * 複数の値を一括保存する
-     * <p/>
+     * <br>
      * MapのkeyとvalueがそれぞれDBのkeyとvalueに対応する
      *
      * @param values

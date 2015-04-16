@@ -45,3 +45,78 @@ dependencies {
      */
     compile project(':eglibrary-android-java-core')
 }
+
+
+if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
+    ext.EGLIBRARY_MAVEN_LOCAL_PATH = ""
+}
+if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
+    ext.EGLIBRARY_ARTIFACT_VERSION = ""
+}
+
+android.libraryVariants.all { variant ->
+
+    task("${variant.name}Javadoc", type: Javadoc) {
+        title = "$name $version API"
+        description "Generates Javadoc for $variant.name."
+        source = variant.javaCompile.source
+        ext.androidJar =
+                "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+        classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar) + files("build/intermediates/classes/${variant.name}/")
+        options.links("http://docs.oracle.com/javase/7/docs/api/");
+        options.links("http://d.android.com/reference/");
+        exclude '**/BuildConfig.java'
+        exclude '**/*Dao.java' /* ignore greenDAO */
+        exclude '**/R.java' /* ignore greenDAO */
+    }
+}
+
+apply plugin: 'maven'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri(EGLIBRARY_MAVEN_LOCAL_PATH))
+            pom.version = EGLIBRARY_ARTIFACT_VERSION
+            pom.groupId = "com.eaglesakura"
+            pom.artifactId = file(".").absoluteFile.name;
+        }
+    }
+}
+
+[uploadArchives.repositories.mavenDeployer]*.pom*.whenConfigured { pom ->
+    pom.project {
+        inceptionYear '2011'
+        packaging 'aar'
+        licenses {
+            license {
+                name 'NYSL'
+                url 'https://raw.github.com/eaglesakura/eglibrary/master/LICENSE'
+            }
+        }
+
+        dependencies {
+            Dependency {
+                groupId = 'com.eaglesakura'
+                artifactId = 'eglibrary-android-java-core'
+                version = EGLIBRARY_ARTIFACT_VERSION
+                scope = 'compile'
+            }
+
+            Dependency {
+                groupId = 'com.melnykov'
+                artifactId = 'floatingactionbutton'
+                version = "1.0.+"
+                scope = 'compile'
+            }
+
+
+            Dependency {
+                groupId = 'com.googlecode.android-query'
+                artifactId = 'android-query'
+                version = '+'
+                scope = 'compile'
+            }
+        }
+    }
+}

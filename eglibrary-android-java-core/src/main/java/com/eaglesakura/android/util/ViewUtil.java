@@ -27,7 +27,7 @@ public class ViewUtil {
 
     /**
      * ImageViewの横幅いっぱいになるようにセットする
-     * <p/>
+     * <br>
      * Viewの高さは画像に合わせて変更される。
      *
      * @param view

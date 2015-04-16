@@ -6,14 +6,14 @@ import java.security.MessageDigest;
 
 /**
  * 暗号化・指紋サポートを行う
- *
  */
 public class EncodeUtil {
 
     /**
      * byte配列からMD5を求める
-     * 
+     *
      * @param buffer
+     *
      * @return
      */
     public static String genMD5(byte[] buffer) {
@@ -39,8 +39,7 @@ public class EncodeUtil {
 
     /**
      * byte配列からMD5を求める
-     * 
-     * @param buffer
+     *
      * @return
      */
     public static String genMD5(InputStream is) throws IOException {
@@ -74,8 +73,9 @@ public class EncodeUtil {
 
     /**
      * byte配列からMD5を求める
-     * 
+     *
      * @param buffer
+     *
      * @return
      */
     public static String genSHA1(byte[] buffer) {

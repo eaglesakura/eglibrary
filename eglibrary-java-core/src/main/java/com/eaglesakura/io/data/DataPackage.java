@@ -1,14 +1,14 @@
 package com.eaglesakura.io.data;
 
+import com.eaglesakura.io.DataInputStream;
+import com.eaglesakura.io.DataOutputStream;
+import com.eaglesakura.util.LogUtil;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 import java.util.zip.DataFormatException;
-
-import com.eaglesakura.io.DataInputStream;
-import com.eaglesakura.io.DataOutputStream;
-import com.eaglesakura.util.LogUtil;
 
 /**
  * Bluetooth等を介して少量のデータ（インメモリに収まる程度）をやりとりするクラス
@@ -30,9 +30,10 @@ public class DataPackage {
     byte[] packedBuffer;
 
     /**
-     * 
-     * @param uniqueId
-     * @param buffer
+     * 識別IDを指定して生成する
+     *
+     * @param uniqueId 一意の識別子
+     * @param buffer   オリジナルバッファ
      */
     public DataPackage(String uniqueId, byte[] buffer) {
         this.uniqueId = uniqueId;
@@ -41,7 +42,8 @@ public class DataPackage {
 
     /**
      * パッケージを生成する
-     * @param buffer
+     *
+     * @param buffer 生成元バッファ
      */
     public DataPackage(byte[] buffer) {
         this.uniqueId = UUID.randomUUID().toString();
@@ -54,8 +56,10 @@ public class DataPackage {
 
     /**
      * パッキングされた送信用データを取得する
+     * <br>
      * このbufferにUniqueIDのデータは含まれない
-     * @return
+     *
+     * @return パッキングされた送信用バッファ
      */
     public byte[] getPackedBuffer() {
         return packedBuffer;
@@ -71,13 +75,16 @@ public class DataPackage {
         }
     }
 
-    static final byte[] MAGIC = new byte[] {
+    private static final byte[] MAGIC = new byte[]{
             3, 1, 0, 3
     };
 
     /**
      * 検証用コードを生成する
-     * @return
+     * <br>
+     * このクラスはデータが壊れているか正常かのチェックのみを行うため、検証コードは非常に短く、衝突耐性は低い。
+     *
+     * @return 検証用の短いバイト配列
      */
     public static byte[] createVerifyCode(byte[] buffer, int offset, int length) {
         byte[] result = new byte[2];
@@ -102,13 +109,14 @@ public class DataPackage {
 
     /**
      * エンコードを行う
-     * @param userData
-     * @return
+     *
+     * @param userData オリジナルのデータ
+     * @return パッキングされた送信用データ
      */
     public static byte[] pack(byte[] userData) {
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            DataOutputStream dos = new DataOutputStream(os);
+            DataOutputStream dos = new DataOutputStream(os, false);
 
             // マジックナンバー
             dos.writeBuffer(MAGIC, 0, MAGIC.length);
@@ -131,9 +139,10 @@ public class DataPackage {
 
     /**
      * パッケージをデコードする
-     * @param stream
-     * @param streamTimeoutMs データ切断までの猶予
-     * @return
+     *
+     * @param stream          パッキングされたデータ
+     * @param streamTimeoutMs データ切断までの猶予時間
+     * @return 解答されたデータ
      * @throws IOException
      */
     public static byte[] unpack(InputStream stream, long streamTimeoutMs) throws IOException, DataFormatException {

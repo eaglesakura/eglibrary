@@ -43,7 +43,7 @@ public class MaterialAnimationUtil {
 
     /**
      * FragmentがRippleで表示される
-     * <p/>
+     * <br>
      * 遷移元のViewと遷移先のFragmentが同じFrameLayoutに格納されていないと、うまく座標が合わないことに注意する。
      *
      * @param transaction

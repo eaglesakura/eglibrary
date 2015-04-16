@@ -12,8 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class JSON {
     /**
      * クラスを文字列へエンコードする
-     * @param obj
-     * @return
      */
     public static void encode(OutputStream os, Object obj) throws JsonProcessingException, IOException {
         new ObjectMapper().writeValue(os, obj);
@@ -21,17 +19,13 @@ public class JSON {
 
     /**
      * クラスを文字列へエンコードする
-     * @param obj
-     * @return
      */
     public static String encode(Object obj) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(obj);
     }
 
     /**
-     * クラスを文字列へエンコードする
-     * @param obj
-     * @return
+     * クラスを文字列へエンコードするx
      */
     public static String encodeOrNull(Object obj) {
         try {
@@ -83,8 +77,6 @@ public class JSON {
 
     /**
      * JSONモデルを送信用byte[]に変換する
-     * @param model
-     * @return
      */
     public static byte[] model2bytes(Object model) {
         return encodeOrNull(model).getBytes();

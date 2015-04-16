@@ -227,7 +227,7 @@ public class GoogleApiClientToken {
 
     /**
      * Google Apiの実行を行う。
-     * <p/>
+     * <br>
      * 裏スレッドから呼び出さなくてはならない。
      *
      * @param task
