@@ -11,5 +11,5 @@
     <string name="eglibrary.GoogleApi.Error.Cancel">キャンセル</string>
 
 
-    <string name="eglibrary.License.Activity.Title">オープンソースライセンス</string>
+    <string name="eglibrary.License.Activity.Title">ライセンス情報</string>
 </resources>

@@ -25,6 +25,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -39,10 +40,16 @@ import java.util.List;
  */
 public class LicenseViewActivity extends BaseActivity {
 
+    public static final String LICENSE_GEOHASH_JAVA = "geohash-java.license";
+
+    static final String EXTRA_IGNORE_FILES = "EXTRA_IGNORE_FILES";
+
     /**
      * 読み込んだライセンス一覧
      */
     List<LicenseItem> licenseList = new ArrayList<>();
+
+    List<String> ignoreFiles;
 
     SupportRecyclerView listRoot;
 
@@ -54,6 +61,11 @@ public class LicenseViewActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_license_view);
         super.onCreate(savedInstanceState);
+
+        ignoreFiles = getIntent().getStringArrayListExtra(EXTRA_IGNORE_FILES);
+        if (ignoreFiles == null) {
+            ignoreFiles = new ArrayList<>();
+        }
 
         setSupportActionBar((Toolbar) findViewById(R.id.EsMaterial_Toolbar));
         setTitle(R.string.eglibrary_License_Activity_Title);
@@ -72,6 +84,8 @@ public class LicenseViewActivity extends BaseActivity {
      */
     void loadLicenseList() {
         new AsyncAction("License Load") {
+            List<LicenseItem> licenses = new ArrayList<>();
+
             @Override
             protected Object onBackgroundAction() throws Exception {
                 final String LICENSE_PATH = "license";
@@ -81,17 +95,13 @@ public class LicenseViewActivity extends BaseActivity {
                         return this;
                     }
 
-                    if (file.endsWith(".license")) {
+                    // 拡張子が一致して、かつignoreリストに含まれていなければ登録する
+                    if (file.endsWith(".license") && ignoreFiles.indexOf(file) < 0) {
                         log("load license(%s)", file);
                         // １行目にOSSの表示名が格納されている
                         final LicenseItem item = newLicense(LICENSE_PATH + "/" + file);
                         if (item != null) {
-                            UIHandler.postUI(new Runnable() {
-                                @Override
-                                public void run() {
-                                    addLicense(item);
-                                }
-                            });
+                            licenses.add(item);
                         }
                     }
                 }
@@ -100,6 +110,7 @@ public class LicenseViewActivity extends BaseActivity {
 
             @Override
             protected void onSuccess(Object object) {
+                addLicenses(licenses);
             }
 
             @Override
@@ -109,39 +120,34 @@ public class LicenseViewActivity extends BaseActivity {
         }.start();
     }
 
-    void addLicense(LicenseItem item) {
+    void addLicenses(List<LicenseItem> newItems) {
         if (isFinishing()) {
             return;
         }
 
-        // 末尾に登録
-        licenseList.add(item);
-        if (adapter == null) {
-            // アダプタを作成
-            adapter = new RecyclerView.Adapter<ItemViewHolder>() {
-                @Override
-                public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                    return new ItemViewHolder();
-                }
+        licenseList = newItems;
 
-                @Override
-                public void onBindViewHolder(ItemViewHolder holder, int position) {
-                    holder.bind(position);
-                }
+        // アダプタを作成
+        adapter = new RecyclerView.Adapter<ItemViewHolder>() {
+            @Override
+            public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                return new ItemViewHolder();
+            }
 
-                @Override
-                public int getItemCount() {
-                    return licenseList.size();
-                }
-            };
-            licenseListView.setItemAnimator(new DefaultItemAnimator());
-            licenseListView.setLayoutManager(new LinearLayoutManager(this));
-            licenseListView.setHasFixedSize(false);
-            licenseListView.setAdapter(adapter);
-        } else {
-            // 追加通知のみを投げる
-            adapter.notifyItemInserted(licenseList.size() - 1);
-        }
+            @Override
+            public void onBindViewHolder(ItemViewHolder holder, int position) {
+                holder.bind(position);
+            }
+
+            @Override
+            public int getItemCount() {
+                return licenseList.size();
+            }
+        };
+        licenseListView.setItemAnimator(new DefaultItemAnimator());
+        licenseListView.setLayoutManager(new LinearLayoutManager(this));
+        licenseListView.setHasFixedSize(false);
+        licenseListView.setAdapter(adapter);
 
         listRoot.setProgressVisibly(false, licenseList.size());
     }
@@ -263,5 +269,17 @@ public class LicenseViewActivity extends BaseActivity {
      */
     public static void startContent(Context context) {
         context.startActivity(new Intent(context, LicenseViewActivity.class));
+    }
+
+    /**
+     * 無視するライセンスファイルを指定して表示を行う
+     *
+     * @param context
+     * @param ignoreFiles
+     */
+    public static void startContent(Context context, Collection<String> ignoreFiles) {
+        Intent intent = new Intent(context, LicenseViewActivity.class);
+        intent.putExtra(EXTRA_IGNORE_FILES, new ArrayList<>(ignoreFiles));
+        context.startActivity(intent);
     }
 }
