@@ -72,16 +72,17 @@ apply plugin: 'com.eaglesakura.android-support'
 
 ### eglibrary-java-core
 
-Pure-Javaで記述されたライブラリです。
-
-Androidで実行可能、もしくはJava 1.7相当の機能で記述されています。
+* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-java-core/javadoc/)
+* Pure-Javaで記述されたライブラリです。
+* Androidで実行可能、もしくはJava 1.7相当の機能で記述されています。
 
 ### eglibrary-java-geo
 
-緯度経度(GPS)関連のライブラリです。内部に含まれているGeohash.javaはMIT LICENSEで提供されています（後述）。
 
-Androidで実行可能、もしくはJava 1.7相当の機能で記述されています。
-
+* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-java-geo/javadoc/)
+* Androidで実行可能、もしくはJava 1.7相当の機能で記述されています。
+* 緯度経度(GPS)関連のライブラリです。
+* 内部に含まれているGeohash.javaはMIT LICENSEで提供されています（後述）。
 * 参考URL
 	* [2点間の距離測定](http://perota.sakura.ne.jp/blog/android%E3%81%A7%E3%82%82%E7%B7%AF%E5%BA%A6%E7%B5%8C%E5%BA%A6%E3%81%A72%E7%82%B9%E9%96%93%E3%81%AE%E8%B7%9D%E9%9B%A2%E3%82%92%E5%8F%96%E5%BE%97/)
 	* [Geohash library for Java](http://github.com/davetroy/geohash-js/tree/master)
@@ -89,24 +90,25 @@ Androidで実行可能、もしくはJava 1.7相当の機能で記述されて�
 
 ### eglibrary-java-wrapper
 
-Pure-Java+各種外部ライブラリのラッパーライブラリです。
-
-Androidで実行可能、もしくはJava 1.7相当の機能で記述されています。
-
+* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-java-wrapper/javadoc/)
+* Pure-Java+各種外部ライブラリのラッパーライブラリです。
+* Androidで実行可能、もしくはJava 1.7相当の機能で記述されています。
 * 依存外部ライブラリ
 	* com.fasterxml.jackson.core:jackson-core:2.4.+
 	* com.fasterxml.jackson.core:jackson-databind:2.4.+
 
 ### eglibrary-android-java-core
 
-eglibrary-android-api8をAPI15以降向けに整理・書きなおしたライブラリです。Android SDKのみで動作します。
 
+* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-android-java-core/javadoc/)
+* Android SDKのみで動作します。
 * minSdkVersion 10
 
 ### eglibrary-android-java-wrapper
 
-頻繁に使用するライブラリのラッパーを提供します。
 
+* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-android-java-wrapper/javadoc/)
+* 頻繁に使用するライブラリのラッパーを提供します。
 * minSdkVersion 10
 * 依存外部ライブラリ
 	* com.fasterxml.jackson.core:jackson-core:2.4.+
@@ -118,9 +120,9 @@ eglibrary-android-api8をAPI15以降向けに整理・書きなおしたライ�
 
 ### eglibrary-android-material-support
 
-マテリアルデザインっぽいUIを提供するためのStyleやcolor等をまとめたライブラリです。
 
-
+* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-android-material-support/javadoc/)
+* マテリアルデザインっぽいUIを提供するためのStyleやcolor等をまとめたライブラリです。
 * minSdkVersion 10
 * 依存外部ライブラリ
 	* com.melnykov:floatingactionbutton:1.0.+
@@ -129,14 +131,15 @@ eglibrary-android-api8をAPI15以降向けに整理・書きなおしたライ�
 
 ### eglibrary-android-glkit
 
-OpenGL ES、特にEGL周りに関するラッパーを提供するライブラリです。
-
+* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-android-glkit/javadoc/)
+* OpenGL ES、特にEGL周りに関するラッパーを提供するライブラリです。
 * minSdkVersion 10
 
 ### eglibrary-android-app-framework
 
-アプリ開発で使用する、ActivityやFragment、ネットワーク等のよく使う機能をまとめたフレームワークです。
 
+* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-android-app-framework/javadoc/)
+* アプリ開発で使用するActivityやFragment、ネットワーク等のよく使う機能をまとめたフレームワークです。
 * minSdkVersion 10
 * 依存外部ライブラリ
 	* com.fasterxml.jackson.core:jackson-core:2.4.+
