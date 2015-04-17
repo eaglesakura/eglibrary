@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.AndroidUtil;
-import com.eaglesakura.google.spreadsheet.generic.StringField;
 
 /**
  * 便利系メソッドを固めたUtilクラス
