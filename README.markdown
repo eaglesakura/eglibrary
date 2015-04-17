@@ -116,8 +116,6 @@ apply plugin: 'com.eaglesakura.android-support'
 * 依存外部ライブラリ
 	* com.fasterxml.jackson.core:jackson-core:2.4.+
 	* com.fasterxml.jackson.core:jackson-databind:2.4.+
-	* org.androidannotations:androidannotations-api:3.0.+
-	* com.googlecode.android-query:android-query:+
 	* de.greenrobot:greendao:1.3.+
 	* com.google.protobuf:protobuf-java:2.5.+
 
@@ -127,8 +125,6 @@ apply plugin: 'com.eaglesakura.android-support'
 * Bluetooth / Bluetooth LE系のUtilを提供します。
 * minSdkVersion 10
 * 依存外部ライブラリ
-	* com.fasterxml.jackson.core:jackson-core:2.4.+
-	* com.fasterxml.jackson.core:jackson-databind:2.4.+
 	* org.androidannotations:androidannotations-api:3.0.+
 	* com.googlecode.android-query:android-query:+
 
@@ -164,6 +160,7 @@ apply plugin: 'com.eaglesakura.android-support'
 
 ### eglibrary-android-framework-bluetooth
 
+* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-android-framework-bluetooth/javadoc/)
 * BLEのスキャンを行うシンプルなService等を提供します
 * minSdkVersion 10
 * 依存外部ライブラリ
