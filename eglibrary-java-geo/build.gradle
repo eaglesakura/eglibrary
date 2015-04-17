@@ -49,7 +49,11 @@ uploadArchives {
         licenses {
             license {
                 name 'NYSL'
-                url 'https://raw.githubusercontent.com/eaglesakura/eglibrary/master/LICENSE'
+                url 'https://raw.githubusercontent.com/eaglesakura/eglibrary/master/LICENSE-NYSL-eng.txt'
+            }
+            license {
+                name 'MIT License'
+                url 'https://raw.githubusercontent.com/eaglesakura/eglibrary/master/LICENSE-MIT.txt'
             }
             license {
                 name 'MIT License'

@@ -1,9 +1,12 @@
-package com.eaglesakura.google.spreadsheet.generic;
+package com.eaglesakura.spreadsheet.generic;
 
 import com.eaglesakura.proguard.NonProguardModel;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Content extends NonProguardModel {
+/**
+ *
+ */
+public class Title extends NonProguardModel {
     @JsonProperty("$t")
     public String name;
 

@@ -1,32 +1,34 @@
-apply plugin: 'groovy'
+apply plugin: 'java'
 
 sourceCompatibility = 1.7
-targetCompatibility = 1.7
-
-repositories {
-    mavenCentral()
-
-    maven {
-        url "http://eaglesakura.github.io/maven/"
-    }
-}
 
 dependencies {
-    // build groovy
-//    groovy "org.codehaus.groovy:groovy:2.0.+"
-    compile gradleApi()
-//    groovy localGroovy()
-
-    compile project(':eglibrary-java-wrapper')
+    compile 'com.eaglesakura:joint-connector-annotation:0.1.13'
+    compile project(':eglibrary-java-core')
 }
 
 apply plugin: 'maven'
 
-if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
+if(!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")){
     ext.EGLIBRARY_MAVEN_LOCAL_PATH = ""
 }
-if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
+if(!hasProperty("EGLIBRARY_ARTIFACT_VERSION")){
     ext.EGLIBRARY_ARTIFACT_VERSION = ""
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+//    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
 }
 
 uploadArchives {
@@ -42,7 +44,7 @@ uploadArchives {
 
 [uploadArchives.repositories.mavenDeployer]*.pom*.whenConfigured { pom ->
     pom.project {
-        inceptionYear '2014'
+        inceptionYear '2011'
         packaging 'jar'
         licenses {
             license {
@@ -52,15 +54,6 @@ uploadArchives {
             license {
                 name 'MIT License'
                 url 'https://raw.githubusercontent.com/eaglesakura/eglibrary/master/LICENSE-MIT.txt'
-            }
-        }
-
-        dependencies {
-            dependency {
-                groupId = 'com.eaglesakura'
-                artifactId = 'eglibrary-java-wrapper'
-                version = EGLIBRARY_ARTIFACT_VERSION
-                scope = 'compile'
             }
         }
     }

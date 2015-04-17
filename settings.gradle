@@ -1,5 +1,6 @@
 include ':eglibrary-java-core'
 include ':eglibrary-java-geo'
+include ':eglibrary-java-spreadsheet'
 include ':eglibrary-java-wrapper'
 include ':eglibrary-android-java-core'
 include ':eglibrary-android-java-wrapper'
