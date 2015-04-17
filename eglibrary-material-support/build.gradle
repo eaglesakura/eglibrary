@@ -47,6 +47,8 @@ dependencies {
 }
 
 
+apply plugin: 'maven'
+
 if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
     ext.EGLIBRARY_MAVEN_LOCAL_PATH = ""
 }
@@ -54,24 +56,24 @@ if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
     ext.EGLIBRARY_ARTIFACT_VERSION = ""
 }
 
-android.libraryVariants.all { variant ->
-
-    task("${variant.name}Javadoc", type: Javadoc) {
-        title = "$name $version API"
-        description "Generates Javadoc for $variant.name."
-        source = variant.javaCompile.source
-        ext.androidJar =
-                "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-        classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar) + files("build/intermediates/classes/${variant.name}/")
-        options.links("http://docs.oracle.com/javase/7/docs/api/");
-        options.links("http://d.android.com/reference/");
-        exclude '**/BuildConfig.java'
-        exclude '**/*Dao.java' /* ignore greenDAO */
-        exclude '**/R.java' /* ignore greenDAO */
-    }
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
 }
 
-apply plugin: 'maven'
+task javadoc(type: Javadoc) {
+    title = "Android Release API"
+    description "Generates Javadoc for Release."
+    source = android.libraryVariants.release.javaCompile.source
+    ext.androidJar =
+            "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+    classpath = files(android.libraryVariants.release.javaCompile.classpath.files) + files(ext.androidJar) + files("build/intermediates/classes/release/")
+    options.links("http://docs.oracle.com/javase/7/docs/api/");
+    options.links("http://d.android.com/reference/");
+    exclude '**/BuildConfig.java'
+    exclude '**/R.java'
+}
+
 
 uploadArchives {
     repositories {
@@ -96,14 +98,14 @@ uploadArchives {
         }
 
         dependencies {
-            Dependency {
+            dependency {
                 groupId = 'com.eaglesakura'
                 artifactId = 'eglibrary-android-java-core'
                 version = EGLIBRARY_ARTIFACT_VERSION
                 scope = 'compile'
             }
 
-            Dependency {
+            dependency {
                 groupId = 'com.melnykov'
                 artifactId = 'floatingactionbutton'
                 version = "1.0.+"
@@ -111,10 +113,17 @@ uploadArchives {
             }
 
 
-            Dependency {
+            dependency {
                 groupId = 'com.googlecode.android-query'
                 artifactId = 'android-query'
                 version = '+'
+                scope = 'compile'
+            }
+
+            dependency {
+                groupId = 'org.androidannotations'
+                artifactId = 'androidannotations-api'
+                version = '3.0.+'
                 scope = 'compile'
             }
         }
