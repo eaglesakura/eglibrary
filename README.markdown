@@ -23,12 +23,7 @@ allprojects {
 <pre>
 dependencies {
     // add library
-    compile "com.eaglesakura:eglibrary-java-core:0.2.+"
-    compile "com.eaglesakura:eglibrary-java-wrapper:0.2.+"
-    compile "com.eaglesakura:eglibrary-android-java-core:0.2.+"
-    compile "com.eaglesakura:eglibrary-android-java-wrapper:0.2.+"
-    compile "com.eaglesakura:eglibrary-android-material-support:0.2.+"
-    compile "com.eaglesakura:eglibrary-android-app-framework:0.2.+"
+    compile "com.eaglesakura:${library name}:0.2.+"
 }
 </pre>
 
@@ -88,11 +83,20 @@ apply plugin: 'com.eaglesakura.android-support'
 	* [Geohash library for Java](http://github.com/davetroy/geohash-js/tree/master)
 	* [Geohash.java](https://github.com/hakobe/Gotouchi/blob/master/src/jp/hakobe/android/util/Geohash.java)
 
+
 ### eglibrary-java-wrapper
 
 * [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-java-wrapper/javadoc/)
 * Pure-Java+各種外部ライブラリのラッパーライブラリです。
 * Androidで実行可能、もしくはJava 1.7相当の機能で記述されています。
+* 依存外部ライブラリ
+	* com.fasterxml.jackson.core:jackson-core:2.4.+
+	* com.fasterxml.jackson.core:jackson-databind:2.4.+
+
+### eglibrary-java-spreadsheet
+
+* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-java-spreadsheet/javadoc/)
+* Spreadsheetとの通信&パース用ModelやUtilをまとめています。
 * 依存外部ライブラリ
 	* com.fasterxml.jackson.core:jackson-core:2.4.+
 	* com.fasterxml.jackson.core:jackson-databind:2.4.+
@@ -106,7 +110,6 @@ apply plugin: 'com.eaglesakura.android-support'
 
 ### eglibrary-android-java-wrapper
 
-
 * [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-android-java-wrapper/javadoc/)
 * 頻繁に使用するライブラリのラッパーを提供します。
 * minSdkVersion 10
@@ -118,8 +121,18 @@ apply plugin: 'com.eaglesakura.android-support'
 	* de.greenrobot:greendao:1.3.+
 	* com.google.protobuf:protobuf-java:2.5.+
 
-### eglibrary-android-material-support
+### eglibrary-android-bluetooth
 
+* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-android-bluetooth/javadoc/)
+* Bluetooth / Bluetooth LE系のUtilを提供します。
+* minSdkVersion 10
+* 依存外部ライブラリ
+	* com.fasterxml.jackson.core:jackson-core:2.4.+
+	* com.fasterxml.jackson.core:jackson-databind:2.4.+
+	* org.androidannotations:androidannotations-api:3.0.+
+	* com.googlecode.android-query:android-query:+
+
+### eglibrary-android-material-support
 
 * [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-android-material-support/javadoc/)
 * マテリアルデザインっぽいUIを提供するためのStyleやcolor等をまとめたライブラリです。
@@ -135,11 +148,23 @@ apply plugin: 'com.eaglesakura.android-support'
 * OpenGL ES、特にEGL周りに関するラッパーを提供するライブラリです。
 * minSdkVersion 10
 
-### eglibrary-android-app-framework
+### eglibrary-android-framework
 
-
-* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-android-app-framework/javadoc/)
+* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-android-framework/javadoc/)
 * アプリ開発で使用するActivityやFragment、ネットワーク等のよく使う機能をまとめたフレームワークです。
+* minSdkVersion 10
+* 依存外部ライブラリ
+	* com.fasterxml.jackson.core:jackson-core:2.4.+
+	* com.fasterxml.jackson.core:jackson-databind:2.4.+
+	* org.androidannotations:androidannotations-api:3.0.+
+	* com.googlecode.android-query:android-query:+
+	* de.greenrobot:greendao:1.3.+
+	* com.google.protobuf:protobuf-java:2.5.+
+	* com.mcxiaoke.volley:library-aar:1.0.+@aar
+
+### eglibrary-android-framework-bluetooth
+
+* BLEのスキャンを行うシンプルなService等を提供します
 * minSdkVersion 10
 * 依存外部ライブラリ
 	* com.fasterxml.jackson.core:jackson-core:2.4.+

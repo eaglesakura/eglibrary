@@ -36,12 +36,26 @@ void rsyncJavadoc(String projectName) {
 }
 
 task uploadJavadoc << {
+    /**
+     * Java
+     */
     rsyncJavadoc("eglibrary-java-core")
+    rsyncJavadoc("eglibrary-java-spreadsheet")
     rsyncJavadoc("eglibrary-java-geo")
     rsyncJavadoc("eglibrary-java-wrapper")
+
+    /**
+     * Android modules
+     */
     rsyncJavadoc("eglibrary-android-java-core")
     rsyncJavadoc("eglibrary-android-java-wrapper")
-    rsyncJavadoc("eglibrary-android-material-support")
+    rsyncJavadoc("eglibrary-android-bluetooth")
     rsyncJavadoc("eglibrary-android-glkit")
-    rsyncJavadoc("eglibrary-android-app-framework")
+
+    /**
+     * Android framework
+     */
+    rsyncJavadoc("eglibrary-android-material-support")
+    rsyncJavadoc("eglibrary-android-framework")
+    rsyncJavadoc("eglibrary-android-framework-bluetooth")
 }

@@ -13,13 +13,10 @@ configurations {
 }
 
 dependencies {
-    // greendao
-    compile 'de.greenrobot:greendao:1.3.+'
+    apt "org.androidannotations:androidannotations:3.0.+"
+    compile "org.androidannotations:androidannotations-api:3.0.+"
+    compile "com.googlecode.android-query:android-query:+"
 
-    // protobuf
-    compile 'com.google.protobuf:protobuf-java:2.5.+'
-
-    compile project(':eglibrary-java-wrapper')
     compile project(':eglibrary-android-java-core')
 }
 
@@ -43,57 +40,6 @@ android {
         disable 'MissingTranslation'
         disable "NewApi"
     }
-}
-
-buildscript {
-    repositories {
-        jcenter()
-
-        mavenCentral()
-
-        maven {
-            url "http://eaglesakura.github.io/maven/"
-        }
-    }
-
-    dependencies {
-        classpath 'com.eaglesakura:eglibrary-gradle-plugin:0.1.+'
-    }
-}
-
-
-apply plugin: 'com.eaglesakura.android-support'
-
-/**
- * DBファイルを出力する
- */
-task generateDao(type: com.eaglesakura.gradle.tasks.AndroidDaoGenTask) {
-    outDirectory = file("src/main/dao").absoluteFile;
-    classPackageBase = "com.eaglesakura.android.dao";
-
-    def generateTkvs = {
-        def schema = newSchema(0x01, "tkvs");
-        def entity = schema.addEntity("DbKeyValueData");
-        // uniqueId
-        entity.addStringProperty("key").notNull().unique().primaryKey();
-        // value
-        entity.addStringProperty("value");
-        // 更新日時
-        entity.addDateProperty("date").notNull();
-    }
-    generateTkvs();
-
-    def generateBkvs = {
-        def schema = newSchema(0x01, "bkvs");
-        def entity = schema.addEntity("DbKeyValueData");
-        // uniqueId
-        entity.addStringProperty("key").notNull().unique().primaryKey();
-        // value
-        entity.addByteArrayProperty("value");
-        // 更新日時
-        entity.addDateProperty("date").notNull();
-    }
-    generateBkvs();
 }
 
 apply plugin: 'maven'
@@ -135,30 +81,6 @@ android.libraryVariants.all { variant ->
         archives sourcesJar
     }
 }
-//task javadoc(type: Javadoc) {
-//    title = "Android Release API"
-//    description "Generates Javadoc for Release."
-//    source = android.sourceSets.main.java.srcDirs
-//    ext.androidJar =
-//            "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-//    classpath = files(android.libraryVariants.release.javaCompile.classpath.files) + files(ext.androidJar) + files("build/intermediates/classes/release/")
-//    options.links("http://docs.oracle.com/javase/7/docs/api/");
-//    options.links("http://d.android.com/reference/");
-//    exclude '**/BuildConfig.java'
-//    exclude '**/*Dao.java'
-//    exclude '**/R.java'
-//}
-//
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-//    classifier = 'javadoc'
-//    from javadoc.destinationDir
-//}
-//
-//artifacts {
-//    archives javadocJar
-//    archives sourcesJar
-//}
-
 
 uploadArchives {
     repositories {
@@ -198,6 +120,21 @@ uploadArchives {
                 groupId = 'com.eaglesakura'
                 artifactId = 'eglibrary-android-java-core'
                 version = EGLIBRARY_ARTIFACT_VERSION
+                scope = 'compile'
+            }
+
+
+            dependency {
+                groupId = 'com.googlecode.android-query'
+                artifactId = 'android-query'
+                version = '0.25.+'
+                scope = 'compile'
+            }
+
+            dependency {
+                groupId = 'org.androidannotations'
+                artifactId = 'androidannotations-api'
+                version = '3.0.+'
                 scope = 'compile'
             }
 
