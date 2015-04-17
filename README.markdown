@@ -2,11 +2,11 @@
 
 [@eaglesakura](https://twitter.com/eaglesakura)が関わった開発で利用することを前提としたライブラリです。作者個人が開発を効率化するために開発が行われているため、たまに動作が変わったりします。
 
-分割はそれなりにされていますが、そこそこ適当です。また、依存ライブラリが結構多いです。
+分割はそれなりにされていますが、そこそこ適当です。あまりに規模が大きくなった場合は将来的に分割する可能性があります。また、依存ライブラリが結構多いです。
 
 普通に使用する場合はForkしたり、dependenciesでバージョンを固定したり、参考にするに留めるほうが良いです。
 
-## Gradle
+## build.gradle
 
 * Maven Centralに追加するのがメンドウだったので、eglibraryを使用するためにはgithubのリポジトリをbuild.gradleへ追加する必要があります。
 
@@ -21,6 +21,7 @@ allprojects {
 }
 </pre>
 <pre>
+dependencies {
     // add library
     compile "com.eaglesakura:eglibrary-java-core:0.2.+"
     compile "com.eaglesakura:eglibrary-java-wrapper:0.2.+"
@@ -28,6 +29,7 @@ allprojects {
     compile "com.eaglesakura:eglibrary-android-java-wrapper:0.2.+"
     compile "com.eaglesakura:eglibrary-android-material-support:0.2.+"
     compile "com.eaglesakura:eglibrary-android-app-framework:0.2.+"
+}
 </pre>
 
 ### Gradle Plugin
@@ -50,86 +52,23 @@ apply plugin: 'com.eaglesakura.android-support'
 
 ## LICENSE
 
-リポジトリの最新版(ver 0.2.+以降のバージョン)では、プロジェクトの都合に応じて、下記のどちらかを選択してください。0.1.+のバージョンをdependenciesを利用して取得する場合、旧ライセンス(NYSL)として使用できます。
-
-ソースコードは自由に使ってもらって構いませんが、どんな不具合があっても責任は持ちません。
+リポジトリの最新版(ver 0.2.+以降のバージョン)では、プロジェクトの都合に応じて、下記のどちらかを選択してください。ソースコードは自由に使ってもらって構いませんが、どんな不具合があっても責任は持ちません。
 
 また、ライブラリ内で依存している別なライブラリについては、必ずそのライブラリのライセンスに従ってください。
 
-### アプリ等の成果物で権利情報を表示可能な場合
+* アプリ等の成果物で権利情報を表示可能な場合
+	* 権利情報の表示を行う（行える）場合、MIT Licenseを使用してください。
+	* [MIT License](LICENSE-MIT.txt)	
+* 何らかの理由で権利情報を表示不可能な場合
+	* 何らかの事情によりライセンス表記を行えない場合、下記のライセンスで使用可能です。
+	* ライブラリ内で依存している別なライブラリについては、必ずそのライブラリのライセンスに従ってください。
+	* [NYSL(English)](LICENSE-NYSL-eng.txt)
+	* [NYSL(日本語)](LICENSE-NYSL-jpn.txt)
+* 0.1.+バージョンを使用する場合
+	* dependenciesを利用して取得する場合、継続してNYSLとして使用できます。
+	* [旧ライセンス(NYSL)](LICENSE-NYSL.txt)
 
-権利情報の表示を行う（行える）場合、MIT Licenseを使用してください。
-<pre>
-The MIT License (MIT)
-
-Copyright (c) 2011 @eaglesakura
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-</pre>
-
-### 何らかの理由で権利情報を表示不可能な場合
-
-何らかの事情によりライセンス表記を行えない場合、下記のライセンスで使用可能です。
-
-* 日本語
-<pre>
-A. 本ソフトウェアは Everyone'sWare です。このソフトを手にした一人一人が、
-   ご自分の作ったものを扱うのと同じように、自由に利用することが出来ます。
-
-  A-1. フリーウェアです。作者からは使用料等を要求しません。
-  A-2. 有料無料や媒体の如何を問わず、自由に転載・再配布できます。
-  A-3. いかなる種類の 改変・他プログラムでの利用 を行っても構いません。
-  A-4. 変更したものや部分的に使用したものは、あなたのものになります。
-       公開する場合は、あなたの名前の下で行って下さい。
-
-B. このソフトを利用することによって生じた損害等について、作者は
-   責任を負わないものとします。各自の責任においてご利用下さい。
-
-C. 著作者人格権は @eaglesakura に帰属します。著作権は放棄します。
-
-D. 以上の３項は、ソース・実行バイナリの双方に適用されます。
-</pre>
-* English
-<pre>
-A. This software is "Everyone'sWare". It means:
-  Anybody who has this software can use it as if he/she is
-  the author.
-
-  A-1. Freeware. No fee is required.
-  A-2. You can freely redistribute this software.
-  A-3. You can freely modify this software. And the source
-      may be used in any software with no limitation.
-  A-4. When you release a modified version to public, you
-      must publish it with your name.
-
-B. The author is not responsible for any kind of damages or loss
-  while using or misusing this software, which is distributed
-  "AS IS". No warranty of any kind is expressed or implied.
-  You use AT YOUR OWN RISK.
-
-C. Copyrighted to @eaglesakura
-
-D. Above three clauses are applied both to source and binary
-  form of this software.
-</pre>
-
-## 各種ライブラリ
+## 各ライブラリの内容
 
 ### eglibrary-java-core
 
@@ -210,9 +149,7 @@ OpenGL ES、特にEGL周りに関するラッパーを提供するライブラ�
 
 ## ソースコードとして含まれているライブラリのライセンス
 
-### Geohash.java
-
-#### Geohash.java License
+### Geohash.java License
 <pre>
 // Geohash.java
 // Geohash library for Java
