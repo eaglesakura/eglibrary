@@ -25,3 +25,23 @@ ext {
     EGLIBRARY_MAVEN_LOCAL_PATH = new File("${System.env.MAVEN_LOCAL_REPO}");
     EGLIBRARY_ARTIFACT_VERSION = "0.2.0"
 }
+
+void rsyncJavadoc(String projectName) {
+    def src = file("${projectName}/build/docs/javadoc/");
+    def dst = file("${EGLIBRARY_MAVEN_LOCAL_PATH}/doc/${projectName}/")
+    dst.deleteDir();
+    dst.mkdirs();
+
+    ["/usr/bin/rsync", "-a", src.absolutePath, dst.absolutePath].execute().text;
+}
+
+task uploadJavadoc << {
+    rsyncJavadoc("eglibrary-java-core")
+    rsyncJavadoc("eglibrary-java-geo")
+    rsyncJavadoc("eglibrary-java-wrapper")
+    rsyncJavadoc("eglibrary-android-java-core")
+    rsyncJavadoc("eglibrary-android-java-wrapper")
+    rsyncJavadoc("eglibrary-android-material-support")
+    rsyncJavadoc("eglibrary-android-glkit")
+    rsyncJavadoc("eglibrary-android-app-framework")
+}
