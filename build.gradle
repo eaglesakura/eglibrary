@@ -16,9 +16,7 @@ buildscript {
 allprojects {
     repositories {
         mavenCentral()
-        maven {
-            url "http://eaglesakura.github.io/maven/"
-        }
+        maven { url "http://eaglesakura.github.io/maven/" }
     }
 }
 

@@ -14,7 +14,7 @@ dependencies {
     compile 'com.mcxiaoke.volley:library-aar:1.0.+@aar'
 
     compile project(':eglibrary-android-java-wrapper')
-    compile project(':eglibrary-material-support')
+    compile project(':eglibrary-android-material-support')
 }
 
 

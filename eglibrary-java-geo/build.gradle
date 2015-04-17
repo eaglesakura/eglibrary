@@ -1,0 +1,59 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.7
+
+dependencies {
+    compile 'com.eaglesakura:joint-connector-annotation:0.1.13'
+}
+
+apply plugin: 'maven'
+
+if(!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")){
+    ext.EGLIBRARY_MAVEN_LOCAL_PATH = ""
+}
+if(!hasProperty("EGLIBRARY_ARTIFACT_VERSION")){
+    ext.EGLIBRARY_ARTIFACT_VERSION = ""
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+//    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri(EGLIBRARY_MAVEN_LOCAL_PATH))
+            pom.version = EGLIBRARY_ARTIFACT_VERSION
+            pom.groupId = "com.eaglesakura"
+            pom.artifactId = file(".").absoluteFile.name;
+        }
+    }
+}
+
+[uploadArchives.repositories.mavenDeployer]*.pom*.whenConfigured { pom ->
+    pom.project {
+        inceptionYear '2014'
+        packaging 'jar'
+        licenses {
+            license {
+                name 'NYSL'
+                url 'https://raw.githubusercontent.com/eaglesakura/eglibrary/master/LICENSE'
+            }
+            license {
+                name 'MIT License'
+                url 'https://raw.githubusercontent.com/davetroy/geohash-js/master/README'
+            }
+        }
+    }
+}

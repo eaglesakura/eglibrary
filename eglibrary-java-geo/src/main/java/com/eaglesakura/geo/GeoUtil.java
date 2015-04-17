@@ -24,5 +24,4 @@ public class GeoUtil {
         double miles = dist * 60 * 1.1515;
         return (miles * 1.609344);
     }
-
 }
