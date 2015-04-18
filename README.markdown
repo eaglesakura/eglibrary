@@ -61,7 +61,7 @@ apply plugin: 'com.eaglesakura.android-support'
 	* [NYSL(日本語)](LICENSE-NYSL-jpn.txt)
 * 0.1.+バージョンを使用する場合
 	* dependenciesを利用して取得する場合、継続してNYSLとして使用できます。
-	* [旧ライセンス(NYSL)](LICENSE-NYSL.txt)
+	* [旧ライセンス(NYSL)](LICENSE-NYSL-eng.txt)
 
 ## 各ライブラリの内容
 
@@ -88,6 +88,7 @@ apply plugin: 'com.eaglesakura.android-support'
 
 * [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-java-wrapper/javadoc/)
 * Pure-Java+各種外部ライブラリのラッパーライブラリです。
+	* JSON処理(Jackson)
 * Androidで実行可能、もしくはJava 1.7相当の機能で記述されています。
 * 依存外部ライブラリ
 	* com.fasterxml.jackson.core:jackson-core:2.4.+
