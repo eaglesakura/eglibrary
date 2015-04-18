@@ -58,6 +58,13 @@ uploadArchives {
 
         dependencies {
             dependency {
+                groupId = 'com.eaglesakura'
+                artifactId = 'eglibrary-java-core'
+                version = EGLIBRARY_ARTIFACT_VERSION
+                scope = 'compile'
+            }
+
+            dependency {
                 groupId = 'com.fasterxml.jackson.core'
                 artifactId = 'jackson-core'
                 version = '2.4.+'
@@ -77,14 +84,6 @@ uploadArchives {
                 version = '1.18.+'
                 scope = 'compile'
             }
-
-            dependency {
-                groupId = 'com.eaglesakura'
-                artifactId = 'eglibrary-java-core'
-                version = EGLIBRARY_ARTIFACT_VERSION
-                scope = 'compile'
-            }
-
         }
     }
 }

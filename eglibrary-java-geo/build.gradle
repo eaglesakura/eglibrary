@@ -60,5 +60,14 @@ uploadArchives {
                 url 'https://raw.githubusercontent.com/davetroy/geohash-js/master/README'
             }
         }
+
+        dependencies {
+            dependency {
+                groupId = 'com.eaglesakura'
+                artifactId = 'eglibrary-java-core'
+                version = EGLIBRARY_ARTIFACT_VERSION
+                scope = 'compile'
+            }
+        }
     }
 }
