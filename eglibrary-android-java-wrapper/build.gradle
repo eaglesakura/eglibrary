@@ -13,11 +13,16 @@ configurations {
 }
 
 dependencies {
-    // greendao
+    /**
+     * Database
+     */
     compile 'de.greenrobot:greendao:1.3.+'
-
-    // protobuf
     compile 'com.google.protobuf:protobuf-java:2.5.+'
+
+    /**
+     * Network
+     */
+    compile 'com.mcxiaoke.volley:library-aar:1.0.+@aar'
 
     compile project(':eglibrary-java-wrapper')
     compile project(':eglibrary-android-java-core')
@@ -35,7 +40,7 @@ android {
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src/main/java', 'src/main/dao']
+            java.srcDirs = ['src/main/java', 'src/main/generated/dao']
         }
     }
 
@@ -59,41 +64,6 @@ buildscript {
     dependencies {
         classpath 'com.eaglesakura:eglibrary-gradle-plugin:0.1.+'
     }
-}
-
-
-apply plugin: 'com.eaglesakura.android-support'
-
-/**
- * DBファイルを出力する
- */
-task generateDao(type: com.eaglesakura.gradle.tasks.AndroidDaoGenTask) {
-    outDirectory = file("src/main/dao").absoluteFile;
-    classPackageBase = "com.eaglesakura.android.dao";
-
-    def generateTkvs = {
-        def schema = newSchema(0x01, "tkvs");
-        def entity = schema.addEntity("DbKeyValueData");
-        // uniqueId
-        entity.addStringProperty("key").notNull().unique().primaryKey();
-        // value
-        entity.addStringProperty("value");
-        // 更新日時
-        entity.addDateProperty("date").notNull();
-    }
-    generateTkvs();
-
-    def generateBkvs = {
-        def schema = newSchema(0x01, "bkvs");
-        def entity = schema.addEntity("DbKeyValueData");
-        // uniqueId
-        entity.addStringProperty("key").notNull().unique().primaryKey();
-        // value
-        entity.addByteArrayProperty("value");
-        // 更新日時
-        entity.addDateProperty("date").notNull();
-    }
-    generateBkvs();
 }
 
 apply plugin: 'maven'
@@ -217,3 +187,5 @@ uploadArchives {
         }
     }
 }
+
+apply from: "generator.gradle"

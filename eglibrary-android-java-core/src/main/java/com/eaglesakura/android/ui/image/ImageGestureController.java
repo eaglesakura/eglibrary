@@ -1,4 +1,4 @@
-package com.eaglesakura.android.framework.ui.image;
+package com.eaglesakura.android.ui.image;
 
 import android.content.Context;
 import android.graphics.Rect;

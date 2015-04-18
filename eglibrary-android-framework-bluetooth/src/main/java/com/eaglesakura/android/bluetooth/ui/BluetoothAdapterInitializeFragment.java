@@ -11,7 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 
 import com.eaglesakura.android.bluetooth.BluetoothUtil;
-import com.eaglesakura.android.bluetooth.R;
+import com.eaglesakura.android.framework.bluetooth.R;
 import com.eaglesakura.android.util.FragmentUtil;
 
 import org.androidannotations.annotations.EFragment;

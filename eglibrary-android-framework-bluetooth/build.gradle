@@ -7,7 +7,6 @@ configurations {
 
 dependencies {
     compile project(':eglibrary-android-framework')
-    compile project(':eglibrary-android-bluetooth')
 }
 
 

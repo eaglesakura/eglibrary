@@ -1,4 +1,4 @@
-package com.eaglesakura.android.framework.net;
+package com.eaglesakura.android.net;
 
 import java.io.IOException;
 import java.util.ArrayList;

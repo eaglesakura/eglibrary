@@ -1,0 +1,78 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url "http://eaglesakura.github.io/maven/"
+        }
+    }
+    dependencies {
+        classpath "com.eaglesakura:eglibrary-gradle-plugin:0.1.21"
+    }
+}
+
+apply plugin: 'com.eaglesakura.android-support'
+
+/**
+ * Key-Value StoreのDAOを出力する
+ */
+task generateKeyValueStoreDao(type: com.eaglesakura.gradle.tasks.AndroidDaoGenTask) {
+    outDirectory = file("src/main/generated/dao").absoluteFile;
+    classPackageBase = "com.eaglesakura.android.dao";
+
+    def generateTkvs = {
+        def schema = newSchema(0x01, "tkvs");
+        def entity = schema.addEntity("DbKeyValueData");
+        // uniqueId
+        entity.addStringProperty("key").notNull().unique().primaryKey();
+        // value
+        entity.addStringProperty("value");
+        // 更新日時
+        entity.addDateProperty("date").notNull();
+    }
+    generateTkvs();
+
+    def generateBkvs = {
+        def schema = newSchema(0x01, "bkvs");
+        def entity = schema.addEntity("DbKeyValueData");
+        // uniqueId
+        entity.addStringProperty("key").notNull().unique().primaryKey();
+        // value
+        entity.addByteArrayProperty("value");
+        // 更新日時
+        entity.addDateProperty("date").notNull();
+    }
+    generateBkvs();
+}
+/**
+ * ネットワークキャッシュ用のDB
+ */
+task generateNetCache(type: com.eaglesakura.gradle.tasks.AndroidDaoGenTask) {
+    outDirectory = file("src/main/generated/dao")
+    classPackageBase = "com.eaglesakura.android.dao"
+
+    def schema = newSchema(2, "net");
+
+    def DbNetCache = schema.addEntity("DbNetCache");
+    // URLをキーに保存する
+    DbNetCache.addStringProperty("url").notNull().unique().primaryKey();
+
+    // データ本体
+    // キャッシュタイプがDBかFILEかで保存先が変わる
+    // FILEの場合、bodyにはファイル名が格納される
+    DbNetCache.addIntProperty("cacheType").notNull();
+    DbNetCache.addIntProperty("bodySize").notNull();
+    DbNetCache.addByteArrayProperty("body");
+
+    DbNetCache.addStringProperty("method").notNull();
+
+    // キャッシュ時刻
+    DbNetCache.addDateProperty("cacheTime").notNull();
+    DbNetCache.addDateProperty("cacheLimit").notNull();
+
+    // ヘッダ保存
+    DbNetCache.addStringProperty("etag");
+
+    // 検証のためのデータハッシュ
+    DbNetCache.addStringProperty("hash");
+
+}

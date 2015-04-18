@@ -11,7 +11,6 @@ dependencies {
     compile "com.google.android.gms:play-services-plus:7.0.+"
     compile "com.google.android.gms:play-services-gcm:7.0.+"
     compile 'com.android.support:support-annotations:+'
-    compile 'com.mcxiaoke.volley:library-aar:1.0.+@aar'
 
     compile project(':eglibrary-android-java-wrapper')
     compile project(':eglibrary-android-material-support')

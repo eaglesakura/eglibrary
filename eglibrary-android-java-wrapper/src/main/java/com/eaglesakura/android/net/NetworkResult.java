@@ -1,13 +1,11 @@
-package com.eaglesakura.android.framework.net;
+package com.eaglesakura.android.net;
 
 import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.AndroidUtil;
-import com.eaglesakura.io.IOUtil;
 import com.eaglesakura.time.Timer;
 import com.eaglesakura.util.Util;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * ネットワークの戻り値を管理する

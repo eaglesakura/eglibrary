@@ -112,21 +112,15 @@ apply plugin: 'com.eaglesakura.android-support'
 
 * [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-android-java-wrapper/javadoc/)
 * 頻繁に使用するライブラリのラッパーを提供します。
+	* Database(greenDAO/protobuf)
+	* Network(Volley)
 * minSdkVersion 10
 * 依存外部ライブラリ
 	* com.fasterxml.jackson.core:jackson-core:2.4.+
 	* com.fasterxml.jackson.core:jackson-databind:2.4.+
 	* de.greenrobot:greendao:1.3.+
 	* com.google.protobuf:protobuf-java:2.5.+
-
-### eglibrary-android-bluetooth
-
-* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-android-bluetooth/javadoc/)
-* Bluetooth / Bluetooth LE系のUtilを提供します。
-* minSdkVersion 10
-* 依存外部ライブラリ
-	* org.androidannotations:androidannotations-api:3.0.+
-	* com.googlecode.android-query:android-query:+
+	* com.mcxiaoke.volley:library-aar:1.0.+@aar
 
 ### eglibrary-android-material-support
 
@@ -156,7 +150,6 @@ apply plugin: 'com.eaglesakura.android-support'
 	* com.googlecode.android-query:android-query:+
 	* de.greenrobot:greendao:1.3.+
 	* com.google.protobuf:protobuf-java:2.5.+
-	* com.mcxiaoke.volley:library-aar:1.0.+@aar
 
 ### eglibrary-android-framework-bluetooth
 

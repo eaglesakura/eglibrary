@@ -1,4 +1,4 @@
-package com.eaglesakura.android.framework.net;
+package com.eaglesakura.android.net;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,7 +19,6 @@ import com.eaglesakura.android.dao.net.DaoSession;
 import com.eaglesakura.android.dao.net.DbNetCache;
 import com.eaglesakura.android.dao.net.DbNetCacheDao;
 import com.eaglesakura.android.db.BaseDatabase;
-import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.android.thread.MultiRunningTasks;
 import com.eaglesakura.android.util.ImageUtil;
 import com.eaglesakura.io.IOUtil;
@@ -41,9 +40,9 @@ import java.util.Map;
 
 /**
  * シンプルにNetのAPI接続を行えるようにするクラス
- <br>
+ * <br>
  * 要件に応じてカスタマイズが行えるようにする。
- <br>
+ * <br>
  * リクエストの発行と同期を別途行えるようになったため、通信・処理速度が向上する。
  */
 public class NetworkConnector {
@@ -62,14 +61,6 @@ public class NetworkConnector {
      */
     private static MultiRunningTasks tasks = new MultiRunningTasks(3);
 
-    static {
-        requests = Volley.newRequestQueue(FrameworkCentral.getApplication());
-        requests.start();
-
-        tasks.setThreadName("NetworkConnector");
-        tasks.setThreadPoolMode(false);
-    }
-
     private final Context context;
 
     File cacheFile;
@@ -79,6 +70,17 @@ public class NetworkConnector {
     NetworkFactory factory;
 
     public NetworkConnector(Context context) {
+        context = context.getApplicationContext();
+        synchronized (NetworkConnector.class) {
+            if (requests == null) {
+                requests = Volley.newRequestQueue(context);
+                requests.start();
+
+                tasks.setThreadName(getClass().getSimpleName());
+                tasks.setThreadPoolMode(false);
+            }
+        }
+
         this.context = context.getApplicationContext();
         this.cacheFile = new File(this.context.getCacheDir(), "egl-net.db");
 
@@ -105,7 +107,6 @@ public class NetworkConnector {
      * キャッシュを削除する
      */
     public void deleteCacheDb() {
-        Context context = FrameworkCentral.getApplication();
         File volleyDir = new File(context.getCacheDir(), "volley");
         IOUtil.delete(volleyDir);
         volleyDir.mkdirs();
@@ -141,6 +142,7 @@ public class NetworkConnector {
      * @param parser
      * @param cacheTimeoutMs
      * @param <T>
+     *
      * @return
      */
     public <T> NetworkResult<T> get(String url, RequestParser<T> parser, long cacheTimeoutMs) {
@@ -171,6 +173,7 @@ public class NetworkConnector {
      * @param parser
      * @param cacheTimeoutMs
      * @param <T>
+     *
      * @return
      */
     public <T> NetworkResult<T> post(String url, RequestParser<T> parser, Map<String, String> params, long cacheTimeoutMs) {
@@ -183,6 +186,7 @@ public class NetworkConnector {
      * @param url
      * @param parser
      * @param <T>
+     *
      * @return
      */
     public <T> NetworkResult<T> post(String url, RequestParser<T> parser, Map<String, String> params) {
@@ -194,6 +198,7 @@ public class NetworkConnector {
      *
      * @param url
      * @param <T>
+     *
      * @return
      */
     protected <T> NetworkResult<T> newUrlErrorResult(final String url) {
@@ -217,6 +222,7 @@ public class NetworkConnector {
      * @param parser
      * @param cacheTimeoutMs
      * @param <T>
+     *
      * @return
      */
     protected <T> NetworkResult<T> connect(final String url, final RequestParser<T> parser, final int volleyMethod, final long cacheTimeoutMs, final Map<String, String> params) {
@@ -377,6 +383,7 @@ public class NetworkConnector {
      *
      * @param cache
      * @param timeoutMs
+     *
      * @return
      */
     protected boolean dropTimeoutCache(DbNetCache cache, long timeoutMs) {
@@ -401,6 +408,7 @@ public class NetworkConnector {
      * URLを指定してキャッシュを取得する
      *
      * @param url
+     *
      * @return
      */
     protected DbNetCache loadCache(String url) {
@@ -512,6 +520,7 @@ public class NetworkConnector {
          * キャッシュを取得する
          *
          * @param url
+         *
          * @return
          */
         public DbNetCache get(String url) {
@@ -522,6 +531,7 @@ public class NetworkConnector {
          * 有効期間が切れていないキャッシュを取得する
          *
          * @param url
+         *
          * @return
          */
         public DbNetCache getIfExist(String url) {
@@ -575,11 +585,21 @@ public class NetworkConnector {
 
     private static NetworkConnector defaultConnector;
 
-    public static synchronized NetworkConnector getDefaultConnector() {
-        if (defaultConnector == null) {
-            defaultConnector = new NetworkConnector(FrameworkCentral.getApplication());
+    public static NetworkConnector getDefaultConnector() {
+        synchronized (NetworkConnector.class) {
+            if (defaultConnector == null) {
+                throw new IllegalStateException();
+            }
+            return defaultConnector;
         }
-        return defaultConnector;
+    }
+
+    public static void initializeDefaultConnector(Context context) {
+        synchronized (NetworkConnector.class) {
+            if (defaultConnector == null) {
+                defaultConnector = new NetworkConnector(context);
+            }
+        }
     }
 
     /**
