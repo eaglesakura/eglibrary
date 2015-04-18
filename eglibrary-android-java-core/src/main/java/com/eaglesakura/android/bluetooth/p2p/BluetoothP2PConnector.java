@@ -29,7 +29,7 @@ public abstract class BluetoothP2PConnector {
     /**
      * リスナ一覧
      */
-    List<P2PConnectorListener> listeners = new ArrayList<P2PConnectorListener>();
+    List<P2PConnectorListener> listeners = new ArrayList<>();
 
     /**
      * 接続対象デバイス

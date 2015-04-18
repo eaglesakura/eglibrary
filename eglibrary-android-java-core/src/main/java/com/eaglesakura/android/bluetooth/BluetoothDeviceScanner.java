@@ -32,7 +32,7 @@ public class BluetoothDeviceScanner {
     /**
      * 発見したデバイスのキャッシュ
      */
-    List<BluetoothDeviceCache> deviceCaches = new ArrayList<BluetoothDeviceCache>();
+    List<BluetoothDeviceCache> deviceCaches = new ArrayList<>();
 
     /**
      * 指定時間以上前に発見されたデバイスはclean対象となる
@@ -446,6 +446,7 @@ public class BluetoothDeviceScanner {
          * 距離は概算となる。また、揺らぎがかなり大きいので、参考値程度に考える。
          *
          * @param fromAverage trueの場合、平均のRSSIを使用する。falseの場合は最新のRSSIを使用する
+         *
          * @return デバイスからの距離(m)
          */
         public double calcDeviceDistanceMeter(boolean fromAverage) {
@@ -580,6 +581,7 @@ public class BluetoothDeviceScanner {
      *
      * @param rssi    電波強度
      * @param txPower BLEデバイス電波出力
+     *
      * @return 距離(メートル)
      */
     public static double calcDeviceDistance(int rssi, int txPower) {
@@ -605,6 +607,7 @@ public class BluetoothDeviceScanner {
      * 精度を上げるため、平均RSSIを使用してチェックする。
      *
      * @param devices 検索対象のデバイス一覧
+     *
      * @return デバイス
      */
     public static BluetoothDeviceCache pickNearDevice(List<BluetoothDeviceCache> devices) {
@@ -630,6 +633,7 @@ public class BluetoothDeviceScanner {
      * typoのため非推奨
      *
      * @param devices
+     *
      * @return
      */
     @Deprecated
@@ -641,6 +645,7 @@ public class BluetoothDeviceScanner {
      * 距離が近い順番にソートする
      *
      * @param devices
+     *
      * @return
      */
     public static List<BluetoothDeviceCache> sortNearDevices(List<BluetoothDeviceCache> devices) {
