@@ -133,14 +133,6 @@ uploadArchives {
                 version = EGLIBRARY_ARTIFACT_VERSION
                 scope = 'compile'
             }
-
-
-            dependency {
-                groupId = 'com.eaglesakura'
-                artifactId = 'joint-connector-annotation'
-                version = '0.1.+'
-                scope = 'compile'
-            }
         }
     }
 }

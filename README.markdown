@@ -132,6 +132,10 @@ apply plugin: 'com.eaglesakura.android-support'
 	* com.melnykov:floatingactionbutton:1.0.+
 	* org.androidannotations:androidannotations-api:3.0.+
 	* com.googlecode.android-query:android-query:+
+	* com.android.support:support-v4:22.+
+	* com.android.support:appcompat-v7:22.+
+	* com.android.support:cardview-v7:22.+
+	* com.android.support:recyclerview-v7:22.+
 
 ### eglibrary-android-glkit
 

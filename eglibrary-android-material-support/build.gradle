@@ -20,15 +20,16 @@ android {
     }
 }
 
+def ANDROID_SUPPORT_LIB_VERSION = "22.+"
+
 dependencies {
     /**
      * support libs
      */
-    compile 'com.android.support:support-v4:22.+'
-    compile 'com.android.support:appcompat-v7:22.+'
-    compile 'com.android.support:cardview-v7:22.+'
-    compile 'com.android.support:recyclerview-v7:22.+'
-//    compile 'com.android.support:support-v13:21.+'
+    compile "com.android.support:support-v4:${ANDROID_SUPPORT_LIB_VERSION}"
+    compile "com.android.support:appcompat-v7:${ANDROID_SUPPORT_LIB_VERSION}"
+    compile "com.android.support:cardview-v7:${ANDROID_SUPPORT_LIB_VERSION}"
+    compile "com.android.support:recyclerview-v7:${ANDROID_SUPPORT_LIB_VERSION}"
 
     /**
      * floating action button
@@ -159,6 +160,34 @@ uploadArchives {
                 groupId = 'org.androidannotations'
                 artifactId = 'androidannotations-api'
                 version = '3.0.+'
+                scope = 'compile'
+            }
+
+            dependency {
+                groupId = 'com.android.support'
+                artifactId = 'support-v4'
+                version = ANDROID_SUPPORT_LIB_VERSION
+                scope = 'compile'
+            }
+
+            dependency {
+                groupId = 'com.android.support'
+                artifactId = 'appcompat-v7'
+                version = ANDROID_SUPPORT_LIB_VERSION
+                scope = 'compile'
+            }
+
+            dependency {
+                groupId = 'com.android.support'
+                artifactId = 'cardview-v7'
+                version = ANDROID_SUPPORT_LIB_VERSION
+                scope = 'compile'
+            }
+
+            dependency {
+                groupId = 'com.android.support'
+                artifactId = 'recyclerview-v7'
+                version = ANDROID_SUPPORT_LIB_VERSION
                 scope = 'compile'
             }
         }
