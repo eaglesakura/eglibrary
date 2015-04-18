@@ -23,7 +23,7 @@ allprojects {
 ext {
     EGLIBRARY_ANDROID_BUILDTOOL_VERSION = '22'
     EGLIBRARY_MAVEN_LOCAL_PATH = new File("${System.env.MAVEN_LOCAL_REPO}");
-    EGLIBRARY_ARTIFACT_VERSION = "0.2.0"
+    EGLIBRARY_ARTIFACT_VERSION = "0.2.1"
 }
 
 void rsyncJavadoc(String projectName) {
@@ -49,7 +49,6 @@ task uploadJavadoc << {
      */
     rsyncJavadoc("eglibrary-android-java-core")
     rsyncJavadoc("eglibrary-android-java-wrapper")
-    rsyncJavadoc("eglibrary-android-bluetooth")
     rsyncJavadoc("eglibrary-android-glkit")
 
     /**
