@@ -561,8 +561,7 @@ public class NetworkConnector {
                 public void onCreate(SQLiteDatabase db) {
                     DaoMaster.createAllTables(db, false);
                 }
-            };
-        }
+            };        }
     }
 
     /**

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SupportNetworkImageView">
+        <!-- Cache Time -->
+        <attr name="cacheTimeSec" format="integer"/>
+        <attr name="cacheTimeMin" format="integer"/>
+        <attr name="cacheTimeHour" format="integer"/>
+        <attr name="cacheTimeDay" format="integer"/>
+
+        <!-- Error Image -->
+        <attr name="errorImage" format="reference"/>
+    </declare-styleable>
+</resources>
