@@ -47,6 +47,13 @@ public class SupportAQuery extends AbstractAQuery<SupportAQuery> {
         return this;
     }
 
+    public SupportAQuery imageListener(SupportNetworkImageView.OnImageListener listener) {
+        if (view instanceof SupportNetworkImageView) {
+            ((SupportNetworkImageView) view).setOnImageListener(listener);
+        }
+        return this;
+    }
+
     /**
      * {@link SupportNetworkImageView}
      *

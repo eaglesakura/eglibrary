@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.eaglesakura.android.net.NetworkConnector;
 import com.eaglesakura.android.net.NetworkResult;
+import com.eaglesakura.android.util.ViewUtil;
 import com.eaglesakura.android.wrapper.R;
 import com.eaglesakura.util.LogUtil;
 
@@ -34,6 +35,8 @@ public class SupportNetworkImageView extends ImageView {
      * 標準では1時間キャッシュ
      */
     protected long cacheTimeoutMs;
+
+    protected OnImageListener onImageListener;
 
     public SupportNetworkImageView(Context context) {
         super(context);
@@ -118,7 +121,7 @@ public class SupportNetworkImageView extends ImageView {
             public void onDataReceived(NetworkResult<Bitmap> sender) {
                 if (getUrl.equals(url)) {
                     try {
-                        setImageBitmap(sender.getReceivedData());
+                        onReceivedImage(sender.getReceivedData());
                     } catch (Exception e) {
                         onImageLoadError();
                     }
@@ -136,9 +139,47 @@ public class SupportNetworkImageView extends ImageView {
         });
     }
 
+    public void setOnImageListener(OnImageListener onImageListener) {
+        this.onImageListener = onImageListener;
+    }
+
+    protected void onReceivedImage(Bitmap image) {
+        setImageBitmap(image);
+
+        if (onImageListener != null) {
+            onImageListener.onImageReceived(this, url, image);
+        }
+    }
+
     protected void onImageLoadError() {
         if (errorImage != null) {
             setImageDrawable(errorImage);
         }
+
+        if (onImageListener != null) {
+            onImageListener.onImageReceiveFailed(this, url);
+        }
+    }
+
+    /**
+     * 画像受信時のListener
+     */
+    public interface OnImageListener {
+        /**
+         * 正常に画像を受信した
+         *
+         * @param view  this
+         * @param url   画像URL
+         * @param image 画像
+         */
+        void onImageReceived(SupportNetworkImageView view, String url, Bitmap image);
+
+        /**
+         * 受信に失敗した
+         *
+         * @param view this
+         * @param url  画像URL
+         */
+        void onImageReceiveFailed(SupportNetworkImageView view, String url);
     }
 }
