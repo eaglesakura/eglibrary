@@ -6,7 +6,6 @@ import android.os.Handler;
  * 非同期の処理を行う。<BR>
  * こちらはAsyncTaskとは独立しているため、強制的な実行が可能。<BR>
  * Handlerの指定も可能。
- * @author TAKESHI YAMASHITA
  *
  */
 public abstract class AsyncAction extends Thread {
@@ -15,7 +14,7 @@ public abstract class AsyncAction extends Thread {
     boolean canceled = false;
 
     /**
-     * 
+     *
      * @param handler 通知先のハンドラ
      */
     public AsyncAction(Handler handler) {

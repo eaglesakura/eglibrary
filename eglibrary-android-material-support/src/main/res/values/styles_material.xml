@@ -24,7 +24,7 @@
     <dimen name="EsMaterial.Button.MinHeight">48dp</dimen>
 
     <dimen name="EsMaterial.Dialog.Button.Height">48dp</dimen>
-    <dimen name="EsMaterial.Dialog.Content.MinHeight">96dp</dimen>
+    <dimen name="EsMaterial.Dialog.Content.MinHeight">52dp</dimen>
     <color name="EsMaterial.Dialog.Shadow">#0F000000</color>
     <dimen name="EsMaterial.Dialog.ShadowRadius">7dp</dimen>
     <dimen name="EsMaterial.Dialog.License.Height">320dp</dimen>
