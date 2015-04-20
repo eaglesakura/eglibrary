@@ -202,7 +202,7 @@ public class NetworkConnector {
      * @return
      */
     protected <T> NetworkResult<T> newUrlErrorResult(final String url) {
-        return new NetworkResult<T>(url) {
+        NetworkResult<T> result = new NetworkResult<T>(url) {
             @Override
             void startDownloadFromBackground() {
                 onError(new IllegalStateException("URL error :: " + url));
@@ -213,6 +213,8 @@ public class NetworkConnector {
 
             }
         };
+        start(result);
+        return result;
     }
 
     /**
@@ -561,7 +563,8 @@ public class NetworkConnector {
                 public void onCreate(SQLiteDatabase db) {
                     DaoMaster.createAllTables(db, false);
                 }
-            };        }
+            };
+        }
     }
 
     /**

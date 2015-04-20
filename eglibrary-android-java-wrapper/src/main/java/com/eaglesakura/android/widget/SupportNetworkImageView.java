@@ -83,8 +83,7 @@ public class SupportNetworkImageView extends ImageView {
             cacheTimeoutMs = NetworkConnector.CACHE_ONE_HOUR;
         }
 
-        LogUtil.log("Cache time(%.2f hour)", (double) cacheTimeoutMs / (double) NetworkConnector.CACHE_ONE_HOUR);
-        LogUtil.log("ErrorImage (%s)", "" + errorImage);
+        LogUtil.log("Cache time(%.2f hour) ErrorImage (%s)", (double) cacheTimeoutMs / (double) NetworkConnector.CACHE_ONE_HOUR, "" + errorImage);
     }
 
     /**
