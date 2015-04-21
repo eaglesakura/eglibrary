@@ -2,15 +2,22 @@ package com.eaglesakura.android.framework.support.ui;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.res.TypedArray;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 
+import com.eaglesakura.android.framework.R;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiClientToken;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiTask;
 import com.eaglesakura.android.util.ContextUtil;
+import com.eaglesakura.util.LogUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
@@ -39,6 +46,44 @@ public abstract class BaseActivity extends ActionBarActivity implements Fragment
 
     protected BaseActivity() {
         fragments.setCallback(this);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        edgeColorToPrimaryColor();
+    }
+
+
+    /**
+     * Scroll系レイアウトでのEdgeColorをブランドに合わせて変更する
+     * <br/>
+     * Lollipopでは自動的にcolorPrimary系の色が反映されるため、何も行わない。
+     * <br/>
+     * 参考: http://stackoverflow.com/questions/28978989/set-recyclerview-edge-glow-pre-lollipop-when-using-appcompat
+     */
+    private void edgeColorToPrimaryColor() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return;
+        }
+
+        try {
+            TypedArray typedArray = getTheme().obtainStyledAttributes(R.styleable.Theme);
+            int id = typedArray.getResourceId(R.styleable.Theme_colorPrimaryDark, 0);
+            int brandColor = getResources().getColor(id);
+
+            //glow
+            int glowDrawableId = getResources().getIdentifier("overscroll_glow", "drawable", "android");
+            Drawable androidGlow = getResources().getDrawable(glowDrawableId);
+            androidGlow.setColorFilter(brandColor, PorterDuff.Mode.SRC_IN);
+            //edge
+            int edgeDrawableId = getResources().getIdentifier("overscroll_edge", "drawable", "android");
+            Drawable androidEdge = getResources().getDrawable(edgeDrawableId);
+            androidEdge.setColorFilter(brandColor, PorterDuff.Mode.SRC_IN);
+        } catch (Exception e) {
+            LogUtil.log(e);
+        }
     }
 
     public void setGoogleApiClientToken(GoogleApiClientToken googleApiClientToken) {
@@ -205,6 +250,7 @@ public abstract class BaseActivity extends ActionBarActivity implements Fragment
      * キーイベントハンドリングを行う
      *
      * @param event
+     *
      * @return ハンドリングを行えたらtrue
      */
     protected boolean handleFragmentsKeyEvent(KeyEvent event) {
