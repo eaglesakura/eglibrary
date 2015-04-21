@@ -20,6 +20,7 @@ import com.eaglesakura.io.IOUtil;
 import com.eaglesakura.material.widget.MaterialLicenseDialog;
 import com.eaglesakura.material.widget.support.SupportRecyclerView;
 import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.Util;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -39,11 +40,6 @@ import java.util.List;
  * </pre>
  */
 public class LicenseViewActivity extends BaseActivity {
-
-    public static final String LICENSE_GEOHASH_JAVA = "geohash-java.license";
-
-    static final String EXTRA_IGNORE_FILES = "EXTRA_IGNORE_FILES";
-
     /**
      * 読み込んだライセンス一覧
      */
@@ -62,9 +58,10 @@ public class LicenseViewActivity extends BaseActivity {
         setContentView(R.layout.activity_license_view);
         super.onCreate(savedInstanceState);
 
-        ignoreFiles = getIntent().getStringArrayListExtra(EXTRA_IGNORE_FILES);
-        if (ignoreFiles == null) {
-            ignoreFiles = new ArrayList<>();
+
+        String[] ignoreFiles = getResources().getStringArray(R.array.eglibrary_Licence_IgnoreFiles);
+        if (!Util.isEmpty(ignoreFiles)) {
+            this.ignoreFiles = Util.convert(ignoreFiles);
         }
 
         setSupportActionBar((Toolbar) findViewById(R.id.EsMaterial_Toolbar));
@@ -276,15 +273,4 @@ public class LicenseViewActivity extends BaseActivity {
         context.startActivity(new Intent(context, LicenseViewActivity.class));
     }
 
-    /**
-     * 無視するライセンスファイルを指定して表示を行う
-     *
-     * @param context
-     * @param ignoreFiles
-     */
-    public static void startContent(Context context, Collection<String> ignoreFiles) {
-        Intent intent = new Intent(context, LicenseViewActivity.class);
-        intent.putExtra(EXTRA_IGNORE_FILES, new ArrayList<>(ignoreFiles));
-        context.startActivity(intent);
-    }
 }

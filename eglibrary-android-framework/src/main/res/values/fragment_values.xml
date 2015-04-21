@@ -12,4 +12,6 @@
 
 
     <string name="eglibrary.License.Activity.Title">ライセンス情報</string>
+    <string-array name="eglibrary_Licence_IgnoreFiles">
+    </string-array>
 </resources>
