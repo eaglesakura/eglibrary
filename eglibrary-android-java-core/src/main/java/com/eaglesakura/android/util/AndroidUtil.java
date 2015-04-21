@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Vibrator;
 import android.view.TextureView;
 
 import java.util.List;
@@ -47,6 +48,7 @@ public class AndroidUtil {
      * Handlerに関連付けられていたThreadで動作している場合はtrueを返す。
      *
      * @param handler 確認対象のHandler
+     *
      * @return Handlerに関連付けられていたThreadで動作している場合はtrueを返す。
      */
     public static boolean isHandlerThread(Handler handler) {
@@ -73,6 +75,7 @@ public class AndroidUtil {
      * 自分自身がTop Applicationとして起動している場合はtrue
      *
      * @param context
+     *
      * @return
      */
     public static boolean isTopApplicationSelf(Context context) {
@@ -83,6 +86,7 @@ public class AndroidUtil {
      * ランチャー一覧を取得する
      *
      * @param context
+     *
      * @return
      */
     public static List<ResolveInfo> listLauncherApplications(Context context) {
@@ -96,6 +100,7 @@ public class AndroidUtil {
      * インストールされているアプリのpackage名一覧を取得する
      *
      * @param context
+     *
      * @return
      */
     public static List<ApplicationInfo> listInstallApplications(Context context) {
@@ -108,6 +113,7 @@ public class AndroidUtil {
      * トップに起動しているActivityのpackage nameを指定する
      *
      * @param context
+     *
      * @return
      */
     public static String getTopApplicationPackage(Context context) {
@@ -126,6 +132,16 @@ public class AndroidUtil {
         throw new IllegalStateException();
     }
 
+    /**
+     * 指定時間、端末のバイブを振動させる
+     *
+     * @param context app context
+     * @param timeMs  震動時間(ミリ秒)
+     */
+    public static void vibrate(Context context, long timeMs) {
+        ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(timeMs);
+    }
+
     public static void playDefaultNotification(Context context) {
         playSound(context, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
     }
@@ -133,8 +149,8 @@ public class AndroidUtil {
     /**
      * サウンドを一度だけ鳴らす
      *
-     * @param context
-     * @param uri
+     * @param context app context
+     * @param uri     URI
      */
     public static void playSound(Context context, Uri uri) {
         final MediaPlayer player = new MediaPlayer();

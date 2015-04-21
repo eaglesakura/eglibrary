@@ -110,7 +110,9 @@ public class LicenseViewActivity extends BaseActivity {
 
             @Override
             protected void onSuccess(Object object) {
-                addLicenses(licenses);
+                if (!isFinishing()) {
+                    addLicenses(licenses);
+                }
             }
 
             @Override
@@ -121,21 +123,18 @@ public class LicenseViewActivity extends BaseActivity {
     }
 
     void addLicenses(List<LicenseItem> newItems) {
-        if (isFinishing()) {
-            return;
-        }
-
         licenseList = newItems;
 
         // アダプタを作成
         adapter = new RecyclerView.Adapter<ItemViewHolder>() {
             @Override
             public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                return new ItemViewHolder();
+                return new ItemViewHolder(parent);
             }
 
             @Override
             public void onBindViewHolder(ItemViewHolder holder, int position) {
+                log("onBindViewHolder pos(%d) title(%s) bind(%s)", position, licenseList.get(position).title, holder.toString());
                 holder.bind(position);
             }
 
@@ -195,8 +194,8 @@ public class LicenseViewActivity extends BaseActivity {
     class ItemViewHolder extends RecyclerView.ViewHolder {
         LicenseItem item;
 
-        public ItemViewHolder() {
-            super(View.inflate(LicenseViewActivity.this, R.layout.card_license, null));
+        public ItemViewHolder(ViewGroup parent) {
+            super(getLayoutInflater().inflate(R.layout.card_license, parent, false));
         }
 
         void bind(int position) {
@@ -204,7 +203,7 @@ public class LicenseViewActivity extends BaseActivity {
             ViewUtil.matchCardWidth(itemView);
 
             AQuery q = new AQuery(itemView);
-            q.id(R.id.eglibrary_License_Item_Name).text(item.title);
+            q.id(R.id.eglibrary_License_Item_Name).text("").text(item.title);
             q.id(R.id.eglibrary_License_Item_Root).clicked(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
