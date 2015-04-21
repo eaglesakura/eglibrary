@@ -133,9 +133,14 @@ public class LicenseViewActivity extends BaseActivity {
             }
 
             @Override
-            public void onBindViewHolder(ItemViewHolder holder, int position) {
+            public void onBindViewHolder(final ItemViewHolder holder, final int position) {
                 log("onBindViewHolder pos(%d) title(%s) bind(%s)", position, licenseList.get(position).title, holder.toString());
-                holder.bind(position);
+                UIHandler.postUI(new Runnable() {
+                    @Override
+                    public void run() {
+                        holder.bind(position);
+                    }
+                });
             }
 
             @Override
@@ -210,6 +215,7 @@ public class LicenseViewActivity extends BaseActivity {
                     loadLicense(item);
                 }
             });
+            itemView.requestLayout();
         }
     }
 
