@@ -12,6 +12,7 @@
 
 
     <string name="eglibrary.License.Activity.Title">ライセンス情報</string>
+    <dimen name="eglibrary.License.Card.Margin">1dp</dimen>
     <string-array name="eglibrary_Licence_IgnoreFiles">
     </string-array>
 </resources>

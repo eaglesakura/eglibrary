@@ -138,6 +138,7 @@ public class LicenseViewActivity extends BaseActivity {
                         holder.bind(position);
                     }
                 });
+                ViewUtil.matchCardWidth(holder.itemView);
             }
 
             @Override
@@ -197,7 +198,8 @@ public class LicenseViewActivity extends BaseActivity {
         LicenseItem item;
 
         public ItemViewHolder(ViewGroup parent) {
-            super(getLayoutInflater().inflate(R.layout.card_license, parent, false));
+//            super(getLayoutInflater().inflate(R.layout.card_license, parent, false));
+            super(View.inflate(LicenseViewActivity.this, R.layout.card_license, null));
         }
 
         void bind(int position) {
@@ -212,7 +214,6 @@ public class LicenseViewActivity extends BaseActivity {
                     loadLicense(item);
                 }
             });
-            itemView.requestLayout();
         }
     }
 
