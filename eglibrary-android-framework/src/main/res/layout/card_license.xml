@@ -8,10 +8,9 @@
     <android.support.v7.widget.CardView
         android:clickable="true"
         tools:targetApi="11"
-        android:layout_marginTop="@dimen/eglibrary.License.Card.Margin"
-        android:layout_marginBottom="@dimen/eglibrary.License.Card.Margin"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="2dp"
         style="@style/EsMaterial.CardView.Light.NoHorizontalMargin"
-        android:foreground="?android:attr/selectableItemBackground"
         android:id="@+id/eglibrary.License.Item.Root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

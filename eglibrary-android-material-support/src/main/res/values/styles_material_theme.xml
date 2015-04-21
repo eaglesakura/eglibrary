@@ -7,19 +7,6 @@
 
     <color name="EsMaterial.Base.WindowBackground">@color/EsMaterial.Grey.50</color>
 
-    <style name="EsMaterial.CardView.Light" parent="CardView.Light">
-        <item name="android:layout_marginLeft">@dimen/EsMaterial.Margin.KeyLine1Horizontal</item>
-        <item name="android:layout_marginTop">@dimen/EsMaterial.Margin.KeyLine1Vertical</item>
-        <item name="android:layout_marginRight">@dimen/EsMaterial.Margin.KeyLine1Horizontal</item>
-        <item name="android:layout_marginBottom">@dimen/EsMaterial.Margin.KeyLine1Vertical</item>
-        <item name="android:minHeight">@dimen/EsMaterial.Button.MinHeight</item>
-    </style>
-
-    <style name="EsMaterial.CardView.Light.NoHorizontalMargin" parent="EsMaterial.CardView.Light">
-        <item name="android:layout_marginLeft">@dimen/EsMaterial.Button.Margin</item>
-        <item name="android:layout_marginRight">@dimen/EsMaterial.Button.Margin</item>
-    </style>
-
     <!-- Base -->
     <style name="EsMaterial.Theme.Base" parent="EsMaterial.Base">
         <!-- EsMaterial attributes -->

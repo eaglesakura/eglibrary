@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="esmCardViewForeground" format="reference"/>
+
+    <!-- before Kitkat -->
+    <style name="EsMaterial.CardView.Base" parent="CardView.Light">
+        <item name="android:foreground">@drawable/esm_cardview_light_foreground</item>
+    </style>
+
+    <style name="EsMaterial.CardView.Light" parent="EsMaterial.CardView.Base">
+        <item name="android:layout_marginLeft">@dimen/EsMaterial.Margin.KeyLine1Horizontal</item>
+        <item name="android:layout_marginTop">@dimen/EsMaterial.Margin.KeyLine1Vertical</item>
+        <item name="android:layout_marginRight">@dimen/EsMaterial.Margin.KeyLine1Horizontal</item>
+        <item name="android:layout_marginBottom">@dimen/EsMaterial.Margin.KeyLine1Vertical</item>
+        <item name="android:minHeight">@dimen/EsMaterial.Button.MinHeight</item>
+    </style>
+
+    <style name="EsMaterial.CardView.Light.NoHorizontalMargin" parent="EsMaterial.CardView.Light">
+        <item name="android:layout_marginLeft">@dimen/EsMaterial.Button.Margin</item>
+        <item name="android:layout_marginRight">@dimen/EsMaterial.Button.Margin</item>
+    </style>
+
+</resources>
