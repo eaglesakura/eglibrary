@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
-        <color android:color="#8FE0E0E0" />
+        <color android:color="@color/EsMaterial.CardView.Light.Press"/>
     </item>
 </selector>

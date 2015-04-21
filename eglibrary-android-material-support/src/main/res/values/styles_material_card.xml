@@ -2,6 +2,7 @@
 <resources>
 
     <attr name="esmCardViewForeground" format="reference"/>
+    <color name="EsMaterial.CardView.Light.Press">#8FD0D0D0</color>
 
     <!-- before Kitkat -->
     <style name="EsMaterial.CardView.Base" parent="CardView.Light">
