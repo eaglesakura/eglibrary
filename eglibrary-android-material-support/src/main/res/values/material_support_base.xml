@@ -45,9 +45,7 @@
         <item name="android:textColorPrimaryDisableOnly">@color/EsMaterial.Grey.750</item>
 
         <!-- Button Color -->
-        <item name="esmButtonBaseColor">@color/EsMaterial.Grey.Theme</item>
-        <item name="esmButtonHighlightColorWeight">0.9</item>
-        <item name="esmButtonTextColorMode">dark</item>
+        <item name="colorButtonNormal">@color/EsMaterial.Grey.Theme</item>
     </style>
 
 

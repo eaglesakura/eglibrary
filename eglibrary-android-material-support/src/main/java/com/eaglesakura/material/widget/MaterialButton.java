@@ -20,10 +20,10 @@ import static android.support.v7.internal.widget.ThemeUtils.getDisabledThemeAttr
  *
  */
 public class MaterialButton extends AppCompatButton {
-    private static final int TEXTCOLOR_MODE_LIGHT = 0;
-    private static final int TEXTCOLOR_MODE_DARK = 1;
-    private static final int TEXTCOLOR_MODE_PALETTE = 2;
-    private static final int TEXTCOLOR_MODE_AUTO = 3;
+    public static final int TEXTCOLOR_MODE_LIGHT = 0;
+    public static final int TEXTCOLOR_MODE_DARK = 1;
+    public static final int TEXTCOLOR_MODE_PALETTE = 2;
+    public static final int TEXTCOLOR_MODE_AUTO = 3;
 
 
     public MaterialButton(Context context) {
@@ -52,34 +52,16 @@ public class MaterialButton extends AppCompatButton {
             Resources res = getResources();
             LogUtil.log("has attribute");
             TypedArray typedArray = context.obtainStyledAttributes(attrs, new int[]{
-                    R.attr.esmButtonBaseColor,
-                    R.attr.esmButtonHighlightColorWeight,
+                    R.attr.colorButtonNormal,
                     R.attr.esmButtonTextColorMode,
             });
             int baseColor = typedArray.getColor(0, res.getColor(R.color.EsMaterial_Grey_500));
-
-            // ボタンそのものの背景指定
-            {
-                int highlight = baseColor;
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    // Kitkat以下はRippleエフェクトが指定できないため、色を変える
-                    float weight = typedArray.getFloat(1, 0.9f);
-                    int a = Color.alpha(baseColor);
-                    int r = (int) (weight * Color.red(baseColor));
-                    int g = (int) (weight * Color.green(baseColor));
-                    int b = (int) (weight * Color.blue(baseColor));
-                    highlight = Color.argb(a, r, g, b);
-                }
-
-                // set style
-                setSupportBackgroundTintList(createButtonColorStateList(context, baseColor, highlight));
-            }
 
             // base colorから各種TextColorを生成する
             {
                 int textBaseColor = 0;
                 int textHighlightColor = 0;
-                int colorMode = typedArray.getInt(2, TEXTCOLOR_MODE_AUTO);
+                int colorMode = typedArray.getInt(1, TEXTCOLOR_MODE_AUTO);
 
                 if (colorMode == TEXTCOLOR_MODE_AUTO || colorMode == TEXTCOLOR_MODE_PALETTE) {
                     // Paletteから色を指定する
