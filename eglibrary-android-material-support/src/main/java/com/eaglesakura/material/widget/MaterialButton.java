@@ -89,8 +89,8 @@ public class MaterialButton extends AppCompatButton {
                     textHighlightColor = res.getColor(R.color.EsMaterial_Grey_100);
                 } else if (colorMode == TEXTCOLOR_MODE_DARK) {
                     // フォントを暗くする
-                    textBaseColor = res.getColor(R.color.EsMaterial_Grey_750);
-                    textHighlightColor = res.getColor(R.color.EsMaterial_Grey_800);
+                    textBaseColor = res.getColor(R.color.EsMaterial_Grey_800);
+                    textHighlightColor = res.getColor(R.color.EsMaterial_Grey_900);
                 }
 
                 // TextColor
