@@ -29,7 +29,7 @@ ext {
 
 void rsyncJavadoc(String projectName) {
     def src = file("${projectName}/build/docs/javadoc/");
-    def dst = file("${EGLIBRARY_MAVEN_LOCAL_PATH}/doc/${projectName}/")
+    def dst = new File("${System.env.MAVEN_LOCAL_REPO}/doc/${projectName}/");
     dst.deleteDir();
     dst.mkdirs();
 
