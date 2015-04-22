@@ -9,10 +9,67 @@ public class StringUtil {
 
     public static final String SHIT_JIS = "Shift_JIS";
 
+    static {
+        // initialize base64
+        try {
+            base64Converter = (Base64Converter) Class.forName("com.eaglesakura.android.util.AndroidBase64Impl").newInstance();
+        } catch (Exception e) {
+            try {
+                // Commons Codec Java
+                base64Converter = new Base64Converter() {
+                    /**
+                     * base64 encode/decode
+                     */
+                    private Class base64Class = null;
+
+                    /**
+                     * base64 encode
+                     */
+                    private Method base64Encode = null;
+
+                    /**
+                     * base64 decode
+                     */
+                    private Method base64Decode = null;
+
+                    Base64Converter init() throws Exception {
+                        base64Class = Class.forName("org.apache.commons.codec.binary.Base64");
+                        base64Encode = base64Class.getMethod("encodeBase64", byte[].class);
+                        base64Decode = base64Class.getMethod("decodeBase64", byte[].class);
+                        return this;
+                    }
+
+                    @Override
+                    public String encode(byte[] buffer) {
+                        try {
+                            return (String) base64Encode.invoke(base64Class, buffer, 0 /* Base64.Default */);
+                        } catch (Exception e) {
+                            LogUtil.log(e);
+                            return null;
+                        }
+                    }
+
+                    @Override
+                    public byte[] decode(String base64) {
+                        try {
+                            return (byte[]) base64Decode.invoke(base64Class, base64, 0 /* Base64.Default */);
+                        } catch (Exception e) {
+                            LogUtil.log(e);
+                            return null;
+                        }
+                    }
+                }.init();
+            } catch (Exception ee) {
+                // not impl
+            }
+        }
+    }
+
     /**
      * 引数全ての文字列が有効であればtrueを返す
      *
      * @param args
+     *
      * @return
      */
     public static boolean allNotEmpty(String... args) {
@@ -29,6 +86,7 @@ public class StringUtil {
      * 文字列がnullか空文字だったらtrueを返す。
      *
      * @param str
+     *
      * @return
      */
     public static boolean isEmpty(String str) {
@@ -43,6 +101,7 @@ public class StringUtil {
      * strがnullかemptyだったらnullを返す。
      *
      * @param str
+     *
      * @return
      */
     public static String emptyToNull(String str) {
@@ -53,6 +112,7 @@ public class StringUtil {
      * 全角英数を半角英数に変換する
      *
      * @param s
+     *
      * @return
      */
     public static String zenkakuEngToHankakuEng(String s) {
@@ -99,6 +159,7 @@ public class StringUtil {
      * 全角文字を半角文字に変更する
      *
      * @param s
+     *
      * @return
      */
     public static String zenkakuHiraganaToZenkakuKatakana(String s) {
@@ -123,6 +184,7 @@ public class StringUtil {
 
     /**
      * @param str
+     *
      * @return
      */
     public static String macStringToWinString(String str) {
@@ -166,6 +228,7 @@ public class StringUtil {
      *
      * @param a
      * @param b
+     *
      * @return
      */
     public static int compareString(String a, String b) {
@@ -186,6 +249,7 @@ public class StringUtil {
      * 内容はyyyyMMdd-hh:mm:ss.SSとなる。
      *
      * @param date
+     *
      * @return
      */
     public static String toString(Date date) {
@@ -196,6 +260,7 @@ public class StringUtil {
      * yyyyMMdd-hh:mm:ss.SSフォーマットの文字列をDateに変換する
      *
      * @param date
+     *
      * @return
      */
     public static Date toDate(String date) {
@@ -210,6 +275,7 @@ public class StringUtil {
      * EXIF記録されている時刻から日時に変換する
      *
      * @param exifDate
+     *
      * @return
      */
     public static Date toExifDate(String exifDate) {
@@ -221,49 +287,17 @@ public class StringUtil {
     }
 
     /**
-     * base64 encode/decode
+     * Base64変換器
      */
-    private static Class base64Class = null;
+    private static Base64Converter base64Converter;
 
     /**
-     * base64 encode
+     * Base64変換インターフェース
      */
-    private static Method base64Encode = null;
+    public interface Base64Converter {
+        String encode(byte[] buffer);
 
-    /**
-     * base64 decode
-     */
-    private static Method base64Decode = null;
-
-    private synchronized static void initializeBase64Method() {
-        if (base64Class != null) {
-            return;
-        }
-
-        try {
-            // for Android
-            base64Class = Class.forName("android.util.Base64");
-            base64Encode = base64Class.getMethod("encodeToString", byte[].class, int.class);
-            base64Decode = base64Class.getMethod("decode", byte[].class, int.class);
-        } catch (Exception e) {
-            LogUtil.log(e);
-        }
-
-        if (base64Class != null) {
-            return;
-        }
-
-
-        if (base64Class == null) {
-            try {
-                // for Commons Codec Java
-                base64Class = Class.forName("org.apache.commons.codec.binary.Base64");
-                base64Encode = base64Class.getMethod("encodeBase64", byte[].class);
-                base64Decode = base64Class.getMethod("decodeBase64", byte[].class);
-            } catch (Exception e) {
-
-            }
-        }
+        byte[] decode(String base64);
     }
 
     public static int toInteger(String value, int def) {
@@ -294,34 +328,22 @@ public class StringUtil {
      * base64エンコードする
      *
      * @param buffer
+     *
      * @return
      */
     public static String toString(byte[] buffer) {
-        initializeBase64Method();
-
-        try {
-            return (String) base64Encode.invoke(base64Class, buffer, 0 /* Base64.Default */);
-        } catch (Exception e) {
-            LogUtil.log(e);
-            return null;
-        }
+        return base64Converter.encode(buffer);
     }
 
     /**
      * base64文字列をバイト配列へ変換する
      *
      * @param base64
+     *
      * @return
      */
     public static byte[] toByteArray(String base64) {
-        initializeBase64Method();
-
-        try {
-            return (byte[]) base64Decode.invoke(base64Class, base64, 0 /* Base64.Default */);
-        } catch (Exception e) {
-            LogUtil.log(e);
-            return null;
-        }
+        return base64Converter.decode(base64);
     }
 
     /**
@@ -342,6 +364,7 @@ public class StringUtil {
      *
      * @param intHex
      * @param defValue
+     *
      * @return
      */
     public static long parseHex(String intHex, long defValue) {
@@ -369,6 +392,7 @@ public class StringUtil {
      * WebColor RGBをARGB形式に変換する
      *
      * @param webColor
+     *
      * @return
      */
     public static int parseWebColorRGB2XRGB(String webColor) {
@@ -380,6 +404,7 @@ public class StringUtil {
      * WebColor ARGBをARGB形式に変換する
      *
      * @param webColor
+     *
      * @return
      */
     public static int parseWebColorARGB2ARGB(String webColor) {

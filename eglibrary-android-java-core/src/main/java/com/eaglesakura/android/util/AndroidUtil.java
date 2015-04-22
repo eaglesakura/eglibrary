@@ -129,7 +129,7 @@ public class AndroidUtil {
             }
         }
 
-        throw new IllegalStateException();
+        return context.getPackageName();
     }
 
     /**
