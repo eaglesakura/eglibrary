@@ -9,7 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 
@@ -32,7 +32,7 @@ import java.util.List;
  *
  */
 @EActivity
-public abstract class BaseActivity extends ActionBarActivity implements FragmentChooser.Callback {
+public abstract class BaseActivity extends AppCompatActivity implements FragmentChooser.Callback {
 
     protected static final int REQUEST_GOOGLEPLAYSERVICE_RECOVER = 0x1100;
 

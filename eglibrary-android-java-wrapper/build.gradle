@@ -1,9 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'android-apt'
 
-if (!hasProperty("EGLIBRARY_MAVEN_LOCAL_PATH")) {
-    ext.EGLIBRARY_MAVEN_LOCAL_PATH = ""
-}
 if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
     ext.EGLIBRARY_ARTIFACT_VERSION = ""
 }
@@ -133,7 +130,7 @@ android.libraryVariants.all { variant ->
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: uri(EGLIBRARY_MAVEN_LOCAL_PATH))
+            repository(url: uri(new File("${System.env.MAVEN_LOCAL_REPO}")))
             pom.version = EGLIBRARY_ARTIFACT_VERSION
             pom.groupId = "com.eaglesakura"
             pom.artifactId = file(".").absoluteFile.name;

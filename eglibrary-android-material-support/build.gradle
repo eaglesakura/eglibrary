@@ -20,7 +20,7 @@ android {
     }
 }
 
-def ANDROID_SUPPORT_LIB_VERSION = "22.+"
+def ANDROID_SUPPORT_LIB_VERSION = "22.1.+"
 
 dependencies {
     /**
@@ -110,7 +110,7 @@ android.libraryVariants.all { variant ->
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: uri(EGLIBRARY_MAVEN_LOCAL_PATH))
+            repository(url: uri(new File("${System.env.MAVEN_LOCAL_REPO}")))
             pom.version = EGLIBRARY_ARTIFACT_VERSION
             pom.groupId = "com.eaglesakura"
             pom.artifactId = file(".").absoluteFile.name;
