@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Red -->
 
+    <!-- LightGreen -->
+    <color name="EsMaterial.LightGreen.50">#F1F8E9</color>
+    <color name="EsMaterial.LightGreen.100">#DCEDC8</color>
+    <color name="EsMaterial.LightGreen.200">#C5E1A5</color>
+    <color name="EsMaterial.LightGreen.300">#AED581</color>
+    <color name="EsMaterial.LightGreen.400">#9CCC65</color>
+    <color name="EsMaterial.LightGreen.500">#8BC34A</color>
+    <color name="EsMaterial.LightGreen.600">#7CB342</color>
+    <color name="EsMaterial.LightGreen.700">#689F38</color>
+    <color name="EsMaterial.LightGreen.800">#558B2F</color>
+    <color name="EsMaterial.LightGreen.900">#33691E</color>
+
+    <!-- Blue -->
     <color name="EsMaterial.Blue.50">#E3F2FD</color>
     <color name="EsMaterial.Blue.100">#BBDEFB</color>
     <color name="EsMaterial.Blue.200">#90CAF9</color>

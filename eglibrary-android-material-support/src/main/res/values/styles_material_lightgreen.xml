@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="EsMaterial.LightGreen.50">#F1F8E9</color>
-    <color name="EsMaterial.LightGreen.100">#DCEDC8</color>
-    <color name="EsMaterial.LightGreen.200">#C5E1A5</color>
-    <color name="EsMaterial.LightGreen.300">#AED581</color>
-    <color name="EsMaterial.LightGreen.400">#9CCC65</color>
-    <color name="EsMaterial.LightGreen.500">#8BC34A</color>
-    <color name="EsMaterial.LightGreen.600">#7CB342</color>
-    <color name="EsMaterial.LightGreen.700">#689F38</color>
-    <color name="EsMaterial.LightGreen.800">#558B2F</color>
-    <color name="EsMaterial.LightGreen.900">#33691E</color>
-
     <color name="EsMaterial.LightGreen.Button.Disabled">@color/EsMaterial.LightGreen.300</color>
     <color name="EsMaterial.LightGreen.Button.Normal">@color/EsMaterial.LightGreen.400</color>
     <color name="EsMaterial.LightGreen.Button.Focused">@color/EsMaterial.LightGreen.400</color>

@@ -1,5 +1,10 @@
 <resources>
 
+    <string name="EsMaterial.Dialog.Close">閉じる</string>
+    <string name="EsMaterial.Dialog.OK">OK</string>
+    <string name="EsMaterial.Dialog.Cancel">キャンセル</string>
+    <string name="EsMaterial.OSS.Title">ライセンス情報</string>
+
     <dimen name="EsMaterial.Font.SmallSmall">12sp</dimen>
     <dimen name="EsMaterial.Font.Small">14sp</dimen>
     <dimen name="EsMaterial.Font.Medium">16sp</dimen>

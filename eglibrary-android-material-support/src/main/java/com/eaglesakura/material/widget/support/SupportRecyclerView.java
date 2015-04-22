@@ -104,6 +104,7 @@ public class SupportRecyclerView extends FrameLayout {
      * 空Viewを取得する
      *
      * @param <T>
+     *
      * @return
      */
     public <T extends View> T getEmptyView(Class<T> clazz) {
@@ -138,6 +139,7 @@ public class SupportRecyclerView extends FrameLayout {
      * Adapterの選択位置を取得する
      *
      * @param view
+     *
      * @return
      */
     public static int getSelectedAdapterPosition(RecyclerView view) {
