@@ -70,6 +70,20 @@
     <attr name="esmNavigationDrawerTextColor" format="color"/>
     <attr name="esmSeparatorBarColor" format="color"/>
     <attr name="esmWindowBackgroundColorDark" format="color"/>
+    <attr name="esmNormalButtonBaseColor" format="color"/>
+    <attr name="esmNormalButtonTextColorMode" format="enum">
+        <enum name="light" value="0"/>
+        <enum name="dark" value="1"/>
+        <enum name="palette" value="2"/>
+        <enum name="auto" value="3"/>
+    </attr>
+    <attr name="esmAlertButtonBaseColor" format="color"/>
+    <attr name="esmAlertButtonTextColorMode" format="color">
+        <enum name="light" value="0"/>
+        <enum name="dark" value="1"/>
+        <enum name="palette" value="2"/>
+        <enum name="auto" value="3"/>
+    </attr>
 
     <color name="EsMaterial.Base.WindowBackground">@color/EsMaterial.Grey.50</color>
 
@@ -81,6 +95,12 @@
         <item name="esmNavigationDrawerTextColor">@color/EsMaterial.Grey.700</item>
         <item name="esmSeparatorBarColor">@color/EsMaterial.Grey.300</item>
         <item name="esmWindowBackgroundColorDark">@color/EsMaterial.Grey.300</item>
+
+        <!-- Button -->
+        <item name="esmNormalButtonBaseColor">@color/EsMaterial.Grey.400</item>
+        <item name="esmNormalButtonTextColorMode">dark</item>
+        <item name="esmAlertButtonBaseColor">@color/EsMaterial.Red.400</item>
+        <item name="esmAlertButtonTextColorMode">light</item>
     </style>
 
     <style name="EsMaterial.Transparent" parent="EsMaterial.Theme.Base">
