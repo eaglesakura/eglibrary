@@ -46,7 +46,6 @@ public class MaterialButton extends AppCompatButton {
             return;
         }
 
-
         if (attrs != null) {
 
             Resources res = getResources();

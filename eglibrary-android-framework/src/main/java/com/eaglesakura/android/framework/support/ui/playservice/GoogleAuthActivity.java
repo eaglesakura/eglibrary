@@ -44,8 +44,8 @@ public abstract class GoogleAuthActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_google_auth);
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_google_auth);
 
         setGoogleApiClientToken(new GoogleApiClientToken(newGoogleApiClient()));
     }

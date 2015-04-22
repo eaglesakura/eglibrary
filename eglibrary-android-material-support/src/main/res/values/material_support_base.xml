@@ -103,21 +103,15 @@
         <item name="colorAccent">@color/EsMaterial.LightGreen.300</item>
     </style>
 
-    <style name="EsMaterial.Theme.Red" parent="">
+    <style name="EsMaterial.Theme.Red.NoActionBar" parent="EsMaterial.Theme.Base">
         <item name="drawerArrowStyle">@style/EsMaterial.Red.DrawerArrow</item>
         <item name="colorPrimary">@color/EsMaterial.Red.500</item>
         <item name="colorPrimaryDark">@color/EsMaterial.Red.600</item>
     </style>
 
-    <style name="EsMaterial.Red.Toolbar" parent="EsMaterial.Theme.Red">
+    <style name="EsMaterial.Red.Toolbar" parent="EsMaterial.Theme.Red.NoActionBar">
         <item name="android:textColorPrimary">@color/EsMaterial.Grey.50</item>
         <item name="android:textColorSecondary">@color/EsMaterial.Grey.50</item>
         <item name="colorAccent">@color/EsMaterial.LightGreen.300</item>
     </style>
-
-    <style name="EsMaterial.Theme.Red.NoActionBar" parent="EsMaterial.Theme.Base">
-        <item name="windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-    </style>
-
 </resources>
