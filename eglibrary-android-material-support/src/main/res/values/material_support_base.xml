@@ -1,4 +1,16 @@
 <resources>
+    <attr name="esmNavigationDrawerBackgroundColor" format="color"/>
+    <attr name="esmNavigationDrawerTextColor" format="color"/>
+    <attr name="esmSeparatorBarColor" format="color"/>
+    <attr name="esmWindowBackgroundColorDark" format="color"/>
+    <attr name="esmButtonBaseColor" format="color"/>
+    <attr name="esmButtonHighlightColorWeight" format="float"/>
+    <attr name="esmButtonTextColorMode" format="enum">
+        <enum name="light" value="0"/>
+        <enum name="dark" value="1"/>
+        <enum name="palette" value="2"/>
+        <enum name="auto" value="3"/>
+    </attr>
 
     <string name="EsMaterial.Dialog.Close">閉じる</string>
     <string name="EsMaterial.Dialog.OK">OK</string>
@@ -26,20 +38,16 @@
 
     <style name="EsMaterial.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- 上から下に登場するAnimation -->
-        <!--<item name="android:windowAnimationStyle">@style/EsMaterial.Animation.Activity</item>-->
-
         <item name="colorAccent">@color/accent_material_light</item>
         <item name="android:textColor">@color/EsMaterial.Grey.800</item>
         <item name="android:textSize">@dimen/EsMaterial.Font.Medium</item>
-
         <!-- CheckBox/RadioButton color -->
         <item name="android:textColorPrimaryDisableOnly">@color/EsMaterial.Grey.750</item>
 
-        <!--test -->
-        <!--<item name="android:textColorPrimary">#FF0000</item>-->
-        <!--<item name="android:textColorSecondary">#FF0000</item>-->
-        <!--<item name="android:textColorTertiary">#FF0000</item>-->
-        <!--<item name="android:textColorHint">#FF0000</item>-->
+        <!-- Button Color -->
+        <item name="esmButtonBaseColor">@color/EsMaterial.Grey.Theme</item>
+        <item name="esmButtonHighlightColorWeight">0.9</item>
+        <item name="esmButtonTextColorMode">dark</item>
     </style>
 
 
@@ -66,25 +74,6 @@
         <item name="android:textSize">@dimen/EsMaterial.Font.Title</item>
     </style>
 
-    <attr name="esmNavigationDrawerBackgroundColor" format="color"/>
-    <attr name="esmNavigationDrawerTextColor" format="color"/>
-    <attr name="esmSeparatorBarColor" format="color"/>
-    <attr name="esmWindowBackgroundColorDark" format="color"/>
-    <attr name="esmNormalButtonBaseColor" format="color"/>
-    <attr name="esmNormalButtonTextColorMode" format="enum">
-        <enum name="light" value="0"/>
-        <enum name="dark" value="1"/>
-        <enum name="palette" value="2"/>
-        <enum name="auto" value="3"/>
-    </attr>
-    <attr name="esmAlertButtonBaseColor" format="color"/>
-    <attr name="esmAlertButtonTextColorMode" format="color">
-        <enum name="light" value="0"/>
-        <enum name="dark" value="1"/>
-        <enum name="palette" value="2"/>
-        <enum name="auto" value="3"/>
-    </attr>
-
     <color name="EsMaterial.Base.WindowBackground">@color/EsMaterial.Grey.50</color>
 
     <!-- Base -->
@@ -95,12 +84,6 @@
         <item name="esmNavigationDrawerTextColor">@color/EsMaterial.Grey.700</item>
         <item name="esmSeparatorBarColor">@color/EsMaterial.Grey.300</item>
         <item name="esmWindowBackgroundColorDark">@color/EsMaterial.Grey.300</item>
-
-        <!-- Button -->
-        <item name="esmNormalButtonBaseColor">@color/EsMaterial.Grey.400</item>
-        <item name="esmNormalButtonTextColorMode">dark</item>
-        <item name="esmAlertButtonBaseColor">@color/EsMaterial.Red.400</item>
-        <item name="esmAlertButtonTextColorMode">light</item>
     </style>
 
     <style name="EsMaterial.Transparent" parent="EsMaterial.Theme.Base">

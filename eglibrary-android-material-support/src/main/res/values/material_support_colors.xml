@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <color name="EsMaterial.Base.Dark">@color/EsMaterial.Grey.800</color>
+    <color name="EsMaterial.Base.Light">@color/EsMaterial.Grey.100</color>
+
     <!-- Grey -->
     <color name="EsMaterial.Grey.0">#FFFFFF</color>
     <color name="EsMaterial.Grey.50">#FAFAFA</color>
@@ -15,6 +19,7 @@
     <color name="EsMaterial.Grey.750">#515151</color>
     <color name="EsMaterial.Grey.800">#424242</color>
     <color name="EsMaterial.Grey.900">#212121</color>
+    <color name="EsMaterial.Grey.Theme">@color/EsMaterial.Grey.450</color>
 
     <!-- Red -->
     <color name="EsMaterial.Red.50">#FFEBEE</color>
@@ -27,6 +32,7 @@
     <color name="EsMaterial.Red.700">#D32F2F</color>
     <color name="EsMaterial.Red.800">#C62828</color>
     <color name="EsMaterial.Red.900">#B71C1C</color>
+    <color name="EsMaterial.Red.Theme">@color/EsMaterial.Red.400</color>
 
     <!-- Green -->
     <color name="EsMaterial.Green.50">#E8F5E9</color>
@@ -39,6 +45,7 @@
     <color name="EsMaterial.Green.700">#388E3C</color>
     <color name="EsMaterial.Green.800">#2E7D32</color>
     <color name="EsMaterial.Green.900">#1B5E20</color>
+    <color name="EsMaterial.Green.Theme">@color/EsMaterial.Green.400</color>
 
     <!-- LightGreen -->
     <color name="EsMaterial.LightGreen.50">#F1F8E9</color>
@@ -51,6 +58,7 @@
     <color name="EsMaterial.LightGreen.700">#689F38</color>
     <color name="EsMaterial.LightGreen.800">#558B2F</color>
     <color name="EsMaterial.LightGreen.900">#33691E</color>
+    <color name="EsMaterial.LightGreen.Theme">@color/EsMaterial.LightGreen.400</color>
 
     <!-- Blue -->
     <color name="EsMaterial.Blue.50">#E3F2FD</color>
@@ -63,6 +71,7 @@
     <color name="EsMaterial.Blue.700">#1976D2</color>
     <color name="EsMaterial.Blue.800">#1565C0</color>
     <color name="EsMaterial.Blue.900">#0D47A1</color>
+    <color name="EsMaterial.Blue.Theme">@color/EsMaterial.Blue.400</color>
 
     <color name="EsMaterial.Blue.Button.Disabled">@color/EsMaterial.Blue.400</color>
     <color name="EsMaterial.Blue.Button.Normal">@color/EsMaterial.Blue.500</color>

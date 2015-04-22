@@ -42,7 +42,7 @@ public class MaterialButton extends AppCompatButton {
     }
 
     private void initMaterialButton(Context context, AttributeSet attrs, int defStyleAttr) {
-        if (attrs == null) {
+        if (isInEditMode()) {
             return;
         }
 
@@ -51,15 +51,19 @@ public class MaterialButton extends AppCompatButton {
 
             Resources res = getResources();
             LogUtil.log("has attribute");
-            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MaterialButton);
-            int baseColor = typedArray.getColor(R.styleable.MaterialButton_buttonBaseColor, res.getColor(R.color.EsMaterial_Grey_500));
+            TypedArray typedArray = context.obtainStyledAttributes(attrs, new int[]{
+                    R.attr.esmButtonBaseColor,
+                    R.attr.esmButtonHighlightColorWeight,
+                    R.attr.esmButtonTextColorMode,
+            });
+            int baseColor = typedArray.getColor(0, res.getColor(R.color.EsMaterial_Grey_500));
 
             // ボタンそのものの背景指定
             {
                 int highlight = baseColor;
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                     // Kitkat以下はRippleエフェクトが指定できないため、色を変える
-                    float weight = typedArray.getFloat(R.styleable.MaterialButton_buttonHighlightWeight, 0.9f);
+                    float weight = typedArray.getFloat(1, 0.9f);
                     int a = Color.alpha(baseColor);
                     int r = (int) (weight * Color.red(baseColor));
                     int g = (int) (weight * Color.green(baseColor));
@@ -75,7 +79,7 @@ public class MaterialButton extends AppCompatButton {
             {
                 int textBaseColor = 0;
                 int textHighlightColor = 0;
-                int colorMode = typedArray.getInt(R.styleable.MaterialButton_buttonTextColorMode, TEXTCOLOR_MODE_AUTO);
+                int colorMode = typedArray.getInt(2, TEXTCOLOR_MODE_AUTO);
 
                 if (colorMode == TEXTCOLOR_MODE_AUTO || colorMode == TEXTCOLOR_MODE_PALETTE) {
                     // Paletteから色を指定する
