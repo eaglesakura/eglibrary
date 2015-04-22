@@ -4,7 +4,6 @@
         <attr name="emptyText" format="string"/>
     </declare-styleable>
 
-
     <declare-styleable name="MaterialButton">
         <attr name="buttonBaseColor" format="color"/>
         <attr name="buttonHighlightWeight" format="float"/>

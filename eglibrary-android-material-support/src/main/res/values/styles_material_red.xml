@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="EsMaterial.Red.50">#FFEBEE</color>
-    <color name="EsMaterial.Red.100">#FFCDD2</color>
-    <color name="EsMaterial.Red.200">#EF9A9A</color>
-    <color name="EsMaterial.Red.300">#E57373</color>
-    <color name="EsMaterial.Red.400">#EF5350</color>
-    <color name="EsMaterial.Red.500">#F44336</color>
-    <color name="EsMaterial.Red.600">#E53935</color>
-    <color name="EsMaterial.Red.700">#D32F2F</color>
-    <color name="EsMaterial.Red.800">#C62828</color>
-    <color name="EsMaterial.Red.900">#B71C1C</color>
-
     <color name="EsMaterial.Red.Button.Disabled">@color/EsMaterial.Red.400</color>
     <color name="EsMaterial.Red.Button.Normal">@color/EsMaterial.Red.500</color>
     <color name="EsMaterial.Red.Button.Focused">@color/EsMaterial.Red.500</color>
@@ -21,10 +10,6 @@
     <style name="EsMaterial.Red.DrawerArrow" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="color">@color/EsMaterial.Red.50</item>
     </style>
-
-    <!--<style name="EsMaterial.Red.ToolbarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">-->
-    <!--<item name="android:textColorPrimary">@color/EsMaterial.Red.50</item>-->
-    <!--</style>-->
 
     <style name="EsMaterial.Button.Red" parent="EsMaterial.Button.Base">
         <item name="android:background">@drawable/esm_button_red</item>

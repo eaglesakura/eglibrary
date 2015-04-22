@@ -3,6 +3,7 @@ package com.eaglesakura.material.widget;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v7.app.AppCompatDialog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -14,16 +15,16 @@ import com.eaglesakura.material.R;
 /**
  * Material Design support Dialog
  */
-public class MaterialDialogBase extends Dialog {
+public class MaterialDialogBase extends AppCompatDialog {
 
     protected View root;
 
     public MaterialDialogBase(Context context) {
         super(context);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setBackgroundDrawable(new ColorDrawable(0));
-        getWindow().setFlags(0, WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        getWindow().setBackgroundDrawable(new ColorDrawable(0));
+//        getWindow().setFlags(0, WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
         root = View.inflate(context, R.layout.esm_material_dialog, null);
         setContentView(root);

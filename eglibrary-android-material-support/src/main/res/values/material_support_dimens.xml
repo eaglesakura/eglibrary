@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="EsMaterial.Font.SmallSmall">12sp</dimen>
+    <dimen name="EsMaterial.Font.Small">14sp</dimen>
+    <dimen name="EsMaterial.Font.Medium">16sp</dimen>
+    <dimen name="EsMaterial.Font.Large">20sp</dimen>
+    <dimen name="EsMaterial.Font.Title">28sp</dimen>
+    <dimen name="EsMaterial.Font.LargeLarge">34sp</dimen>
+
+    <dimen name="EsMaterial.Separator.Height">6dp</dimen>
+    <dimen name="EsMaterial.Separator.Bar.Height">1dp</dimen>
+    <dimen name="EsMaterial.Separator.Bar.SideMargin">4dp</dimen>
+    <dimen name="EsMaterial.Navigation.Icon.Size">32dp</dimen>
+    <dimen name="EsMaterial.Navigation.MinHeight">48dp</dimen>
+
+    <dimen name="EsMaterial.Header.Icon.Size">24dp</dimen>
+
+    <color name="EsMaterial.Button.Shadow">#7F000000</color>
+    <dimen name="EsMaterial.Button.ShadowRadius">2dp</dimen>
+    <dimen name="EsMaterial.Button.Margin">6dp</dimen>
+    <dimen name="EsMaterial.Button.ExternalMarginHorizontal">4dp</dimen>
+    <dimen name="EsMaterial.Button.ExternalMarginVertical">6dp</dimen>
+    <dimen name="EsMaterial.Button.InternalMarginHorizontal">8dp</dimen>
+    <dimen name="EsMaterial.Button.MinWidth">64dp</dimen>
+    <dimen name="EsMaterial.Button.MinHeight">48dp</dimen>
+
+</resources>
