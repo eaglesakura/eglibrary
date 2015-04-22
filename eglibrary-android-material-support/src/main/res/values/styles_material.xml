@@ -43,7 +43,7 @@
         <item name="android:activityCloseExitAnimation">@anim/fragment_fromlower_upper_exit</item>
     </style>
 
-    <style name="EsMaterial.Base" parent="Theme.AppCompat.Light">
+    <style name="EsMaterial.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- 上から下に登場するAnimation -->
         <!--<item name="android:windowAnimationStyle">@style/EsMaterial.Animation.Activity</item>-->
 
