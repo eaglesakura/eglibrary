@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.graphics.ColorUtils;
@@ -11,7 +12,9 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.Gravity;
 
+import com.eaglesakura.android.graphics.Graphics;
 import com.eaglesakura.material.R;
 import com.eaglesakura.util.LogUtil;
 
@@ -26,6 +29,7 @@ public class MaterialButton extends AppCompatButton {
     public static final int TEXTCOLOR_MODE_PALETTE = 2;
     public static final int TEXTCOLOR_MODE_AUTO = 3;
 
+    private int styleBaseColor;
 
     public MaterialButton(Context context) {
         super(context);
@@ -44,6 +48,7 @@ public class MaterialButton extends AppCompatButton {
 
     private void initMaterialButton(Context context, AttributeSet attrs, int defStyleAttr) {
         if (isInEditMode()) {
+            setGravity(Gravity.CENTER);
             return;
         }
 
@@ -57,6 +62,7 @@ public class MaterialButton extends AppCompatButton {
                     R.attr.esmButtonTextColorMode,
             });
             int baseColor = typedArray.getColor(0, res.getColor(R.color.EsMaterial_Grey_500));
+            this.styleBaseColor = baseColor;
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 // Kitkatは独自に色合いを変えてあげる必要がある
                 float weight = typedArray.getFloat(1, 0.9f);
@@ -110,6 +116,18 @@ public class MaterialButton extends AppCompatButton {
                 setTextColor(createButtonColorStateList(context, textBaseColor, textHighlightColor));
             }
         }
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        if (isInEditMode()) {
+            Graphics g = new Graphics(canvas);
+            g.setColorARGB(0xFF00FFFF);
+            g.fillRoundRect(0, 0, getWidth(), getHeight(), (float) Math.min(getWidth(), getHeight()) / 10.0f);
+            g.setColorARGB(0xFFFF0000);
+            g.drawRoundRect(0, 0, getWidth(), getHeight(), (float) Math.min(getWidth(), getHeight()) / 10.0f);
+        }
+        super.onDraw(canvas);
     }
 
     static final int[] DISABLED_STATE_SET = new int[]{-android.R.attr.state_enabled};
