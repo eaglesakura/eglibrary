@@ -228,7 +228,7 @@ public class NetworkConnector {
      * @return
      */
     protected <T> NetworkResult<T> connect(final String url, final RequestParser<T> parser, final int volleyMethod, final long cacheTimeoutMs, final Map<String, String> params) {
-        if (!url.startsWith("http")) {
+        if (url == null || !url.startsWith("http")) {
             return newUrlErrorResult(url);
         }
 
