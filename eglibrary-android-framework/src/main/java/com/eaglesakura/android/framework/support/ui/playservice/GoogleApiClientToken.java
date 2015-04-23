@@ -96,18 +96,33 @@ public class GoogleApiClientToken {
         }
     }
 
-    public void registerConnectionFailedListener(GoogleApiClient.OnConnectionFailedListener listener) {
-        client.unregisterConnectionFailedListener(listener);
-        client.registerConnectionFailedListener(listener);
+    public boolean registerConnectionFailedListener(GoogleApiClient.OnConnectionFailedListener listener) {
+        if (client != null) {
+            client.unregisterConnectionFailedListener(listener);
+            client.registerConnectionFailedListener(listener);
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public void registerConnectionCallbacks(GoogleApiClient.ConnectionCallbacks callbacks) {
-        client.unregisterConnectionCallbacks(callbacks);
-        client.registerConnectionCallbacks(callbacks);
+    public boolean registerConnectionCallbacks(GoogleApiClient.ConnectionCallbacks callbacks) {
+        if (client != null) {
+            client.unregisterConnectionCallbacks(callbacks);
+            client.registerConnectionCallbacks(callbacks);
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public void unregisterConnectionCallbacks(GoogleApiClient.ConnectionCallbacks callbacks) {
-        client.unregisterConnectionCallbacks(callbacks);
+    public boolean unregisterConnectionCallbacks(GoogleApiClient.ConnectionCallbacks callbacks) {
+        if (client != null) {
+            client.unregisterConnectionCallbacks(callbacks);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
