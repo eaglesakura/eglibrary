@@ -10,6 +10,7 @@ import android.support.v4.graphics.ColorUtils;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 
 import com.eaglesakura.material.R;
 import com.eaglesakura.util.LogUtil;
@@ -51,16 +52,29 @@ public class MaterialButton extends AppCompatButton {
             Resources res = getResources();
             LogUtil.log("has attribute");
             TypedArray typedArray = context.obtainStyledAttributes(attrs, new int[]{
-                    R.attr.colorButtonNormal,
+                    R.attr.esmButtonBaseColor,
+                    R.attr.esmButtonHighlightColorWeight,
                     R.attr.esmButtonTextColorMode,
             });
             int baseColor = typedArray.getColor(0, res.getColor(R.color.EsMaterial_Grey_500));
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                // Kitkatは独自に色合いを変えてあげる必要がある
+                float weight = typedArray.getFloat(1, 0.9f);
+                int a = (int) (weight * Color.alpha(baseColor));
+                int r = (int) (weight * Color.red(baseColor));
+                int g = (int) (weight * Color.green(baseColor));
+                int b = (int) (weight * Color.blue(baseColor));
+
+                setSupportBackgroundTintList(createButtonColorStateList(context, baseColor, Color.argb(a, r, g, b)));
+            } else {
+                setSupportBackgroundTintList(createButtonColorStateList(context, baseColor, baseColor));
+            }
 
             // base colorから各種TextColorを生成する
             {
                 int textBaseColor = 0;
                 int textHighlightColor = 0;
-                int colorMode = typedArray.getInt(1, TEXTCOLOR_MODE_AUTO);
+                int colorMode = typedArray.getInt(2, TEXTCOLOR_MODE_AUTO);
 
                 if (colorMode == TEXTCOLOR_MODE_AUTO || colorMode == TEXTCOLOR_MODE_PALETTE) {
                     // Paletteから色を指定する

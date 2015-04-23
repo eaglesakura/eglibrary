@@ -46,6 +46,8 @@
 
         <!-- Button Color -->
         <item name="colorButtonNormal">@color/EsMaterial.Grey.Theme</item>
+        <item name="esmButtonBaseColor">@color/EsMaterial.Grey.Theme</item>
+        <item name="esmButtonTextColorMode">dark</item>
     </style>
 
 

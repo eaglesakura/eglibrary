@@ -9,27 +9,32 @@
 
     <style name="EsMaterial.Theme.Button.Grey" parent="EsMaterial.Base">
         <item name="colorButtonNormal">@color/EsMaterial.Grey.Theme</item>
+        <item name="esmButtonBaseColor">@color/EsMaterial.Grey.Theme</item>
         <item name="esmButtonTextColorMode">light</item>
     </style>
 
     <style name="EsMaterial.Theme.Button.Red" parent="EsMaterial.Base">
         <item name="colorButtonNormal">@color/EsMaterial.Red.Theme</item>
+        <item name="esmButtonBaseColor">@color/EsMaterial.Red.Theme</item>
         <item name="esmButtonTextColorMode">light</item>
     </style>
 
     <style name="EsMaterial.Theme.Button.LightGreen" parent="EsMaterial.Base">
         <item name="colorButtonNormal">@color/EsMaterial.LightGreen.Theme</item>
+        <item name="esmButtonBaseColor">@color/EsMaterial.LightGreen.Theme</item>
         <item name="esmButtonTextColorMode">light</item>
     </style>
 
 
     <style name="EsMaterial.Theme.Button.Green" parent="EsMaterial.Base">
         <item name="colorButtonNormal">@color/EsMaterial.Green.Theme</item>
+        <item name="esmButtonBaseColor">@color/EsMaterial.Green.Theme</item>
         <item name="esmButtonTextColorMode">light</item>
     </style>
 
     <style name="EsMaterial.Theme.Button.Blue" parent="EsMaterial.Base">
         <item name="colorButtonNormal">@color/EsMaterial.Blue.Theme</item>
+        <item name="esmButtonBaseColor">@color/EsMaterial.Blue.Theme</item>
         <item name="esmButtonTextColorMode">light</item>
     </style>
 
