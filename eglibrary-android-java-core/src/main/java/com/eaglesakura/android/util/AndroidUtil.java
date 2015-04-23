@@ -71,6 +71,10 @@ public class AndroidUtil {
         return Build.VERSION.SDK_INT >= 14;
     }
 
+    public static boolean isSupportedTransitionAnimation() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
+
     /**
      * 自分自身がTop Applicationとして起動している場合はtrue
      *
