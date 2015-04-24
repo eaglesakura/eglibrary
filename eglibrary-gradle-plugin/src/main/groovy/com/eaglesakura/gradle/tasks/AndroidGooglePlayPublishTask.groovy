@@ -1,16 +1,21 @@
 package com.eaglesakura.gradle.tasks
 
-import com.eaglesakura.io.IOUtil
+import com.eaglesakura.gradle.android.googleplay.GooglePlayConsoleManager
 import com.eaglesakura.tool.log.Logger
-import com.eaglesakura.util.StringUtil
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
+/**
+ * Google PlayへのアップロードをサポートするServiceを提供する
+ *
+ * アップロードは必ずServiceAccountを通して行う。
+ */
 public class AndroidGooglePlayPublishTask extends DefaultTask {
 
     enum Track {
         alpha,
         beta,
+        production,
         rollout;
     }
 
@@ -21,45 +26,40 @@ public class AndroidGooglePlayPublishTask extends DefaultTask {
 
     String applicationId;
 
-    String applicationName;
-
     String serviceAccountEmail;
 
     Track track;
 
-    private void validate() {
-        if (!IOUtil.isFile(p12)) {
-            throw new IllegalStateException("task.p12 File Error")
-        }
+    /**
+     * listings
+     *   * jp/title.txt
+     *   * jp/fullDescription.txt
+     *   * jp/shortDescription.txt
+     */
+    File listings;
 
-        if (!IOUtil.isFile(apk)) {
-            throw new IllegalStateException("task.apk File Error");
-        }
+    protected GooglePlayConsoleManager googlePlayConsoleManager;
 
-        if (StringUtil.isEmpty(applicationId)) {
-            throw new IllegalStateException("task.applicationId Error");
-        }
+    protected void onGooglePayTask() {
+        googlePlayConsoleManager.autholize();
 
-        if (StringUtil.isEmpty(applicationName)) {
-            throw new IllegalStateException("task.applicationName Error");
-        }
-
-        if (StringUtil.isEmpty(serviceAccountEmail)) {
-            throw new IllegalStateException("task.serviceAccountEmail Error");
-        }
-
-        if (track == null) {
-            throw new IllegalStateException("task.track Error");
-        }
+        googlePlayConsoleManager.updateListings(listings);
+//        googlePlayConsoleManager.uploadApk();
     }
 
     @TaskAction
     def onExecute() {
-        validate()
-
-        Logger.out "Deploy        : ${applicationName} / ${applicationId}"
+        Logger.out "applicationId : ${applicationId}"
         Logger.out "track         : ${track.name()}"
         Logger.out "apk           : ${apk.absolutePath}"
         Logger.out "account email : ${serviceAccountEmail}"
+
+        googlePlayConsoleManager = new GooglePlayConsoleManager();
+        googlePlayConsoleManager.p12 = p12;
+        googlePlayConsoleManager.apk = apk;
+        googlePlayConsoleManager.applicationId = applicationId;
+        googlePlayConsoleManager.serviceAccountEmail = serviceAccountEmail;
+
+        onGooglePayTask();
     }
 }

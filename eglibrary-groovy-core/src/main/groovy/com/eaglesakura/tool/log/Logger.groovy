@@ -54,6 +54,10 @@ public class Logger {
         updateIndentText();
     }
 
+    public static void out(String fmt, Object... formats) {
+        out(String.format(fmt, formats));
+    }
+
     public static void out(String message) {
         if (indent > outLogLevel) {
             return;

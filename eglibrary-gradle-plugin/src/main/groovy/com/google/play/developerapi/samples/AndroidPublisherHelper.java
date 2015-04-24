@@ -35,8 +35,6 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 
-import javax.annotation.Nullable;
-
 /**
  * Helper class to initialize the publisher APIs client library.
  * <p>
@@ -52,10 +50,8 @@ public class AndroidPublisherHelper {
 
     static final String MIME_TYPE_APK = "application/vnd.android.package-archive";
 
-    /**
-     * Path to the private key file (only used for Service Account auth).
-     */
-    private static final String SRC_RESOURCES_KEY_P12 = "src/resources/key.p12";
+    static final String MIME_TYPE_PNG = "image/png";
+
     /**
      * Global instance of the JSON factory.
      */
@@ -67,7 +63,7 @@ public class AndroidPublisherHelper {
     private static HttpTransport HTTP_TRANSPORT;
 
 
-    private static Credential authorizeWithServiceAccount(String serviceAccountEmail)
+    private static Credential authorizeWithServiceAccount(String serviceAccountEmail, File p12)
             throws GeneralSecurityException, IOException {
         log.info(String.format("Authorizing using Service Account: %s", serviceAccountEmail));
 
@@ -78,7 +74,7 @@ public class AndroidPublisherHelper {
                 .setServiceAccountId(serviceAccountEmail)
                 .setServiceAccountScopes(
                         Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER))
-                .setServiceAccountPrivateKeyFromP12File(new File(SRC_RESOURCES_KEY_P12))
+                .setServiceAccountPrivateKeyFromP12File(p12)
                 .build();
         return credential;
     }
@@ -95,8 +91,11 @@ public class AndroidPublisherHelper {
      * @throws GeneralSecurityException
      * @throws IOException
      */
-    protected static AndroidPublisher init(String applicationName,
-                                           @Nullable String serviceAccountEmail) throws IOException, GeneralSecurityException {
+    protected static AndroidPublisher init(
+            String applicationName,
+            String serviceAccountEmail,
+            File p12
+    ) throws IOException, GeneralSecurityException {
         if (Strings.isNullOrEmpty(applicationName) || StringUtil.isEmpty(serviceAccountEmail)) {
             throw new IllegalStateException("applicationName cannot be null or empty!");
         }
@@ -104,7 +103,7 @@ public class AndroidPublisherHelper {
 
         // Authorization.
         newTrustedTransport();
-        Credential credential = authorizeWithServiceAccount(serviceAccountEmail);
+        Credential credential = authorizeWithServiceAccount(serviceAccountEmail, p12);
 
         // Set up and return API client.
         return new AndroidPublisher.Builder(
