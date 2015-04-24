@@ -23,8 +23,11 @@ allprojects {
 ext {
     /**
      * Deploy Version
+     *
+     * 0.2.2 : bugfix
+     * 0.2.3 : update android support-lib 22.1.0
      */
-    EGLIBRARY_ARTIFACT_VERSION = "0.2.2"
+    EGLIBRARY_ARTIFACT_VERSION = "0.2.3"
 }
 
 void rsyncJavadoc(String projectName) {
