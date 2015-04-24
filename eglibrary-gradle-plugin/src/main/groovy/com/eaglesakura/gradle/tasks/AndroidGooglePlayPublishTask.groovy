@@ -1,6 +1,7 @@
 package com.eaglesakura.gradle.tasks
 
 import com.eaglesakura.gradle.android.googleplay.GooglePlayConsoleManager
+import com.eaglesakura.io.IOUtil
 import com.eaglesakura.tool.log.Logger
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
@@ -43,14 +44,20 @@ public class AndroidGooglePlayPublishTask extends DefaultTask {
     protected void onGooglePayTask() {
         googlePlayConsoleManager.autholize();
 
-        googlePlayConsoleManager.updateListings(listings);
-//        googlePlayConsoleManager.uploadApk();
+        if (track != null) {
+            googlePlayConsoleManager.uploadApk(track.name());
+        }
+
+        if (IOUtil.isDirectory(listings)) {
+            googlePlayConsoleManager.updateListings(listings);
+        }
     }
 
     @TaskAction
     def onExecute() {
         Logger.out "applicationId : ${applicationId}"
-        Logger.out "track         : ${track.name()}"
+        Logger.out "track         : ${track}"
+        Logger.out "listings      : ${listings}"
         Logger.out "apk           : ${apk.absolutePath}"
         Logger.out "account email : ${serviceAccountEmail}"
 
