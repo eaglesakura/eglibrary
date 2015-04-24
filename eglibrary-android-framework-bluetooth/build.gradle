@@ -43,7 +43,7 @@ task sourcesJar(type: Jar) {
 }
 
 android.libraryVariants.all { variant ->
-    if (!"release".equals(variant.name)) {
+    if (!"release".equals(variant.name) || "".equals(EGLIBRARY_ARTIFACT_VERSION)) {
         return;
     }
 
