@@ -9,6 +9,10 @@ public class AndroidGooglePlayPublishTaskTest extends GroovyTestCase {
         def task = (AndroidGooglePlayPublishTask) project.task("googlePlayPublish", type: AndroidGooglePlayPublishTask);
 
         def rootDir = new File(".").absolutePath;
+        if (!new File(rootDir, "testfile").directory) {
+            // not setup
+            return;
+        }
 
         task.p12 = new File(rootDir, "testfile/test.p12");
         task.apk = new File(rootDir, "testfile/test.apk");

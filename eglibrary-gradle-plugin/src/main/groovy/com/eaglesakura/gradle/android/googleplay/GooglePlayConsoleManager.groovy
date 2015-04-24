@@ -125,7 +125,7 @@ public class GooglePlayConsoleManager {
             }
 
 
-            Logger.out("Created new US app listing with title: %s", updatedListing.getTitle());
+            Logger.out("Update ${lang.name} listing with title: %s", updatedListing.getTitle());
         }
 
         // Commit changes for edit.
