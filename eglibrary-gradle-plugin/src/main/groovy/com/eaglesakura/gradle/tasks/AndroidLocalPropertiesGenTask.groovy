@@ -6,7 +6,10 @@ import org.gradle.api.tasks.TaskAction
 
 /**
  * Androidのlocal.propを出力するためのUtilタスク
+ *
+ * 現在のGradle Pluginでは不要そうなので非推奨
  */
+@Deprecated
 public class AndroidLocalPropertiesGenTask extends DefaultTask {
 
     def ANDROID_SDK_HOME = System.getenv("ANDROID_HOME");

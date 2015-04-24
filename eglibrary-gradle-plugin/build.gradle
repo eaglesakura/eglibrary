@@ -14,17 +14,12 @@ buildscript {
 
     dependencies {
         classpath project(':eglibrary-groovy-core')
-
-        // greenDao
-        classpath "de.greenrobot:greendao-generator:1.3.+"
     }
 }
 
 repositories {
     mavenCentral()
-    maven {
-        url "http://eaglesakura.github.io/maven/"
-    }
+    maven { url "http://eaglesakura.github.io/maven/" }
 }
 
 dependencies {
@@ -34,6 +29,11 @@ dependencies {
 
     compile project(':eglibrary-groovy-core')
     compile "de.greenrobot:greendao-generator:1.3.+"
+
+
+    // GooglePlay Deploy
+    compile "com.google.apis:google-api-services-androidpublisher:v2-rev18-1.20.0"
+    compile "com.google.oauth-client:google-oauth-client-java6:1.19.0"
 }
 
 apply plugin: 'maven'
@@ -82,9 +82,9 @@ uploadArchives {
                 scope = 'compile'
             }
             dependency {
-                groupId = 'de.greenrobot'
-                artifactId = 'greendao-generator'
-                version = '1.3.+'
+                groupId = 'com.google.apis'
+                artifactId = 'google-api-services-androidpublisher'
+                version = 'v2-rev18-1.20.0'
                 scope = 'compile'
             }
         }

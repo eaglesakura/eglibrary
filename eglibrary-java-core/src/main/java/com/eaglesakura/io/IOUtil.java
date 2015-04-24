@@ -705,4 +705,8 @@ public class IOUtil {
 
         }
     }
+
+    public static boolean isFile(File file) {
+        return file != null && file.isFile();
+    }
 }
