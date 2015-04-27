@@ -26,11 +26,18 @@ public class AndroidGooglePlayPublishTask extends DefaultTask {
 
     /**
      * listings
-     *   * jp/title.txt
-     *   * jp/fullDescription.txt
-     *   * jp/shortDescription.txt
+     *   * ja-JP/title.txt
+     *   * ja-JP/fullDescription.txt
+     *   * ja-JP/shortDescription.txt
      */
     File listings;
+
+    /**
+     * apk update Listings
+     *  * ja-JP/apk.txt
+     */
+    File apkListings;
+
 
     protected GooglePlayConsoleManager googlePlayConsoleManager;
 
@@ -38,7 +45,7 @@ public class AndroidGooglePlayPublishTask extends DefaultTask {
         googlePlayConsoleManager.autholize();
 
         if (!StringUtil.isEmpty(track)) {
-            googlePlayConsoleManager.uploadApk(track);
+            googlePlayConsoleManager.uploadApk(track, apkListings);
         }
 
         if (IOUtil.isDirectory(listings)) {
@@ -52,6 +59,7 @@ public class AndroidGooglePlayPublishTask extends DefaultTask {
         Logger.out "track               : ${track}"
         Logger.out "listings            : ${listings}"
         Logger.out "apk                 : ${apk}"
+        Logger.out "apklistings         : ${apkListings}"
         Logger.out "serviceAccountEmail : ${serviceAccountEmail}"
 
         googlePlayConsoleManager = new GooglePlayConsoleManager();
