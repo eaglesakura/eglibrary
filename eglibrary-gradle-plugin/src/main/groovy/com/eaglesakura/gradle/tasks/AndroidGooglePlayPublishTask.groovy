@@ -3,6 +3,7 @@ package com.eaglesakura.gradle.tasks
 import com.eaglesakura.gradle.android.googleplay.GooglePlayConsoleManager
 import com.eaglesakura.io.IOUtil
 import com.eaglesakura.tool.log.Logger
+import com.eaglesakura.util.StringUtil
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
@@ -13,14 +14,6 @@ import org.gradle.api.tasks.TaskAction
  */
 public class AndroidGooglePlayPublishTask extends DefaultTask {
 
-    enum Track {
-        alpha,
-        beta,
-        production,
-        rollout;
-    }
-
-
     File p12;
 
     File apk;
@@ -29,7 +22,7 @@ public class AndroidGooglePlayPublishTask extends DefaultTask {
 
     String serviceAccountEmail;
 
-    Track track;
+    String track;
 
     /**
      * listings
@@ -44,8 +37,8 @@ public class AndroidGooglePlayPublishTask extends DefaultTask {
     protected void onGooglePayTask() {
         googlePlayConsoleManager.autholize();
 
-        if (track != null) {
-            googlePlayConsoleManager.uploadApk(track.name());
+        if (!StringUtil.isEmpty(track)) {
+            googlePlayConsoleManager.uploadApk(track);
         }
 
         if (IOUtil.isDirectory(listings)) {
@@ -55,11 +48,11 @@ public class AndroidGooglePlayPublishTask extends DefaultTask {
 
     @TaskAction
     def onExecute() {
-        Logger.out "applicationId : ${applicationId}"
-        Logger.out "track         : ${track}"
-        Logger.out "listings      : ${listings}"
-        Logger.out "apk           : ${apk.absolutePath}"
-        Logger.out "account email : ${serviceAccountEmail}"
+        Logger.out "applicationId       : ${applicationId}"
+        Logger.out "track               : ${track}"
+        Logger.out "listings            : ${listings}"
+        Logger.out "apk                 : ${apk}"
+        Logger.out "serviceAccountEmail : ${serviceAccountEmail}"
 
         googlePlayConsoleManager = new GooglePlayConsoleManager();
         googlePlayConsoleManager.p12 = p12;
