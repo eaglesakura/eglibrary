@@ -13,7 +13,7 @@ public class Logger {
 
     private static String indentText = "";
 
-    public static void initialize() {
+    static {
         // ログ出力を迂回
         LogUtil.setLogger(new LogUtil.Logger() {
             public void i(String msg) {
@@ -24,6 +24,13 @@ public class Logger {
                 Logger.out(msg);
             }
         });
+    }
+
+    /**
+     * このメソッドは現在何も行わない
+     */
+    @Deprecated
+    public static void initialize() {
     }
 
     private static void updateIndentText() {
@@ -45,6 +52,10 @@ public class Logger {
         }
 
         updateIndentText();
+    }
+
+    public static void out(String fmt, Object... formats) {
+        out(String.format(fmt, formats));
     }
 
     public static void out(String message) {

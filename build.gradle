@@ -26,8 +26,9 @@ ext {
      *
      * 0.2.2 : bugfix
      * 0.2.3 : update android support-lib 22.1.0
+     * 0.2.4 : support google play publish
      */
-    EGLIBRARY_ARTIFACT_VERSION = "0.2.3"
+    EGLIBRARY_ARTIFACT_VERSION = "0.2.4"
 }
 
 void rsyncJavadoc(String projectName) {

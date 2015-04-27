@@ -1,1 +1,4 @@
 eglibrary/
+testfile/
+*.apk
+*.p12

@@ -21,7 +21,7 @@ public class AndroidSupportPlugin implements Plugin<Project> {
         {
             // build number
             def BUILD_VERSION_CODE = System.getenv("BUILD_NUMBER");
-            def BUILD_VERSION_NAME = "1.0.${BUILD_VERSION_CODE}.jks";
+            def BUILD_VERSION_NAME = "ci.${BUILD_VERSION_CODE}";
             def BUILD_DATE = System.getenv("BUILD_ID");
 
             // Jenkins以外から実行されている場合、適当な設定を行う
@@ -39,11 +39,11 @@ public class AndroidSupportPlugin implements Plugin<Project> {
             }
         }
 
-        println("target.eglibrary.ci.releaseDir(${target.eglibrary.ci.releaseDir})")
-        println("target.eglibrary.ci.ciRunning(${target.eglibrary.ci.ciRunning})")
-        println("target.eglibrary.ci.buildVersionCode(${target.eglibrary.ci.buildVersionCode})")
-        println("target.eglibrary.ci.buildDate(${target.eglibrary.ci.buildDate})")
-        println("target.eglibrary.ci.buildVersionName(${target.eglibrary.ci.buildVersionName})")
+//        println("target.eglibrary.ci.releaseDir(${target.eglibrary.ci.releaseDir})")
+//        println("target.eglibrary.ci.ciRunning(${target.eglibrary.ci.ciRunning})")
+//        println("target.eglibrary.ci.buildVersionCode(${target.eglibrary.ci.buildVersionCode})")
+//        println("target.eglibrary.ci.buildDate(${target.eglibrary.ci.buildDate})")
+//        println("target.eglibrary.ci.buildVersionName(${target.eglibrary.ci.buildVersionName})")
 
         // 規定のタスクを追加
         target.task('genLocalProperties', type: AndroidLocalPropertiesGenTask)
@@ -66,7 +66,7 @@ public class AndroidSupportPlugin implements Plugin<Project> {
         File releaseDir = new File("ci-release").absoluteFile;
 
         /**
-         * CI上で実行されていればtrue
+         * CI(Jenkins)上で実行されていればtrue
          *
          * それ以外ならばfalseとなる
          */

@@ -705,4 +705,12 @@ public class IOUtil {
 
         }
     }
+
+    public static boolean isFile(File file) {
+        return file != null && file.isFile();
+    }
+
+    public static boolean isDirectory(File file) {
+        return file != null && file.isDirectory();
+    }
 }
