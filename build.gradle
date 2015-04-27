@@ -8,7 +8,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:1.1.0'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
-        classpath "com.eaglesakura:eglibrary-gradle-plugin:0.1.21"
+        classpath "com.eaglesakura:eglibrary-gradle-plugin:0.2.4"
         classpath 'com.eaglesakura:joint-connector-plugin:0.1.13'
     }
 }
