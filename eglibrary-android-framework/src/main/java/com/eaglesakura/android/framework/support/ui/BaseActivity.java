@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 
 import com.eaglesakura.android.framework.R;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiClientToken;
@@ -53,6 +54,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         super.onCreate(savedInstanceState);
 
         edgeColorToPrimaryColor();
+    }
+
+    public <T extends View> T findViewById(Class<T> clazz, int id) {
+        return (T) findViewById(id);
     }
 
 
