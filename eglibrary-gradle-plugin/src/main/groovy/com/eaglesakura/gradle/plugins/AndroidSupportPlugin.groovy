@@ -18,31 +18,27 @@ public class AndroidSupportPlugin implements Plugin<Project> {
 //        println("AndroidSupportPlugin apply!")
         target.extensions.create("eglibrary", ExtensionEglibrary);
 
-        CI_SETUP:
-        {
-            // Jenkins以外から実行されている場合、適当な設定を行う
-            if (!StringUtil.isEmpty(System.getenv("BUILD_NUMBER")) {
-                println("Build Jenkins");
-                target.eglibrary.ci.ciRunning = true;
-                target.eglibrary.ci.buildVersionCode = System.getenv("BUILD_NUMBER");
-                target.eglibrary.ci.buildDate = System.getenv("BUILD_ID");
-                target.eglibrary.ci.buildVersionName = "ci.${target.eglibrary.ci.buildVersionCode}";
-            } else if (!StringUtil.isEmpty(StringUtil.isEmpty(System.getenv("BUILD_NUMBER"))) {
-                println("Build CircleCI");
-                target.eglibrary.ci.ciRunning = true;
-                target.eglibrary.ci.buildVersionCode = System.getenv("CIRCLE_BUILD_NUM");
-                target.eglibrary.ci.buildDate = new Date().toLocaleString();
-                target.eglibrary.ci.buildVersionName = "ci.${target.eglibrary.ci.buildVersionCode}";
-            } else {
-                println("not CI");
-                target.eglibrary.ci.ciRunning = false;
-                target.eglibrary.ci.buildVersionCode = "1";
-                target.eglibrary.ci.buildDate = new Date().toLocaleString();
-                target.eglibrary.ci.buildVersionName = "build.${System.getenv("USER")}.${target.eglibrary.ci.buildDate}";
+        // Jenkins以外から実行されている場合、適当な設定を行う
+        if (!StringUtil.isEmpty(System.getenv("BUILD_NUMBER"))) {
+            println("Build Jenkins");
+            target.eglibrary.ci.ciRunning = true;
+            target.eglibrary.ci.buildVersionCode = System.getenv("BUILD_NUMBER");
+            target.eglibrary.ci.buildDate = System.getenv("BUILD_ID");
+            target.eglibrary.ci.buildVersionName = "ci.${target.eglibrary.ci.buildVersionCode}";
+        } else if (!StringUtil.isEmpty(System.getenv("BUILD_NUMBER"))) {
+            println("Build CircleCI");
+            target.eglibrary.ci.ciRunning = true;
+            target.eglibrary.ci.buildVersionCode = System.getenv("CIRCLE_BUILD_NUM");
+            target.eglibrary.ci.buildDate = new Date().toLocaleString();
+            target.eglibrary.ci.buildVersionName = "ci.${target.eglibrary.ci.buildVersionCode}";
+        } else {
+            println("not CI");
+            target.eglibrary.ci.ciRunning = false;
+            target.eglibrary.ci.buildVersionCode = "1";
+            target.eglibrary.ci.buildDate = new Date().toLocaleString();
+            target.eglibrary.ci.buildVersionName = "build.${System.getenv("USER")}.${target.eglibrary.ci.buildDate}";
 
-            }
         }
-
 //        println("target.eglibrary.ci.releaseDir(${target.eglibrary.ci.releaseDir})")
 //        println("target.eglibrary.ci.ciRunning(${target.eglibrary.ci.ciRunning})")
 //        println("target.eglibrary.ci.buildVersionCode(${target.eglibrary.ci.buildVersionCode})")
