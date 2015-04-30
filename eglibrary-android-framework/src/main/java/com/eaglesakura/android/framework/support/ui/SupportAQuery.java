@@ -33,6 +33,10 @@ public class SupportAQuery extends AbstractAQuery<SupportAQuery> {
         super(act, root);
     }
 
+    public <T extends View> T getView(Class<T> clazz) {
+        return (T) getView();
+    }
+
     public SupportAQuery emptyText(int stringRes) {
         if (view instanceof SupportRecyclerView) {
             ((SupportRecyclerView) view).getEmptyView(TextView.class).setText(stringRes);

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.View;
 
 import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiClientToken;
@@ -43,6 +44,10 @@ public abstract class BaseFragment extends Fragment {
     protected boolean initializedViews = false;
 
     protected boolean fragmentResumed = false;
+
+    public <T extends View> T findViewById(Class<T> clazz, int id) {
+        return (T) getView().findViewById(id);
+    }
 
     /**
      * 初回のみ呼び出される

@@ -53,6 +53,8 @@ public class ScrollLinkHeaderController {
 
     private final Context context;
 
+    boolean alphaLink = true;
+
     ScrollListener listener;
 
     int currentScrollPosition;
@@ -88,6 +90,14 @@ public class ScrollLinkHeaderController {
         openHeight = headerViewContainer.getHeight();
         ViewUtil.setViewHeight(spacerView, openHeight);
         onScrollY(scroll);
+    }
+
+    public boolean isAlphaLink() {
+        return alphaLink;
+    }
+
+    public void setAlphaLink(boolean alphaLink) {
+        this.alphaLink = alphaLink;
     }
 
     /**
@@ -152,7 +162,7 @@ public class ScrollLinkHeaderController {
         // スクロール量に合わせてヘッダを透過する
         float scrollLevel = Math.min(1, (float) currentY / (float) openHeight);
         float headerAlpha = 1.0f;
-        if (Build.VERSION.SDK_INT >= 14) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH && isAlphaLink()) {
             headerAlpha = 1.0f - scrollLevel;
             headerViewContainer.setAlpha(headerAlpha);
         }
