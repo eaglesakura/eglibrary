@@ -18,8 +18,9 @@ public class AndroidGooglePlayPublishTaskTest extends GroovyTestCase {
 //        task.apk = new File(rootDir, "testfile/test.apk");
 //        task.applicationId = new File(rootDir, "testfile/test-appId.txt").text;
 //        task.serviceAccountEmail = new File(rootDir, "testfile/test-email.txt").text;
-//        task.track = AndroidGooglePlayPublishTask.Track.beta;
+//        task.track = "alpha";
 //        task.listings = new File(rootDir, "testfile/listing");
+//        task.apkListings = new File(rootDir, "testfile/listing");
 //        Logger.out "PATH = ${new File(".").absolutePath}"
 //
 //        task.execute();

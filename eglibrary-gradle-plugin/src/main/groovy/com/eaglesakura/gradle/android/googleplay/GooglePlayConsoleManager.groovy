@@ -7,6 +7,7 @@ import com.google.api.client.http.AbstractInputStreamContent
 import com.google.api.client.http.FileContent
 import com.google.api.services.androidpublisher.AndroidPublisher
 import com.google.api.services.androidpublisher.AndroidPublisher.Edits.Images
+import com.google.api.services.androidpublisher.model.ApkListing
 import com.google.api.services.androidpublisher.model.AppEdit
 import com.google.api.services.androidpublisher.model.Listing
 import com.google.api.services.androidpublisher.model.Track
@@ -137,9 +138,13 @@ public class GooglePlayConsoleManager {
     /**
      * 新しいAPKを指定されたトラックへアップロードする
      */
-    public void uploadApk(String track) {
+    public void uploadApk(String track, File apkListings) {
         if (StringUtil.isEmpty(track)) {
             throw new IllegalArgumentException("task.track Error");
+        }
+
+        if (!IOUtil.isFile(apk)) {
+            throw new IllegalStateException("task.apk File Error");
         }
 
         final AndroidPublisher.Edits edits = service.edits();
@@ -164,6 +169,21 @@ public class GooglePlayConsoleManager {
         def updatedTrack = updateTrackRequest.execute();
         Logger.out("Track %s has been updated.", updatedTrack.getTrack());
 
+        // upload listings
+        if (apkListings != null) {
+            for (def lang : apkListings.listFiles()) {
+                File apkText = new File(lang, "apk.txt");
+                if (IOUtil.isFile(apkText)) {
+                    // テキストをアップロード
+                    def listing = new ApkListing();
+                    listing.setLanguage(lang.name);
+                    listing.setRecentChanges(apkText.text);
+
+                    edits.apklistings().update(applicationId, editId, apk.getVersionCode(), lang.name, listing).execute();
+                }
+            }
+        }
+
         // Commit changes for edit.
         def commitRequest = edits.commit(applicationId, editId);
         def appEdit = commitRequest.execute();
@@ -186,10 +206,6 @@ public class GooglePlayConsoleManager {
     private void validate() {
         if (!IOUtil.isFile(p12)) {
             throw new IllegalStateException("task.p12 File Error");
-        }
-
-        if (!IOUtil.isFile(apk)) {
-            throw new IllegalStateException("task.apk File Error");
         }
 
         if (StringUtil.isEmpty(applicationId)) {
