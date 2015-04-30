@@ -3,6 +3,7 @@ package com.eaglesakura.gradle.plugins
 import com.eaglesakura.gradle.tasks.AndroidCiCleanTask
 import com.eaglesakura.gradle.tasks.AndroidCiCollectTask
 import com.eaglesakura.gradle.tasks.AndroidLocalPropertiesGenTask
+import com.eaglesakura.util.StringUtil
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskAction
@@ -19,23 +20,26 @@ public class AndroidSupportPlugin implements Plugin<Project> {
 
         CI_SETUP:
         {
-            // build number
-            def BUILD_VERSION_CODE = System.getenv("BUILD_NUMBER");
-            def BUILD_VERSION_NAME = "ci.${BUILD_VERSION_CODE}";
-            def BUILD_DATE = System.getenv("BUILD_ID");
-
             // Jenkins以外から実行されている場合、適当な設定を行う
-            if (BUILD_VERSION_CODE == null) {
-                println("not jenkins");
+            if (!StringUtil.isEmpty(System.getenv("BUILD_NUMBER")) {
+                println("Build Jenkins");
+                target.eglibrary.ci.ciRunning = true;
+                target.eglibrary.ci.buildVersionCode = System.getenv("BUILD_NUMBER");
+                target.eglibrary.ci.buildDate = System.getenv("BUILD_ID");
+                target.eglibrary.ci.buildVersionName = "ci.${target.eglibrary.ci.buildVersionCode}";
+            } else if (!StringUtil.isEmpty(StringUtil.isEmpty(System.getenv("BUILD_NUMBER"))) {
+                println("Build CircleCI");
+                target.eglibrary.ci.ciRunning = true;
+                target.eglibrary.ci.buildVersionCode = System.getenv("CIRCLE_BUILD_NUM");
+                target.eglibrary.ci.buildDate = new Date().toLocaleString();
+                target.eglibrary.ci.buildVersionName = "ci.${target.eglibrary.ci.buildVersionCode}";
+            } else {
+                println("not CI");
                 target.eglibrary.ci.ciRunning = false;
                 target.eglibrary.ci.buildVersionCode = "1";
                 target.eglibrary.ci.buildDate = new Date().toLocaleString();
                 target.eglibrary.ci.buildVersionName = "build.${System.getenv("USER")}.${target.eglibrary.ci.buildDate}";
-            } else {
-                target.eglibrary.ci.ciRunning = true;
-                target.eglibrary.ci.buildVersionCode = BUILD_VERSION_CODE;
-                target.eglibrary.ci.buildDate = BUILD_DATE;
-                target.eglibrary.ci.buildVersionName = BUILD_VERSION_NAME;
+
             }
         }
 
