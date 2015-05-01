@@ -25,18 +25,22 @@ public class AndroidSupportPlugin implements Plugin<Project> {
             target.eglibrary.ci.buildVersionCode = System.getenv("BUILD_NUMBER");
             target.eglibrary.ci.buildDate = System.getenv("BUILD_ID");
             target.eglibrary.ci.buildVersionName = "ci.${target.eglibrary.ci.buildVersionCode}";
-        } else if (!StringUtil.isEmpty(System.getenv("BUILD_NUMBER"))) {
+            target.eglibrary.ci.ciType = "Jenkins";
+
+        } else if (!StringUtil.isEmpty(System.getenv("CIRCLE_BUILD_NUM"))) {
             println("Build CircleCI");
             target.eglibrary.ci.ciRunning = true;
             target.eglibrary.ci.buildVersionCode = System.getenv("CIRCLE_BUILD_NUM");
             target.eglibrary.ci.buildDate = new Date().toLocaleString();
             target.eglibrary.ci.buildVersionName = "ci.${target.eglibrary.ci.buildVersionCode}";
+            target.eglibrary.ci.ciType = "CircleCI";
         } else {
-            println("not CI");
+            println("Build Local");
             target.eglibrary.ci.ciRunning = false;
             target.eglibrary.ci.buildVersionCode = "1";
             target.eglibrary.ci.buildDate = new Date().toLocaleString();
             target.eglibrary.ci.buildVersionName = "build.${System.getenv("USER")}.${target.eglibrary.ci.buildDate}";
+            target.eglibrary.ci.ciType = "Local";
 
         }
 //        println("target.eglibrary.ci.releaseDir(${target.eglibrary.ci.releaseDir})")
@@ -86,5 +90,12 @@ public class AndroidSupportPlugin implements Plugin<Project> {
          * バージョン名
          */
         String buildVersionName;
+
+        /**
+         * CIの動作対象
+         *
+         * Jenkins / CircleCI / Local
+         */
+        String ciType;
     }
 }

@@ -29,7 +29,7 @@ ext {
      * 0.2.4 : support google play publish
      * 0.2.5 : support circle ci
      */
-    EGLIBRARY_ARTIFACT_VERSION = "0.2.5beta1"
+    EGLIBRARY_ARTIFACT_VERSION = "0.2.5"
 }
 
 void rsyncJavadoc(String projectName) {
