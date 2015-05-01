@@ -1,5 +1,6 @@
 package com.eaglesakura.android.framework.support.ui;
 
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
@@ -15,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.View;
 
 import com.eaglesakura.android.framework.R;
+import com.eaglesakura.android.framework.context.Resources;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiClientToken;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiTask;
 import com.eaglesakura.android.util.ContextUtil;
@@ -60,6 +62,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         return (T) findViewById(id);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void setStatusBarColor(int argb) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(argb);
+        }
+    }
 
     /**
      * Scroll系レイアウトでのEdgeColorをブランドに合わせて変更する
