@@ -91,7 +91,7 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
         if (owner == null) {
             throw new NullPointerException("owner == null");
         }
-        this.owner = new WeakReference<Object>(owner);
+        this.owner = new WeakReference<>(owner);
     }
 
     /**
@@ -209,13 +209,15 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
 
         // 廃棄命令があるまでループする
         while (!isProcessingDestroy()) {
+            LoopState loopStartState = loopState;
+
             // bind継続チェック
             if (device.hasSurfaceDestroyRequest()) {
                 // 一旦アンバインドして休止
                 device.unbind();
                 Util.sleep(SLEEP_TIME);
             } else if (device.hasSurface()) {
-                if (isProcessingRunning()) {
+                if (loopStartState == LoopState.Run) {
                     if (!device.isBindedThread()) {
                         // バインドされていなければバインドを行う
                         device.bind();
@@ -242,7 +244,7 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
 
                     // processを通ったら再描画リクエストは廃棄する
                     renderingRequest = false;
-                } else if (isProcessingPaused()) {
+                } else if (loopStartState == LoopState.Pause) {
                     if (renderingRequest) {
                         LogUtil.log("has RenderingRequest(%s)", toString());
 
@@ -267,7 +269,7 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
                 }
 
                 // 現在のステートを保存する
-                lastState = loopState;
+                lastState = loopStartState;
                 oldSurfaceWidth = nowSurfaceWidth;
                 oldSurfaceHeight = nowSurfaceHeight;
             } else {
