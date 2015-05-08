@@ -113,7 +113,7 @@ public interface IEGLDevice {
      * レンダリング対象として有効なEGLSurfaceを持っていればtrue
      */
     @JCMethod
-    public boolean hasSurface();
+    boolean hasSurface();
 
     /**
      * レンダリング可能なEGLContextを持っていたらtrue
@@ -121,7 +121,7 @@ public interface IEGLDevice {
      * @return
      */
     @JCMethod
-    public boolean hasContext();
+    boolean hasContext();
 
     /**
      * ApplicationContextを取得する
@@ -129,7 +129,7 @@ public interface IEGLDevice {
      * @return
      */
     @JCMethod
-    public Context getApplicationContext();
+    Context getApplicationContext();
 
     /**
      * AssetManagerを取得する
@@ -137,5 +137,5 @@ public interface IEGLDevice {
      * @return
      */
     @JCMethod
-    public AssetManager getAssetManager();
+    AssetManager getAssetManager();
 }

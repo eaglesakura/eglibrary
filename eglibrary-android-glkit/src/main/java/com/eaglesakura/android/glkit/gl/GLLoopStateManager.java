@@ -3,12 +3,17 @@ package com.eaglesakura.android.glkit.gl;
 import android.content.Context;
 
 import com.eaglesakura.android.glkit.egl.IEGLManager;
+import com.eaglesakura.android.message.JointMessage;
+import com.eaglesakura.android.message.MessageHandlingListener;
 import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.jc.annotation.JCClass;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * 描画ループ等を構築する必要が有る場合に使用する
@@ -21,6 +26,15 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
      * weak refが切れた時点でdestroyと同じ扱いとなる
      */
     protected WeakReference<Object> owner;
+
+    /**
+     * GLスレッドへ伝えるためのメッセージキュー
+     * <p/>
+     * 構造をシンプルにするため、Run状態のみ実行される。
+     * <p/>
+     * 実行は {@link #onLoopFrame()} を呼び出す直前になる。
+     */
+    private List<QueueDataHolder> messageQueue = new ArrayList<>();
 
     public enum LoopState {
         /**
@@ -116,6 +130,39 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
         }
     }
 
+    /**
+     * GLスレッドで実行を行わせる
+     *
+     * @param runner
+     */
+    public void post(Runnable runner) {
+        synchronized (messageQueue) {
+            messageQueue.add(new QueueDataHolder(runner));
+        }
+    }
+
+    /**
+     * GLスレッドへデータを投げる
+     *
+     * @param message
+     */
+    public void post(JointMessage message) {
+        synchronized (messageQueue) {
+            messageQueue.add(new QueueDataHolder(message, null));
+        }
+    }
+
+    /**
+     * GLスレッドへデータを送信し、終了時ハンドリングを行う
+     *
+     * @param message
+     * @param listener
+     */
+    public void post(JointMessage message, MessageHandlingListener listener) {
+        synchronized (messageQueue) {
+            messageQueue.add(new QueueDataHolder(message, listener));
+        }
+    }
 
     @Override
     public void start() {
@@ -239,6 +286,22 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
                         onLoopSurfaceSizeChanged(oldSurfaceWidth, oldSurfaceHeight, nowSurfaceWidth, nowSurfaceHeight);
                     }
 
+                    // メッセージングの処理を行う
+                    {
+                        List<QueueDataHolder> datas;
+                        synchronized (messageQueue) {
+                            // データをコピーして、メンバからは廃棄してすぐさまロックを解除
+                            // 同期時間を最低限にしておく
+                            datas = new ArrayList<>(messageQueue);
+                            messageQueue.clear();
+                        }
+
+                        // 処理の実行を行わせる
+                        for (QueueDataHolder holder : datas) {
+                            holder.execute();
+                        }
+                    }
+
                     // 毎フレーム処理
                     onLoopFrame();
 
@@ -341,4 +404,40 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
      */
     protected abstract void onLoopFinish();
 
+    /**
+     * メッセージキューを受信した際のハンドリングを行う
+     *
+     * @param message
+     */
+    protected void onReceivedMessage(JointMessage message) {
+        LogUtil.log("onReceivedMessage(%s)", message.getMessage());
+    }
+
+    private class QueueDataHolder {
+        Runnable runner;
+
+        JointMessage message;
+
+        MessageHandlingListener listener;
+
+        public QueueDataHolder(Runnable runner) {
+            this.runner = runner;
+        }
+
+        public QueueDataHolder(JointMessage message, MessageHandlingListener listener) {
+            this.message = message;
+            this.listener = listener;
+        }
+
+        void execute() {
+            if (runner != null) {
+                runner.run();
+            } else if (message != null) {
+                onReceivedMessage(message);
+                if (listener != null) {
+                    listener.onMessageHandleCompleted(message);
+                }
+            }
+        }
+    }
 }

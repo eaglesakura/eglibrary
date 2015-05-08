@@ -98,6 +98,11 @@ public abstract class GLProcessingManager {
         return device;
     }
 
+    @JCMethod
+    public AssetManager getAssets() {
+        return context.getAssets();
+    }
+
     /**
      * 画面に反映可能なEGLDeviceを生成する
      *

@@ -1,6 +1,10 @@
 package com.eaglesakura.util;
 
+import com.eaglesakura.jc.annotation.JCClass;
+import com.eaglesakura.jc.annotation.JCMethod;
+
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -69,7 +73,6 @@ public class StringUtil {
      * 引数全ての文字列が有効であればtrueを返す
      *
      * @param args
-     *
      * @return
      */
     public static boolean allNotEmpty(String... args) {
@@ -86,7 +89,6 @@ public class StringUtil {
      * 文字列がnullか空文字だったらtrueを返す。
      *
      * @param str
-     *
      * @return
      */
     public static boolean isEmpty(String str) {
@@ -101,7 +103,6 @@ public class StringUtil {
      * strがnullかemptyだったらnullを返す。
      *
      * @param str
-     *
      * @return
      */
     public static String emptyToNull(String str) {
@@ -112,7 +113,6 @@ public class StringUtil {
      * 全角英数を半角英数に変換する
      *
      * @param s
-     *
      * @return
      */
     public static String zenkakuEngToHankakuEng(String s) {
@@ -159,7 +159,6 @@ public class StringUtil {
      * 全角文字を半角文字に変更する
      *
      * @param s
-     *
      * @return
      */
     public static String zenkakuHiraganaToZenkakuKatakana(String s) {
@@ -184,7 +183,6 @@ public class StringUtil {
 
     /**
      * @param str
-     *
      * @return
      */
     public static String macStringToWinString(String str) {
@@ -228,7 +226,6 @@ public class StringUtil {
      *
      * @param a
      * @param b
-     *
      * @return
      */
     public static int compareString(String a, String b) {
@@ -249,7 +246,6 @@ public class StringUtil {
      * 内容はyyyyMMdd-hh:mm:ss.SSとなる。
      *
      * @param date
-     *
      * @return
      */
     public static String toString(Date date) {
@@ -260,7 +256,6 @@ public class StringUtil {
      * yyyyMMdd-hh:mm:ss.SSフォーマットの文字列をDateに変換する
      *
      * @param date
-     *
      * @return
      */
     public static Date toDate(String date) {
@@ -275,7 +270,6 @@ public class StringUtil {
      * EXIF記録されている時刻から日時に変換する
      *
      * @param exifDate
-     *
      * @return
      */
     public static Date toExifDate(String exifDate) {
@@ -328,7 +322,6 @@ public class StringUtil {
      * base64エンコードする
      *
      * @param buffer
-     *
      * @return
      */
     public static String toString(byte[] buffer) {
@@ -339,7 +332,6 @@ public class StringUtil {
      * base64文字列をバイト配列へ変換する
      *
      * @param base64
-     *
      * @return
      */
     public static byte[] toByteArray(String base64) {
@@ -364,7 +356,6 @@ public class StringUtil {
      *
      * @param intHex
      * @param defValue
-     *
      * @return
      */
     public static long parseHex(String intHex, long defValue) {
@@ -392,7 +383,6 @@ public class StringUtil {
      * WebColor RGBをARGB形式に変換する
      *
      * @param webColor
-     *
      * @return
      */
     public static int parseWebColorRGB2XRGB(String webColor) {
@@ -404,11 +394,11 @@ public class StringUtil {
      * WebColor ARGBをARGB形式に変換する
      *
      * @param webColor
-     *
      * @return
      */
     public static int parseWebColorARGB2ARGB(String webColor) {
         int argb = (int) (parseHex(webColor, 0x00000000FFFFFFFF) & 0x00000000FFFFFFFFL);
         return argb;
     }
+
 }
