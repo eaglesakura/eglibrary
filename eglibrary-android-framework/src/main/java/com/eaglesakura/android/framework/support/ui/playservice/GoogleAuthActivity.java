@@ -45,6 +45,7 @@ public abstract class GoogleAuthActivity extends BaseActivity {
 
         setGoogleApiClientToken(new GoogleApiClientToken(newGoogleApiClient()));
         getGoogleApiClientToken().setConnectSleepTime(1000);
+        getGoogleApiClientToken().setDisconnectPendingTime(1);
         initialLogout();
     }
 
@@ -75,6 +76,7 @@ public abstract class GoogleAuthActivity extends BaseActivity {
                     client.clearDefaultAccountAndReconnect().await();
                 } catch (Exception e) {
                 }
+                Util.sleep(500);
                 return null;
             }
 
@@ -98,6 +100,9 @@ public abstract class GoogleAuthActivity extends BaseActivity {
     @Background
     protected void loginOnBackground() {
         Util.sleep(500);
+        setGoogleApiClientToken(new GoogleApiClientToken(newGoogleApiClient()));
+        getGoogleApiClientToken().setConnectSleepTime(1000);
+        getGoogleApiClientToken().setDisconnectPendingTime(1);
 
         // ブロッキングログインを行う
         getGoogleApiClientToken().executeGoogleApi(new GoogleApiTask<Object>() {
@@ -121,6 +126,7 @@ public abstract class GoogleAuthActivity extends BaseActivity {
             @Override
             public Object connectedFailed(GoogleApiClient client, ConnectionResult connectionResult) {
                 if (retryRequest > 0) {
+                    // MEMO ログイン直後は正常にログインできない端末があるので、リトライ機構とウェイトを設ける
                     --retryRequest;
                     loginOnBackground();
                 } else if (connectionResult.hasResolution()) {
@@ -196,7 +202,6 @@ public abstract class GoogleAuthActivity extends BaseActivity {
     protected void resultGoogleClientAuth(int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             // 再度ログイン処理
-//            setGoogleApiClientToken(new GoogleApiClientToken(newGoogleApiClient()));
             retryRequest = 2;
             loginOnBackground();
         } else {

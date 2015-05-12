@@ -25,6 +25,8 @@ public class GoogleApiClientToken {
 
     private long connectSleepTime = 1;
 
+    private long disconnectPendingTime = 500;
+
     /**
      * pending result
      */
@@ -89,6 +91,10 @@ public class GoogleApiClientToken {
 
     public void setConnectSleepTime(long connectSleepTime) {
         this.connectSleepTime = connectSleepTime;
+    }
+
+    public void setDisconnectPendingTime(long disconnectPendingTime) {
+        this.disconnectPendingTime = disconnectPendingTime;
     }
 
     private boolean tryApiConnectBlocking() {
@@ -216,7 +222,7 @@ public class GoogleApiClientToken {
                 --refs;
                 if (isDisconnectTarget()) {
                     LogUtil.log("req clean GoogleApiClient");
-                    UIHandler.postDelayedUI(disconnectChecker, 1000 * 5);
+                    UIHandler.postDelayedUI(disconnectChecker, disconnectPendingTime);
                 }
             }
         }
