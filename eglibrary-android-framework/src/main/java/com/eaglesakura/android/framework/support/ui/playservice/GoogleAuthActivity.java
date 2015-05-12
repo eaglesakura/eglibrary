@@ -76,7 +76,9 @@ public abstract class GoogleAuthActivity extends BaseActivity {
                     client.clearDefaultAccountAndReconnect().await();
                 } catch (Exception e) {
                 }
-                Util.sleep(1000 * 2);
+                Util.sleep(1000 * 5);
+                client.reconnect();
+                Util.sleep(1000 * 5);
                 return null;
             }
 
