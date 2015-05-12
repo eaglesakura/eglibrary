@@ -36,7 +36,7 @@ public abstract class GoogleAuthActivity extends BaseActivity {
 
     public static final String EXTRA_AUTH_ERROR_CODE = "EXTRA_AUTH_ERROR_CODE";
 
-    int retryRequest = 0;
+    int retryRequest = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public abstract class GoogleAuthActivity extends BaseActivity {
         setContentView(R.layout.activity_google_auth);
 
         setGoogleApiClientToken(new GoogleApiClientToken(newGoogleApiClient()));
-        getGoogleApiClientToken().setConnectSleepTime(250);
+        getGoogleApiClientToken().setConnectSleepTime(1000);
         getGoogleApiClientToken().setDisconnectPendingTime(1);
         initialLogout();
     }
@@ -76,9 +76,9 @@ public abstract class GoogleAuthActivity extends BaseActivity {
                     client.clearDefaultAccountAndReconnect().await();
                 } catch (Exception e) {
                 }
-                Util.sleep(1000 * 5);
-                client.reconnect();
-                Util.sleep(1000 * 5);
+                Util.sleep(1000 * 2);
+//                client.reconnect();
+//                Util.sleep(1000 * 2);
                 return null;
             }
 
@@ -124,10 +124,14 @@ public abstract class GoogleAuthActivity extends BaseActivity {
 
             @Override
             public Object connectedFailed(GoogleApiClient client, ConnectionResult connectionResult) {
-                if (retryRequest > 0) {
+                if (retryRequest >= 0) {
                     // MEMO ログイン直後は正常にログインできない端末があるので、リトライ機構とウェイトを設ける
                     --retryRequest;
-                    loginOnBackground();
+                    if (retryRequest == 0) {
+                        onFailed(connectionResult.getErrorCode());
+                    } else {
+                        loginOnBackground();
+                    }
                 } else if (connectionResult.hasResolution()) {
                     log("start auth dialog");
                     showLoginDialog(connectionResult);
@@ -201,7 +205,7 @@ public abstract class GoogleAuthActivity extends BaseActivity {
     protected void resultGoogleClientAuth(int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             // 再度ログイン処理
-            retryRequest = 1;
+            retryRequest = 5;
             setGoogleApiClientToken(new GoogleApiClientToken(newGoogleApiClient()));
             getGoogleApiClientToken().setConnectSleepTime(500);
             getGoogleApiClientToken().setDisconnectPendingTime(1);

@@ -6,7 +6,7 @@
     <string name="eglibrary.Gcm.SenderID"></string>
 
     <string name="eglibrary.GoogleApi.Error.Title">ログインエラー</string>
-    <string name="eglibrary.GoogleApi.Error.Message">再度ログインを行いますか？</string>
+    <string name="eglibrary.GoogleApi.Error.Message">再度ログインを行いますか？\n失敗する場合、端末を再起動するか、しばらく待ってから再度ログインを行うことで改善される可能性があります。</string>
     <string name="eglibrary.GoogleApi.Error.Retry">リトライ</string>
     <string name="eglibrary.GoogleApi.Error.Cancel">キャンセル</string>
 

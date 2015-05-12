@@ -2,6 +2,7 @@ package com.eaglesakura.android.framework.support.ui.playservice;
 
 import android.os.Bundle;
 
+import com.eaglesakura.android.thread.ThreadSyncRunnerBase;
 import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.AndroidUtil;
 import com.eaglesakura.util.LogUtil;
@@ -115,7 +116,7 @@ public class GoogleApiClientToken {
         }
     }
 
-    private void tryApiConnectAsync() {
+    private boolean tryApiConnectAsync() {
         Util.sleep(connectSleepTime);
         // clientを作成
         client = builder.build();
@@ -165,7 +166,13 @@ public class GoogleApiClientToken {
             client.registerConnectionCallbacks(connectionCallbacks);
             client.registerConnectionFailedListener(failedListener);
 //            client.reconnect();
-            client.connect();
+            new ThreadSyncRunnerBase<Void>(UIHandler.getInstance()) {
+                @Override
+                public Void onOtherThreadRun() throws Exception {
+                    client.connect();
+                    return null;
+                }
+            }.run();
             try {
                 waitLock.wait(1000 * 30);
             } catch (Exception e) {
@@ -173,6 +180,14 @@ public class GoogleApiClientToken {
 
             client.unregisterConnectionCallbacks(connectionCallbacks);
             client.unregisterConnectionFailedListener(failedListener);
+
+            if (connectionResult == null) {
+                return true;
+            } else if (connectionResult.hasResolution()) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -194,8 +209,10 @@ public class GoogleApiClientToken {
                 ++refs;
                 if (refs == 1) {
                     connectionResult = null;
-                    if (!tryApiConnectBlocking()) {
-                        tryApiConnectAsync();
+                    if (!tryApiConnectAsync()) {
+                        if (!tryApiConnectBlocking()) {
+                            tryApiConnectAsync();
+                        }
                     }
                 }
 
