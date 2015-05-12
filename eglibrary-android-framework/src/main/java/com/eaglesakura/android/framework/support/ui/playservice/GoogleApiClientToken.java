@@ -164,7 +164,7 @@ public class GoogleApiClientToken {
         synchronized (waitLock) {
             client.registerConnectionCallbacks(connectionCallbacks);
             client.registerConnectionFailedListener(failedListener);
-            client.connect();
+            client.reconnect();
             try {
                 waitLock.wait(1000 * 10);
             } catch (Exception e) {

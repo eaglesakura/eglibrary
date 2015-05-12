@@ -44,7 +44,7 @@ public abstract class GoogleAuthActivity extends BaseActivity {
         setContentView(R.layout.activity_google_auth);
 
         setGoogleApiClientToken(new GoogleApiClientToken(newGoogleApiClient()));
-        getGoogleApiClientToken().setConnectSleepTime(1000);
+        getGoogleApiClientToken().setConnectSleepTime(250);
         getGoogleApiClientToken().setDisconnectPendingTime(1);
         initialLogout();
     }
@@ -76,7 +76,7 @@ public abstract class GoogleAuthActivity extends BaseActivity {
                     client.clearDefaultAccountAndReconnect().await();
                 } catch (Exception e) {
                 }
-                Util.sleep(500);
+                Util.sleep(1000 * 2);
                 return null;
             }
 
@@ -99,10 +99,7 @@ public abstract class GoogleAuthActivity extends BaseActivity {
      */
     @Background
     protected void loginOnBackground() {
-        Util.sleep(500);
-        setGoogleApiClientToken(new GoogleApiClientToken(newGoogleApiClient()));
-        getGoogleApiClientToken().setConnectSleepTime(1000);
-        getGoogleApiClientToken().setDisconnectPendingTime(1);
+        Util.sleep(1000 * 2);
 
         // ブロッキングログインを行う
         getGoogleApiClientToken().executeGoogleApi(new GoogleApiTask<Object>() {
@@ -202,7 +199,10 @@ public abstract class GoogleAuthActivity extends BaseActivity {
     protected void resultGoogleClientAuth(int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             // 再度ログイン処理
-            retryRequest = 2;
+            retryRequest = 1;
+            setGoogleApiClientToken(new GoogleApiClientToken(newGoogleApiClient()));
+            getGoogleApiClientToken().setConnectSleepTime(500);
+            getGoogleApiClientToken().setDisconnectPendingTime(1);
             loginOnBackground();
         } else {
             // キャンセルされた場合はログイン状態も解除しなければならない
