@@ -175,7 +175,7 @@ public abstract class GoogleAuthActivity extends BaseActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // ユーザーが一度操作しているから回数リセット
-                loginOnBackground();
+                initialLogout();
             }
         });
         dialog.setNegativeButton(R.string.eglibrary_GoogleApi_Error_Cancel, new DialogInterface.OnClickListener() {
