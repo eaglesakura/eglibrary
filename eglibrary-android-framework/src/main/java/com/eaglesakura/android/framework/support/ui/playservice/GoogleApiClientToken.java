@@ -2,15 +2,14 @@ package com.eaglesakura.android.framework.support.ui.playservice;
 
 import android.os.Bundle;
 
-import com.eaglesakura.android.framework.FrameworkCentral;
-import com.eaglesakura.android.framework.db.BasicSettings;
 import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.AndroidUtil;
-import com.eaglesakura.time.Timer;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -20,19 +19,11 @@ public class GoogleApiClientToken {
 
     private GoogleApiClient client;
 
-    /**
-     * ログインが失敗で確定したらtrue
-     */
-    private boolean initialLoginCompleted;
-
-    /**
-     * 初期接続を開始していればtrue
-     */
-    private boolean initialConnectStarted;
-
     private Bundle connectedHint;
 
     private final Object lock = new Object();
+
+    private long connectSleepTime = 1;
 
     /**
      * pending result
@@ -43,57 +34,6 @@ public class GoogleApiClientToken {
 
     public GoogleApiClientToken(GoogleApiClient.Builder builder) {
         this.builder = builder;
-        CallbackImpl impl = new CallbackImpl();
-        builder.addOnConnectionFailedListener(impl);
-        builder.addConnectionCallbacks(impl);
-
-        this.client = builder.build();
-    }
-
-    public void startInitialConnect() {
-        if (client == null) {
-            initialConnectStarted = false;
-            initialLoginCompleted = false;
-            connectionResult = null;
-            client = builder.build();
-        }
-
-        if (!initialConnectStarted) {
-            client.connect();
-            initialConnectStarted = true;
-        }
-    }
-
-    /**
-     * 参照カウンタをアップし、クライアントを取得する
-     *
-     * @return
-     */
-    public GoogleApiClient lock() {
-        synchronized (lock) {
-            if (client == null) {
-                throw new IllegalStateException("token invalid");
-            }
-            ++refs;
-            return client;
-        }
-    }
-
-    /**
-     * 参照カウンタをデクリメントし、必要であればクライアントを削除する
-     */
-    public void unlock() {
-        synchronized (lock) {
-            --refs;
-
-            if (refs == 0) {
-                UIHandler.getInstance().removeCallbacks(destroyRunner);
-
-                // 適当なインターバルをおいてチェックする
-                // 入れ違いにロックがかかることを防ぐため
-                UIHandler.postDelayedUI(destroyRunner, 1000 * 5);
-            }
-        }
     }
 
     public boolean registerConnectionFailedListener(GoogleApiClient.OnConnectionFailedListener listener) {
@@ -135,15 +75,6 @@ public class GoogleApiClientToken {
     }
 
     /**
-     * ログインが失敗したらtrueを返却する
-     *
-     * @return
-     */
-    public boolean isInitialLoginCompleted() {
-        return client != null && initialLoginCompleted;
-    }
-
-    /**
      * 最後に取得したコネクション情報を取得する
      *
      * @return
@@ -152,93 +83,91 @@ public class GoogleApiClientToken {
         return connectionResult;
     }
 
-    /**
-     * Google Apiに対する初回ログイン試行が完了している
-     *
-     * @return
-     */
-    public boolean isInitialGoogleLoginFinished() {
-        return initialLoginCompleted;
-    }
-
-    /**
-     * Google Apiに対する初回ログインを完了させる
-     */
-    public boolean waitInitialGoogleLoginFinish(int timeoutMs) {
-        Timer timer = new Timer();
-        timer.start();
-
-        GoogleApiClient client = this.client;
-        if (client == null) {
-            startInitialConnect();
-        }
-
-        do {
-            if (timer.end() > timeoutMs) {
-                return false;
-            }
-            Util.sleep(10);
-        } while (!initialConnectStarted);
-
-        while (!client.isConnected() && connectionResult == null) {
-            if (timer.end() > timeoutMs) {
-                return false;
-            }
-            Util.sleep(100);
-        }
-
-        return true;
-    }
-
     public Bundle getConnectedHint() {
         return connectedHint;
     }
 
-    private class CallbackImpl implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-        @Override
-        public void onConnected(Bundle bundle) {
-            LogUtil.log("onConnected bundle(%s)", "" + bundle);
-            connectedHint = bundle;
-            initialLoginCompleted = true;
-            connectionResult = null;
-        }
+    public void setConnectSleepTime(long connectSleepTime) {
+        this.connectSleepTime = connectSleepTime;
+    }
 
-        @Override
-        public void onConnectionSuspended(int status) {
-            LogUtil.log("onConnectionSuspended status(%d)", status);
+    private boolean tryApiConnectBlocking() {
+        Util.sleep(connectSleepTime);
+        // clientを作成
+        client = builder.build();
+        Util.sleep(connectSleepTime);
 
-            initialLoginCompleted = true;
-        }
-
-        @Override
-        public void onConnectionFailed(ConnectionResult result) {
-            LogUtil.log("onConnectionFailed connectionResult(%s)", "" + connectionResult);
-
-            initialLoginCompleted = true;
-            connectionResult = result;
-
-//            if (false) {
-//                BasicSettings settings = FrameworkCentral.getSettings();
-//                settings.setLoginGoogleClientApi(false);
-//                settings.setLoginGoogleAccount("");
-//                settings.commit();
-//            }
+        this.connectionResult = client.blockingConnect(1000 * 30, TimeUnit.MILLISECONDS);
+        if (this.connectionResult.isSuccess()) {
+            this.connectionResult = null;
+            return true;
+        } else if (this.connectionResult.hasResolution()) {
+            return true;
+        } else {
+            client = null;
+            return false;
         }
     }
 
-    private final Runnable destroyRunner = new Runnable() {
-        @Override
-        public void run() {
-            synchronized (lock) {
-                if (refs == 0) {
-                    if (client.isConnected() || client.isConnecting()) {
-                        client.disconnect();
-                        client = null;
+    private void tryApiConnectAsync() {
+        Util.sleep(connectSleepTime);
+        // clientを作成
+        client = builder.build();
+        Util.sleep(connectSleepTime);
+
+        this.connectionResult = null;
+
+        final Object waitLock = new Object();
+        GoogleApiClient.ConnectionCallbacks connectionCallbacks = new GoogleApiClient.ConnectionCallbacks() {
+            @Override
+            public void onConnected(Bundle bundle) {
+                synchronized (waitLock) {
+                    try {
+                        waitLock.notifyAll();
+                    } catch (Exception e) {
                     }
                 }
             }
+
+            @Override
+            public void onConnectionSuspended(int i) {
+                synchronized (waitLock) {
+                    try {
+                        waitLock.notifyAll();
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+        };
+
+        GoogleApiClient.OnConnectionFailedListener failedListener = new GoogleApiClient.OnConnectionFailedListener() {
+            @Override
+            public void onConnectionFailed(ConnectionResult newConnectionResult) {
+                connectionResult = newConnectionResult;
+                synchronized (waitLock) {
+                    try {
+                        waitLock.notifyAll();
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+        };
+
+        synchronized (waitLock) {
+            client.registerConnectionCallbacks(connectionCallbacks);
+            client.registerConnectionFailedListener(failedListener);
+            client.connect();
+            try {
+                waitLock.wait(1000 * 10);
+            } catch (Exception e) {
+            }
+
+            client.unregisterConnectionCallbacks(connectionCallbacks);
+            client.unregisterConnectionFailedListener(failedListener);
         }
-    };
+    }
 
     /**
      * Google Apiの実行を行う。
@@ -252,27 +181,66 @@ public class GoogleApiClientToken {
             throw new IllegalStateException();
         }
 
-        if (task.isCanceled()) {
-            return null;
-        }
-
-        waitInitialGoogleLoginFinish(1000 * 30);
-        if (!isLoginCompleted()) {
-            return task.connectedFailed(null, getConnectionResult());
-        }
-
+        UIHandler.getInstance().removeCallbacks(disconnectChecker);
         try {
-            GoogleApiClient apiClient = this.lock();
-            if (task.isCanceled()) {
+            synchronized (lock) {
+                ++refs;
+                if (refs == 1) {
+                    connectionResult = null;
+                    if (!tryApiConnectBlocking()) {
+                        tryApiConnectAsync();
+                    }
+                }
+
+                if (task.isCanceled()) {
+                    return null;
+                }
+
+                if (connectionResult != null) {
+                    // 接続に失敗している
+                    return task.connectedFailed(client, connectionResult);
+                }
+            }
+
+            try {
+                if (task.isCanceled()) {
+                    return null;
+                }
+                return task.executeTask(client);
+            } catch (Exception e) {
+                LogUtil.log(e);
                 return null;
             }
-            return task.executeTask(apiClient);
-        } catch (Exception e) {
-            LogUtil.log(e);
-            return null;
         } finally {
-            this.unlock();
+            synchronized (lock) {
+                --refs;
+                if (isDisconnectTarget()) {
+                    LogUtil.log("req clean GoogleApiClient");
+                    UIHandler.postDelayedUI(disconnectChecker, 1000 * 5);
+                }
+            }
         }
     }
+
+    private boolean isDisconnectTarget() {
+        return refs == 0 && client != null && client.isConnected();
+    }
+
+    Runnable disconnectChecker = new Runnable() {
+        @Override
+        public void run() {
+            new Thread() {
+                @Override
+                public void run() {
+                    synchronized (lock) {
+                        if (isDisconnectTarget()) {
+                            client.disconnect();
+                            client = null;
+                        }
+                    }
+                }
+            }.start();
+        }
+    };
 
 }
