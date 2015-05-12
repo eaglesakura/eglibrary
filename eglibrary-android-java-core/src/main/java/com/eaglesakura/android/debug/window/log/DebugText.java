@@ -25,12 +25,14 @@ public class DebugText extends DebugRenderingItem {
      */
     int argb = Color.WHITE;
 
+    private static final int DEFAULT_FONT_SIZE = 64;
+
     public DebugText() {
     }
 
     public DebugText(String message) {
         this.message = message;
-        fontCalculator.setFontHeight(64);
+        fontCalculator.setFontHeight(DEFAULT_FONT_SIZE);
     }
 
 
