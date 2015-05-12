@@ -11,6 +11,7 @@ import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.android.framework.R;
 import com.eaglesakura.android.framework.db.BasicSettings;
 import com.eaglesakura.android.framework.support.ui.BaseActivity;
+import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.material.widget.MaterialAlertDialog;
 import com.eaglesakura.util.Util;
@@ -34,6 +35,8 @@ public abstract class GoogleAuthActivity extends BaseActivity {
     static final int REQUEST_GOOGLE_CLIENT_AUTH = 0x1200;
 
     public static final String EXTRA_AUTH_ERROR_CODE = "EXTRA_AUTH_ERROR_CODE";
+
+    int retryRequest = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +97,8 @@ public abstract class GoogleAuthActivity extends BaseActivity {
      */
     @Background
     protected void loginOnBackground() {
+        Util.sleep(500);
+
         // ブロッキングログインを行う
         getGoogleApiClientToken().executeGoogleApi(new GoogleApiTask<Object>() {
             @Override
@@ -115,7 +120,10 @@ public abstract class GoogleAuthActivity extends BaseActivity {
 
             @Override
             public Object connectedFailed(GoogleApiClient client, ConnectionResult connectionResult) {
-                if (connectionResult.hasResolution()) {
+                if (retryRequest > 0) {
+                    --retryRequest;
+                    loginOnBackground();
+                } else if (connectionResult.hasResolution()) {
                     log("start auth dialog");
                     showLoginDialog(connectionResult);
                 } else {
@@ -189,6 +197,7 @@ public abstract class GoogleAuthActivity extends BaseActivity {
         if (resultCode == Activity.RESULT_OK) {
             // 再度ログイン処理
 //            setGoogleApiClientToken(new GoogleApiClientToken(newGoogleApiClient()));
+            retryRequest = 2;
             loginOnBackground();
         } else {
             // キャンセルされた場合はログイン状態も解除しなければならない
