@@ -36,11 +36,11 @@ public abstract class GoogleAuthActivity extends BaseActivity {
 
     public static final String EXTRA_AUTH_ERROR_CODE = "EXTRA_AUTH_ERROR_CODE";
 
-    long sleepTime = 1000;
+    long sleepTime = 2000;
 
-    final float BACKOFF_MULT = 1.25f;
+    final float BACKOFF_MULT = 1.20f;
 
-    final int MAX_RETRY = 3;
+    final int MAX_RETRY = 5;
 
     int retryRequest = -1;
 
@@ -103,6 +103,7 @@ public abstract class GoogleAuthActivity extends BaseActivity {
 //        setGoogleApiClientToken(new GoogleApiClientToken(newGoogleApiClient()));
 //        getGoogleApiClientToken().setConnectSleepTime(1000);
 //        getGoogleApiClientToken().setDisconnectPendingTime(1);
+        getGoogleApiClientToken().reconnect();
         loginOnBackground();
     }
 
