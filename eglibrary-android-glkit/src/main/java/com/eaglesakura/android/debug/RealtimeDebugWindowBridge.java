@@ -10,12 +10,12 @@ import com.eaglesakura.jc.annotation.JCField;
 import com.eaglesakura.jc.annotation.JCMethod;
 
 /**
- * グラフィックス用のデバッグ描画を行う
+ * デバッグ描画のNDKからのブリッジ
  * <p/>
  * Native側にサポート用のclassを配置する
  */
 @JCClass(cppNamespace = "es.debug")
-public class GraphicsDebugRenderer extends RealtimeDebugWindow {
+public class RealtimeDebugWindowBridge extends RealtimeDebugWindow {
 
     /**
      * 左側に描画する
@@ -29,26 +29,7 @@ public class GraphicsDebugRenderer extends RealtimeDebugWindow {
     @JCField
     public static final int FLAG_RENDERING_POSITION_RIGHT = 0x1 << 4;
 
-    public GraphicsDebugRenderer(Context context) {
+    public RealtimeDebugWindowBridge(Context context) {
         super(context);
-    }
-
-    /**
-     * レンダリングテキストを追加する
-     *
-     * @param text
-     * @param flags
-     * @param showTimeMs
-     * @param rgba
-     */
-    @JCMethod
-    public void addTextMessage(String text, int flags, int showTimeMs, int rgba) {
-        DebugText debugText = new DebugText();
-        debugText.setMessage(text);
-        debugText.setFlags(flags);
-        debugText.setRenderingTime(showTimeMs);
-        debugText.setArgb(Color.rgba2argb(rgba));
-
-        addMessage(debugText);
     }
 }
