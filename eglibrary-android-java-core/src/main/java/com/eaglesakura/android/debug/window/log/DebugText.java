@@ -25,7 +25,7 @@ public class DebugText extends DebugRenderingItem {
      */
     int argb = Color.WHITE;
 
-    private static final int DEFAULT_FONT_SIZE = 64;
+    private static int DEFAULT_FONT_SIZE = 64;
 
     public DebugText() {
     }
@@ -63,5 +63,14 @@ public class DebugText extends DebugRenderingItem {
     public void rendering(Graphics graphics, int x, int y) {
         graphics.setColorARGB(argb);
         fontCalculator.drawString(message, "...", x, y, graphics.getWidth(), 1, 0, graphics.getCanvas(), graphics.getPaint());
+    }
+
+    /**
+     * デフォルトのフォントサイズをピクセル単位で指定する
+     *
+     * @param defaultFontSize
+     */
+    public static void setDefaultFontSize(int defaultFontSize) {
+        DEFAULT_FONT_SIZE = defaultFontSize;
     }
 }

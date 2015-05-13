@@ -1,6 +1,7 @@
 package com.eaglesakura.android.debug.window.log;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -36,7 +37,6 @@ public class DebugItemGroup {
      */
     public List<DebugRenderingItem> listFlagItems(int flags) {
         List<DebugRenderingItem> result = new ArrayList<>();
-
         for (DebugRenderingItem temp : items) {
             if (temp.hasFlags(flags)) {
                 result.add(temp);
@@ -44,6 +44,16 @@ public class DebugItemGroup {
         }
 
         return result;
+    }
+
+    /**
+     * 不要なアイテムを削除する
+     */
+    public void clean() {
+        Iterator<DebugRenderingItem> iterator = items.iterator();
+        while(iterator.hasNext()) {
+            DebugRenderingItem item = iterator.next();
+        }
     }
 
     /**
