@@ -12,9 +12,6 @@ import com.eaglesakura.android.debug.window.log.DebugRenderingItem;
 import com.eaglesakura.android.debug.window.log.DebugText;
 import com.eaglesakura.android.thread.HandlerLoopController;
 import com.eaglesakura.android.thread.UIHandler;
-import com.eaglesakura.util.Util;
-
-import java.util.Date;
 
 /**
  * 毎フレーム処理のリアルタイムデバッグ出力のサポートを行う
@@ -64,6 +61,20 @@ public class RealtimeDebugWindow {
     Object lock = new Object();
 
     /**
+     * デバッグウィンドウを利用する場合であればtrue
+     * <p/>
+     * BuildConfig.DEBUGを指定することで、アクティブ状態を簡易的に切り替えられる
+     */
+    boolean active = true;
+
+    /**
+     * 自動的に {@link #postMessages()} を実行する場合はtrue
+     * <p/>
+     * 毎フレームレンダリングではなく、イベントドリブンが主体であればこちらのほうが利用しやすい。
+     */
+    boolean autoPost = false;
+
+    /**
      * 文字を見やすくするための背景色
      */
     int backgroundColor = Color.argb(128, 0, 0, 0);
@@ -103,15 +114,58 @@ public class RealtimeDebugWindow {
         }
     }
 
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void setAutoPost(boolean autoPost) {
+        this.autoPost = autoPost;
+    }
+
     /**
      * デバッグ用メッセージを投げる
      *
      * @param item
      */
     public void addMessage(DebugRenderingItem item) {
+        if (!active) {
+            // デバッグがActiveではないので、デバッグメッセージの登録を行わない
+            return;
+        }
+
         synchronized (lock) {
             this.debugItems.add(item);
         }
+        if (autoPost) {
+            postMessages();
+        }
+    }
+
+    public void addTextMessage(String text) {
+        addTextMessage(text, FLAG_RENDERING_POSITION_LEFT, 0, 0xFFFFFFFF);
+    }
+
+
+    public void addTextMessageWithLimit(String text, int showTimeMs) {
+        addTextMessage(text, FLAG_RENDERING_POSITION_LEFT, showTimeMs, 0xFFFFFFFF);
+    }
+
+    /**
+     * テキストメッセージを追加する
+     *
+     * @param text
+     * @param flags
+     * @param showTimeMs
+     * @param rgba
+     */
+    public void addTextMessage(String text, int flags, int showTimeMs, int rgba) {
+        DebugText debugText = new DebugText();
+        debugText.setMessage(text);
+        debugText.setFlags(flags);
+        debugText.setRenderingTime(showTimeMs);
+        debugText.setArgb(com.eaglesakura.graphics.Color.rgba2argb(rgba));
+
+        addMessage(debugText);
     }
 
     /**
@@ -126,6 +180,10 @@ public class RealtimeDebugWindow {
     }
 
     public void connect() {
+        if (!active) {
+            return;
+        }
+
         Point size = new Point();
         windowManager.getDefaultDisplay().getSize(size);
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
@@ -169,6 +227,10 @@ public class RealtimeDebugWindow {
     }
 
     public void disconnect() {
+        if (!active) {
+            return;
+        }
+
         if (renderView != null) {
             windowManager.removeView(renderView);
             renderView = null;
