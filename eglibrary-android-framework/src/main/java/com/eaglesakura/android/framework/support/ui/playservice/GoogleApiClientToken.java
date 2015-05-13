@@ -111,103 +111,6 @@ public class GoogleApiClientToken {
         this.disconnectPendingTime = disconnectPendingTime;
     }
 
-    private boolean tryApiConnectBlocking() {
-        Util.sleep(connectSleepTime);
-        // clientを作成
-        client = builder.build();
-        Util.sleep(connectSleepTime);
-
-        this.connectionResult = client.blockingConnect(1000 * 30, TimeUnit.MILLISECONDS);
-        if (this.connectionResult.isSuccess()) {
-            this.connectionResult = null;
-            return true;
-        } else if (this.connectionResult.hasResolution()) {
-            return true;
-        } else {
-            client = null;
-            return false;
-        }
-    }
-
-    private boolean tryApiConnectAsync() {
-        Util.sleep(connectSleepTime);
-        // clientを作成
-        client = builder.build();
-        Util.sleep(connectSleepTime);
-
-        this.connectionResult = null;
-
-        final Object waitLock = new Object();
-        GoogleApiClient.ConnectionCallbacks connectionCallbacks = new GoogleApiClient.ConnectionCallbacks() {
-            @Override
-            public void onConnected(Bundle bundle) {
-                synchronized (waitLock) {
-                    connectedHint = bundle;
-                    LogUtil.log("onConnected");
-                    try {
-                        waitLock.notifyAll();
-                    } catch (Exception e) {
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionSuspended(int status) {
-                LogUtil.log("onConnectionSuspended(%d = %s)", status, GooglePlayServicesUtil.getErrorString(status));
-                synchronized (waitLock) {
-                    try {
-                        waitLock.notifyAll();
-                    } catch (Exception e) {
-
-                    }
-                }
-            }
-        };
-
-        GoogleApiClient.OnConnectionFailedListener failedListener = new GoogleApiClient.OnConnectionFailedListener() {
-            @Override
-            public void onConnectionFailed(ConnectionResult newConnectionResult) {
-                LogUtil.log("onConnectionFailed(%d = %s)", newConnectionResult.getErrorCode(), GooglePlayServicesUtil.getErrorString(newConnectionResult.getErrorCode()));
-                connectionResult = newConnectionResult;
-                synchronized (waitLock) {
-                    try {
-                        waitLock.notifyAll();
-                    } catch (Exception e) {
-
-                    }
-                }
-            }
-        };
-
-        synchronized (waitLock) {
-            client.registerConnectionCallbacks(connectionCallbacks);
-            client.registerConnectionFailedListener(failedListener);
-//            client.reconnect();
-            new ThreadSyncRunnerBase<Void>(UIHandler.getInstance()) {
-                @Override
-                public Void onOtherThreadRun() throws Exception {
-                    client.connect();
-                    return null;
-                }
-            }.run();
-            try {
-                waitLock.wait(1000 * 30);
-            } catch (Exception e) {
-            }
-
-            client.unregisterConnectionCallbacks(connectionCallbacks);
-            client.unregisterConnectionFailedListener(failedListener);
-
-            if (connectionResult == null) {
-                return true;
-            } else if (connectionResult.hasResolution()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-
     /**
      * Google Apiに対する初回ログインを完了させる
      */
@@ -226,8 +129,12 @@ public class GoogleApiClientToken {
 
             if (connectionResult != null) {
                 return true;
+            } else {
+                Util.sleep(10);
+//                if (!client.isConnected()) {
+//                    client.blockingConnect(1000, TimeUnit.MILLISECONDS);
+//                }
             }
-            Util.sleep(10);
         } while (!client.isConnected());
 
         return true;

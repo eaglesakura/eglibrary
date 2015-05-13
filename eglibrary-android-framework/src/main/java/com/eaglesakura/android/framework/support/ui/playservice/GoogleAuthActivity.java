@@ -36,12 +36,12 @@ public abstract class GoogleAuthActivity extends BaseActivity {
 
     public static final String EXTRA_AUTH_ERROR_CODE = "EXTRA_AUTH_ERROR_CODE";
 
-    final long DEFAULT_SLEEP_TIME = 2500;
+    final long DEFAULT_SLEEP_TIME = 3000;
     long sleepTime = DEFAULT_SLEEP_TIME;
 
     final float BACKOFF_MULT = 1.25f;
 
-    final int MAX_RETRY = 5;
+    final int MAX_RETRY = 3;
 
     int retryRequest = -1;
 
@@ -104,6 +104,7 @@ public abstract class GoogleAuthActivity extends BaseActivity {
 //        setGoogleApiClientToken(new GoogleApiClientToken(newGoogleApiClient()));
 //        getGoogleApiClientToken().setConnectSleepTime(1000);
 //        getGoogleApiClientToken().setDisconnectPendingTime(1);
+        getGoogleApiClientToken().reconnect();
         loginOnBackground();
     }
 
@@ -112,7 +113,6 @@ public abstract class GoogleAuthActivity extends BaseActivity {
      */
     @Background
     protected void loginOnBackground() {
-        getGoogleApiClientToken().reconnect();
         Util.sleep(sleepTime);
 
         // ブロッキングログインを行う
@@ -222,7 +222,7 @@ public abstract class GoogleAuthActivity extends BaseActivity {
             // 再度ログイン処理
             retryRequest = MAX_RETRY;
             sleepTime = DEFAULT_SLEEP_TIME;
-//            getGoogleApiClientToken().reconnect();
+            getGoogleApiClientToken().connect();
             loginOnBackground();
         } else {
             // キャンセルされた場合はログイン状態も解除しなければならない
