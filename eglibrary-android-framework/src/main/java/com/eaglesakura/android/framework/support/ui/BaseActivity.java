@@ -100,13 +100,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
     }
 
     public void setGoogleApiClientToken(GoogleApiClientToken googleApiClientToken) {
-        if (this.googleApiClientToken != null) {
-            this.googleApiClientToken.unlock();
-        }
         this.googleApiClientToken = googleApiClientToken;
-        if (this.googleApiClientToken != null) {
-            this.googleApiClientToken.lock();
-        }
     }
 
     public GoogleApiClientToken getGoogleApiClientToken() {
@@ -116,10 +110,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
     @Override
     protected void onStart() {
         super.onStart();
-
-        if (googleApiClientToken != null) {
-            googleApiClientToken.startInitialConnect();
-        }
     }
 
     @Override
@@ -164,9 +154,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
     @Override
     protected void onStop() {
         super.onStop();
-        if (googleApiClientToken != null) {
-            googleApiClientToken.unlock();
-        }
     }
 
     @AfterViews

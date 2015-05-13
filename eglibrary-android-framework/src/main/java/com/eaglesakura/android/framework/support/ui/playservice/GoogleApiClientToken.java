@@ -2,15 +2,17 @@ package com.eaglesakura.android.framework.support.ui.playservice;
 
 import android.os.Bundle;
 
-import com.eaglesakura.android.framework.FrameworkCentral;
-import com.eaglesakura.android.framework.db.BasicSettings;
+import com.eaglesakura.android.thread.ThreadSyncRunnerBase;
 import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.AndroidUtil;
 import com.eaglesakura.time.Timer;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -18,21 +20,20 @@ import com.google.android.gms.common.api.GoogleApiClient;
 public class GoogleApiClientToken {
     private int refs;
 
+    /**
+     * clientは複数回のconnectに対応できる。
+     * <p/>
+     * 何度もclientを生成するような実装だと正常にconnectが行えない場合があるため、一つのclientに長生きしてもらう。
+     */
     private GoogleApiClient client;
-
-    /**
-     * ログインが失敗で確定したらtrue
-     */
-    private boolean initialLoginCompleted;
-
-    /**
-     * 初期接続を開始していればtrue
-     */
-    private boolean initialConnectStarted;
 
     private Bundle connectedHint;
 
     private final Object lock = new Object();
+
+    private long connectSleepTime = 1;
+
+    private long disconnectPendingTime = 500;
 
     /**
      * pending result
@@ -43,57 +44,12 @@ public class GoogleApiClientToken {
 
     public GoogleApiClientToken(GoogleApiClient.Builder builder) {
         this.builder = builder;
-        CallbackImpl impl = new CallbackImpl();
-        builder.addOnConnectionFailedListener(impl);
-        builder.addConnectionCallbacks(impl);
-
         this.client = builder.build();
-    }
+        CallbackImpl impl = new CallbackImpl();
+        this.client.registerConnectionCallbacks(impl);
+        this.client.registerConnectionFailedListener(impl);
 
-    public void startInitialConnect() {
-        if (client == null) {
-            initialConnectStarted = false;
-            initialLoginCompleted = false;
-            connectionResult = null;
-            client = builder.build();
-        }
-
-        if (!initialConnectStarted) {
-            client.connect();
-            initialConnectStarted = true;
-        }
-    }
-
-    /**
-     * 参照カウンタをアップし、クライアントを取得する
-     *
-     * @return
-     */
-    public GoogleApiClient lock() {
-        synchronized (lock) {
-            if (client == null) {
-                throw new IllegalStateException("token invalid");
-            }
-            ++refs;
-            return client;
-        }
-    }
-
-    /**
-     * 参照カウンタをデクリメントし、必要であればクライアントを削除する
-     */
-    public void unlock() {
-        synchronized (lock) {
-            --refs;
-
-            if (refs == 0) {
-                UIHandler.getInstance().removeCallbacks(destroyRunner);
-
-                // 適当なインターバルをおいてチェックする
-                // 入れ違いにロックがかかることを防ぐため
-                UIHandler.postDelayedUI(destroyRunner, 1000 * 5);
-            }
-        }
+        this.client.connect();
     }
 
     public boolean registerConnectionFailedListener(GoogleApiClient.OnConnectionFailedListener listener) {
@@ -135,15 +91,6 @@ public class GoogleApiClientToken {
     }
 
     /**
-     * ログインが失敗したらtrueを返却する
-     *
-     * @return
-     */
-    public boolean isInitialLoginCompleted() {
-        return client != null && initialLoginCompleted;
-    }
-
-    /**
      * 最後に取得したコネクション情報を取得する
      *
      * @return
@@ -152,93 +99,46 @@ public class GoogleApiClientToken {
         return connectionResult;
     }
 
-    /**
-     * Google Apiに対する初回ログイン試行が完了している
-     *
-     * @return
-     */
-    public boolean isInitialGoogleLoginFinished() {
-        return initialLoginCompleted;
+    public Bundle getConnectedHint() {
+        return connectedHint;
+    }
+
+    public void setConnectSleepTime(long connectSleepTime) {
+        this.connectSleepTime = connectSleepTime;
+    }
+
+    public void setDisconnectPendingTime(long disconnectPendingTime) {
+        this.disconnectPendingTime = disconnectPendingTime;
     }
 
     /**
      * Google Apiに対する初回ログインを完了させる
      */
-    public boolean waitInitialGoogleLoginFinish(int timeoutMs) {
+    private boolean waitInitialGoogleLoginFinish(int timeoutMs) {
         Timer timer = new Timer();
         timer.start();
 
-        GoogleApiClient client = this.client;
-        if (client == null) {
-            startInitialConnect();
-        }
+//        if (!client.isConnected() && !client.isConnecting()) {
+//            client.connect();
+//        }
 
         do {
             if (timer.end() > timeoutMs) {
                 return false;
             }
-            Util.sleep(10);
-        } while (!initialConnectStarted);
 
-        while (!client.isConnected() && connectionResult == null) {
-            if (timer.end() > timeoutMs) {
-                return false;
+            if (connectionResult != null) {
+                return true;
+            } else {
+                Util.sleep(10);
+//                if (!client.isConnected()) {
+//                    client.blockingConnect(1000, TimeUnit.MILLISECONDS);
+//                }
             }
-            Util.sleep(100);
-        }
+        } while (!client.isConnected());
 
         return true;
     }
-
-    public Bundle getConnectedHint() {
-        return connectedHint;
-    }
-
-    private class CallbackImpl implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-        @Override
-        public void onConnected(Bundle bundle) {
-            LogUtil.log("onConnected bundle(%s)", "" + bundle);
-            connectedHint = bundle;
-            initialLoginCompleted = true;
-            connectionResult = null;
-        }
-
-        @Override
-        public void onConnectionSuspended(int status) {
-            LogUtil.log("onConnectionSuspended status(%d)", status);
-
-            initialLoginCompleted = true;
-        }
-
-        @Override
-        public void onConnectionFailed(ConnectionResult result) {
-            LogUtil.log("onConnectionFailed connectionResult(%s)", "" + connectionResult);
-
-            initialLoginCompleted = true;
-            connectionResult = result;
-
-//            if (false) {
-//                BasicSettings settings = FrameworkCentral.getSettings();
-//                settings.setLoginGoogleClientApi(false);
-//                settings.setLoginGoogleAccount("");
-//                settings.commit();
-//            }
-        }
-    }
-
-    private final Runnable destroyRunner = new Runnable() {
-        @Override
-        public void run() {
-            synchronized (lock) {
-                if (refs == 0) {
-                    if (client.isConnected() || client.isConnecting()) {
-                        client.disconnect();
-                        client = null;
-                    }
-                }
-            }
-        }
-    };
 
     /**
      * Google Apiの実行を行う。
@@ -252,26 +152,99 @@ public class GoogleApiClientToken {
             throw new IllegalStateException();
         }
 
-        if (task.isCanceled()) {
-            return null;
-        }
-
-        waitInitialGoogleLoginFinish(1000 * 30);
-        if (!isLoginCompleted()) {
-            return task.connectedFailed(null, getConnectionResult());
-        }
-
+        UIHandler.getInstance().removeCallbacks(disconnectChecker);
         try {
-            GoogleApiClient apiClient = this.lock();
-            if (task.isCanceled()) {
+            synchronized (lock) {
+                ++refs;
+                if (refs == 1) {
+                    waitInitialGoogleLoginFinish(1000 * 15);
+                }
+
+                if (task.isCanceled()) {
+                    return null;
+                }
+            }
+
+            try {
+
+                if (connectionResult != null) {
+                    // 接続に失敗している
+                    return task.connectedFailed(client, connectionResult);
+                } else {
+                    return task.executeTask(client);
+                }
+            } catch (Exception e) {
+                LogUtil.log(e);
                 return null;
             }
-            return task.executeTask(apiClient);
-        } catch (Exception e) {
-            LogUtil.log(e);
-            return null;
         } finally {
-            this.unlock();
+            synchronized (lock) {
+                --refs;
+                if (isDisconnectTarget()) {
+                    LogUtil.log("req clean GoogleApiClient");
+                    UIHandler.postDelayedUI(disconnectChecker, disconnectPendingTime);
+                }
+            }
+        }
+    }
+
+    void reconnect() {
+        connectionResult = null;
+        client.disconnect();
+        client.reconnect();
+    }
+
+    void connect() {
+        connectionResult = null;
+        client.disconnect();
+        client.connect();
+    }
+
+    private boolean isDisconnectTarget() {
+        return refs == 0 && client != null && client.isConnected();
+    }
+
+    Runnable disconnectChecker = new Runnable() {
+        @Override
+        public void run() {
+            new Thread() {
+                @Override
+                public void run() {
+                    synchronized (lock) {
+//                        if (isDisconnectTarget()) {
+//                            client.disconnect();
+//                            client = null;
+//                        }
+                    }
+                }
+            }.start();
+        }
+    };
+
+    private class CallbackImpl implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+        @Override
+        public void onConnected(Bundle bundle) {
+            LogUtil.log("onConnected bundle(%s)", "" + bundle);
+            connectedHint = bundle;
+            connectionResult = null;
+        }
+
+        @Override
+        public void onConnectionSuspended(int status) {
+            LogUtil.log("onConnectionSuspended status(%d)", status);
+        }
+
+        @Override
+        public void onConnectionFailed(ConnectionResult result) {
+            LogUtil.log("onConnectionFailed connectionResult(%s)", "" + connectionResult);
+            connectionResult = result;
+
+//            if (false) {
+//                BasicSettings settings = FrameworkCentral.getSettings();
+//                settings.setLoginGoogleClientApi(false);
+//                settings.setLoginGoogleAccount("");
+//                settings.commit();
+//            }
         }
     }
 
