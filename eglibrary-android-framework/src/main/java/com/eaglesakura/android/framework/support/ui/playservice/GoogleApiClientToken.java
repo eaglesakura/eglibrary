@@ -5,9 +5,11 @@ import android.os.Bundle;
 import com.eaglesakura.android.thread.ThreadSyncRunnerBase;
 import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.AndroidUtil;
+import com.eaglesakura.time.Timer;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.concurrent.TimeUnit;
@@ -18,6 +20,9 @@ import java.util.concurrent.TimeUnit;
 public class GoogleApiClientToken {
     private int refs;
 
+    /**
+     * clientは複数回のconnectに対応できる。
+     */
     private GoogleApiClient client;
 
     private Bundle connectedHint;
@@ -37,6 +42,12 @@ public class GoogleApiClientToken {
 
     public GoogleApiClientToken(GoogleApiClient.Builder builder) {
         this.builder = builder;
+        this.client = builder.build();
+        CallbackImpl impl = new CallbackImpl();
+        this.client.registerConnectionCallbacks(impl);
+        this.client.registerConnectionFailedListener(impl);
+
+        this.client.connect();
     }
 
     public boolean registerConnectionFailedListener(GoogleApiClient.OnConnectionFailedListener listener) {
@@ -129,6 +140,8 @@ public class GoogleApiClientToken {
             @Override
             public void onConnected(Bundle bundle) {
                 synchronized (waitLock) {
+                    connectedHint = bundle;
+                    LogUtil.log("onConnected");
                     try {
                         waitLock.notifyAll();
                     } catch (Exception e) {
@@ -137,7 +150,8 @@ public class GoogleApiClientToken {
             }
 
             @Override
-            public void onConnectionSuspended(int i) {
+            public void onConnectionSuspended(int status) {
+                LogUtil.log("onConnectionSuspended(%d = %s)", status, GooglePlayServicesUtil.getErrorString(status));
                 synchronized (waitLock) {
                     try {
                         waitLock.notifyAll();
@@ -151,6 +165,7 @@ public class GoogleApiClientToken {
         GoogleApiClient.OnConnectionFailedListener failedListener = new GoogleApiClient.OnConnectionFailedListener() {
             @Override
             public void onConnectionFailed(ConnectionResult newConnectionResult) {
+                LogUtil.log("onConnectionFailed(%d = %s)", newConnectionResult.getErrorCode(), GooglePlayServicesUtil.getErrorString(newConnectionResult.getErrorCode()));
                 connectionResult = newConnectionResult;
                 synchronized (waitLock) {
                     try {
@@ -192,6 +207,31 @@ public class GoogleApiClientToken {
     }
 
     /**
+     * Google Apiに対する初回ログインを完了させる
+     */
+    private boolean waitInitialGoogleLoginFinish(int timeoutMs) {
+        Timer timer = new Timer();
+        timer.start();
+
+//        if (!client.isConnected() && !client.isConnecting()) {
+//            client.connect();
+//        }
+
+        do {
+            if (timer.end() > timeoutMs) {
+                return false;
+            }
+
+            if (connectionResult != null) {
+                return true;
+            }
+            Util.sleep(10);
+        } while (!client.isConnected());
+
+        return true;
+    }
+
+    /**
      * Google Apiの実行を行う。
      * <br>
      * 裏スレッドから呼び出さなくてはならない。
@@ -208,29 +248,22 @@ public class GoogleApiClientToken {
             synchronized (lock) {
                 ++refs;
                 if (refs == 1) {
-                    connectionResult = null;
-                    if (!tryApiConnectAsync()) {
-                        if (!tryApiConnectBlocking()) {
-                            tryApiConnectAsync();
-                        }
-                    }
+                    waitInitialGoogleLoginFinish(1000 * 15);
                 }
 
                 if (task.isCanceled()) {
                     return null;
-                }
-
-                if (connectionResult != null) {
-                    // 接続に失敗している
-                    return task.connectedFailed(client, connectionResult);
                 }
             }
 
             try {
-                if (task.isCanceled()) {
-                    return null;
+
+                if (connectionResult != null) {
+                    // 接続に失敗している
+                    return task.connectedFailed(client, connectionResult);
+                } else {
+                    return task.executeTask(client);
                 }
-                return task.executeTask(client);
             } catch (Exception e) {
                 LogUtil.log(e);
                 return null;
@@ -246,6 +279,18 @@ public class GoogleApiClientToken {
         }
     }
 
+    void reconnect() {
+        connectionResult = null;
+        client.disconnect();
+        client.reconnect();
+    }
+
+    void connect() {
+        connectionResult = null;
+        client.disconnect();
+        client.connect();
+    }
+
     private boolean isDisconnectTarget() {
         return refs == 0 && client != null && client.isConnected();
     }
@@ -257,14 +302,41 @@ public class GoogleApiClientToken {
                 @Override
                 public void run() {
                     synchronized (lock) {
-                        if (isDisconnectTarget()) {
-                            client.disconnect();
-                            client = null;
-                        }
+//                        if (isDisconnectTarget()) {
+//                            client.disconnect();
+//                            client = null;
+//                        }
                     }
                 }
             }.start();
         }
     };
+
+    private class CallbackImpl implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+        @Override
+        public void onConnected(Bundle bundle) {
+            LogUtil.log("onConnected bundle(%s)", "" + bundle);
+            connectedHint = bundle;
+            connectionResult = null;
+        }
+
+        @Override
+        public void onConnectionSuspended(int status) {
+            LogUtil.log("onConnectionSuspended status(%d)", status);
+        }
+
+        @Override
+        public void onConnectionFailed(ConnectionResult result) {
+            LogUtil.log("onConnectionFailed connectionResult(%s)", "" + connectionResult);
+            connectionResult = result;
+
+//            if (false) {
+//                BasicSettings settings = FrameworkCentral.getSettings();
+//                settings.setLoginGoogleClientApi(false);
+//                settings.setLoginGoogleAccount("");
+//                settings.commit();
+//            }
+        }
+    }
 
 }
