@@ -3,8 +3,6 @@ package com.eaglesakura.android.debug;
 import android.content.Context;
 
 import com.eaglesakura.android.debug.window.RealtimeDebugWindow;
-import com.eaglesakura.android.debug.window.log.DebugText;
-import com.eaglesakura.graphics.Color;
 import com.eaglesakura.jc.annotation.JCClass;
 import com.eaglesakura.jc.annotation.JCField;
 import com.eaglesakura.jc.annotation.JCMethod;
@@ -31,5 +29,11 @@ public class RealtimeDebugWindowBridge extends RealtimeDebugWindow {
 
     public RealtimeDebugWindowBridge(Context context) {
         super(context);
+    }
+
+    @JCMethod
+    @Override
+    public void addTextMessage(String text, int flags, int showTimeMs, int rgba) {
+        super.addTextMessage(text, flags, showTimeMs, rgba);
     }
 }

@@ -1,6 +1,5 @@
 package com.eaglesakura.android.debug.window.log;
 
-import com.eaglesakura.android.debug.window.RealtimeDebugWindow;
 import com.eaglesakura.android.graphics.FontCalculator;
 import com.eaglesakura.android.graphics.Graphics;
 import com.eaglesakura.graphics.Color;
