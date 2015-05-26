@@ -2,17 +2,13 @@ package com.eaglesakura.android.framework.support.ui.playservice;
 
 import android.os.Bundle;
 
-import com.eaglesakura.android.thread.ThreadSyncRunnerBase;
 import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.AndroidUtil;
 import com.eaglesakura.time.Timer;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -41,6 +37,8 @@ public class GoogleApiClientToken {
     private ConnectionResult connectionResult;
 
     private final GoogleApiClient.Builder builder;
+
+    private boolean disconnected = false;
 
     public GoogleApiClientToken(GoogleApiClient.Builder builder) {
         this.builder = builder;
@@ -118,9 +116,10 @@ public class GoogleApiClientToken {
         Timer timer = new Timer();
         timer.start();
 
-//        if (!client.isConnected() && !client.isConnecting()) {
-//            client.connect();
-//        }
+        if (disconnected) {
+            LogUtil.log("Token disconnected Req ReConnecting");
+            client.connect();
+        }
 
         do {
             if (timer.end() > timeoutMs) {
@@ -166,7 +165,6 @@ public class GoogleApiClientToken {
             }
 
             try {
-
                 if (connectionResult != null) {
                     // 接続に失敗している
                     return task.connectedFailed(client, connectionResult);
@@ -180,13 +178,14 @@ public class GoogleApiClientToken {
         } finally {
             synchronized (lock) {
                 --refs;
-                if (isDisconnectTarget()) {
+                if (isAutoDisconnectTarget()) {
                     LogUtil.log("req clean GoogleApiClient");
                     UIHandler.postDelayedUI(disconnectChecker, disconnectPendingTime);
                 }
             }
         }
     }
+
 
     void reconnect() {
         connectionResult = null;
@@ -200,7 +199,7 @@ public class GoogleApiClientToken {
         client.connect();
     }
 
-    private boolean isDisconnectTarget() {
+    private boolean isAutoDisconnectTarget() {
         return refs == 0 && client != null && client.isConnected();
     }
 
@@ -211,10 +210,13 @@ public class GoogleApiClientToken {
                 @Override
                 public void run() {
                     synchronized (lock) {
-//                        if (isDisconnectTarget()) {
-//                            client.disconnect();
-//                            client = null;
-//                        }
+                        if (isAutoDisconnectTarget()) {
+                            LogUtil.log("auto disconnect client");
+                            client.disconnect();
+                            client = null;
+                            disconnected = true;
+                            connectionResult = null;
+                        }
                     }
                 }
             }.start();
