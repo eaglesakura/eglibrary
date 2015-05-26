@@ -8,8 +8,8 @@ configurations {
 }
 
 dependencies {
-    compile "com.google.android.gms:play-services-plus:7.0.+"
-    compile "com.google.android.gms:play-services-gcm:7.0.+"
+    compile "com.google.android.gms:play-services-plus:7.3.+"
+    compile "com.google.android.gms:play-services-gcm:7.3.+"
     compile 'com.android.support:support-annotations:+'
 
     compile project(':eglibrary-android-java-wrapper')
