@@ -213,7 +213,6 @@ public class GoogleApiClientToken {
                         if (isAutoDisconnectTarget()) {
                             LogUtil.log("auto disconnect client");
                             client.disconnect();
-                            client = null;
                             disconnected = true;
                             connectionResult = null;
                         }
