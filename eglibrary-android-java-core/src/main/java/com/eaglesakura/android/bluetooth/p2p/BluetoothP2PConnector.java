@@ -12,6 +12,9 @@ import java.util.zip.DataFormatException;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
+import com.eaglesakura.android.thread.AsyncAction;
+import com.eaglesakura.android.thread.ThreadSyncRunnerBase;
+import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.io.data.DataPackage;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
@@ -40,6 +43,12 @@ public abstract class BluetoothP2PConnector {
      * 切断リクエスト中
      */
     private boolean requestDisconnect = false;
+
+    ConnectorState inputState = ConnectorState.Stop;
+
+    ConnectorState outputState = ConnectorState.Stop;
+
+    boolean connecting = false;
 
     public enum ConnectorType {
         /**
@@ -161,32 +170,50 @@ public abstract class BluetoothP2PConnector {
     /**
      * 処理を開始する
      */
-    public final void start(final UUID protocol) {
-        requestDisconnect = false;
-
-        new Thread() {
-            @Override
-            public void run() {
-                requestConnecting(protocol);
-            }
-        }.start();
-    }
-
-    /**
-     * 処理を停止する
-     * 同期的には止まらず、コールバックに {@link ConnectorState#Disconnected} が来るのを待つ必要がある
-     */
-    public final void stop() {
-        synchronized (lock) {
-            if (requestDisconnect) {
-                return;
-            }
-            requestDisconnect = true;
+    public synchronized final void start(final UUID protocol) {
+        if (connecting) {
+            // 既に接続リクエストが発行されているので、何もしない
+            return;
         }
 
-        new Thread() {
+        requestDisconnect = false;
+        connecting = true;
+
+        // 制御Threadを立てる
+        new AsyncAction("BluetoothP2P-Ctrl") {
             @Override
-            public void run() {
+            protected Object onBackgroundAction() throws Exception {
+                if (!requestConnecting(protocol)) {
+                    // 正常に接続できなかった
+                    throw new IllegalStateException("P2P Connect Failed");
+                }
+
+                boolean connectedHandling = false;
+
+                // Input/Outputが正常に動いていることを確認する
+                while (!requestDisconnect && inputState != ConnectorState.Disconnecting && outputState != ConnectorState.Disconnecting) {
+                    if (!connectedHandling && inputState == ConnectorState.Connected && outputState == ConnectorState.Connected) {
+                        connectedHandling = true;
+                        // ハンドリングを行う
+                        new ThreadSyncRunnerBase<Void>(UIHandler.getInstance()) {
+                            @Override
+                            public Void onOtherThreadRun() throws Exception {
+                                for (P2PConnectorListener listener : listeners) {
+                                    listener.onConnectorStateChanged(BluetoothP2PConnector.this, ConnectorState.Connected);
+                                }
+                                return null;
+                            }
+                        }.run();
+                    }
+
+                    // 精度は適当
+                    Util.sleep(threadWaitTimeMs);
+                }
+
+                // どちらかがdisconnectingになったら、Threadを停止させる
+                requestDisconnect = true;
+
+                // input/outputがrequestDisconnectによって自然停止するのを待つ
                 if (inputThread != null) {
                     try {
                         inputThread.join();
@@ -205,23 +232,40 @@ public abstract class BluetoothP2PConnector {
                     outputThread = null;
                 }
 
+                // Socketの停止を行わせる
                 requestDisconnecting();
 
-                synchronized (lock) {
-                    for (P2PConnectorListener listener : listeners) {
-                        listener.onConnectorStateChanged(BluetoothP2PConnector.this, ConnectorType.Output, ConnectorState.Disconnected);
-                        listener.onConnectorStateChanged(BluetoothP2PConnector.this, ConnectorType.Input, ConnectorState.Disconnected);
-                        listener.onConnectorStateChanged(BluetoothP2PConnector.this, null, ConnectorState.Disconnected);
-                    }
+                return null;
+            }
+
+            @Override
+            protected void onSuccess(Object object) {
+                for (P2PConnectorListener listener : listeners) {
+                    listener.onConnectorStateChanged(BluetoothP2PConnector.this, ConnectorState.Disconnected);
+                }
+            }
+
+            @Override
+            protected void onFailure(Exception exception) {
+                for (P2PConnectorListener listener : listeners) {
+                    listener.onConnectorStateChanged(BluetoothP2PConnector.this, ConnectorState.Failed);
                 }
             }
         }.start();
     }
 
     /**
+     * 処理を停止する
+     * 同期的には止まらず、コールバックに {@link ConnectorState#Disconnected} が来るのを待つ必要がある
+     */
+    public final void stop() {
+        requestDisconnect = true;
+    }
+
+    /**
      * 接続をリクエストする
      */
-    protected abstract void requestConnecting(UUID protocol);
+    protected abstract boolean requestConnecting(UUID protocol);
 
     /**
      * 切断をリクエストする
@@ -239,23 +283,14 @@ public abstract class BluetoothP2PConnector {
                 return;
             }
 
-            inputThread = new Thread() {
+            inputThread = new AsyncAction("BluetoothP2P-Input") {
                 @Override
-                public void run() {
-                    synchronized (lock) {
-                        for (P2PConnectorListener listener : listeners) {
-                            listener.onConnectorStateChanged(BluetoothP2PConnector.this, ConnectorType.Input, ConnectorState.Connecting);
-                        }
-                    }
-
+                protected Object onBackgroundAction() throws Exception {
+                    inputState = ConnectorState.Connecting;
                     InputStream stream = null;
                     try {
                         stream = socket.getInputStream();
-                        synchronized (lock) {
-                            for (P2PConnectorListener listener : listeners) {
-                                listener.onConnectorStateChanged(BluetoothP2PConnector.this, ConnectorType.Input, ConnectorState.Connected);
-                            }
-                        }
+                        inputState = ConnectorState.Connected;
 
                         while (!requestDisconnect) {
                             // データパックを受信する
@@ -275,20 +310,24 @@ public abstract class BluetoothP2PConnector {
                             // sleep
                             Util.sleep(threadWaitTimeMs);
                         }
-
                     } catch (IOException ioe) {
                         ioe.printStackTrace();
                     } catch (Exception e) {
                         e.printStackTrace();
+                    } finally {
+                        inputState = ConnectorState.Disconnecting;
                     }
+                    return null;
+                }
 
-                    synchronized (lock) {
-                        for (P2PConnectorListener listener : listeners) {
-                            listener.onConnectorStateChanged(BluetoothP2PConnector.this, ConnectorType.Input, ConnectorState.Disconnecting);
-                        }
-                    }
+                @Override
+                protected void onSuccess(Object object) {
 
-                    BluetoothP2PConnector.this.stop();
+                }
+
+                @Override
+                protected void onFailure(Exception exception) {
+
                 }
             };
             inputThread.start();
@@ -307,23 +346,15 @@ public abstract class BluetoothP2PConnector {
                 return;
             }
 
-            outputThread = new Thread() {
+            outputThread = new AsyncAction() {
                 @Override
-                public void run() {
-                    synchronized (lock) {
-                        for (P2PConnectorListener listener : listeners) {
-                            listener.onConnectorStateChanged(BluetoothP2PConnector.this, ConnectorType.Output, ConnectorState.Connecting);
-                        }
-                    }
+                protected Object onBackgroundAction() throws Exception {
+                    outputState = ConnectorState.Connecting;
 
                     OutputStream stream = null;
                     try {
                         stream = socket.getOutputStream();
-                        synchronized (lock) {
-                            for (P2PConnectorListener listener : listeners) {
-                                listener.onConnectorStateChanged(BluetoothP2PConnector.this, ConnectorType.Output, ConnectorState.Connected);
-                            }
-                        }
+                        outputState = ConnectorState.Connected;
 
                         while (!requestDisconnect) {
                             // データパックを送信する
@@ -357,14 +388,18 @@ public abstract class BluetoothP2PConnector {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    outputState = ConnectorState.Disconnecting;
+                    return null;
+                }
 
-                    synchronized (lock) {
-                        for (P2PConnectorListener listener : listeners) {
-                            listener.onConnectorStateChanged(BluetoothP2PConnector.this, ConnectorType.Output, ConnectorState.Disconnecting);
-                        }
-                    }
+                @Override
+                protected void onSuccess(Object object) {
 
-                    BluetoothP2PConnector.this.stop();
+                }
+
+                @Override
+                protected void onFailure(Exception exception) {
+
                 }
             };
             outputThread.start();
@@ -465,6 +500,6 @@ public abstract class BluetoothP2PConnector {
          * @param self
          * @param state
          */
-        void onConnectorStateChanged(BluetoothP2PConnector self, ConnectorType type, ConnectorState state);
+        void onConnectorStateChanged(BluetoothP2PConnector self, ConnectorState state);
     }
 }

@@ -8,6 +8,8 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 
+import com.eaglesakura.android.thread.UIHandler;
+
 /**
  * Bluetooth通信用親機となるサーバー
  */
@@ -42,7 +44,7 @@ public class BluetoothServer extends BluetoothP2PConnector {
      * サーバー用接続を行う
      */
     @Override
-    protected void requestConnecting(UUID protocol) {
+    protected boolean requestConnecting(UUID protocol) {
         try {
             BluetoothServerSocket serverSocket = adapter.listenUsingInsecureRfcommWithServiceRecord(context.getPackageName(), protocol);
 
@@ -55,18 +57,16 @@ public class BluetoothServer extends BluetoothP2PConnector {
 
             if (isRequestDisconnect()) {
                 socket.close();
-                return;
+                return false;
             }
 
             startInputThread(socket);
             startOutputThread(socket);
+
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
-            synchronized (lock) {
-                for (P2PConnectorListener listener : listeners) {
-                    listener.onConnectorStateChanged(BluetoothServer.this, null, ConnectorState.Failed);
-                }
-            }
+            return false;
         }
     }
 
