@@ -56,7 +56,7 @@ public class BatteryEventReceiver extends BroadcastReceiver {
                 float scale = (float) intent.getIntExtra("scale", 1);
 
                 final float newScale = currentLevel / scale;
-                if (newScale != powerLevel) {
+                if (newScale != getPowerLevel()) {
                     this.powerLevel = newScale;
                     onBatteryLevelChanged(newScale);
                 }
