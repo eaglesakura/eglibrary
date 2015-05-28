@@ -183,6 +183,7 @@ public abstract class BluetoothP2PConnector {
         new AsyncAction("BluetoothP2P-Ctrl") {
             @Override
             protected Object onBackgroundAction() throws Exception {
+
                 if (!requestConnecting(protocol)) {
                     // 正常に接続できなかった
                     throw new IllegalStateException("P2P Connect Failed");
@@ -210,8 +211,14 @@ public abstract class BluetoothP2PConnector {
                     Util.sleep(threadWaitTimeMs);
                 }
 
+                LogUtil.log("Disconnecting input(%s) output(%s)", inputState.toString(), outputState.toString());
+
                 // どちらかがdisconnectingになったら、Threadを停止させる
                 requestDisconnect = true;
+                // Socketの停止を行わせる
+                requestDisconnecting();
+
+                LogUtil.log("requestDisconnecting() finished");
 
                 // input/outputがrequestDisconnectによって自然停止するのを待つ
                 if (inputThread != null) {
@@ -223,6 +230,8 @@ public abstract class BluetoothP2PConnector {
                     inputThread = null;
                 }
 
+                LogUtil.log("inputThread / join");
+
                 if (outputThread != null) {
                     try {
                         outputThread.join();
@@ -232,10 +241,17 @@ public abstract class BluetoothP2PConnector {
                     outputThread = null;
                 }
 
-                // Socketの停止を行わせる
-                requestDisconnecting();
+                LogUtil.log("outputThread / join");
 
                 return null;
+            }
+
+            @Override
+            protected void onFinalize() {
+                super.onFinalize();
+                inputState = ConnectorState.Stop;
+                outputState = ConnectorState.Stop;
+                connecting = false;
             }
 
             @Override
