@@ -8,7 +8,6 @@ import com.eaglesakura.util.Util;
  * マルチスレッドでデータ受け渡し等に利用する。
  *
  * @param <T>
- * @author TAKESHI YAMASHITA
  */
 public class Holder<T> {
 

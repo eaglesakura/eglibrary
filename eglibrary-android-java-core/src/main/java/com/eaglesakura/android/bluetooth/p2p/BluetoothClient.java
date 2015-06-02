@@ -6,6 +6,8 @@ import java.util.UUID;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
+import com.eaglesakura.android.thread.UIHandler;
+
 public class BluetoothClient extends BluetoothP2PConnector {
 
     BluetoothSocket socket;
@@ -15,7 +17,7 @@ public class BluetoothClient extends BluetoothP2PConnector {
     }
 
     @Override
-    protected void requestConnecting(UUID protocol) {
+    protected boolean requestConnecting(UUID protocol) {
         try {
 
             socket = connectDevice.createRfcommSocketToServiceRecord(protocol);
@@ -23,14 +25,11 @@ public class BluetoothClient extends BluetoothP2PConnector {
 
             startInputThread(socket);
             startOutputThread(socket);
+
+            return true;
         } catch (Exception ioe) {
             ioe.printStackTrace();
-
-            synchronized (lock) {
-                for (P2PConnectorListener listener : listeners) {
-                    listener.onConnectorStateChanged(BluetoothClient.this, null, ConnectorState.Failed);
-                }
-            }
+            return false;
         }
 
     }

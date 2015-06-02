@@ -45,7 +45,7 @@ public class LicenseViewActivity extends BaseActivity {
      */
     List<LicenseItem> licenseList = new ArrayList<>();
 
-    List<String> ignoreFiles;
+    List<String> ignoreFiles = new ArrayList<>();
 
     SupportRecyclerView listRoot;
 
@@ -63,7 +63,6 @@ public class LicenseViewActivity extends BaseActivity {
         if (!Util.isEmpty(ignoreFiles)) {
             this.ignoreFiles = Util.convert(ignoreFiles);
         }
-
         setSupportActionBar((Toolbar) findViewById(R.id.EsMaterial_Toolbar));
         setTitle(R.string.eglibrary_License_Activity_Title);
 
