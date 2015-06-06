@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 
 import com.eaglesakura.android.thread.HandlerLoopController;
 import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.material.R;
 import com.eaglesakura.math.MathUtil;
 import com.eaglesakura.util.LogUtil;
@@ -79,6 +80,7 @@ public class RippleEffectLayout extends FrameLayout {
     @Override
     public void draw(Canvas canvas) {
         if (rippleState != null) {
+
             rippleState.setupCanvas(canvas);
         }
         super.draw(canvas);
@@ -111,6 +113,11 @@ public class RippleEffectLayout extends FrameLayout {
         this.enableRound = enableRound;
     }
 
+    public void cancelRipple() {
+        stopEffect();
+        rippleState = null;
+    }
+
     /**
      * Rippleを設定する
      *
@@ -123,10 +130,16 @@ public class RippleEffectLayout extends FrameLayout {
     }
 
     public void setRipple(Bundle bundle) {
-        RectF fromArea = bundle.getParcelable(BUNDLE_KEY_FROM_AREA);
-        if (fromArea != null) {
-            setRipple(fromArea);
+        int[] displaySize = ContextUtil.getDisplaySize(getContext());
+        RectF fromArea = null;
+        if (bundle != null) {
+            fromArea = bundle.getParcelable(BUNDLE_KEY_FROM_AREA);
         }
+        if (fromArea == null) {
+            fromArea = new RectF(0, 0, displaySize[0] / 2, displaySize[1] / 2);
+            fromArea.offsetTo(displaySize[0] / 4, displaySize[1] / 4);
+        }
+        setRipple(fromArea);
     }
 
     public void setRipple(View view) {
@@ -148,6 +161,10 @@ public class RippleEffectLayout extends FrameLayout {
      * Rippleを開始する
      */
     public void startEffect() {
+        if (rippleState == null) {
+            return;
+        }
+
         stopEffect();
         rippleState.startedTime = System.currentTimeMillis();
         loopController = new HandlerLoopController(UIHandler.getInstance()) {
@@ -326,6 +343,8 @@ public class RippleEffectLayout extends FrameLayout {
      */
     public static void startRippleTransaction(FragmentTransaction transaction, View fromView, Fragment targetFragment) {
         setRippleTransaction(transaction);
-        targetFragment.setArguments(saveFromView(fromView, targetFragment.getArguments()));
+        if (fromView != null) {
+            targetFragment.setArguments(saveFromView(fromView, targetFragment.getArguments()));
+        }
     }
 }
