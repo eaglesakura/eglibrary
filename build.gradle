@@ -28,8 +28,9 @@ ext {
      * 0.2.3 : update android support-lib 22.1.0
      * 0.2.4 : support google play publish
      * 0.2.5 : support circle ci
+     * 0.2.6 : update Bluetooth P2P
      */
-    EGLIBRARY_ARTIFACT_VERSION = "0.2.5"
+    EGLIBRARY_ARTIFACT_VERSION = "0.2.6"
 }
 
 void rsyncJavadoc(String projectName) {
