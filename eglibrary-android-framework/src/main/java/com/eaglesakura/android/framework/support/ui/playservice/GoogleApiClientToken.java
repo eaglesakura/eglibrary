@@ -18,7 +18,7 @@ public class GoogleApiClientToken {
 
     /**
      * clientは複数回のconnectに対応できる。
-     * <p/>
+     * <br>
      * 何度もclientを生成するような実装だと正常にconnectが行えない場合があるため、一つのclientに長生きしてもらう。
      */
     private GoogleApiClient client;

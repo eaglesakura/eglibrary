@@ -29,9 +29,9 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
 
     /**
      * GLスレッドへ伝えるためのメッセージキュー
-     * <p/>
+     * <br>
      * 構造をシンプルにするため、Run状態のみ実行される。
-     * <p/>
+     * <br>
      * 実行は {@link #onLoopFrame()} を呼び出す直前になる。
      */
     private List<QueueDataHolder> messageQueue = new ArrayList<>();

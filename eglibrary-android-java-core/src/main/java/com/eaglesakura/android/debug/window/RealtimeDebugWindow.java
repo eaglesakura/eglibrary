@@ -62,14 +62,14 @@ public class RealtimeDebugWindow {
 
     /**
      * デバッグウィンドウを利用する場合であればtrue
-     * <p/>
+     * <br>
      * BuildConfig.DEBUGを指定することで、アクティブ状態を簡易的に切り替えられる
      */
     boolean active = true;
 
     /**
      * 自動的に {@link #postMessages()} を実行する場合はtrue
-     * <p/>
+     * <br>
      * 毎フレームレンダリングではなく、イベントドリブンが主体であればこちらのほうが利用しやすい。
      */
     boolean autoPost = false;
@@ -170,7 +170,7 @@ public class RealtimeDebugWindow {
 
     /**
      * デバッグ描画のフレームレートを指定する
-     * <p/>
+     * <br>
      * デフォルトは10fps
      *
      * @param rate

@@ -9,7 +9,7 @@ import com.eaglesakura.jc.annotation.JCMethod;
 
 /**
  * デバッグ描画のNDKからのブリッジ
- * <p/>
+ * <br>
  * Native側にサポート用のclassを配置する
  */
 @JCClass(cppNamespace = "es.debug")
