@@ -92,7 +92,7 @@ public class NetworkConnector {
 
             @Override
             public RetryPolicy newRetryPolycy(final String url, String method) {
-                return new DefaultRetryPolicy(1000, 10, 1.2f) {
+                return new DefaultRetryPolicy(5000, 10, 1.2f) {
                     @Override
                     public void retry(VolleyError error) throws VolleyError {
                         LogUtil.log("%s retry(%s)", NetworkConnector.this.getClass().getSimpleName(), url);
@@ -284,6 +284,7 @@ public class NetworkConnector {
                         }
                         return super.getParams();
                     }
+
 
                     @Override
                     public Map<String, String> getHeaders() throws AuthFailureError {
