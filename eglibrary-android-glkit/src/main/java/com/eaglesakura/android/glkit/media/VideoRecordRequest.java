@@ -223,6 +223,8 @@ public class VideoRecordRequest {
             recorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
 
             recorder.setOutputFormat(request.outputVideoFormat);
+            // 録画ディレクトリを作成
+            outputFile.getParentFile().mkdirs();
             recorder.setOutputFile(outputFile.getAbsolutePath());
 
             recorder.setVideoEncoder(request.videoEncoder);

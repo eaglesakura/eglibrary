@@ -7,8 +7,8 @@ import com.eaglesakura.android.util.AndroidUtil;
 
 /**
  * UIスレッド専用のハンドラ
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class UIHandler extends Handler {
 
@@ -20,6 +20,7 @@ public class UIHandler extends Handler {
 
     /**
      * 唯一のインスタンスを取得する。
+     *
      * @return UIHandlerインスタンス
      */
     public static UIHandler getInstance() {
@@ -31,6 +32,7 @@ public class UIHandler extends Handler {
 
     /**
      * UIスレッドで実行を行わせる。
+     *
      * @param runnable
      */
     public static void postUI(Runnable runnable) {
@@ -38,7 +40,21 @@ public class UIHandler extends Handler {
     }
 
     /**
+     * UIThreadにPostするか、UIThreadの場合はその場で実行する
+     *
+     * @param runnable
+     */
+    public static void postUIorRun(Runnable runnable) {
+        if (AndroidUtil.isUIThread()) {
+            runnable.run();
+        } else {
+            postUI(runnable);
+        }
+    }
+
+    /**
      * 指定したディレイをかけてPOSTする
+     *
      * @param runnable
      * @param delay
      */
@@ -48,6 +64,7 @@ public class UIHandler extends Handler {
 
     /**
      * UIスレッドにPOSTし、実行終了を待つ
+     *
      * @param runnable
      */
     public static void postWithWait(final Runnable runnable) {

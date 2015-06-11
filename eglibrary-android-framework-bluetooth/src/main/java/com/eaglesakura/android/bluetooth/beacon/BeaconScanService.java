@@ -136,38 +136,45 @@ public class BeaconScanService extends BaseService {
 
     final BluetoothDeviceScanner.DeviceScanListener scanListener = new BluetoothDeviceScanner.DeviceScanListener() {
         @Override
-        public void onDeviceFound(BluetoothDeviceScanner self, BluetoothDeviceScanner.BluetoothDeviceCache device) {
-            AndroidUtil.assertUIThread();
+        public void onDeviceFound(BluetoothDeviceScanner self, final BluetoothDeviceScanner.BluetoothDeviceCache device) {
+            UIHandler.postUIorRun(new Runnable() {
+                @Override
+                public void run() {
+                    AndroidUtil.assertUIThread();
+                    try {
+                        device.parseBeacon(true);
 
-            try {
-                device.parseBeacon(true);
-
-                // デバイスの内容をコールバックする
-                for (ScanCallbackHolder holder : callbackHolders) {
-                    holder.onBeaconFound(device);
+                        // デバイスの内容をコールバックする
+                        for (ScanCallbackHolder holder : callbackHolders) {
+                            holder.onBeaconFound(device);
+                        }
+                    } catch (Exception e) {
+                        // not beacon
+                    }
                 }
-            } catch (Exception e) {
-                // not beacon
-            }
+            });
         }
 
         @Override
         public void onDeviceUpdated(BluetoothDeviceScanner self, BluetoothDeviceScanner.BluetoothDeviceCache device) {
-            AndroidUtil.assertUIThread();
-
         }
 
         @Override
         public void onScanTimeout(BluetoothDeviceScanner self) {
-            AndroidUtil.assertUIThread();
+            UIHandler.postUIorRun(new Runnable() {
+                @Override
+                public void run() {
+                    AndroidUtil.assertUIThread();
 
-            // スキャン結果のコールバックを行う
-            for (ScanCallbackHolder holder : callbackHolders) {
-                holder.onScanFinished(scanStartTime);
-            }
+                    // スキャン結果のコールバックを行う
+                    for (ScanCallbackHolder holder : callbackHolders) {
+                        holder.onScanFinished(scanStartTime);
+                    }
 
-            // スキャンを停止させる
-            stopScan();
+                    // スキャンを停止させる
+                    stopScan();
+                }
+            });
         }
     };
 
