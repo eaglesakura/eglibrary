@@ -10,7 +10,7 @@ public class BlockOutputStream extends OutputStream {
 
     int currentBlockIndex = 0;
 
-    byte[] buffer = new byte[NetworkConnector.BLOCK_SIZE];
+    byte[] blockBuffer = new byte[NetworkConnector.BLOCK_SIZE];
 
     int bufferCapacity = NetworkConnector.BLOCK_SIZE;
 
@@ -32,18 +32,22 @@ public class BlockOutputStream extends OutputStream {
     @Override
     public void write(byte[] buffer, int offset, int count) throws IOException {
         while (count > 0) {
+            int writeSize = Math.min(bufferCapacity, count);
+
+            if (writeSize > 0) {
+                // バッファをコピーする
+                System.arraycopy(buffer, offset, blockBuffer, blockBuffer.length - bufferCapacity, writeSize);
+
+                // キャパシティをリセットする
+                bufferCapacity -= writeSize;
+                count -= writeSize;
+                offset += writeSize;
+            }
+
             // キャパシティが無かったらコミットする
             if (bufferCapacity == 0) {
                 commit(false);
             }
-
-            int writeSize = Math.min(bufferCapacity, count);
-            // バッファをコピーする
-            System.arraycopy(buffer, offset, buffer, buffer.length - bufferCapacity, writeSize);
-
-            // キャパシティをリセットする
-            bufferCapacity -= writeSize;
-            count -= writeSize;
         }
     }
 
@@ -69,19 +73,19 @@ public class BlockOutputStream extends OutputStream {
         DbFileBlock block = new DbFileBlock();
         block.setUrl(url);
         if (bufferCapacity == 0) {
-            block.setBody(buffer);
+            block.setBody(blockBuffer);
         } else {
-            byte[] temp = new byte[buffer.length - bufferCapacity];
-            System.arraycopy(block, 0, temp, 0, temp.length);
+            byte[] temp = new byte[blockBuffer.length - bufferCapacity];
+            System.arraycopy(blockBuffer, 0, temp, 0, temp.length);
             block.setBody(temp);
         }
         block.setEof(eof);
-        block.setIndex(currentBlockIndex);
+        block.setNumber(currentBlockIndex);
 
         database.put(block);
 
         // キャパシティを戻してインデックスを進める
         ++currentBlockIndex;
-        bufferCapacity = buffer.length;
+        bufferCapacity = blockBuffer.length;
     }
 }

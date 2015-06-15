@@ -8,7 +8,7 @@ public class DbFileBlock {
 
     /** Not-null value. */
     private String url;
-    private int index;
+    private int number;
     /** Not-null value. */
     private byte[] body;
     private boolean eof;
@@ -16,9 +16,9 @@ public class DbFileBlock {
     public DbFileBlock() {
     }
 
-    public DbFileBlock(String url, int index, byte[] body, boolean eof) {
+    public DbFileBlock(String url, int number, byte[] body, boolean eof) {
         this.url = url;
-        this.index = index;
+        this.number = number;
         this.body = body;
         this.eof = eof;
     }
@@ -33,12 +33,12 @@ public class DbFileBlock {
         this.url = url;
     }
 
-    public int getIndex() {
-        return index;
+    public int getNumber() {
+        return number;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
+    public void setNumber(int number) {
+        this.number = number;
     }
 
     /** Not-null value. */

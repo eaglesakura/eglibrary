@@ -34,19 +34,32 @@ public class BlockInputStream extends InputStream {
 
     @Override
     public int available() throws IOException {
+        if (blockCapacity == 0) {
+            if (nextBlock()) {
+                return 0;
+            }
+        }
         return blockCapacity;
     }
 
     @Override
     public int read(byte[] buffer, int byteOffset, int byteCount) throws IOException {
+        if (available() == 0) {
+            // 読み込むべきデータが残っていない場合は何もしない
+            return -1;
+        }
+
         int sumReadBytes = 0;
         while (byteCount > 0) {
             int readSize = Math.min(blockCapacity, byteCount);
-            System.arraycopy(block.getBody(), block.getBody().length - blockCapacity, buffer, byteOffset, readSize);
+            if (readSize > 0) {
+                System.arraycopy(block.getBody(), block.getBody().length - blockCapacity, buffer, byteOffset, readSize);
 
-            sumReadBytes += readSize;
-            blockCapacity -= readSize;
-            byteCount -= readSize;
+                sumReadBytes += readSize;
+                blockCapacity -= readSize;
+                byteCount -= readSize;
+                byteOffset += readSize;
+            }
 
             if (blockCapacity == 0) {
                 // 読み込み容量が無くなったらチェックする

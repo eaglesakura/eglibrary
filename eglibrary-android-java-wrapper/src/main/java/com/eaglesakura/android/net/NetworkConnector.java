@@ -53,8 +53,9 @@ public class NetworkConnector {
 
     /**
      * 1ブロックのデータサイズ
+     * 検証時は小さくしておく
      */
-    static final int BLOCK_SIZE = 1024 * 128;
+    static final int BLOCK_SIZE = 1024 * 32;
 
     public static final long CACHE_ONE_MINUTE = 1000 * 60;
     public static final long CACHE_ONE_HOUR = CACHE_ONE_MINUTE * 60;
@@ -260,7 +261,7 @@ public class NetworkConnector {
                     return false;
                 }
 
-                T parse = parser.parse(this, new ByteArrayInputStream(cache.getBody()));
+                T parse = parser.parse(this, new BlockInputStream(getCacheDatabase(), cache.getUrl()));
                 if (parse != null) {
                     currentDataHash = oldDataHash;
 //                    LogUtil.log("data(%s) hash old(%s) -> new(%s) modified(false : local)",
@@ -459,10 +460,30 @@ public class NetworkConnector {
         tasks.pushFront(new Runnable() {
             @Override
             public void run() {
+                CacheDatabase db = getCacheDatabase();
+                // ブロックとして書き出す
+                BlockOutputStream os = null;
+                try {
+                    db.open();
+                    db.cleanFileBlock(url);
+
+                    os = new BlockOutputStream(getCacheDatabase(), url, 0);
+                    os.write(body, 0, body.length);
+                    os.onCompleted();
+                } catch (Exception e) {
+                    LogUtil.log(e);
+                    return;
+                } finally {
+                    IOUtil.close(os);
+                    db.close();
+                }
+
+
                 DbNetCache cache = new DbNetCache();
                 cache.setUrl(url);
-                cache.setBody(body);
                 cache.setBodySize(body.length);
+                cache.setDownloadedSize(body.length);
+                cache.setBlockSize(BLOCK_SIZE);
                 cache.setCacheType(CACHETYPE_DB);
                 cache.setMethod(method.toUpperCase());
                 cache.setCacheTime(new Date());
@@ -473,7 +494,6 @@ public class NetworkConnector {
                 }
                 cache.setHash(EncodeUtil.genMD5(body));
 
-                CacheDatabase db = getCacheDatabase();
                 try {
                     db.open();
                     db.put(cache);
@@ -497,7 +517,7 @@ public class NetworkConnector {
         return cacheDatabase;
     }
 
-    private static final int SUPPORTED_DATABASE_VERSION = 2;
+    private static final int SUPPORTED_DATABASE_VERSION = 3;
 
     class CacheDatabase extends BaseDatabase<DaoSession> {
         public CacheDatabase() {
@@ -573,7 +593,7 @@ public class NetworkConnector {
             CloseableListIterator<DbFileBlock> iterator = session.getDbFileBlockDao()
                     .queryBuilder()
                     .where(DbFileBlockDao.Properties.Url.eq(url))
-                    .orderAsc(DbFileBlockDao.Properties.Index)
+                    .orderAsc(DbFileBlockDao.Properties.Number)
                     .listIterator();
             return iterator;
         }

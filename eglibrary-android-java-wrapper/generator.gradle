@@ -50,7 +50,7 @@ task generateNetCache(type: com.eaglesakura.gradle.tasks.AndroidDaoGenTask) {
     outDirectory = file("src/main/generated/dao")
     classPackageBase = "com.eaglesakura.android.dao"
 
-    def schema = newSchema(2, "net");
+    def schema = newSchema(3, "net");
 
     /**
      * シンプルなローカルキャッシュを管理する
@@ -65,9 +65,9 @@ task generateNetCache(type: com.eaglesakura.gradle.tasks.AndroidDaoGenTask) {
     DbNetCache.addIntProperty("cacheType").notNull();
     DbNetCache.addIntProperty("bodySize").notNull();
     DbNetCache.addIntProperty("blockSize").notNull(); // 1ブロックのサイズ
-    DbNetCache.addBooleanProperty("completed").notNull(); // データが全て揃っていたらtrue
-
-    DbNetCache.addByteArrayProperty("body");
+    // ダウンロード済みのサイズ
+    // 将来的にはResume用に利用するが、当初はサポートしない
+    DbNetCache.addIntProperty("downloadedSize").notNull();
 
     DbNetCache.addStringProperty("method").notNull();
 
@@ -88,7 +88,7 @@ task generateNetCache(type: com.eaglesakura.gradle.tasks.AndroidDaoGenTask) {
      */
     def DbFileBlock = schema.addEntity("DbFileBlock");
     DbFileBlock.addStringProperty("url").notNull().index(); // DL元のURL
-    DbFileBlock.addIntProperty("index").notNull().index(); // 番号
+    DbFileBlock.addIntProperty("number").notNull().index(); // 番号
     DbFileBlock.addByteArrayProperty("body").notNull(); // ファイル本体
     DbFileBlock.addBooleanProperty("eof").notNull(); // 終端マーク
 }

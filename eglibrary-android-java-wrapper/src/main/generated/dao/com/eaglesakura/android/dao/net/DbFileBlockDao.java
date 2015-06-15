@@ -24,7 +24,7 @@ public class DbFileBlockDao extends AbstractDao<DbFileBlock, Void> {
     */
     public static class Properties {
         public final static Property Url = new Property(0, String.class, "url", false, "URL");
-        public final static Property Index = new Property(1, int.class, "index", false, "INDEX");
+        public final static Property Number = new Property(1, int.class, "number", false, "NUMBER");
         public final static Property Body = new Property(2, byte[].class, "body", false, "BODY");
         public final static Property Eof = new Property(3, boolean.class, "eof", false, "EOF");
     };
@@ -43,14 +43,14 @@ public class DbFileBlockDao extends AbstractDao<DbFileBlock, Void> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'DB_FILE_BLOCK' (" + //
                 "'URL' TEXT NOT NULL ," + // 0: url
-                "'INDEX' INTEGER NOT NULL ," + // 1: index
+                "'NUMBER' INTEGER NOT NULL ," + // 1: number
                 "'BODY' BLOB NOT NULL ," + // 2: body
                 "'EOF' INTEGER NOT NULL );"); // 3: eof
         // Add Indexes
         db.execSQL("CREATE INDEX " + constraint + "IDX_DB_FILE_BLOCK_URL ON DB_FILE_BLOCK" +
                 " (URL);");
-        db.execSQL("CREATE INDEX " + constraint + "IDX_DB_FILE_BLOCK_INDEX ON DB_FILE_BLOCK" +
-                " (INDEX);");
+        db.execSQL("CREATE INDEX " + constraint + "IDX_DB_FILE_BLOCK_NUMBER ON DB_FILE_BLOCK" +
+                " (NUMBER);");
     }
 
     /** Drops the underlying database table. */
@@ -64,7 +64,7 @@ public class DbFileBlockDao extends AbstractDao<DbFileBlock, Void> {
     protected void bindValues(SQLiteStatement stmt, DbFileBlock entity) {
         stmt.clearBindings();
         stmt.bindString(1, entity.getUrl());
-        stmt.bindLong(2, entity.getIndex());
+        stmt.bindLong(2, entity.getNumber());
         stmt.bindBlob(3, entity.getBody());
         stmt.bindLong(4, entity.getEof() ? 1l: 0l);
     }
@@ -80,7 +80,7 @@ public class DbFileBlockDao extends AbstractDao<DbFileBlock, Void> {
     public DbFileBlock readEntity(Cursor cursor, int offset) {
         DbFileBlock entity = new DbFileBlock( //
             cursor.getString(offset + 0), // url
-            cursor.getInt(offset + 1), // index
+            cursor.getInt(offset + 1), // number
             cursor.getBlob(offset + 2), // body
             cursor.getShort(offset + 3) != 0 // eof
         );
@@ -91,7 +91,7 @@ public class DbFileBlockDao extends AbstractDao<DbFileBlock, Void> {
     @Override
     public void readEntity(Cursor cursor, DbFileBlock entity, int offset) {
         entity.setUrl(cursor.getString(offset + 0));
-        entity.setIndex(cursor.getInt(offset + 1));
+        entity.setNumber(cursor.getInt(offset + 1));
         entity.setBody(cursor.getBlob(offset + 2));
         entity.setEof(cursor.getShort(offset + 3) != 0);
      }
