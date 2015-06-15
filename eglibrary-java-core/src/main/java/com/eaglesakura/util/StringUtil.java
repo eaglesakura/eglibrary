@@ -352,6 +352,26 @@ public class StringUtil {
     }
 
     /**
+     * 16進数表現に変換する
+     *
+     * @param bytes
+     * @return
+     */
+    public static String toHexString(byte[] bytes) {
+        StringBuffer sBuffer = new StringBuffer(bytes.length * 2);
+        for (byte b : bytes) {
+            String s = Integer.toHexString(((int) b) & 0xff);
+
+            if (s.length() == 1) {
+                sBuffer.append('0');
+            }
+            sBuffer.append(s);
+        }
+
+        return sBuffer.toString();
+    }
+
+    /**
      * 16進数変換を行う
      *
      * @param intHex

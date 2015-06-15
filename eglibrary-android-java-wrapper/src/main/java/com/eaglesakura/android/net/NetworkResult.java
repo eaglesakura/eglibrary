@@ -35,11 +35,6 @@ public abstract class NetworkResult<T> {
     protected final String url;
 
     /**
-     * 自動でストリームを閉じる場合はtrue
-     */
-    protected boolean streamAutoClose = true;
-
-    /**
      * 古いデータのハッシュ値
      */
     protected String oldDataHash;
@@ -48,6 +43,11 @@ public abstract class NetworkResult<T> {
      * 新しいデータのハッシュ
      */
     protected String currentDataHash;
+
+    /**
+     * ダウンロード済みのデータサイズ
+     */
+    protected long downloadedDataSize = 0;
 
     public NetworkResult(String url) {
         this.url = url;
@@ -75,14 +75,6 @@ public abstract class NetworkResult<T> {
         }
     }
 
-    public void setStreamAutoClose(boolean streamAutoClose) {
-        this.streamAutoClose = streamAutoClose;
-    }
-
-    public boolean isStreamAutoClose() {
-        return streamAutoClose;
-    }
-
     /**
      * タイムアウトまでデータ待ちを行う
      *
@@ -107,6 +99,12 @@ public abstract class NetworkResult<T> {
         }
 
         return receivedData;
+    }
+
+    public long getDownloadedDataSize() {
+        synchronized (this) {
+            return downloadedDataSize;
+        }
     }
 
     /**

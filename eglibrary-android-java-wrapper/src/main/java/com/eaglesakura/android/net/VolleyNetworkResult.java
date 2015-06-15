@@ -65,8 +65,16 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
             return false;
         }
 
-        T parse = parser.parse(this, new BlockInputStream(connector.getCacheDatabase(), cache.getUrl()));
+        BlockInputStream is = new BlockInputStream(connector.getCacheDatabase(), cache.getUrl());
+        T parse;
+        try {
+            parse = parser.parse(this, is);
+        } finally {
+            IOUtil.close(is);
+        }
+
         if (parse != null) {
+            downloadedDataSize = cache.getBodySize();
             currentDataHash = oldDataHash;
             onReceived(parse);
             return true;
@@ -113,6 +121,7 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
                             "" + isDataModified()
                     );
 
+                    downloadedDataSize = networkResponse.data.length;
                     Response<T> result = Response.success(parser.parse(self(), new ByteArrayInputStream(networkResponse.data)), getCacheEntry());
                     // キャッシュに追加する
                     if (cacheTimeoutMs > 10) {
@@ -175,7 +184,7 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
             return;
         }
 
-        NetworkConnector.tasks.pushFront(new Runnable() {
+        NetworkConnector.cacheWorkTask.pushFront(new Runnable() {
             @Override
             public void run() {
                 NetworkConnector.CacheDatabase db = connector.getCacheDatabase();
@@ -220,7 +229,7 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
                 }
             }
         });
-        NetworkConnector.tasks.start();
+        NetworkConnector.cacheWorkTask.start();
     }
 
 }

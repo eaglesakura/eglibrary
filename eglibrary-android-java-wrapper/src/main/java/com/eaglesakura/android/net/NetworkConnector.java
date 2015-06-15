@@ -5,12 +5,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
@@ -25,16 +22,16 @@ import com.eaglesakura.android.thread.MultiRunningTasks;
 import com.eaglesakura.android.util.ImageUtil;
 import com.eaglesakura.io.IOUtil;
 import com.eaglesakura.json.JSON;
-import com.eaglesakura.util.EncodeUtil;
 import com.eaglesakura.util.LogUtil;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -70,7 +67,12 @@ public class NetworkConnector {
     /**
      * UIスレッドから呼び出しを行うためのタスクキュー
      */
-    static MultiRunningTasks tasks = new MultiRunningTasks(3);
+    static MultiRunningTasks cacheWorkTask = new MultiRunningTasks(3);
+
+    /**
+     * ネットワーク処理を行うためのタスクキュー
+     */
+    static MultiRunningTasks netDownloadTask = new MultiRunningTasks(3);
 
     private final Context context;
 
@@ -87,8 +89,11 @@ public class NetworkConnector {
                 requests = Volley.newRequestQueue(context);
                 requests.start();
 
-                tasks.setThreadName(getClass().getSimpleName());
-                tasks.setThreadPoolMode(false);
+                cacheWorkTask.setThreadName(getClass().getSimpleName() + "/Work");
+                cacheWorkTask.setThreadPoolMode(false);
+
+                netDownloadTask.setThreadName(getClass().getSimpleName() + "/Net");
+                netDownloadTask.setThreadPoolMode(false);
             }
         }
 
@@ -96,6 +101,8 @@ public class NetworkConnector {
         this.cacheFile = new File(this.context.getCacheDir(), "egl-net.db");
 
         this.factory = new NetworkFactory() {
+            HttpRequestFactory requestFactory = AndroidHttp.newCompatibleTransport().createRequestFactory();
+
             @Override
             public Map<String, String> newHttpHeaders(String url, String method) {
                 return Collections.emptyMap();
@@ -110,6 +117,23 @@ public class NetworkConnector {
                         super.retry(error);
                     }
                 };
+            }
+
+            @Override
+            public HttpRequest newLargeRequest(String url, String method) {
+                method = method.toUpperCase();
+
+                try {
+                    if ("GET".equals(method)) {
+                        return requestFactory.buildGetRequest(new GenericUrl(url));
+                    } else if ("POST".equals(method)) {
+                        return requestFactory.buildPostRequest(new GenericUrl(url), null);
+                    }
+                } catch (Exception e) {
+                    LogUtil.log(e);
+                }
+
+                return null;
             }
         };
     }
@@ -146,8 +170,6 @@ public class NetworkConnector {
 
     /**
      * ネットワーク経由でデータを取得する
-     * <br>
-     * iteratorが常にKey - Valueの順番で取得できることが前提となる
      *
      * @param url
      * @param parser
@@ -156,7 +178,39 @@ public class NetworkConnector {
      * @return
      */
     public <T> NetworkResult<T> get(String url, RequestParser<T> parser, long cacheTimeoutMs) {
-        return connect(url, parser, Request.Method.GET, cacheTimeoutMs, null);
+        return get(url, parser, cacheTimeoutMs, true);
+    }
+
+    /**
+     * ネットワーク経由でデータを取得する
+     *
+     * @param url
+     * @param parser
+     * @param cacheTimeoutMs
+     * @param largeFile
+     * @param <T>
+     * @return
+     */
+    public <T> NetworkResult<T> get(String url, RequestParser<T> parser, long cacheTimeoutMs, boolean largeFile) {
+        if (url == null || !url.startsWith("http")) {
+            return newUrlErrorResult(url);
+        }
+
+        if (largeFile) {
+            LargeNetworkResult<T> result = new LargeNetworkResult<>(
+                    url,
+                    this,
+                    factory.newLargeRequest(url, "GET"),
+                    cacheTimeoutMs,
+                    parser,
+                    null
+            );
+
+            start(result);
+            return result;
+        } else {
+            return connect(url, parser, Request.Method.GET, cacheTimeoutMs, null);
+        }
     }
 
     public static Map<String, String> asMap(Collection<String> keyValues) {
@@ -250,7 +304,7 @@ public class NetworkConnector {
      * @param <T>
      */
     protected <T> void start(final NetworkResult<T> result) {
-        tasks.pushBack(new Runnable() {
+        cacheWorkTask.pushBack(new Runnable() {
             @Override
             public void run() {
                 if (result.isCanceled()) {
@@ -260,7 +314,7 @@ public class NetworkConnector {
                 result.startDownloadFromBackground();
             }
         });
-        tasks.start();
+        cacheWorkTask.start();
     }
 
     /**
@@ -483,6 +537,15 @@ public class NetworkConnector {
          * @return
          */
         Map<String, String> newHttpHeaders(String url, String method);
+
+        /**
+         * 大容量のデータを受け取る場合に利用するリクエスト
+         *
+         * @param url
+         * @param method
+         * @return
+         */
+        HttpRequest newLargeRequest(String url, String method);
     }
 
 

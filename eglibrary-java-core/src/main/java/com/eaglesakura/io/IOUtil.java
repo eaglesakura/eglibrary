@@ -34,7 +34,6 @@ public class IOUtil {
      *
      * @param input  コピー元
      * @param output コピー先
-     *
      * @throws IOException
      */
     public static void copyTo(InputStream input, OutputStream output) throws IOException {
@@ -56,7 +55,6 @@ public class IOUtil {
      * @param closeInput  終了時にinputを閉じる
      * @param output      コピー先
      * @param closeOutput 終了時にoutputを閉じる
-     *
      * @throws IOException
      */
     public static void copyTo(InputStream input, boolean closeInput, OutputStream output, boolean closeOutput) throws IOException {
@@ -79,7 +77,6 @@ public class IOUtil {
      * int配列をbit状態を保ってbyte配列へ変換する
      *
      * @param array 　変換元のint配列
-     *
      * @return コピーされたbyte配列
      */
     public static final byte[] toByteArray(int[] array) {
@@ -92,7 +89,6 @@ public class IOUtil {
      *
      * @param array  変換元のint配列
      * @param result 変換先のbyte配列
-     *
      * @return resultオブジェクト
      */
     public static final byte[] toByteArray(int[] array, byte[] result) {
@@ -110,9 +106,7 @@ public class IOUtil {
      *
      * @param is    読み込み対象のstream
      * @param close closeする場合はtrue
-     *
      * @return 読み取った文字列
-     *
      * @throws IOException
      */
     public static String toString(InputStream is, boolean close) throws IOException {
@@ -124,7 +118,6 @@ public class IOUtil {
      * ファイルを文字列 or null
      *
      * @param file ファイルパス
-     *
      * @return 文字列に変換できれば文字列
      */
     public static String toStringOrNull(File file) {
@@ -149,9 +142,7 @@ public class IOUtil {
      *
      * @param is    読み込み対象
      * @param close isを閉じるならtrue
-     *
      * @return 読み込んだbyte配列
-     *
      * @throws IOException
      */
     public static byte[] toByteArray(InputStream is, boolean close) throws IOException {
@@ -207,7 +198,6 @@ public class IOUtil {
      *
      * @param src コピー元
      * @param dst コピー先
-     *
      * @throws IOException
      */
     public static final void copyOrUpdate(File src, File dst) throws IOException {
@@ -230,7 +220,6 @@ public class IOUtil {
      * ファイルからMD5を求める。
      *
      * @param file 生成元ファイル
-     *
      * @return MD5
      */
     public static String genMD5(File file) {
@@ -270,7 +259,6 @@ public class IOUtil {
      *
      * @param file        ファイルパス
      * @param checkLength 確認容量
-     *
      * @return ハッシュ値
      */
     public static String genShortHash(File file, int checkLength) {
@@ -315,7 +303,6 @@ public class IOUtil {
      * ファイルからSHA1を求める。
      *
      * @param file 生成するファイル
-     *
      * @return SHA1
      */
     public static String genSHA1(File file) {
@@ -372,7 +359,6 @@ public class IOUtil {
      * ファイル拡張子を取得する。
      *
      * @param fileName ファイル名
-     *
      * @return ドットを含まない拡張子
      */
     public static String getFileExt(String fileName) {
@@ -391,7 +377,6 @@ public class IOUtil {
      * 拡張子付のファイル名からファイル名のみを抜き出す
      *
      * @param fileName ファイル名
-     *
      * @return 拡張子を取り除いたファイル名
      */
     public static String getFileName(final String fileName) {
@@ -410,7 +395,6 @@ public class IOUtil {
      * ファイルパスからSHA1を得る。
      *
      * @param file 生成するファイル
-     *
      * @return SHA1
      */
     public static String genPathSHA1(final File file) {
@@ -442,7 +426,6 @@ public class IOUtil {
      * inの中身がソートされるため、戻り値は同じ参照となる。
      *
      * @param files ファイルを名前順にソートする
-     *
      * @return filesオブジェクト
      */
     public static File[] sort(File[] files) {
@@ -474,7 +457,6 @@ public class IOUtil {
      * 比較等の処理を行うために文字列を正規化する
      *
      * @param origin 元の文字列
-     *
      * @return 比較用に変換した文字列
      */
     public static String normalizeFileName(String origin) {
@@ -492,7 +474,6 @@ public class IOUtil {
      * {@link File#mkdirs()} を使用すべき
      *
      * @param dir
-     *
      * @return
      */
     @Deprecated
@@ -519,7 +500,6 @@ public class IOUtil {
      *
      * @param target 探すファイル
      * @param parent 親ディレクトリ
-     *
      * @return 探索できた全てのファイル
      */
     public static List<File> getDirectoryRoute(File target, File parent) {
@@ -538,7 +518,6 @@ public class IOUtil {
      * dirフォルダ自体は残る。
      *
      * @param dir 削除対象のディレクトリ
-     *
      * @return dirオブジェクト
      */
     public static File cleanDirectory(File dir) {
@@ -555,7 +534,6 @@ public class IOUtil {
      *
      * @param a ファイルA
      * @param b ファイルB
-     *
      * @return 同じパスである場合はtrue
      */
     public static boolean equals(File a, File b) {
@@ -571,7 +549,6 @@ public class IOUtil {
      * ただし、これはヘッダのみをチェックするため、簡易的なチェックしか行えない。
      *
      * @param buffer ヘッダ
-     *
      * @return GZIPであればtrue
      */
     public static boolean isGzip(byte[] buffer) {
@@ -582,7 +559,6 @@ public class IOUtil {
      * rawバッファをGZIPに圧縮して返却する
      *
      * @param raw 元ファイル配列
-     *
      * @return GZIP配列
      */
     public static byte[] compressGzip(byte[] raw) {
@@ -605,7 +581,6 @@ public class IOUtil {
      * GZIPバッファをデコードする。失敗したらnullを返却する。
      *
      * @param gzip GZIPバッファ
-     *
      * @return 解凍したバッファ
      */
     public static byte[] decompressGzipOrNull(byte[] gzip) {
@@ -623,7 +598,6 @@ public class IOUtil {
      *
      * @param stream       読み込み対象
      * @param outDirectory 書き込み対象
-     *
      * @throws IOException
      */
     public static void unzip(InputStream stream, File outDirectory) throws IOException {
@@ -659,7 +633,6 @@ public class IOUtil {
      *
      * @param zipFile      ZIPファイル
      * @param outDirectory 解凍ディレクトリ
-     *
      * @throws IOException
      */
     public static void unzip(File zipFile, File outDirectory) throws IOException {

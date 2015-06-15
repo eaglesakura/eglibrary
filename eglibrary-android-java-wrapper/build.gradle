@@ -20,6 +20,7 @@ dependencies {
      * Network
      */
     compile 'com.mcxiaoke.volley:library-aar:1.0.+@aar'
+    compile 'com.google.http-client:google-http-client-android:1.18.+'
 
     compile project(':eglibrary-java-wrapper')
     compile project(':eglibrary-android-java-core')
