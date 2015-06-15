@@ -138,7 +138,6 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
                 InputStream content = resp.getContent();
                 HttpHeaders headers = resp.getHeaders();
                 int code = resp.getStatusCode();
-
                 LogUtil.log("Resp url(%s) status(%d) headers(%s)", url, code, "" + headers);
 
                 final MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -146,6 +145,12 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
                 int readSize = 0;
 
                 try {
+                    if ((code / 100) != 2) {
+                        LogUtil.log("Status Code(%d) != success", code);
+                        throw new IOException(String.format("StatusCode Error(%d)", code));
+                    }
+
+
                     while ((readSize = content.read(buffer)) >= 0) {
                         if (isCanceled() || aborted) {
                             throw new IllegalStateException("Abort || Cancel Download");
