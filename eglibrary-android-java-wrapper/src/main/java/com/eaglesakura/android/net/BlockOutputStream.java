@@ -16,11 +16,6 @@ public class BlockOutputStream extends OutputStream {
 
     NetworkConnector.CacheDatabase database;
 
-    /**
-     * データのDLが正常終了した場合に呼び出す
-     */
-    boolean completed = false;
-
     public BlockOutputStream(NetworkConnector.CacheDatabase database, String url, int startIndex) {
         this.database = database;
         this.currentBlockIndex = startIndex;
