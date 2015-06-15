@@ -10,6 +10,8 @@ public class DbNetCache {
     private String url;
     private int cacheType;
     private int bodySize;
+    private int blockSize;
+    private boolean completed;
     private byte[] body;
     /** Not-null value. */
     private String method;
@@ -27,10 +29,12 @@ public class DbNetCache {
         this.url = url;
     }
 
-    public DbNetCache(String url, int cacheType, int bodySize, byte[] body, String method, java.util.Date cacheTime, java.util.Date cacheLimit, String etag, String hash) {
+    public DbNetCache(String url, int cacheType, int bodySize, int blockSize, boolean completed, byte[] body, String method, java.util.Date cacheTime, java.util.Date cacheLimit, String etag, String hash) {
         this.url = url;
         this.cacheType = cacheType;
         this.bodySize = bodySize;
+        this.blockSize = blockSize;
+        this.completed = completed;
         this.body = body;
         this.method = method;
         this.cacheTime = cacheTime;
@@ -63,6 +67,22 @@ public class DbNetCache {
 
     public void setBodySize(int bodySize) {
         this.bodySize = bodySize;
+    }
+
+    public int getBlockSize() {
+        return blockSize;
+    }
+
+    public void setBlockSize(int blockSize) {
+        this.blockSize = blockSize;
+    }
+
+    public boolean getCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 
     public byte[] getBody() {

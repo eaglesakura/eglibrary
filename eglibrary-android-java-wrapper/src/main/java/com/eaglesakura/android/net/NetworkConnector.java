@@ -16,6 +16,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.eaglesakura.android.dao.net.DaoMaster;
 import com.eaglesakura.android.dao.net.DaoSession;
+import com.eaglesakura.android.dao.net.DbFileBlock;
+import com.eaglesakura.android.dao.net.DbFileBlockDao;
 import com.eaglesakura.android.dao.net.DbNetCache;
 import com.eaglesakura.android.dao.net.DbNetCacheDao;
 import com.eaglesakura.android.db.BaseDatabase;
@@ -38,6 +40,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import de.greenrobot.dao.query.CloseableListIterator;
+
 /**
  * シンプルにNetのAPI接続を行えるようにするクラス
  * <br>
@@ -46,6 +50,12 @@ import java.util.Map;
  * リクエストの発行と同期を別途行えるようになったため、通信・処理速度が向上する。
  */
 public class NetworkConnector {
+
+    /**
+     * 1ブロックのデータサイズ
+     */
+    static final int BLOCK_SIZE = 1024 * 128;
+
     public static final long CACHE_ONE_MINUTE = 1000 * 60;
     public static final long CACHE_ONE_HOUR = CACHE_ONE_MINUTE * 60;
     public static final long CACHE_ONE_DAY = CACHE_ONE_HOUR * 24;
@@ -142,7 +152,6 @@ public class NetworkConnector {
      * @param parser
      * @param cacheTimeoutMs
      * @param <T>
-     *
      * @return
      */
     public <T> NetworkResult<T> get(String url, RequestParser<T> parser, long cacheTimeoutMs) {
@@ -173,7 +182,6 @@ public class NetworkConnector {
      * @param parser
      * @param cacheTimeoutMs
      * @param <T>
-     *
      * @return
      */
     public <T> NetworkResult<T> post(String url, RequestParser<T> parser, Map<String, String> params, long cacheTimeoutMs) {
@@ -186,7 +194,6 @@ public class NetworkConnector {
      * @param url
      * @param parser
      * @param <T>
-     *
      * @return
      */
     public <T> NetworkResult<T> post(String url, RequestParser<T> parser, Map<String, String> params) {
@@ -198,7 +205,6 @@ public class NetworkConnector {
      *
      * @param url
      * @param <T>
-     *
      * @return
      */
     protected <T> NetworkResult<T> newUrlErrorResult(final String url) {
@@ -224,7 +230,6 @@ public class NetworkConnector {
      * @param parser
      * @param cacheTimeoutMs
      * @param <T>
-     *
      * @return
      */
     protected <T> NetworkResult<T> connect(final String url, final RequestParser<T> parser, final int volleyMethod, final long cacheTimeoutMs, final Map<String, String> params) {
@@ -386,7 +391,6 @@ public class NetworkConnector {
      *
      * @param cache
      * @param timeoutMs
-     *
      * @return
      */
     protected boolean dropTimeoutCache(DbNetCache cache, long timeoutMs) {
@@ -411,7 +415,6 @@ public class NetworkConnector {
      * URLを指定してキャッシュを取得する
      *
      * @param url
-     *
      * @return
      */
     protected DbNetCache loadCache(String url) {
@@ -496,7 +499,7 @@ public class NetworkConnector {
 
     private static final int SUPPORTED_DATABASE_VERSION = 2;
 
-    protected class CacheDatabase extends BaseDatabase<DaoSession> {
+    class CacheDatabase extends BaseDatabase<DaoSession> {
         public CacheDatabase() {
             super(NetworkConnector.this.context, DaoMaster.class);
         }
@@ -520,10 +523,18 @@ public class NetworkConnector {
         }
 
         /**
+         * データを追記する
+         *
+         * @param block
+         */
+        public void put(DbFileBlock block) {
+            session.getDbFileBlockDao().insert(block);
+        }
+
+        /**
          * キャッシュを取得する
          *
          * @param url
-         *
          * @return
          */
         public DbNetCache get(String url) {
@@ -534,7 +545,6 @@ public class NetworkConnector {
          * 有効期間が切れていないキャッシュを取得する
          *
          * @param url
-         *
          * @return
          */
         public DbNetCache getIfExist(String url) {
@@ -543,10 +553,29 @@ public class NetworkConnector {
                     .limit(1)
                     .list();
             if (list.isEmpty()) {
+                cleanFileBlock(url);
                 return null;
             } else {
                 return list.get(0);
             }
+        }
+
+        public void cleanFileBlock(String url) {
+            session.getDbFileBlockDao()
+                    .queryBuilder()
+                    .where(DbFileBlockDao.Properties.Url.eq(url))
+                    .buildDelete()
+                    .executeDeleteWithoutDetachingEntities();
+
+        }
+
+        public CloseableListIterator<DbFileBlock> listFileBlocks(String url) {
+            CloseableListIterator<DbFileBlock> iterator = session.getDbFileBlockDao()
+                    .queryBuilder()
+                    .where(DbFileBlockDao.Properties.Url.eq(url))
+                    .orderAsc(DbFileBlockDao.Properties.Index)
+                    .listIterator();
+            return iterator;
         }
 
         @Override

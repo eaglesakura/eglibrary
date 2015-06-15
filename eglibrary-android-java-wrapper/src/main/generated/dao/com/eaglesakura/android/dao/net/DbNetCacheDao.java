@@ -26,12 +26,14 @@ public class DbNetCacheDao extends AbstractDao<DbNetCache, String> {
         public final static Property Url = new Property(0, String.class, "url", true, "URL");
         public final static Property CacheType = new Property(1, int.class, "cacheType", false, "CACHE_TYPE");
         public final static Property BodySize = new Property(2, int.class, "bodySize", false, "BODY_SIZE");
-        public final static Property Body = new Property(3, byte[].class, "body", false, "BODY");
-        public final static Property Method = new Property(4, String.class, "method", false, "METHOD");
-        public final static Property CacheTime = new Property(5, java.util.Date.class, "cacheTime", false, "CACHE_TIME");
-        public final static Property CacheLimit = new Property(6, java.util.Date.class, "cacheLimit", false, "CACHE_LIMIT");
-        public final static Property Etag = new Property(7, String.class, "etag", false, "ETAG");
-        public final static Property Hash = new Property(8, String.class, "hash", false, "HASH");
+        public final static Property BlockSize = new Property(3, int.class, "blockSize", false, "BLOCK_SIZE");
+        public final static Property Completed = new Property(4, boolean.class, "completed", false, "COMPLETED");
+        public final static Property Body = new Property(5, byte[].class, "body", false, "BODY");
+        public final static Property Method = new Property(6, String.class, "method", false, "METHOD");
+        public final static Property CacheTime = new Property(7, java.util.Date.class, "cacheTime", false, "CACHE_TIME");
+        public final static Property CacheLimit = new Property(8, java.util.Date.class, "cacheLimit", false, "CACHE_LIMIT");
+        public final static Property Etag = new Property(9, String.class, "etag", false, "ETAG");
+        public final static Property Hash = new Property(10, String.class, "hash", false, "HASH");
     };
 
 
@@ -50,12 +52,14 @@ public class DbNetCacheDao extends AbstractDao<DbNetCache, String> {
                 "'URL' TEXT PRIMARY KEY NOT NULL UNIQUE ," + // 0: url
                 "'CACHE_TYPE' INTEGER NOT NULL ," + // 1: cacheType
                 "'BODY_SIZE' INTEGER NOT NULL ," + // 2: bodySize
-                "'BODY' BLOB," + // 3: body
-                "'METHOD' TEXT NOT NULL ," + // 4: method
-                "'CACHE_TIME' INTEGER NOT NULL ," + // 5: cacheTime
-                "'CACHE_LIMIT' INTEGER NOT NULL ," + // 6: cacheLimit
-                "'ETAG' TEXT," + // 7: etag
-                "'HASH' TEXT);"); // 8: hash
+                "'BLOCK_SIZE' INTEGER NOT NULL ," + // 3: blockSize
+                "'COMPLETED' INTEGER NOT NULL ," + // 4: completed
+                "'BODY' BLOB," + // 5: body
+                "'METHOD' TEXT NOT NULL ," + // 6: method
+                "'CACHE_TIME' INTEGER NOT NULL ," + // 7: cacheTime
+                "'CACHE_LIMIT' INTEGER NOT NULL ," + // 8: cacheLimit
+                "'ETAG' TEXT," + // 9: etag
+                "'HASH' TEXT);"); // 10: hash
     }
 
     /** Drops the underlying database table. */
@@ -71,23 +75,25 @@ public class DbNetCacheDao extends AbstractDao<DbNetCache, String> {
         stmt.bindString(1, entity.getUrl());
         stmt.bindLong(2, entity.getCacheType());
         stmt.bindLong(3, entity.getBodySize());
+        stmt.bindLong(4, entity.getBlockSize());
+        stmt.bindLong(5, entity.getCompleted() ? 1l: 0l);
  
         byte[] body = entity.getBody();
         if (body != null) {
-            stmt.bindBlob(4, body);
+            stmt.bindBlob(6, body);
         }
-        stmt.bindString(5, entity.getMethod());
-        stmt.bindLong(6, entity.getCacheTime().getTime());
-        stmt.bindLong(7, entity.getCacheLimit().getTime());
+        stmt.bindString(7, entity.getMethod());
+        stmt.bindLong(8, entity.getCacheTime().getTime());
+        stmt.bindLong(9, entity.getCacheLimit().getTime());
  
         String etag = entity.getEtag();
         if (etag != null) {
-            stmt.bindString(8, etag);
+            stmt.bindString(10, etag);
         }
  
         String hash = entity.getHash();
         if (hash != null) {
-            stmt.bindString(9, hash);
+            stmt.bindString(11, hash);
         }
     }
 
@@ -104,12 +110,14 @@ public class DbNetCacheDao extends AbstractDao<DbNetCache, String> {
             cursor.getString(offset + 0), // url
             cursor.getInt(offset + 1), // cacheType
             cursor.getInt(offset + 2), // bodySize
-            cursor.isNull(offset + 3) ? null : cursor.getBlob(offset + 3), // body
-            cursor.getString(offset + 4), // method
-            new java.util.Date(cursor.getLong(offset + 5)), // cacheTime
-            new java.util.Date(cursor.getLong(offset + 6)), // cacheLimit
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // etag
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8) // hash
+            cursor.getInt(offset + 3), // blockSize
+            cursor.getShort(offset + 4) != 0, // completed
+            cursor.isNull(offset + 5) ? null : cursor.getBlob(offset + 5), // body
+            cursor.getString(offset + 6), // method
+            new java.util.Date(cursor.getLong(offset + 7)), // cacheTime
+            new java.util.Date(cursor.getLong(offset + 8)), // cacheLimit
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // etag
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10) // hash
         );
         return entity;
     }
@@ -120,12 +128,14 @@ public class DbNetCacheDao extends AbstractDao<DbNetCache, String> {
         entity.setUrl(cursor.getString(offset + 0));
         entity.setCacheType(cursor.getInt(offset + 1));
         entity.setBodySize(cursor.getInt(offset + 2));
-        entity.setBody(cursor.isNull(offset + 3) ? null : cursor.getBlob(offset + 3));
-        entity.setMethod(cursor.getString(offset + 4));
-        entity.setCacheTime(new java.util.Date(cursor.getLong(offset + 5)));
-        entity.setCacheLimit(new java.util.Date(cursor.getLong(offset + 6)));
-        entity.setEtag(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-        entity.setHash(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setBlockSize(cursor.getInt(offset + 3));
+        entity.setCompleted(cursor.getShort(offset + 4) != 0);
+        entity.setBody(cursor.isNull(offset + 5) ? null : cursor.getBlob(offset + 5));
+        entity.setMethod(cursor.getString(offset + 6));
+        entity.setCacheTime(new java.util.Date(cursor.getLong(offset + 7)));
+        entity.setCacheLimit(new java.util.Date(cursor.getLong(offset + 8)));
+        entity.setEtag(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setHash(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
      }
     
     /** @inheritdoc */
