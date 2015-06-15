@@ -115,6 +115,23 @@ public class IOUtil {
     }
 
     /**
+     * ファイルをbyte列 or null
+     *
+     * @param file ファイルパス
+     * @return ファイルが読み込めればbyte配列
+     */
+    public static byte[] toByteArrayOrNull(File file) {
+        FileInputStream is = null;
+        try {
+            is = new FileInputStream(file);
+            return toByteArray(is, true);
+        } catch (Exception e) {
+            close(is);
+        }
+        return null;
+    }
+
+    /**
      * ファイルを文字列 or null
      *
      * @param file ファイルパス
@@ -124,15 +141,9 @@ public class IOUtil {
         FileInputStream is = null;
         try {
             is = new FileInputStream(file);
-            return toString(is, false);
+            return toString(is, true);
         } catch (Exception e) {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (Exception e2) {
-
-                }
-            }
+            close(is);
         }
         return null;
     }
