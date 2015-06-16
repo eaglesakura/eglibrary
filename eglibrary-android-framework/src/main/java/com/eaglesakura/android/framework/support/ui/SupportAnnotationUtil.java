@@ -39,7 +39,7 @@ public class SupportAnnotationUtil {
     @SuppressWarnings("unchecked")
     public static <T extends Fragment> T newFragment(Class<T> clazz) {
         try {
-            return (T) (AnnotationUtil.annotation(clazz).newInstance());
+            return AnnotationUtil.annotation(clazz).newInstance();
         } catch (Exception e) {
             LogUtil.d(e);
             return null;
