@@ -182,6 +182,33 @@ public class NetworkConnector {
     }
 
     /**
+     * 保存ファイルを指定してDLする
+     *
+     * @param url
+     * @param parser
+     * @param downloadFile
+     * @param <T>
+     * @return
+     */
+    public <T> NetworkResult<T> get(String url, RequestParser<T> parser, long cacheTimeoutMs, File downloadFile) {
+        if (url == null || !url.startsWith("http")) {
+            return newUrlErrorResult(url);
+        }
+
+        LargeNetworkResult<T> result = new LargeNetworkResult<>(
+                url,
+                this,
+                factory.newLargeRequest(url, "GET"),
+                cacheTimeoutMs,
+                parser,
+                null,
+                downloadFile
+        );
+        start(result);
+        return result;
+    }
+
+    /**
      * ネットワーク経由でデータを取得する
      *
      * @param url
@@ -203,6 +230,7 @@ public class NetworkConnector {
                     factory.newLargeRequest(url, "GET"),
                     cacheTimeoutMs,
                     parser,
+                    null,
                     null
             );
 

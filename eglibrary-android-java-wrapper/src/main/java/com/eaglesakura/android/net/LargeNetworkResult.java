@@ -9,8 +9,12 @@ import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.util.Date;
 import java.util.Map;
@@ -34,7 +38,11 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
 
     boolean aborted;
 
-    public LargeNetworkResult(String url, NetworkConnector connector, HttpRequest request, long cacheTimeoutMs, NetworkConnector.RequestParser<T> parser, Map<String, String> params) {
+    final File downloadFile;
+
+    final File cacheFile;
+
+    public LargeNetworkResult(String url, NetworkConnector connector, HttpRequest request, long cacheTimeoutMs, NetworkConnector.RequestParser<T> parser, Map<String, String> params, File downloadFile) {
         super(url);
         this.parser = parser;
         this.request = request;
@@ -42,6 +50,12 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
         this.cacheTimeoutMs = cacheTimeoutMs;
         this.params = params;
         this.database = connector.getCacheDatabase();
+        this.downloadFile = downloadFile;
+        if (downloadFile == null) {
+            this.cacheFile = null;
+        } else {
+            this.cacheFile = new File(downloadFile.getAbsolutePath() + "." + System.currentTimeMillis() + ".escache");
+        }
     }
 
     @Override
@@ -76,6 +90,14 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
         NetworkConnector.netDownloadTask.start();
     }
 
+    InputStream openInputStream(String url) throws IOException {
+        if (downloadFile != null) {
+            return new FileInputStream(downloadFile);
+        } else {
+            return new BlockInputStream(connector.getCacheDatabase(), url);
+        }
+    }
+
     boolean loadFromCache() throws Exception {
         DbNetCache cache = connector.loadCache(url);
 
@@ -91,7 +113,7 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
             return false;
         }
 
-        BlockInputStream is = new BlockInputStream(connector.getCacheDatabase(), cache.getUrl());
+        InputStream is = openInputStream(url);
         T parse;
         try {
             parse = parser.parse(this, is);
@@ -118,6 +140,15 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
         aborted = true;
     }
 
+
+    OutputStream openOutputStream() throws IOException {
+        if (downloadFile != null) {
+            return new FileOutputStream(cacheFile);
+        } else {
+            return new BlockOutputStream(database, url, 0);
+        }
+    }
+
     private MultiRunningTasks.Task downloadTask = new MultiRunningTasks.Task() {
         @Override
         public boolean begin(MultiRunningTasks runnner) {
@@ -130,7 +161,7 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
             try {
                 database.open();
 
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[1024 * 32];
                 request.setConnectTimeout(1000 * 60);
                 request.setFollowRedirects(true);
 
@@ -141,8 +172,10 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
                 LogUtil.log("Resp url(%s) status(%d) headers(%s)", url, code, "" + headers);
 
                 final MessageDigest md = MessageDigest.getInstance("SHA-1");
-                BlockOutputStream os = new BlockOutputStream(database, url, 0);
+                OutputStream os = openOutputStream();
                 int readSize = 0;
+
+                boolean completed = false;
 
                 try {
                     if ((code / 100) != 2) {
@@ -159,18 +192,40 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
                         if (readSize > 0) {
                             os.write(buffer, 0, readSize);
                             md.update(buffer, 0, readSize);
+                            synchronized (this) {
+                                downloadedDataSize += readSize;
+                            }
+                            if (listener instanceof Listener2) {
+                                ((Listener2) listener).onDownloadProgress(buffer, readSize);
+                            }
                         }
 
-                        synchronized (this) {
-                            downloadedDataSize += readSize;
-                        }
                     }
 
                     // 正常終了したため、finish
-                    os.onCompleted();
+                    completed = true;
                 } finally {
+                    if (completed && os instanceof BlockOutputStream) {
+                        ((BlockOutputStream) os).onCompleted();
+                    }
                     os.close();
                     resp.disconnect();
+
+
+                    if (completed && os instanceof FileOutputStream) {
+                        // キャッシュから本番に移す
+                        if (downloadFile.isFile()) {
+                            downloadFile.delete();
+                        }
+
+                        // mvする
+                        cacheFile.renameTo(downloadFile);
+                    }
+
+                    // cacheは例外なく削除する
+                    if (cacheFile != null) {
+                        cacheFile.delete();
+                    }
                 }
 
                 currentDataHash = StringUtil.toHexString(md.digest());
@@ -181,7 +236,7 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
                 );
 
                 // 読み取ったデータをパーサーにかける
-                BlockInputStream is = new BlockInputStream(database, url);
+                InputStream is = openInputStream(url);
                 T parse;
                 try {
                     parse = parser.parse(self(), is);
@@ -210,7 +265,6 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
 
         @Override
         public void finish(MultiRunningTasks runner) {
-
         }
     };
 

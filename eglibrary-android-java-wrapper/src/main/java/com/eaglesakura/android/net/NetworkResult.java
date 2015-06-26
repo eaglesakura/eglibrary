@@ -85,6 +85,8 @@ public abstract class NetworkResult<T> {
         AndroidUtil.assertBackgroundThread();
 
         Timer timer = new Timer();
+
+        long lastCheckedDownloadSize = 0;
         while (receivedData == null) {
             if (error != null) {
                 throw new IOException("Volley Error :: " + error.getMessage());
@@ -95,6 +97,13 @@ public abstract class NetworkResult<T> {
                 abortRequest();
                 throw new IOException("data timeout");
             }
+
+            if (lastCheckedDownloadSize != downloadedDataSize) {
+                // ダウンロードに進捗があれば、タイムアウトを引き伸ばす
+                timer.start();
+            }
+
+            lastCheckedDownloadSize = downloadedDataSize;
             Util.sleep(10);
         }
 
@@ -207,5 +216,14 @@ public abstract class NetworkResult<T> {
          * @param sender
          */
         void onError(NetworkResult<T> sender);
+    }
+
+    /**
+     * データの受け取りをハンドリングする
+     *
+     * @param <T>
+     */
+    public interface Listener2<T> extends Listener<T> {
+        void onDownloadProgress(byte[] buffer, int size);
     }
 }
