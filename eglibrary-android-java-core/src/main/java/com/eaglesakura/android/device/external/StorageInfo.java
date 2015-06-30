@@ -1,5 +1,6 @@
 package com.eaglesakura.android.device.external;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
@@ -124,5 +125,13 @@ public class StorageInfo {
             result.add(new StorageInfo(false, Environment.getExternalStorageDirectory()));
         }
         return result;
+    }
+
+    public static File getExternalStorageRoot(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            return context.getExternalFilesDir(null);
+        } else {
+            return Environment.getExternalStorageDirectory();
+        }
     }
 }

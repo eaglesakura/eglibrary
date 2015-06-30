@@ -441,8 +441,9 @@ public class IOUtil {
      */
     public static File[] sort(File[] files) {
         if (files == null) {
-            return null;
+            return new File[0];
         }
+
         List<File> temp = new ArrayList<File>();
         for (File f : files) {
             temp.add(f);
