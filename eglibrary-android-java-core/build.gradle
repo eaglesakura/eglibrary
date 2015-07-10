@@ -1,5 +1,8 @@
 apply plugin: 'com.android.library'
 
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
 if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
     ext.EGLIBRARY_ARTIFACT_VERSION = ""
 }
