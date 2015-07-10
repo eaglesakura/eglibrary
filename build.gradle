@@ -8,7 +8,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:1.2.3'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
-        classpath "com.eaglesakura:eglibrary-gradle-plugin:0.2.5"
+        classpath "com.eaglesakura:eglibrary-gradle-plugin:0.2.7"
         classpath 'com.eaglesakura:joint-connector-plugin:0.1.13'
     }
 }
@@ -29,8 +29,9 @@ ext {
      * 0.2.4 : support google play publish
      * 0.2.5 : support circle ci
      * 0.2.6 : update Bluetooth P2P
+     * 0.2.7 : build JDK1.7
      */
-    EGLIBRARY_ARTIFACT_VERSION = "0.2.6"
+    EGLIBRARY_ARTIFACT_VERSION = "0.2.7"
 }
 
 void rsyncJavadoc(String projectName) {
