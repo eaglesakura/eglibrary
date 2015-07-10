@@ -102,7 +102,8 @@ public class EGLSpecRequest {
         {
             if (version.ordinal() >= GLESVersion.GLES30.ordinal()) {
                 result.add(EGL_RENDERABLE_TYPE);
-                result.add(0x0010); /* EGL_OPENGL_ES3_BIT */
+//                result.add(0x0010); /* EGL_OPENGL_ES3_BIT */
+                result.add(0x0040); /* EGL_OPENGL_ES3_BIT_KHR */
             } else if (version == GLESVersion.GLES20) {
                 result.add(EGL_RENDERABLE_TYPE);
                 result.add(0x0004); /* EGL_OPENGL_ES2_BIT */

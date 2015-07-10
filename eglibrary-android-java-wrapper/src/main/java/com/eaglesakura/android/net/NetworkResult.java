@@ -25,7 +25,7 @@ public abstract class NetworkResult<T> {
 
     /**
      * データダウンロード待ちのタイムアウト
-     <br>
+     * <br>
      * 標準で3分
      */
     protected long dataTimeoutMs = 1000 * 60 * 3;
@@ -95,7 +95,7 @@ public abstract class NetworkResult<T> {
         Timer timer = new Timer();
         while (receivedData == null) {
             if (error != null) {
-                throw new IOException("Volley Error");
+                throw new IOException("Volley Error :: " + error.getMessage());
             } else if (canceled) {
                 throw new ConnectCanceledException("canceled");
             } else if (timer.end() >= dataTimeoutMs) {
