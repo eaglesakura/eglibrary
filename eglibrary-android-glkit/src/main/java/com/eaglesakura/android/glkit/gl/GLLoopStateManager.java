@@ -358,7 +358,7 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
             device.bind();
             LogUtil.log("call onLoopFinish");
             onLoopFinish();
-            device.unbind();
+//            device.unbind();
         }
         // 処理を終了させる
         device.unbind();
