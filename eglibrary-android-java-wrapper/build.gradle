@@ -48,6 +48,15 @@ android {
         disable 'MissingTranslation'
         disable "NewApi"
     }
+
+    // ignore include
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+    }
+
 }
 
 //buildscript {
