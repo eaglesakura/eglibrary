@@ -1,6 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'android-apt'
 
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
 def APPLICATION_ID = "com.eaglesakura.android.framework"
 
 configurations {
@@ -31,6 +34,14 @@ android {
             manifest.srcFile 'AndroidManifest.xml'
             java.srcDirs = ['src/main/java', 'src/main/dao', 'src/main/gen-prop', 'src/main/generated/dao']
         }
+    }
+
+    // ignore include
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
     }
 }
 

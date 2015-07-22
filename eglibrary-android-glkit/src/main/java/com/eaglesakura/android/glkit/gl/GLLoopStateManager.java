@@ -29,9 +29,9 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
 
     /**
      * GLスレッドへ伝えるためのメッセージキュー
-     * <p/>
+     * <br>
      * 構造をシンプルにするため、Run状態のみ実行される。
-     * <p/>
+     * <br>
      * 実行は {@link #onLoopFrame()} を呼び出す直前になる。
      */
     private List<QueueDataHolder> messageQueue = new ArrayList<>();
@@ -250,7 +250,7 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
         int nowSurfaceWidth = 0;
         int oldSurfaceHeight = 0;
         int oldSurfaceWidth = 0;
-        LoopState lastState = LoopState.Run;
+        LoopState lastState = null;
 
         final int SLEEP_TIME = 1000 / 60;   // 何らかの原因でsleepさせる場合の休止時間
 
@@ -270,15 +270,15 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
                         device.bind();
                     }
 
-                    // 解像度を取得
-                    nowSurfaceWidth = device.getSurfaceWidth();
-                    nowSurfaceHeight = device.getSurfaceHeight();
-
-                    if (lastState == LoopState.Pause) {
+                    if (lastState != LoopState.Run) {
                         // pauseから復旧したらresume
                         LogUtil.log("call onLoopResume");
                         onLoopResume();
                     }
+
+                    // 解像度を取得
+                    nowSurfaceWidth = device.getSurfaceWidth();
+                    nowSurfaceHeight = device.getSurfaceHeight();
 
                     if (nowSurfaceWidth != oldSurfaceWidth || nowSurfaceHeight != oldSurfaceHeight) {
                         // 解像度に変化があったらイベントを発行
@@ -358,7 +358,7 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
             device.bind();
             LogUtil.log("call onLoopFinish");
             onLoopFinish();
-            device.unbind();
+//            device.unbind();
         }
         // 処理を終了させる
         device.unbind();

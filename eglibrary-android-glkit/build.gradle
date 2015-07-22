@@ -1,6 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'android-apt'
 
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
 configurations {
     apt
 }
@@ -30,6 +33,14 @@ android {
 
     lintOptions {
         disable "NewApi"
+    }
+
+    // ignore include
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
     }
 }
 

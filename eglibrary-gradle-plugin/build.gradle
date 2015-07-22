@@ -1,7 +1,7 @@
 apply plugin: 'groovy'
 
-//sourceCompatibility = 1.7
-//targetCompatibility = 1.7
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
 def GOOGLEPLAY_PUBLISH_LIBRARY_VERSION = "v2-rev18-1.19.0"
 def GOOGLEOAUTH_CLIENT_VERSION = "1.19.0"

@@ -1,6 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'android-apt'
 
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
 configurations {
     apt
 }

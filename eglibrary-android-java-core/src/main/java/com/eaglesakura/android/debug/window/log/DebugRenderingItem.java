@@ -8,13 +8,13 @@ import com.eaglesakura.math.Vector2;
 
 /**
  * デバッグレンダリング情報
- * <p/>
+ * <br>
  * 必ず一度は描画されるように調整される。
  */
 public abstract class DebugRenderingItem {
     /**
      * 描画をDropする時刻
-     * <p/>
+     * <br>
      * デフォルトは一度の描画でdrop
      */
     long dropTime = System.currentTimeMillis();
