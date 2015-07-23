@@ -279,7 +279,7 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
             return;
         }
 
-        NetworkConnector.cacheWorkTask.pushFront(new Runnable() {
+        Runnable task = new Runnable() {
             @Override
             public void run() {
                 NetworkConnector.CacheDatabase db = database;
@@ -306,7 +306,9 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
                     db.close();
                 }
             }
-        });
-        NetworkConnector.cacheWorkTask.start();
+        };
+        task.run();
+//        NetworkConnector.cacheWorkTask.pushFront();
+//        NetworkConnector.cacheWorkTask.start();
     }
 }
