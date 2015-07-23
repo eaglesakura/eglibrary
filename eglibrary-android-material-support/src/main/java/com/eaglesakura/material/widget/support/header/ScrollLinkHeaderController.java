@@ -155,6 +155,7 @@ public class ScrollLinkHeaderController {
         if (currentY == currentScrollPosition) {
             return;
         }
+        currentY = (int) (headerScrollDelay * currentY);
 
         LogUtil.log("onScrollY(%d)", currentY);
         currentScrollPosition = currentY;
@@ -171,7 +172,7 @@ public class ScrollLinkHeaderController {
         int viewScrollY;
         {
             int scrollOffset = (openHeight - closeHeight);
-            viewScrollY = (int) (scrollLevel * headerScrollDelay * scrollOffset);
+            viewScrollY = (int) (scrollLevel * scrollOffset);
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) headerViewContainer.getLayoutParams();
 
             viewScrollY = -viewScrollY;
