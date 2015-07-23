@@ -245,7 +245,7 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
                 }
 
                 if (parse != null) {
-                    currentDataHash = oldDataHash;
+//                    currentDataHash = oldDataHash;
                     onReceived(parse);
                     // キャッシュに追加する
                     if (cacheTimeoutMs > 10) {
