@@ -115,7 +115,7 @@ public class SupportNetworkImageView extends ImageView {
      */
     public void setImageFromNetwork(final String getUrl, NetworkConnector.RequestParser<Bitmap> parser) {
         this.url = getUrl;
-        imageResult = connector.get(getUrl, parser, cacheTimeoutMs, true); // large file support
+        imageResult = connector.get(getUrl, parser, cacheTimeoutMs, NetworkConnector.RequestType.GoogleHttpClient); // large file support
         imageResult.setListener(new NetworkResult.Listener<Bitmap>() {
             @Override
             public void onDataReceived(NetworkResult<Bitmap> sender) {

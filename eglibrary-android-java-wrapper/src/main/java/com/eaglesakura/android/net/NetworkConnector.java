@@ -61,6 +61,11 @@ public class NetworkConnector {
     public static final long CACHE_ONE_MONTH = CACHE_ONE_WEEK * 4;
     public static final long CACHE_ONE_YEAR = CACHE_ONE_DAY * 365;
 
+    public enum RequestType {
+        Volley,
+        GoogleHttpClient,
+    }
+
 
     static RequestQueue requests;
 
@@ -178,7 +183,7 @@ public class NetworkConnector {
      * @return
      */
     public <T> NetworkResult<T> get(String url, RequestParser<T> parser, long cacheTimeoutMs) {
-        return get(url, parser, cacheTimeoutMs, true);
+        return get(url, parser, cacheTimeoutMs, RequestType.GoogleHttpClient);
     }
 
     /**
@@ -214,16 +219,16 @@ public class NetworkConnector {
      * @param url
      * @param parser
      * @param cacheTimeoutMs
-     * @param largeFile
+     * @param type
      * @param <T>
      * @return
      */
-    public <T> NetworkResult<T> get(String url, RequestParser<T> parser, long cacheTimeoutMs, boolean largeFile) {
+    public <T> NetworkResult<T> get(String url, RequestParser<T> parser, long cacheTimeoutMs, RequestType type) {
         if (url == null || !url.startsWith("http")) {
             return newUrlErrorResult(url);
         }
 
-        if (largeFile) {
+        if (type == RequestType.GoogleHttpClient) {
             LargeNetworkResult<T> result = new LargeNetworkResult<>(
                     url,
                     this,
