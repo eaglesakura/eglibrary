@@ -88,7 +88,9 @@ public class ScrollLinkHeaderController {
      */
     public void onLayoutChanged(int scroll) {
         openHeight = headerViewContainer.getHeight();
-        ViewUtil.setViewHeight(spacerView, openHeight);
+        if (spacerView != null) {
+            ViewUtil.setViewHeight(spacerView, openHeight);
+        }
         onScrollY(scroll);
     }
 

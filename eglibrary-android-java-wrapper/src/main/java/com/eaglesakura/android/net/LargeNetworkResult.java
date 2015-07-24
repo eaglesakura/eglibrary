@@ -203,10 +203,14 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
                     }
 
                     // 正常終了したため、finish
-                    completed = true;
+                    if (!isCanceled()) {
+                        completed = true;
+                    }
                 } finally {
                     if (completed && os instanceof BlockOutputStream) {
                         ((BlockOutputStream) os).onCompleted();
+                    } else {
+                        database.cleanFileBlock(getUrl());
                     }
                     os.close();
                     resp.disconnect();
@@ -248,7 +252,7 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
 //                    currentDataHash = oldDataHash;
                     onReceived(parse);
                     // キャッシュに追加する
-                    if (cacheTimeoutMs > 10) {
+                    if (cacheTimeoutMs > 10 && !isCanceled()) {
                         putCache(url, headers, request.getRequestMethod(), cacheTimeoutMs);
                     }
                 } else {
