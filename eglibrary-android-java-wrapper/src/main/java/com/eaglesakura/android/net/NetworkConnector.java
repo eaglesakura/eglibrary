@@ -417,6 +417,9 @@ public class NetworkConnector {
     protected synchronized CacheDatabase getCacheDatabase() {
         if (cacheDatabase == null) {
             cacheDatabase = new CacheDatabase();
+
+            // キャッシュDBはプロセスに対してグローバルになるため、利用中常にOpen状態にする
+            cacheDatabase.open();
         }
         return cacheDatabase;
     }

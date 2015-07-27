@@ -8,9 +8,11 @@ import java.util.List;
 import android.content.Context;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabaseLockedException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.Util;
 
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.AbstractDaoMaster;
@@ -58,22 +60,31 @@ public abstract class BaseDatabase<SessionClass extends AbstractDaoSession> {
 
     @SuppressWarnings("unchecked")
     public void open() {
-        synchronized (refsLock) {
-            if (daoMaster == null) {
-                SQLiteOpenHelper helper = createHelper();
-                SQLiteDatabase db = helper.getWritableDatabase();
+        try {
+            synchronized (refsLock) {
+                if (daoMaster == null) {
+                    SQLiteOpenHelper helper = createHelper();
+                    SQLiteDatabase db = helper.getWritableDatabase();
 
-                try {
-                    Constructor<? extends AbstractDaoMaster> constructor = daoMasterClass.getConstructor(SQLiteDatabase.class);
-                    daoMaster = constructor.newInstance(db);
-                    session = (SessionClass) daoMaster.newSession();
-                } catch (Exception e) {
-                    LogUtil.d(e);
-                    throw new IllegalStateException();
+                    try {
+                        Constructor<? extends AbstractDaoMaster> constructor = daoMasterClass.getConstructor(SQLiteDatabase.class);
+                        daoMaster = constructor.newInstance(db);
+                        session = (SessionClass) daoMaster.newSession();
+                    } catch (Exception e) {
+                        LogUtil.d(e);
+                        throw new IllegalStateException();
+                    }
                 }
+                ++refs;
+
+                // 正常終了した
+                return;
             }
-            ++refs;
+        } catch (Exception e) {
+            LogUtil.log("retry database lock");
+            Util.sleep((int) (Math.random() * 1000) + 10);
         }
+
     }
 
     /**

@@ -12,7 +12,10 @@ import com.eaglesakura.android.net.NetworkConnector;
 import com.eaglesakura.android.net.NetworkResult;
 import com.eaglesakura.android.util.ViewUtil;
 import com.eaglesakura.android.wrapper.R;
+import com.eaglesakura.util.EncodeUtil;
 import com.eaglesakura.util.LogUtil;
+
+import java.io.File;
 
 /**
  * Support Network ImageView
@@ -37,6 +40,8 @@ public class SupportNetworkImageView extends ImageView {
     protected long cacheTimeoutMs;
 
     protected OnImageListener onImageListener;
+
+    private File imageFile;
 
     public SupportNetworkImageView(Context context) {
         super(context);
@@ -115,7 +120,9 @@ public class SupportNetworkImageView extends ImageView {
      */
     public void setImageFromNetwork(final String getUrl, NetworkConnector.RequestParser<Bitmap> parser) {
         this.url = getUrl;
-        imageResult = connector.get(getUrl, parser, cacheTimeoutMs, NetworkConnector.RequestType.GoogleHttpClient); // large file support
+        this.imageFile = new File(getContext().getCacheDir(), "net-img/" + EncodeUtil.genSHA1(getUrl.getBytes()) + ".img");
+        imageFile.getParentFile().mkdirs();
+        imageResult = connector.get(getUrl, parser, cacheTimeoutMs, imageFile); // large file support
         imageResult.setListener(new NetworkResult.Listener<Bitmap>() {
             @Override
             public void onDataReceived(NetworkResult<Bitmap> sender) {

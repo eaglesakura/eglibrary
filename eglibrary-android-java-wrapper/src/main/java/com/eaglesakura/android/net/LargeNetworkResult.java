@@ -207,10 +207,12 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
                         completed = true;
                     }
                 } finally {
-                    if (completed && os instanceof BlockOutputStream) {
-                        ((BlockOutputStream) os).onCompleted();
-                    } else {
-                        database.cleanFileBlock(getUrl());
+                    if (os instanceof BlockOutputStream) {
+                        if (canceled) {
+                            database.cleanFileBlock(getUrl());
+                        } else {
+                            ((BlockOutputStream) os).onCompleted();
+                        }
                     }
                     os.close();
                     resp.disconnect();

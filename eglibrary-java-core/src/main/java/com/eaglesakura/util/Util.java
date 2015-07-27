@@ -31,7 +31,6 @@ public class Util {
      * 指定日の開始時刻を取得する
      *
      * @param date
-     *
      * @return
      */
     public static Date getDateStart(Date date) {
@@ -45,7 +44,6 @@ public class Util {
      * 指定日の終了時刻を取得する
      *
      * @param date
-     *
      * @return
      */
     public static Date getDateEnd(Date date) {
@@ -88,11 +86,28 @@ public class Util {
     }
 
     /**
+     * nano秒単位でsleepを行う
+     * @param ms
+     * @param nano
+     */
+    public static void nanosleep(long ms, int nano) {
+        if (ms <= 0 && nano <= 0) {
+            // sleep時間が0ならば何もする必要はない
+            return;
+        }
+
+        try {
+            Thread.sleep(ms, nano);
+        } catch (Exception e) {
+            LogUtil.log(e);
+        }
+    }
+
+    /**
      * itemが重複しないようにaddする
      *
      * @param list
      * @param item
-     *
      * @return
      */
     public static <T> boolean addUnique(List<T> list, T item) {
@@ -110,7 +125,6 @@ public class Util {
      * @param list
      * @param item
      * @param <T>
-     *
      * @return
      */
     public static <T> int addUniqueRequestIndex(List<T> list, T item) {
@@ -128,7 +142,6 @@ public class Util {
     /**
      * @param array 変換元配列
      * @param <T>   type
-     *
      * @return 変換したList
      */
     public static <T> List<T> convert(T[] array) {
@@ -149,7 +162,6 @@ public class Util {
      * @param keyCreator
      * @param <Key>
      * @param <Value>
-     *
      * @return
      */
     public static <Key, Value> Map<Key, Value> asMap(Collection<Value> values, KeyCreator<Key, Value> keyCreator) {

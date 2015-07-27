@@ -180,8 +180,6 @@ public class MultiRunningTasks {
                     public void run() {
                         runTask(this);
                     }
-
-                    ;
                 });
                 threads.add(thread);
                 thread.setName(threadName + " :: ID " + threadId++);

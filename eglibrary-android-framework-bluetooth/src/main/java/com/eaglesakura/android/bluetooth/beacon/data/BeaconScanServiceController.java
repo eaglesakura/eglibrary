@@ -79,7 +79,7 @@ public class BeaconScanServiceController {
             try {
                 service.unregisterCallback(scanCallback);
             } catch (Exception e) {
-                throw new IllegalStateException();
+//                throw new IllegalStateException();
             }
             service = null;
             onServiceUnbinded();
