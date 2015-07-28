@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 
 import com.eaglesakura.math.MathUtil;
+import com.eaglesakura.util.Util;
 
 public class ImageCorrector {
 
@@ -112,6 +113,17 @@ public class ImageCorrector {
         setDefaultFitting(fitting);
     }
 
+    public void resetScale() {
+        float centerX = imageArea.centerX();
+        float centerY = imageArea.centerY();
+        imageArea.set(
+                centerX - (renderArea.width() / 2),
+                centerY - ((renderArea.width() / aspect) / 2),
+                centerX + (renderArea.width() / 2),
+                centerY + ((renderArea.width() / aspect) / 2)
+        );
+    }
+
     /**
      * X方向に長い画像
      *
@@ -161,7 +173,6 @@ public class ImageCorrector {
      *
      * @param fitting
      * @param result
-     *
      * @return
      */
     public RectF getDefaultRenderArea(FitType fitting, RectF result) {
@@ -204,7 +215,6 @@ public class ImageCorrector {
      * 画像エリアを取得する。
      *
      * @param result
-     *
      * @return
      */
     public RectF getImageArea(RectF result) {
@@ -297,7 +307,6 @@ public class ImageCorrector {
      * 画像はこの領域に対して描画する
      *
      * @param result
-     *
      * @return
      */
     public Rect getImageArea(Rect result) {
@@ -309,7 +318,6 @@ public class ImageCorrector {
      * レンダリング領域を取得する。
      *
      * @param result
-     *
      * @return
      */
     public RectF getRenderArea(RectF result) {
@@ -321,7 +329,6 @@ public class ImageCorrector {
      * レンダリング領域を取得する
      *
      * @param result
-     *
      * @return
      */
     public Rect getRenderArea(Rect result) {
@@ -333,7 +340,6 @@ public class ImageCorrector {
      * ピクセル座標からU座標に変換する。
      *
      * @param x
-     *
      * @return
      */
     public float pixToImageU(float x) {
@@ -352,7 +358,6 @@ public class ImageCorrector {
      * ピクセル座標からV座標に変換する。
      *
      * @param y
-     *
      * @return
      */
     public float pixToImageV(float y) {
@@ -390,6 +395,10 @@ public class ImageCorrector {
      * 画像エリア地点を中心としてスケーリングを行う。
      */
     public void scale(float scale) {
+        if (scale == 1.0f) {
+            return;
+        }
+
         Matrix m = new Matrix();
         m.setScale(scale, scale, renderArea.centerX(), renderArea.centerY());
         m.mapRect(imageArea);

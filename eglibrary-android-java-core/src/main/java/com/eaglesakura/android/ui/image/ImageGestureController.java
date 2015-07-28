@@ -117,6 +117,11 @@ public class ImageGestureController implements View.OnTouchListener {
             // スケーリング入力していなかったら
             if (imageCorrector.getPixelScale() < 1.0f) {
                 imageCorrector.scale(scaleCenter.x, scaleCenter.y, scaleEffectUpBound);
+                // スケーリングがオーバーしたら1.0に戻す
+                if (imageCorrector.getPixelScale() > 1.0f) {
+                    imageCorrector.resetScale();
+                }
+
             }
 
             // 誤差が一定以内だったらフィットさせる
@@ -127,7 +132,7 @@ public class ImageGestureController implements View.OnTouchListener {
 
 
         // 位置補正
-        if (!touchNow && imageCorrector.getPixelScale() > 1.0f) {
+        if (!touchNow && imageCorrector.getPixelScale() >= 1.0f) {
             Vector2 lookAtSpeed = this.lookAtSpeed;
 
             if (lookAtSpeed != null && lookAtFrames-- > 0) {
@@ -316,7 +321,7 @@ public class ImageGestureController implements View.OnTouchListener {
          * @param event
          * @return 反応したらtrue
          */
-        public boolean onClick(ImageGestureController gesture, MotionEvent event);
+        boolean onClick(ImageGestureController gesture, MotionEvent event);
 
         /**
          * 画像をダブルクリックした
@@ -325,7 +330,7 @@ public class ImageGestureController implements View.OnTouchListener {
          * @param event
          * @return 反応したらtrue
          */
-        public boolean onDoubleClick(ImageGestureController gesture, MotionEvent event);
+        boolean onDoubleClick(ImageGestureController gesture, MotionEvent event);
 
         /**
          * スケーリングを変更した
@@ -334,6 +339,6 @@ public class ImageGestureController implements View.OnTouchListener {
          * @param center
          * @return 反応したらtrue
          */
-        public boolean onScaled(ImageGestureController gesture, Vector2 center);
+        boolean onScaled(ImageGestureController gesture, Vector2 center);
     }
 }
