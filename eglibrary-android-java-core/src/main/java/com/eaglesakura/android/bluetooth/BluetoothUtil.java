@@ -1,6 +1,7 @@
 package com.eaglesakura.android.bluetooth;
 
 import android.annotation.SuppressLint;
+import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -10,6 +11,7 @@ public class BluetoothUtil {
     /**
      * BluetoothLEをサポートしている場合true
      * API18以上ならtrue
+     *
      * @return
      */
     public static boolean isSupportedBluetoothLeAPILevel() {
@@ -18,6 +20,7 @@ public class BluetoothUtil {
 
     /**
      * BluetoothLEに対応しているデバイスの場合trueを返す
+     *
      * @param context
      * @return
      */
@@ -32,11 +35,21 @@ public class BluetoothUtil {
 
     /**
      * Bluetoothに対応しているデバイスの場合trueを返す
+     *
      * @param context
      * @return
      */
     public static boolean isSupportedBluetooth(Context context) {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH);
+    }
+
+    /**
+     * BluetoothがONであればtrue
+     * @param context
+     * @return
+     */
+    public static boolean isEnabled(Context context) {
+        return ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter().isEnabled();
     }
 
 }
