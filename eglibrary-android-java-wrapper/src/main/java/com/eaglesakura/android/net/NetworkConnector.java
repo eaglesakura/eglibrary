@@ -72,7 +72,7 @@ public class NetworkConnector {
     /**
      * UIスレッドから呼び出しを行うためのタスクキュー
      */
-    static MultiRunningTasks cacheWorkTask = new MultiRunningTasks(3);
+    static MultiRunningTasks cacheWorkTask = new MultiRunningTasks(1);
 
     /**
      * ネットワーク処理を行うためのタスクキュー
@@ -417,9 +417,6 @@ public class NetworkConnector {
     protected synchronized CacheDatabase getCacheDatabase() {
         if (cacheDatabase == null) {
             cacheDatabase = new CacheDatabase();
-
-            // キャッシュDBはプロセスに対してグローバルになるため、利用中常にOpen状態にする
-            cacheDatabase.open();
         }
         return cacheDatabase;
     }

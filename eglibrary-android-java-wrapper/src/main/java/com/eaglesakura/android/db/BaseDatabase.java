@@ -59,32 +59,39 @@ public abstract class BaseDatabase<SessionClass extends AbstractDaoSession> {
     protected abstract SQLiteOpenHelper createHelper();
 
     @SuppressWarnings("unchecked")
-    public void open() {
-        try {
-            synchronized (refsLock) {
-                if (daoMaster == null) {
-                    SQLiteOpenHelper helper = createHelper();
-                    SQLiteDatabase db = helper.getWritableDatabase();
+    public void open(boolean readOnly) {
+        synchronized (refsLock) {
+            if (daoMaster == null) {
+                SQLiteOpenHelper helper = createHelper();
+                SQLiteDatabase db = readOnly ? helper.getReadableDatabase() : helper.getWritableDatabase();
 
-                    try {
-                        Constructor<? extends AbstractDaoMaster> constructor = daoMasterClass.getConstructor(SQLiteDatabase.class);
-                        daoMaster = constructor.newInstance(db);
-                        session = (SessionClass) daoMaster.newSession();
-                    } catch (Exception e) {
-                        LogUtil.d(e);
-                        throw new IllegalStateException();
-                    }
+                try {
+                    Constructor<? extends AbstractDaoMaster> constructor = daoMasterClass.getConstructor(SQLiteDatabase.class);
+                    daoMaster = constructor.newInstance(db);
+                    session = (SessionClass) daoMaster.newSession();
+                } catch (Exception e) {
+                    LogUtil.d(e);
+                    throw new IllegalStateException();
                 }
-                ++refs;
-
-                // 正常終了した
-                return;
             }
-        } catch (Exception e) {
-            LogUtil.log("retry database lock");
-            Util.sleep((int) (Math.random() * 1000) + 10);
-        }
+            ++refs;
 
+            // 正常終了した
+            return;
+        }
+    }
+
+    public void openReadOnly() {
+        open(true);
+    }
+
+    public void openWritable() {
+        open(false);
+    }
+
+    @Deprecated
+    public void open() {
+        open(false);
     }
 
     /**

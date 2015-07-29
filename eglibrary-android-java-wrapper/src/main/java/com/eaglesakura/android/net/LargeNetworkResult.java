@@ -159,8 +159,6 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
         public void run(MultiRunningTasks runner) {
 
             try {
-                database.open();
-
                 byte[] buffer = new byte[1024 * 32];
                 request.setConnectTimeout(1000 * 60);
                 request.setFollowRedirects(true);
@@ -264,7 +262,6 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
                 LogUtil.log(e);
                 onError(e);
             } finally {
-                database.close();
             }
 
         }
@@ -313,8 +310,8 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
                 }
             }
         };
-        task.run();
-//        NetworkConnector.cacheWorkTask.pushFront();
-//        NetworkConnector.cacheWorkTask.start();
+//        task.run();
+        NetworkConnector.cacheWorkTask.pushFront(task);
+        NetworkConnector.cacheWorkTask.start();
     }
 }
