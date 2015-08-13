@@ -1,4 +1,4 @@
-package com.eaglesakura.android.thread;
+package com.eaglesakura.thread;
 
 import java.util.ArrayList;
 import java.util.List;

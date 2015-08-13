@@ -18,7 +18,7 @@ import com.eaglesakura.android.dao.net.DbFileBlockDao;
 import com.eaglesakura.android.dao.net.DbNetCache;
 import com.eaglesakura.android.dao.net.DbNetCacheDao;
 import com.eaglesakura.android.db.BaseDatabase;
-import com.eaglesakura.android.thread.MultiRunningTasks;
+import com.eaglesakura.thread.MultiRunningTasks;
 import com.eaglesakura.android.util.ImageUtil;
 import com.eaglesakura.io.IOUtil;
 import com.eaglesakura.json.JSON;

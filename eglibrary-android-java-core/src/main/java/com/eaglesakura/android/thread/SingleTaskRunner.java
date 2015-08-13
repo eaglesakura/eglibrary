@@ -2,6 +2,7 @@ package com.eaglesakura.android.thread;
 
 import android.content.Context;
 
+import com.eaglesakura.thread.MultiRunningTasks;
 import com.eaglesakura.util.LogUtil;
 
 import java.lang.ref.WeakReference;
