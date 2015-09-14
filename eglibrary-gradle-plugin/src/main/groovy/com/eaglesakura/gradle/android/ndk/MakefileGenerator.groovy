@@ -76,7 +76,7 @@ public class MakefileGenerator {
         } else if (path.file) {
             def name = path.name;
 
-            if (name.endsWith(".cpp") || name.endsWith(".c")) {
+            if (name.endsWith(".cpp") || name.endsWith(".c") || name.endsWith(".a")) {
                 sourceFiles.add(findPath);
                 Logger.out "add source(${findPath})"
             }
