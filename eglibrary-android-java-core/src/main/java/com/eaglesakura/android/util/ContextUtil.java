@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -110,6 +111,7 @@ public class ContextUtil {
 
     /**
      * ディスプレイのWHサイズを取得する。
+     * WindowManagerによる利用可能サイズが基準となる。
      *
      * @param context
      * @param result
@@ -120,6 +122,14 @@ public class ContextUtil {
         @SuppressWarnings("deprecation")
         int displayW = wm.getDefaultDisplay().getWidth(), displayH = wm.getDefaultDisplay().getHeight();
         result.set((float) displayW, (float) displayH);
+        return result;
+    }
+
+    public static Vector2 getDisplayRealSize(Context context, Vector2 result) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Point p = new Point();
+        wm.getDefaultDisplay().getRealSize(p);
+        result.set(p.x, p.y);
         return result;
     }
 
