@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.text.Editable;
 import android.text.InputType;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -122,5 +123,10 @@ public class ViewUtil {
         } catch (Exception e) {
             return defValue;
         }
+    }
+
+    public static int getTouchPointerId(MotionEvent event) {
+        int pointerId = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+        return event.getPointerId(pointerId);
     }
 }

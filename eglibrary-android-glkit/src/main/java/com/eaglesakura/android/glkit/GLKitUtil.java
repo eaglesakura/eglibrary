@@ -1,6 +1,5 @@
 package com.eaglesakura.android.glkit;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
@@ -10,8 +9,6 @@ import android.view.SurfaceView;
 import android.view.TextureView;
 
 import com.eaglesakura.android.glkit.egl.IEGLDevice;
-import com.eaglesakura.android.glkit.egl.IEGLManager;
-import com.eaglesakura.android.glkit.egl11.EGL11Manager;
 import com.eaglesakura.jc.annotation.JCClass;
 import com.eaglesakura.jc.annotation.JCMethod;
 import com.eaglesakura.util.LogUtil;

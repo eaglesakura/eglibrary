@@ -7,7 +7,7 @@ public enum ModuleType {
     PrebuildStaticLibrary {
         @Override
         public String buildLine() {
-            return "include $(PREBUILT_STATIC_LIBRARY"; // *.a
+            return "include $(PREBUILT_STATIC_LIBRARY)"; // *.a
         }
     },
 

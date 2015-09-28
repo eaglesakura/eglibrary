@@ -1,7 +1,11 @@
 package com.eaglesakura.android.glkit.gl;
 
 import android.content.Context;
+import android.graphics.SurfaceTexture;
+import android.view.Choreographer;
+import android.view.TextureView;
 
+import com.eaglesakura.android.glkit.egl.IEGLContextGroup;
 import com.eaglesakura.android.glkit.egl.IEGLManager;
 import com.eaglesakura.android.message.JointMessage;
 import com.eaglesakura.android.message.MessageHandlingListener;
@@ -58,6 +62,8 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
      * 現在の描画ステート
      */
     protected LoopState loopState = null;
+
+    private boolean vsyncEnable = false;
 
     protected GLLoopStateManager(Context context, IEGLManager eglManager) {
         super(context, eglManager);
@@ -270,6 +276,11 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
                         device.bind();
                     }
 
+                    // vsync待ちを行う
+                    if(vsyncEnable) {
+                        waitVsync();
+                    }
+
                     if (lastState != LoopState.Run) {
                         // pauseから復旧したらresume
                         LogUtil.log("call onLoopResume");
@@ -440,4 +451,40 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
             }
         }
     }
+
+    @Override
+    public void initializetWindowDevice(Object windowSurface, IEGLContextGroup contextGroup) {
+        super.initializetWindowDevice(windowSurface, contextGroup);
+        if (windowSurface instanceof TextureView || windowSurface instanceof SurfaceTexture) {
+            // TextureViewはVSyncが取れないため、自前のVSyncを行う。
+            vsyncEnable = true;
+            Choreographer.getInstance().postFrameCallback(vsyncCallback);
+        }
+    }
+
+    /**
+     * 垂直同期待ちを行う。
+     */
+    public void waitVsync() {
+        synchronized (vsyncCallback) {
+            try {
+                vsyncCallback.wait(1000 / 50);
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
+    private Choreographer.FrameCallback vsyncCallback = new Choreographer.FrameCallback() {
+        @Override
+        public void doFrame(long frameTimeNanos) {
+            synchronized (this) {
+                this.notifyAll();
+            }
+            if (device != null) {
+                // TextureViewはVSyncが取れないため、自前のVSyncを行う。
+                Choreographer.getInstance().postFrameCallback(vsyncCallback);
+            }
+        }
+    };
 }
