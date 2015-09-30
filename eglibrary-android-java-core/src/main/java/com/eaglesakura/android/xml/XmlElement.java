@@ -140,6 +140,22 @@ public class XmlElement {
     }
 
     /**
+     * 子要素の持つコンテンツを実数として取得する
+     *
+     * @param tag
+     * @param def
+     * @return
+     */
+    public double childToDouble(String tag, double def) {
+        String value = childToString(tag);
+        try {
+            return Double.parseDouble(value);
+        } catch (Exception e) {
+            return def;
+        }
+    }
+
+    /**
      * 指定子要素の指定属性を取得する
      * 失敗したらnullを返す
      *
@@ -175,6 +191,27 @@ public class XmlElement {
             }
         }
         return result;
+    }
+
+    public interface EnumlateCallback {
+        void onFoundElement(XmlElement element);
+    }
+
+    /**
+     * 指定した名前の子要素を列挙してコールバックする
+     *
+     * @param tag
+     * @param callback
+     */
+    public void listChilds(String tag, EnumlateCallback callback) {
+        Iterator<XmlElement> iterator = childs.iterator();
+        while (iterator.hasNext()) {
+            XmlElement element = iterator.next();
+            // タグが一致したから返す
+            if (element.getTag().equals(tag)) {
+                callback.onFoundElement(element);
+            }
+        }
     }
 
     /**
