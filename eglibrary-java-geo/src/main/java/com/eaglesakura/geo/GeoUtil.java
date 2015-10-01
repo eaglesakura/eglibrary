@@ -24,4 +24,17 @@ public class GeoUtil {
         double miles = dist * 60 * 1.1515;
         return (miles * 1.609344);
     }
+
+    /**
+     * GPS2点の距離をメートル計算する
+     *
+     * @param lat0
+     * @param lng0
+     * @param lat1
+     * @param lng1
+     * @return
+     */
+    public static double calcDistanceMeter(double lat0, double lng0, double lat1, double lng1) {
+        return calcDistanceKiloMeter(lat0, lng0, lat1, lng1) * 1000;
+    }
 }
