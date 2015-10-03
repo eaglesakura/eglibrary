@@ -63,7 +63,6 @@ public final class Vector2 {
      * 内積を取得する。
      *
      * @param v
-     *
      * @return
      */
     public float dot(Vector2 v) {
@@ -147,6 +146,28 @@ public final class Vector2 {
     @Override
     public String toString() {
         return "V( " + x + ", " + y + " )";
+    }
+
+    /**
+     * p0からp1を見た場合の角度をdegreeで求める
+     * <p/>
+     * 角度は真上方向を0として反時計回りに360度で求める。
+     *
+     * @param p0
+     * @param p1
+     * @return
+     */
+    public static double degree(Vector2 p0, Vector2 p1) {
+        final double length = Vector2.length(p0.x, p0.y, p1.x, p1.y);
+        if (length == 0) {
+            return 0;
+        }
+
+        final double vecX = (p1.x - p0.x) / length;
+        final double vecY = (p1.y - p0.y) / length;
+
+        final double radian = Math.atan2(vecX, vecY);
+        return MathUtil.normalizeDegree(360.0 - ((radian * 180.0) / Math.PI));
     }
 
 }
