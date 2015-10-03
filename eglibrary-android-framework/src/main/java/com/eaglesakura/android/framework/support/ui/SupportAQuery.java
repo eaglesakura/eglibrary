@@ -11,7 +11,6 @@ import com.androidquery.AbstractAQuery;
 import com.eaglesakura.android.net.NetworkConnector;
 import com.eaglesakura.android.widget.SupportNetworkImageView;
 import com.eaglesakura.material.widget.support.SupportRecyclerView;
-import com.eaglesakura.util.StringUtil;
 
 /**
  * eglibrary Framework用に拡張したAQuery

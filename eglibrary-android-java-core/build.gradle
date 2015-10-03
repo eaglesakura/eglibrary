@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'android-apt'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -7,8 +8,30 @@ if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
     ext.EGLIBRARY_ARTIFACT_VERSION = ""
 }
 
+configurations {
+    apt
+}
+
 dependencies {
-    compile project(':eglibrary-java-core')
+    compile 'com.fasterxml.jackson.core:jackson-core:2.4.+'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.+'
+
+    /**
+     * Database
+     */
+    compile 'de.greenrobot:greendao:1.3.+'
+    compile 'com.google.protobuf:protobuf-java:2.5.+'
+
+    /**
+     * Network
+     */
+    compile 'com.mcxiaoke.volley:library-aar:1.0.+@aar'
+    compile 'com.google.http-client:google-http-client-android:1.18.+'
+
+    /**
+     * Joint
+     */
+    compile 'com.eaglesakura:joint-connector-annotation:0.1.13'
 }
 
 android {
@@ -23,12 +46,19 @@ android {
     }
     sourceSets {
         main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = [
+                    '../eglibrary-java-core/src/main/java',
+                    'src/main/java', 'src/main/generated/dao'
+            ]
         }
     }
 
     lintOptions {
+        disable 'MissingTranslation'
         disable "NewApi"
     }
+
 }
 
 apply plugin: 'maven'
@@ -125,7 +155,36 @@ uploadArchives {
                 version = EGLIBRARY_ARTIFACT_VERSION
                 scope = 'compile'
             }
+            dependency {
+                groupId = 'de.greenrobot'
+                artifactId = 'greendao'
+                version = '1.3.+'
+                scope = 'compile'
+            }
+
+            dependency {
+
+                groupId = 'com.google.protobuf'
+                artifactId = 'protobuf-java'
+                version = '2.5.+'
+                scope = 'compile'
+            }
+
+            dependency {
+                groupId = 'com.mcxiaoke.volley'
+                artifactId = 'library-aar'
+                version = '1.0.+'
+                scope = 'compile'
+            }
+
+            dependency {
+                groupId = 'com.eaglesakura'
+                artifactId = 'joint-connector-annotation'
+                version = '0.1.+'
+                scope = 'compile'
+            }
         }
     }
 }
 
+apply from: "generator.gradle"

@@ -150,7 +150,7 @@ public final class Vector2 {
 
     /**
      * p0からp1を見た場合の角度をdegreeで求める
-     * <p/>
+     * <br>
      * 角度は真上方向を0として反時計回りに360度で求める。
      *
      * @param p0

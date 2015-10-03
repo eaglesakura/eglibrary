@@ -5,6 +5,8 @@ targetCompatibility = 1.7
 
 dependencies {
     compile 'com.eaglesakura:joint-connector-annotation:0.1.13'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.4.+'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.+'
 }
 
 apply plugin: 'maven'
@@ -51,6 +53,27 @@ uploadArchives {
             license {
                 name 'MIT License'
                 url 'https://raw.githubusercontent.com/eaglesakura/eglibrary/master/LICENSE-MIT.txt'
+            }
+            license {
+                name 'MIT License'
+                url 'https://raw.githubusercontent.com/davetroy/geohash-js/master/README'
+            }
+        }
+
+
+        dependencies {
+            dependency {
+                groupId = 'com.fasterxml.jackson.core'
+                artifactId = 'jackson-core'
+                version = '2.4.+'
+                scope = 'compile'
+            }
+
+            dependency {
+                groupId = 'com.fasterxml.jackson.core'
+                artifactId = 'jackson-databind'
+                version = '2.4.+'
+                scope = 'compile'
             }
         }
     }
