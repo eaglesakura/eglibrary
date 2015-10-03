@@ -17,7 +17,7 @@ dependencies {
     compile gradleApi()
 //    groovy localGroovy()
 
-    compile project(':eglibrary-java-wrapper')
+    compile project(':eglibrary-java-core')
 }
 
 apply plugin: 'maven'

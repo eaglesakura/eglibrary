@@ -1,13 +1,9 @@
 package com.eaglesakura.android.system;
 
-import android.app.backup.BackupManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.BatteryManager;
-
-import org.apache.http.MethodNotSupportedException;
 
 /**
  * バッテリー関連のイベントを受け取る

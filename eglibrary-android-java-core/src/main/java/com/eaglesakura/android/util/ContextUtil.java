@@ -237,28 +237,28 @@ public class ContextUtil {
         return false;
     }
 
-    /**
-     * ステータスバーに簡単なメッセージを表示する。
-     *
-     * @param message
-     * @param icon
-     * @param statusbarId
-     * @param intent
-     */
-    @SuppressWarnings("deprecation")
-    public static void sendStatusBarInfo(Context context, String title, String message, int icon, int statusbarId, Intent intent) {
-        try {
-            //! 通知作成
-            final NotificationManager nfManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-            {
-                Notification notification = new Notification(icon, message, System.currentTimeMillis());
-                notification.setLatestEventInfo(context, title, message, PendingIntent.getBroadcast(context, 0, intent, 0));
-                nfManager.notify(statusbarId, notification);
-            }
-        } catch (Exception e) {
-        }
-    }
+//    /**
+//     * ステータスバーに簡単なメッセージを表示する。
+//     *
+//     * @param message
+//     * @param icon
+//     * @param statusbarId
+//     * @param intent
+//     */
+//    @SuppressWarnings("deprecation")
+//    public static void sendStatusBarInfo(Context context, String title, String message, int icon, int statusbarId, Intent intent) {
+//        try {
+//            //! 通知作成
+//            final NotificationManager nfManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//            {
+//                Notification notification = new Notification(icon, message, System.currentTimeMillis());
+//                notification.setLatestEventInfo(context, title, message, PendingIntent.getBroadcast(context, 0, intent, 0));
+//                nfManager.notify(statusbarId, notification);
+//            }
+//        } catch (Exception e) {
+//        }
+//    }
 
     /**
      * ChildFragmentManagerに対応している場合はtrue
