@@ -6,20 +6,6 @@ targetCompatibility = 1.7
 def GOOGLEPLAY_PUBLISH_LIBRARY_VERSION = "v2-rev18-1.19.0"
 def GOOGLEOAUTH_CLIENT_VERSION = "1.19.0"
 
-buildscript {
-    repositories {
-        mavenCentral()
-
-        maven {
-            url "http://eaglesakura.github.io/maven/"
-        }
-    }
-
-    dependencies {
-        classpath project(':eglibrary-groovy-core')
-    }
-}
-
 repositories {
     mavenCentral()
     maven { url "http://eaglesakura.github.io/maven/" }

@@ -6,7 +6,6 @@ targetCompatibility = 1.7
 dependencies {
     compile 'com.eaglesakura:joint-connector-annotation:0.1.13'
     compile project(':eglibrary-java-core')
-    compile project(':eglibrary-java-wrapper')
 }
 
 apply plugin: 'maven'
