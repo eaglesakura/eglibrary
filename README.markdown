@@ -70,29 +70,14 @@ apply plugin: 'com.eaglesakura.android-support'
 * [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-java-core/javadoc/)
 * Pure-Javaで記述されたライブラリです。
 * Androidで実行可能、もしくはJava 1.7相当の機能で記述されています。
-
-### eglibrary-java-geo
-
-
-* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-java-geo/javadoc/)
-* Androidで実行可能、もしくはJava 1.7相当の機能で記述されています。
-* 緯度経度(GPS)関連のライブラリです。
+* 依存外部ライブラリ
+	* com.fasterxml.jackson.core:jackson-core:2.4.+
+	* com.fasterxml.jackson.core:jackson-databind:2.4.+
 * 内部に含まれているGeohash.javaはMIT LICENSEで提供されています（後述）。
 * 参考URL
 	* [2点間の距離測定](http://perota.sakura.ne.jp/blog/android%E3%81%A7%E3%82%82%E7%B7%AF%E5%BA%A6%E7%B5%8C%E5%BA%A6%E3%81%A72%E7%82%B9%E9%96%93%E3%81%AE%E8%B7%9D%E9%9B%A2%E3%82%92%E5%8F%96%E5%BE%97/)
 	* [Geohash library for Java](http://github.com/davetroy/geohash-js/tree/master)
 	* [Geohash.java](https://github.com/hakobe/Gotouchi/blob/master/src/jp/hakobe/android/util/Geohash.java)
-
-
-### eglibrary-java-wrapper
-
-* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-java-wrapper/javadoc/)
-* Pure-Java+各種外部ライブラリのラッパーライブラリです。
-	* JSON処理(Jackson)
-* Androidで実行可能、もしくはJava 1.7相当の機能で記述されています。
-* 依存外部ライブラリ
-	* com.fasterxml.jackson.core:jackson-core:2.4.+
-	* com.fasterxml.jackson.core:jackson-databind:2.4.+
 
 ### eglibrary-java-spreadsheet
 
@@ -109,40 +94,6 @@ apply plugin: 'com.eaglesakura.android-support'
 * Android SDKのみで動作します。
 * minSdkVersion 10
 
-### eglibrary-android-java-wrapper
-
-* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-android-java-wrapper/javadoc/)
-* 頻繁に使用するライブラリのラッパーを提供します。
-	* Database(greenDAO/protobuf)
-	* Network(Volley)
-* minSdkVersion 10
-* 依存外部ライブラリ
-	* com.fasterxml.jackson.core:jackson-core:2.4.+
-	* com.fasterxml.jackson.core:jackson-databind:2.4.+
-	* de.greenrobot:greendao:1.3.+
-	* com.google.protobuf:protobuf-java:2.5.+
-	* com.mcxiaoke.volley:library-aar:1.0.+@aar
-
-### eglibrary-android-material-support
-
-* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-android-material-support/javadoc/)
-* マテリアルデザインっぽいUIを提供するためのStyleやcolor等をまとめたライブラリです。
-* minSdkVersion 10
-* 依存外部ライブラリ
-	* com.melnykov:floatingactionbutton:1.0.+
-	* org.androidannotations:androidannotations-api:3.0.+
-	* com.googlecode.android-query:android-query:+
-	* com.android.support:support-v4:22.+
-	* com.android.support:appcompat-v7:22.+
-	* com.android.support:cardview-v7:22.+
-	* com.android.support:recyclerview-v7:22.+
-
-### eglibrary-android-glkit
-
-* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-android-glkit/javadoc/)
-* OpenGL ES、特にEGL周りに関するラッパーを提供するライブラリです。
-* minSdkVersion 10
-
 ### eglibrary-android-framework
 
 * [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-android-framework/javadoc/)
@@ -155,20 +106,6 @@ apply plugin: 'com.eaglesakura.android-support'
 	* com.googlecode.android-query:android-query:+
 	* de.greenrobot:greendao:1.3.+
 	* com.google.protobuf:protobuf-java:2.5.+
-
-### eglibrary-android-framework-bluetooth
-
-* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-android-framework-bluetooth/javadoc/)
-* BLEのスキャンを行うシンプルなService等を提供します
-* minSdkVersion 10
-* 依存外部ライブラリ
-	* com.fasterxml.jackson.core:jackson-core:2.4.+
-	* com.fasterxml.jackson.core:jackson-databind:2.4.+
-	* org.androidannotations:androidannotations-api:3.0.+
-	* com.googlecode.android-query:android-query:+
-	* de.greenrobot:greendao:1.3.+
-	* com.google.protobuf:protobuf-java:2.5.+
-	* com.mcxiaoke.volley:library-aar:1.0.+@aar
 
 ## ソースコードとして含まれているライブラリのライセンス
 
