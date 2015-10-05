@@ -30,8 +30,9 @@ ext {
      * 0.2.5 : support circle ci
      * 0.2.6 : update Bluetooth P2P
      * 0.2.7 : build JDK1.7
+     * 0.2.8 : update NDK MakefileGenerator
      */
-    EGLIBRARY_ARTIFACT_VERSION = "0.2.7"
+    EGLIBRARY_ARTIFACT_VERSION = "0.2.8"
 }
 
 void rsyncJavadoc(String projectName) {

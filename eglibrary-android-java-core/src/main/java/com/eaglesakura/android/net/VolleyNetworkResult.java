@@ -17,7 +17,7 @@ import java.util.Map;
 
 /**
  * Volleyを利用してデータを取得する
- * <p/>
+ * <BR>
  * コードが大きくなったので、NetworkConnectorから分離
  */
 public class VolleyNetworkResult<T> extends NetworkResult<T> {
