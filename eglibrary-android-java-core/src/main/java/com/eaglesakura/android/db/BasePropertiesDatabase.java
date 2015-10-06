@@ -10,6 +10,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.eaglesakura.json.JSON;
+import com.eaglesakura.thread.MultiRunningTasks;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.StringUtil;
 import com.google.protobuf.GeneratedMessage;
@@ -300,20 +301,24 @@ public class BasePropertiesDatabase {
      * その間、値を書き換えても値の保証はしない。
      */
     public void commitAsync() {
-        (new Thread() {
-            @Override
-            public void run() {
-                commit();
-            }
-        }).start();
+        commitAsync(null);
+    }
+
+    private static MultiRunningTasks gTaskQueue = new MultiRunningTasks(1);
+
+    static {
+        gTaskQueue.setThreadPoolMode(false);
+        gTaskQueue.setThreadName("Prop Commit");
     }
 
     public void commitAsync(final PropsAsyncListener listener) {
-        (new Thread() {
+        gTaskQueue.pushBack(new Runnable() {
             @Override
             public void run() {
                 commit();
-                listener.onAsyncCompleted(BasePropertiesDatabase.this);
+                if (listener != null) {
+                    listener.onAsyncCompleted(BasePropertiesDatabase.this);
+                }
             }
         }).start();
     }
@@ -449,12 +454,12 @@ public class BasePropertiesDatabase {
      * 非同期にコミット＆ロードを行い、設定を最新に保つ
      */
     public void commitAndLoadAsync() {
-        new Thread() {
+        gTaskQueue.pushBack(new Runnable() {
             @Override
             public void run() {
                 commitAndLoad();
             }
-        }.start();
+        }).start();
     }
 
     /**
