@@ -11,6 +11,7 @@ import com.eaglesakura.android.message.JointMessage;
 import com.eaglesakura.android.message.MessageHandlingListener;
 import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.jc.annotation.JCClass;
+import com.eaglesakura.time.Timer;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 
@@ -65,6 +66,16 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
 
     private boolean vsyncEnable = false;
 
+    /**
+     * 実行中の自動gc間隔
+     */
+    private int gcTimeIntervalRunningMs = 1000 * 5;
+
+    /**
+     * 一時停止中の自動gc間隔
+     */
+    private int gcTimeIntervalPausingMs = 1000 * 30;
+
     protected GLLoopStateManager(Context context, IEGLManager eglManager) {
         super(context, eglManager);
     }
@@ -81,6 +92,26 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
      */
     public void onResume() {
         loopState = LoopState.Run;
+    }
+
+    /**
+     * 実行中の自動GC間隔を設定する
+     * 負の値の場合、自動gcを行わない。
+     *
+     * @param gcTimeIntervalRunningMs
+     */
+    public void setGcTimeIntervalRunningMs(int gcTimeIntervalRunningMs) {
+        this.gcTimeIntervalRunningMs = gcTimeIntervalRunningMs;
+    }
+
+    /**
+     * 休止中の自動GC間隔を設定する
+     * 負の値の場合、自動gcを行わない。
+     *
+     * @param gcTimeIntervalPausingMs
+     */
+    public void setGcTimeIntervalPausingMs(int gcTimeIntervalPausingMs) {
+        this.gcTimeIntervalPausingMs = gcTimeIntervalPausingMs;
     }
 
     /**
@@ -258,7 +289,8 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
         int oldSurfaceWidth = 0;
         LoopState lastState = null;
 
-        final int SLEEP_TIME = 1000 / 60;   // 何らかの原因でsleepさせる場合の休止時間
+        final int SLEEP_TIME = 1000 / 15;   // 何らかの原因でsleepさせる場合の休止時間
+        final Timer gcTimer = new Timer();
 
         // 廃棄命令があるまでループする
         while (!isProcessingDestroy()) {
@@ -277,7 +309,7 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
                     }
 
                     // vsync待ちを行う
-                    if(vsyncEnable) {
+                    if (vsyncEnable) {
                         waitVsync();
                     }
 
@@ -318,6 +350,12 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
 
                     // processを通ったら再描画リクエストは廃棄する
                     renderingRequest = false;
+
+                    // 強制GCインターバル
+                    if (gcTimeIntervalRunningMs > 0 && gcTimer.end() >= gcTimeIntervalRunningMs) {
+                        Runtime.getRuntime().gc();
+                        gcTimer.start();
+                    }
                 } else if (loopStartState == LoopState.Pause) {
                     if (renderingRequest) {
                         LogUtil.log("has RenderingRequest(%s)", toString());
@@ -346,6 +384,13 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
                 lastState = loopStartState;
                 oldSurfaceWidth = nowSurfaceWidth;
                 oldSurfaceHeight = nowSurfaceHeight;
+
+
+                // 強制GCインターバル
+                if (gcTimeIntervalPausingMs > 0 && gcTimer.end() >= gcTimeIntervalPausingMs) {
+                    Runtime.getRuntime().gc();
+                    gcTimer.start();
+                }
             } else {
                 Util.sleep(SLEEP_TIME);
             }
