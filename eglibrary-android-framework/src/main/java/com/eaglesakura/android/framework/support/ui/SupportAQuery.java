@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.androidquery.AbstractAQuery;
@@ -30,6 +31,13 @@ public class SupportAQuery extends AbstractAQuery<SupportAQuery> {
 
     public SupportAQuery(Activity act, View root) {
         super(act, root);
+    }
+
+    public SupportAQuery checkedChange(final CompoundButton.OnCheckedChangeListener listener) {
+        if (view instanceof CompoundButton) {
+            ((CompoundButton) view).setOnCheckedChangeListener(listener);
+        }
+        return this;
     }
 
     public <T extends View> T getView(Class<T> clazz) {
@@ -63,7 +71,6 @@ public class SupportAQuery extends AbstractAQuery<SupportAQuery> {
      * @param url
      * @param maxWidth
      * @param maxHeight
-     *
      * @return
      */
     public SupportAQuery imageUrl(String url, int maxWidth, int maxHeight) {
@@ -78,7 +85,6 @@ public class SupportAQuery extends AbstractAQuery<SupportAQuery> {
      *
      * @param url
      * @param parser
-     *
      * @return
      */
     public SupportAQuery imageUrl(String url, NetworkConnector.RequestParser<Bitmap> parser) {
@@ -92,7 +98,6 @@ public class SupportAQuery extends AbstractAQuery<SupportAQuery> {
      * {@link SupportNetworkImageView}
      *
      * @param drawableRes
-     *
      * @return
      */
     public SupportAQuery errorImage(int drawableRes) {
@@ -106,7 +111,6 @@ public class SupportAQuery extends AbstractAQuery<SupportAQuery> {
      * {@link SupportNetworkImageView}
      *
      * @param image
-     *
      * @return
      */
     public SupportAQuery errorImage(Bitmap image) {
