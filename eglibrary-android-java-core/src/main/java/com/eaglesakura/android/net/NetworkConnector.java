@@ -242,7 +242,7 @@ public class NetworkConnector {
             start(result);
             return result;
         } else {
-            return connect(url, parser, Request.Method.GET, cacheTimeoutMs, null);
+            return connect(url, parser, Request.Method.GET, cacheTimeoutMs, (Map<String, String>) null);
         }
     }
 
@@ -274,6 +274,20 @@ public class NetworkConnector {
      */
     public <T> NetworkResult<T> post(String url, RequestParser<T> parser, Map<String, String> params, long cacheTimeoutMs) {
         return connect(url, parser, Request.Method.POST, cacheTimeoutMs, params);
+    }
+
+    /**
+     * byte配列を直接POSTする
+     *
+     * @param url
+     * @param parser
+     * @param data
+     * @param cacheTimeoutMs
+     * @param <T>
+     * @return
+     */
+    public <T> NetworkResult<T> post(String url, RequestParser<T> parser, byte[] data, long cacheTimeoutMs) {
+        return connect(url, parser, Request.Method.POST, cacheTimeoutMs, data);
     }
 
     /**
@@ -326,6 +340,25 @@ public class NetworkConnector {
         }
 
         NetworkResult<T> result = new VolleyNetworkResult<>(url, this, parser, volleyMethod, cacheTimeoutMs, params);
+        start(result);
+        return result;
+    }
+
+    /**
+     * ネットワーク経由でデータを取得する
+     *
+     * @param url
+     * @param parser
+     * @param cacheTimeoutMs
+     * @param <T>
+     * @return
+     */
+    protected <T> NetworkResult<T> connect(final String url, final RequestParser<T> parser, final int volleyMethod, final long cacheTimeoutMs, final byte[] buffer) {
+        if (url == null || !url.startsWith("http")) {
+            return newUrlErrorResult(url);
+        }
+
+        NetworkResult<T> result = new VolleyNetworkResult<>(url, this, parser, volleyMethod, cacheTimeoutMs, buffer);
         start(result);
         return result;
     }

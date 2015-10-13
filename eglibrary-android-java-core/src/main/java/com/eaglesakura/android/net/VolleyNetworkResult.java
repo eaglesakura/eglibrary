@@ -29,6 +29,8 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
 
     final Map<String, String> params;
 
+    final byte[] buffer;
+
     final NetworkConnector.RequestParser<T> parser;
 
     final int volleyMethod;
@@ -39,6 +41,19 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
         this.connector = connector;
         this.cacheTimeoutMs = cacheTimeoutMs;
         this.params = params;
+        this.parser = parser;
+        this.buffer = null;
+        this.volleyMethod = volleyMethod;
+        httpMethod = volleyMethod == Request.Method.GET ? "GET" : "POST";
+    }
+
+    public VolleyNetworkResult(String url, NetworkConnector connector, NetworkConnector.RequestParser<T> parser, int volleyMethod, long cacheTimeoutMs, byte[] buffer) {
+        super(url);
+
+        this.connector = connector;
+        this.cacheTimeoutMs = cacheTimeoutMs;
+        this.params = null;
+        this.buffer = buffer;
         this.parser = parser;
         this.volleyMethod = volleyMethod;
         httpMethod = volleyMethod == Request.Method.GET ? "GET" : "POST";
@@ -99,6 +114,14 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
                 return super.getParams();
             }
 
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                if (buffer != null) {
+                    return buffer;
+                }
+
+                return super.getBody();
+            }
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
