@@ -102,12 +102,15 @@ public class Geohash {
     }
 
     public static String encode(double latitude, double longitude) {
+        return encode(latitude, longitude, 12);
+    }
+
+    public static String encode(double latitude, double longitude, int length) {
         boolean is_even = true;
         double lat[] = new double[3];
         double lon[] = new double[3];
         int bit = 0;
         int ch = 0;
-        int precision = 12;
         String geohash = "";
 
         lat[0] = -90.0;
@@ -115,7 +118,7 @@ public class Geohash {
         lon[0] = -180.0;
         lon[1] = 180.0;
 
-        while (geohash.length() < precision) {
+        while (geohash.length() < length) {
             if (is_even) {
                 double mid = (lon[0] + lon[1]) / 2.0;
                 if (longitude > mid) {
