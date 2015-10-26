@@ -35,6 +35,10 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
 
     final int volleyMethod;
 
+    final long connectStartTime = System.currentTimeMillis();
+
+    long connectEndTime;
+
     public VolleyNetworkResult(String url, NetworkConnector connector, NetworkConnector.RequestParser<T> parser, int volleyMethod, long cacheTimeoutMs, Map<String, String> params) {
         super(url);
 
@@ -91,10 +95,19 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
         if (parse != null) {
             downloadedDataSize = cache.getBodySize();
             currentDataHash = oldDataHash;
+            connectEndTime = System.currentTimeMillis();
             onReceived(parse);
             return true;
         } else {
             return false;
+        }
+    }
+
+    public long getRespTimeMs() {
+        if (connectEndTime == 0) {
+            return -1;
+        } else {
+            return connectEndTime - connectStartTime;
         }
     }
 
@@ -131,10 +144,13 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
             @Override
             protected Response<T> parseNetworkResponse(NetworkResponse networkResponse) {
                 try {
+                    connectEndTime = System.currentTimeMillis();
                     LogUtil.log("%s volley received(%s) %.1f KB",
                             connector.getClass().getSimpleName(),
                             url,
-                            networkResponse.data == null ? 0 : (float) networkResponse.data.length / 1024.0f);
+                            networkResponse.data == null ? 0 : (float) networkResponse.data.length / 1024.0f,
+                            getRespTimeMs()
+                    );
 
 
                     currentDataHash = EncodeUtil.genMD5(networkResponse.data);
