@@ -3,6 +3,7 @@ package com.eaglesakura.android.glkit.egl11;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.opengl.GLES20;
+import android.opengl.GLES30;
 
 import com.eaglesakura.android.glkit.GLKitUtil;
 import com.eaglesakura.android.glkit.egl.GLESVersion;
@@ -99,8 +100,13 @@ public class EGL11Device implements IEGLDevice {
                 EGL10 egl = controller.egl;
                 EGLDisplay display = controller.display;
 
-                egl.eglDestroySurface(display, surface);
-                LogUtil.log("eglDestroySurface(%s)", surface.toString());
+                if (nativeWindow != null) {
+                    LogUtil.log("eglDestroySurface(%s)", surface.toString());
+                    egl.eglDestroySurface(display, surface);
+                } else {
+                    // EGLManagerにSurfaceのキャッシュを残す
+                    contextGroup.pushCacheSurface(surface);
+                }
                 surface = null;
                 surfaceWidth = 0;
                 surfaceHeight = 0;
@@ -147,11 +153,18 @@ public class EGL11Device implements IEGLDevice {
             EGL10 egl = controller.egl;
             EGLDisplay display = controller.display;
             EGLConfig config = controller.config;
-            surface = egl.eglCreatePbufferSurface(display, config, new int[]{
-                    EGL_WIDTH, width,
-                    EGL_HEIGHT, height,
-                    EGL_NONE,
-            });
+
+            // キャッシュからSurfaceを取得する
+            surface = contextGroup.popCacheSurface();
+
+            // キャッシュになければ、新規にサーフェイスを生成する
+            if (surface == null) {
+                surface = egl.eglCreatePbufferSurface(display, config, new int[]{
+                        EGL_WIDTH, width,
+                        EGL_HEIGHT, height,
+                        EGL_NONE,
+                });
+            }
 
             this.surfaceWidth = width;
             this.surfaceHeight = height;

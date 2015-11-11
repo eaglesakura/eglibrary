@@ -12,10 +12,13 @@ import com.eaglesakura.android.glkit.egl.IEGLContextGroup;
 import com.eaglesakura.android.glkit.egl.IEGLManager;
 import com.eaglesakura.android.glkit.egl.IEGLDevice;
 
+import java.util.Stack;
+
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
+import javax.microedition.khronos.egl.EGLSurface;
 
 import static javax.microedition.khronos.egl.EGL10.EGL_ALPHA_SIZE;
 import static javax.microedition.khronos.egl.EGL10.EGL_BLUE_SIZE;
@@ -62,7 +65,6 @@ public class EGL11Manager implements IEGLManager {
      * EGLステータス
      */
     EGLSpecRequest specRequest;
-
 
     public EGL11Manager(Context context) {
         this.context = context.getApplicationContext();

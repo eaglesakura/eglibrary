@@ -5,10 +5,14 @@ import com.eaglesakura.android.glkit.egl.GLESVersion;
 import com.eaglesakura.android.glkit.egl.IEGLContextGroup;
 import com.eaglesakura.util.LogUtil;
 
+import java.util.List;
+import java.util.Stack;
+
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
+import javax.microedition.khronos.egl.EGLSurface;
 
 import static javax.microedition.khronos.egl.EGL10.*;
 
@@ -23,6 +27,15 @@ public class EGL11ContextGroup implements IEGLContextGroup {
      */
     EGLContext masterContext;
 
+
+    /**
+     * Sharedで利用したOffscreenSurfaceのキャッシュを残す
+     * <p/>
+     * Adreno 430ではSurfaceを残しておかないとShared Contextで生成したデータが壊れる問題が発生している。
+     * そのため、masterContextが廃棄されるまで、使用済みSurfaceはキャッシュとして残しておく
+     */
+    Stack<EGLSurface> cacheSurfaces = new Stack<>();
+
     /**
      * 生成したデバイス数
      * <br>
@@ -31,6 +44,7 @@ public class EGL11ContextGroup implements IEGLContextGroup {
     int deviceNum;
 
     final EGL11Manager controller;
+
 
     EGL11ContextGroup(EGL11Manager controller) {
         this.controller = controller;
@@ -46,7 +60,7 @@ public class EGL11ContextGroup implements IEGLContextGroup {
             EGL10 egl = controller.egl;
             EGLDisplay display = controller.display;
             EGLConfig config = controller.config;
-            EGLContext result = EGL_NO_CONTEXT;
+            EGLContext result;
             GLESVersion version = controller.getGLESVersion();
 
             if (masterContext == null) {
@@ -90,6 +104,12 @@ public class EGL11ContextGroup implements IEGLContextGroup {
 
             // デバイス数が0になったなら、マスターも不要となる
             if (deviceNum == 0) {
+                for(EGLSurface surface : cacheSurfaces) {
+                    egl.eglDestroySurface(display, surface);
+                    LogUtil.log("destroy cache surface(%s)", surface.toString());
+                }
+                cacheSurfaces.clear();
+
                 LogUtil.log("desroy masterContext(%s)", masterContext.toString());
                 egl.eglDestroyContext(display, masterContext);
                 masterContext = null;
@@ -100,5 +120,21 @@ public class EGL11ContextGroup implements IEGLContextGroup {
     @Override
     public int getDeviceNum() {
         return deviceNum;
+    }
+
+    EGLSurface popCacheSurface() {
+        synchronized (this) {
+            if (cacheSurfaces.isEmpty()) {
+                return null;
+            } else {
+                return cacheSurfaces.pop();
+            }
+        }
+    }
+
+    void pushCacheSurface(EGLSurface surface) {
+        synchronized (this) {
+            cacheSurfaces.push(surface);
+        }
     }
 }
