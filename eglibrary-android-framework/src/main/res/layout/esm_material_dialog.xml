@@ -73,7 +73,7 @@
 
                 <Button
                     android:id="@+id/EsMaterial.Dialog.BasicButtons.Negative"
-                    style="@style/EsMaterial.FlatButton.Green"
+                    style="@style/EsMaterial.FlatButton.Teal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/EsMaterial.Button.Margin"
@@ -83,7 +83,7 @@
 
                 <Button
                     android:id="@+id/EsMaterial.Dialog.BasicButtons.Neutral"
-                    style="@style/EsMaterial.FlatButton.Green"
+                    style="@style/EsMaterial.FlatButton.Teal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/EsMaterial.Button.Margin"
@@ -93,7 +93,7 @@
 
                 <Button
                     android:id="@+id/EsMaterial.Dialog.BasicButtons.Positive"
-                    style="@style/EsMaterial.FlatButton.Green"
+                    style="@style/EsMaterial.FlatButton.Teal"
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

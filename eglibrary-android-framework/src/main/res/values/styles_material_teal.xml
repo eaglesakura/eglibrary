@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="EsMaterial.Teal.Button.Disabled">@color/EsMaterial.Teal.400</color>
+    <color name="EsMaterial.Teal.Button.Normal">@color/EsMaterial.Teal.500</color>
+    <color name="EsMaterial.Teal.Button.Focused">@color/EsMaterial.Teal.500</color>
+    <color name="EsMaterial.Teal.Button.Pressed">@color/EsMaterial.Teal.800</color>
+    <color name="EsMaterial.Teal.Button.Ripple">@color/EsMaterial.Teal.900</color>
+    <color name="EsMaterial.Teal.Window.Dark">@color/EsMaterial.Grey.300</color>
+
+    <style name="EsMaterial.Teal.DrawerArrow" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/EsMaterial.Teal.50</item>
+    </style>
+
+</resources>
