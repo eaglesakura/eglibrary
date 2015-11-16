@@ -9,10 +9,12 @@ import android.util.Log;
 import android.view.View;
 
 import com.eaglesakura.android.framework.FrameworkCentral;
+import com.eaglesakura.android.framework.support.ui.message.LocalMessageReceiver;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiClientToken;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiTask;
 import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.ContextUtil;
+import com.eaglesakura.android.util.PackageUtil;
 import com.eaglesakura.util.LogUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -39,6 +41,8 @@ public abstract class BaseFragment extends Fragment {
     boolean destroyed = false;
 
     private int backstackIndex = BACKSTACK_NONE;
+
+    private LocalMessageReceiver localMessageReceiver;
 
     @InstanceState
     protected boolean initializedViews = false;
@@ -71,10 +75,27 @@ public abstract class BaseFragment extends Fragment {
         } else {
             onRestoreViews();
         }
+
+        if (localMessageReceiver == null) {
+            localMessageReceiver = newLocalMessageReceiver();
+        }
+    }
+
+    protected LocalMessageReceiver newLocalMessageReceiver() {
+        return null;
     }
 
     public boolean isFragmentResumed() {
         return fragmentResumed;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (localMessageReceiver != null) {
+            localMessageReceiver.connect();
+        }
     }
 
     @Override
@@ -88,6 +109,7 @@ public abstract class BaseFragment extends Fragment {
         super.onPause();
         fragmentResumed = false;
     }
+
 
     @UiThread
     protected void toast(String fmt, Object... args) {
@@ -195,6 +217,9 @@ public abstract class BaseFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         this.destroyed = true;
+        if (localMessageReceiver != null) {
+            localMessageReceiver.disconnect();
+        }
     }
 
     public boolean isDestroyed() {
@@ -313,5 +338,24 @@ public abstract class BaseFragment extends Fragment {
         }
 
         return ((BaseActivity) activity).getGoogleApiClientToken();
+    }
+
+    /**
+     * Runtime Permissionの更新を行わせる
+     *
+     * @param permissions
+     * @return パーミッション取得を開始した場合はtrue
+     */
+    public boolean requestRuntimePermission(String[] permissions) {
+        Activity activity = getActivity();
+        if (activity instanceof BaseActivity) {
+            return ((BaseActivity) activity).requestRuntimePermissions(permissions);
+        } else {
+            return false;
+        }
+    }
+
+    public boolean requestRuntimePermission(PackageUtil.PermissionType type) {
+        return requestRuntimePermission(type.getPermissions());
     }
 }

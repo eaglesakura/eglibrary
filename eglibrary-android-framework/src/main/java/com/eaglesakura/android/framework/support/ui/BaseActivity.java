@@ -1,8 +1,11 @@
 package com.eaglesakura.android.framework.support.ui;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -10,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -17,10 +21,13 @@ import android.view.View;
 
 import com.eaglesakura.android.framework.R;
 import com.eaglesakura.android.framework.context.Resources;
+import com.eaglesakura.android.framework.support.ui.message.LocalMessageReceiver;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiClientToken;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiTask;
 import com.eaglesakura.android.util.ContextUtil;
+import com.eaglesakura.android.util.PackageUtil;
 import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.Util;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
@@ -29,6 +36,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.UiThread;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +46,8 @@ import java.util.List;
 public abstract class BaseActivity extends AppCompatActivity implements FragmentChooser.Callback {
 
     protected static final int REQUEST_GOOGLEPLAYSERVICE_RECOVER = 0x1100;
+
+    protected static final int REQUEST_RUNTIMEPERMISSION_UPDATE = 0x1100 + 1;
 
     protected UserNotificationController userNotificationController = new UserNotificationController(this);
 
@@ -250,7 +260,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
      * キーイベントハンドリングを行う
      *
      * @param event
-     *
      * @return ハンドリングを行えたらtrue
      */
     protected boolean handleFragmentsKeyEvent(KeyEvent event) {
@@ -315,4 +324,43 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         return googleApiClientToken.executeGoogleApi(task);
     }
 
+    /**
+     * Runtime Permissionの更新を行わせる
+     *
+     * @param permissions
+     * @return パーミッション取得を開始した場合はtrue
+     */
+    @SuppressLint("all")
+    public boolean requestRuntimePermissions(String[] permissions) {
+        if (!PackageUtil.isRuntimePermissionGranted(this, permissions)) {
+            requestPermissions(permissions, REQUEST_RUNTIMEPERMISSION_UPDATE);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == REQUEST_RUNTIMEPERMISSION_UPDATE) {
+            Intent intent = new Intent();
+            intent.setAction(LocalMessageReceiver.ACTION_RUNTIMEPERMISSION_UPDATE);
+            List<String> granted = new ArrayList<>();
+            List<String> denied = new ArrayList<>();
+
+            for (int i = 0; i < permissions.length; ++i) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    granted.add(permissions[i]);
+                } else {
+                    denied.add(permissions[i]);
+                }
+            }
+
+            intent.putExtra(LocalMessageReceiver.RUNTIMEPERMISSION_GRANTED_LIST, Util.convert(granted, new String[granted.size()]));
+            intent.putExtra(LocalMessageReceiver.RUNTIMEPERMISSION_DENIED_LIST, Util.convert(denied, new String[denied.size()]));
+
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 }
