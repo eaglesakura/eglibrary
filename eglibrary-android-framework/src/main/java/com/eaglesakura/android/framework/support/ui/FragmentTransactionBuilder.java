@@ -129,25 +129,23 @@ public class FragmentTransactionBuilder {
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 return this;
             case TranslateHorizontal:
-                enter = R.animator.fragment_horizontal_enter;
-                exit = R.animator.fragment_horizontal_exit;
+                enter = R.anim.fragment_horizontal_enter;
+                exit = R.anim.fragment_horizontal_exit;
                 break;
             case TranslateVerticalUp:
-                enter = R.animator.fragment_verticalup_enter;
-                exit = R.animator.fragment_verticalup_exit;
-                break;
+                // TODO XML追加
+                throw new IllegalStateException();
         }
 
         if (popAnimation != null) {
             switch (popAnimation) {
                 case TranslateHorizontal:
-                    popEnter = R.animator.fragment_horizontal_popenter;
-                    popExit = R.animator.fragment_horizontal_popexit;
+                    popEnter = R.anim.fragment_horizontal_popenter;
+                    popExit = R.anim.fragment_horizontal_popexit;
                     break;
                 case TranslateVerticalUp:
-                    popEnter = R.animator.fragment_verticalup_popenter;
-                    popExit = R.animator.fragment_verticalup_popexit;
-                    break;
+                    // TODO XML追加
+                    throw new IllegalStateException();
             }
         }
 

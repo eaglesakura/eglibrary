@@ -21,6 +21,15 @@ public class PackageUtil {
             }
         },
 
+        UsageStatus {
+            @Override
+            public String[] getPermissions() {
+                return new String[]{
+                        Manifest.permission.PACKAGE_USAGE_STATS,
+                };
+            }
+        },
+
         GoogleMap {
             @Override
             public String[] getPermissions() {

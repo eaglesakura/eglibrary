@@ -17,6 +17,8 @@
     <string name="EsMaterial.Dialog.Cancel">キャンセル</string>
     <string name="EsMaterial.OSS.Title">ライセンス情報</string>
 
+
+    <dimen name="EsMaterial.Elevation.Normal">3dp</dimen>
     <dimen name="EsMaterial.Dialog.Button.Height">48dp</dimen>
     <dimen name="EsMaterial.Dialog.Content.MinHeight">52dp</dimen>
     <color name="EsMaterial.Dialog.Shadow">#0F000000</color>
@@ -39,13 +41,13 @@
     <style name="EsMaterial.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- 上から下に登場するAnimation -->
         <item name="colorAccent">@color/accent_material_light</item>
-        <item name="android:textColor">@color/EsMaterial.Grey.800</item>
         <item name="android:textSize">@dimen/EsMaterial.Font.Medium</item>
         <!-- CheckBox/RadioButton color -->
-        <item name="android:textColorPrimaryDisableOnly">@color/EsMaterial.Grey.750</item>
+        <!--<item name="android:textColorPrimaryDisableOnly">@color/EsMaterial.Grey.750</item>-->
+        <!--<item name="android:textColor">@color/EsMaterial.Grey.800</item>-->
 
         <!-- Button Color -->
-        <item name="colorButtonNormal">@color/EsMaterial.Grey.Theme</item>
+        <!--<item name="colorButtonNormal">@color/EsMaterial.Grey.Theme</item>-->
         <item name="esmButtonBaseColor">@color/EsMaterial.Grey.Theme</item>
         <item name="esmButtonTextColorMode">dark</item>
     </style>
