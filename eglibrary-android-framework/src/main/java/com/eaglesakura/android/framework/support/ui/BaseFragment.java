@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
@@ -53,11 +55,28 @@ public abstract class BaseFragment extends Fragment {
         return (T) getView().findViewById(id);
     }
 
+    public <T extends View> T findViewByIdFromActivity(Class<T> clazz, int id) {
+        return (T) getActivity().findViewById(id);
+    }
+
+    /**
+     * ActionBarを取得する
+     *
+     * @return
+     */
+    public ActionBar getActionBar() {
+        Activity activity = getActivity();
+        if (activity instanceof AppCompatActivity) {
+            return ((AppCompatActivity) activity).getSupportActionBar();
+        } else {
+            return null;
+        }
+    }
+
     /**
      * 初回のみ呼び出される
      */
     protected void onInitializeViews() {
-
     }
 
     /**
