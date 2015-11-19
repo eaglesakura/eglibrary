@@ -16,7 +16,7 @@ import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiClientT
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiTask;
 import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.ContextUtil;
-import com.eaglesakura.android.util.PackageUtil;
+import com.eaglesakura.android.util.PermissionUtil;
 import com.eaglesakura.util.LogUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -374,7 +374,7 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    public boolean requestRuntimePermission(PackageUtil.PermissionType type) {
+    public boolean requestRuntimePermission(PermissionUtil.PermissionType type) {
         return requestRuntimePermission(type.getPermissions());
     }
 }

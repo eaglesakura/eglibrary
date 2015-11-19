@@ -20,12 +20,11 @@ import android.view.KeyEvent;
 import android.view.View;
 
 import com.eaglesakura.android.framework.R;
-import com.eaglesakura.android.framework.context.Resources;
 import com.eaglesakura.android.framework.support.ui.message.LocalMessageReceiver;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiClientToken;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiTask;
 import com.eaglesakura.android.util.ContextUtil;
-import com.eaglesakura.android.util.PackageUtil;
+import com.eaglesakura.android.util.PermissionUtil;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 import com.google.android.gms.common.ConnectionResult;
@@ -332,7 +331,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
      */
     @SuppressLint("all")
     public boolean requestRuntimePermissions(String[] permissions) {
-        if (!PackageUtil.isRuntimePermissionGranted(this, permissions)) {
+        if (!PermissionUtil.isRuntimePermissionGranted(this, permissions)) {
             requestPermissions(permissions, REQUEST_RUNTIMEPERMISSION_UPDATE);
             return true;
         } else {
