@@ -3,6 +3,7 @@ package com.eaglesakura.android.db;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -76,7 +77,10 @@ public class BasePropertiesDatabase {
 
     protected BasePropertiesDatabase(Context context, String dbName) {
         this.context = context.getApplicationContext();
-        this.databaseFile = context.getDatabasePath(dbName);
+        if (!StringUtil.isEmpty(dbName)) {
+            // 対象のDBが指定されている
+            this.databaseFile = context.getDatabasePath(dbName);
+        }
     }
 
     public void setDatabaseFile(File databaseFile) {
@@ -253,6 +257,49 @@ public class BasePropertiesDatabase {
      */
     protected void addProperty(String key, String defaultValue) {
         propMap.put(key, new Property(key, defaultValue));
+    }
+
+    /**
+     * Bundleに変換する
+     *
+     * @param compress なるべく容量を少なくする場合はtrue
+     * @return
+     */
+    public Bundle toBundle(boolean compress) {
+        Bundle bundle = new Bundle(context.getClassLoader());
+        Iterator<Map.Entry<String, Property>> itr = propMap.entrySet().iterator();
+        while (itr.hasNext()) {
+            Map.Entry<String, Property> entry = itr.next();
+            Property prop = entry.getValue();
+
+            // 圧縮しない、もしくはデフォルトと異なっている場合は変換対象
+            if (!compress || !prop.value.equals(prop.defaultValue)) {
+                bundle.putString(prop.key, prop.value);
+            }
+        }
+        return bundle;
+    }
+
+    /**
+     * Bundleから値を復元する
+     *
+     * @param bundle 復元するテーブル
+     */
+    public void fromBundle(Bundle bundle) {
+        Iterator<Map.Entry<String, Property>> itr = propMap.entrySet().iterator();
+        while (itr.hasNext()) {
+            Map.Entry<String, Property> entry = itr.next();
+            Property prop = entry.getValue();
+
+            String bunValue = bundle.getString(prop.key);
+            if (bunValue != null) {
+                // 値が書き込まれていた場合はそちらを優先
+                prop.value = bunValue;
+            } else {
+                // 値が書き込まれていないので、デフォルトを復元
+                prop.value = prop.defaultValue;
+            }
+        }
     }
 
     /**
