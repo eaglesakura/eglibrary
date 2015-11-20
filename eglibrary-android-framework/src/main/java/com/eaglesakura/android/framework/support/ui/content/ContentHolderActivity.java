@@ -40,41 +40,46 @@ public abstract class ContentHolderActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         final int layoutId = getIntent().getIntExtra(EXTRA_ACTIVITY_LAYOUT, getDefaultLayoutId());
-        setContentView(layoutId);
-
-        Toolbar toolbar = findViewById(Toolbar.class, R.id.EsMaterial_Toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-        }
-
-        if (savedInstanceState == null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            {
-                String className = getIntent().getStringExtra(EXTRA_CONTENT_FRAGMENT_CLASS);
-                BaseFragment fragment = null;
-                if (className != null) {
-                    fragment = (BaseFragment) SupportAnnotationUtil.newFragment(className);
-                }
-
-                if (fragment == null) {
-                    fragment = newDefaultContentFragment();
-                } else {
-                    Bundle argments = getIntent().getBundleExtra(EXTRA_CONTENT_FRAGMENT_ARGMENTS);
-                    if (argments != null) {
-                        fragment.setArguments(argments);
-                    }
-                }
-                transaction.add(R.id.Content_Holder_Root, fragment, createTag(fragment));
+        if (layoutId != 0) {
+            setContentView(layoutId);
+            Toolbar toolbar = findViewById(Toolbar.class, R.id.EsMaterial_Toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
             }
-            transaction.commit();
+
+            if (savedInstanceState == null) {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                {
+                    String className = getIntent().getStringExtra(EXTRA_CONTENT_FRAGMENT_CLASS);
+                    BaseFragment fragment = null;
+                    if (className != null) {
+                        fragment = (BaseFragment) SupportAnnotationUtil.newFragment(className);
+                    }
+
+                    if (fragment == null) {
+                        fragment = newDefaultContentFragment();
+                    } else {
+                        Bundle argments = getIntent().getBundleExtra(EXTRA_CONTENT_FRAGMENT_ARGMENTS);
+                        if (argments != null) {
+                            fragment.setArguments(argments);
+                        }
+                    }
+                    transaction.add(R.id.Content_Holder_Root, fragment, createTag(fragment));
+                }
+                transaction.commit();
+            }
         }
+
     }
 
     /**
      * デフォルトで使用されるレイアウトIDを取得する
+     *
      * @return
      */
-    protected abstract int getDefaultLayoutId();
+    protected int getDefaultLayoutId() {
+        return R.layout.activity_content_holder;
+    }
 
     /**
      * 表示するコンテンツが指定されない場合のデフォルトコンテンツを開く

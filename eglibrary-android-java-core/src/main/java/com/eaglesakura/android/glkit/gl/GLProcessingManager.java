@@ -109,7 +109,7 @@ public abstract class GLProcessingManager {
      * @param windowSurface 描画対象ウィンドウサーフェイス
      * @param contextGroup  EGLContext共有グループ
      */
-    public void initializetWindowDevice(Object windowSurface, IEGLContextGroup contextGroup) {
+    public void initializeWindowDevice(Object windowSurface, IEGLContextGroup contextGroup) {
         if (windowSurface instanceof SurfaceView) {
             windowSurface = ((SurfaceView) windowSurface).getHolder();
         } else if (windowSurface instanceof Activity) {

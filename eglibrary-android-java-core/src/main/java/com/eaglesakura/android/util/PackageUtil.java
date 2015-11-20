@@ -1,75 +1,105 @@
 package com.eaglesakura.android.util;
 
 import java.io.File;
+import java.util.List;
 
 import android.Manifest;
+import android.app.ActivityManager;
+import android.app.usage.UsageEvents;
+import android.app.usage.UsageStatsManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Build;
+import android.provider.Settings;
+
+import com.eaglesakura.util.StringUtil;
 
 public class PackageUtil {
 
-    public enum PermissionType {
-        SelfLocation {
-            @Override
-            public String[] getPermissions() {
-                return new String[]{
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                };
-            }
-        },
-
-        GoogleMap {
-            @Override
-            public String[] getPermissions() {
-                return new String[]{
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_NETWORK_STATE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                };
-            }
-        };
-
-        public abstract String[] getPermissions();
-    }
-
-    public static boolean isSupportRuntimePermission() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
-    }
-
-    public static boolean isRuntimePermissionGranted(Context context, PermissionType type) {
-        return isRuntimePermissionGranted(context, type.getPermissions());
-    }
-
-    public static boolean isRuntimePermissionGranted(Context context, String[] permissions) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            // Runtime Permission非対応なので常にtrue
-            return true;
-        }
-
-        for (String permission : permissions) {
-            if (context.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-        }
-
-        return true;
+    /**
+     * 自分自身がTop Applicationとして起動している場合はtrue
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isTopApplicationSelf(Context context) {
+        return context.getPackageName().equals(getTopApplicationPackage(context));
     }
 
     /**
-     * 指定したPermissionに対応していたらtrue
+     * ランチャー一覧を取得する
      *
-     * @param packageManager
-     * @param info
-     * @param permissionName
+     * @param context
      * @return
      */
-    public static boolean supportedPermission(PackageManager packageManager, PackageInfo info, String permissionName) {
-        return packageManager.checkPermission(permissionName, info.packageName) == PackageManager.PERMISSION_GRANTED;
+    public static List<ResolveInfo> listLauncherApplications(Context context) {
+        PackageManager pm = context.getPackageManager();
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        return pm.queryIntentActivities(intent, 0);
     }
+
+    /**
+     * インストールされているアプリのpackage名一覧を取得する
+     *
+     * @param context
+     * @return
+     */
+    public static List<ApplicationInfo> listInstallApplications(Context context) {
+        PackageManager pm = context.getPackageManager();
+        List<ApplicationInfo> infos = pm.getInstalledApplications(0);
+        return infos;
+    }
+
+    /**
+     * トップに起動しているActivityのpackage nameを指定する
+     *
+     * @param context
+     * @return
+     */
+    public static String getTopApplicationPackage(Context context) {
+
+        if (Build.VERSION.SDK_INT >= 22) {
+            UsageStatsManager usm = (UsageStatsManager) context.getSystemService("usagestats");
+            long time = System.currentTimeMillis();
+            UsageEvents events = usm.queryEvents(time - (1000 * 60 * 60), time);
+            if (events != null && events.hasNextEvent()) {
+                UsageEvents.Event app = new android.app.usage.UsageEvents.Event();
+                long lastAppTime = 0;
+                String packageName = null;
+                while (events.hasNextEvent()) {
+                    events.getNextEvent(app);
+                    if (app.getTimeStamp() > lastAppTime && app.getEventType() == UsageEvents.Event.MOVE_TO_FOREGROUND) {
+                        packageName = app.getPackageName();
+                        lastAppTime = app.getTimeStamp();
+                    }
+                }
+
+                if (!StringUtil.isEmpty(packageName)) {
+                    return packageName;
+                }
+            }
+        } else {
+            ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+            List<ActivityManager.RunningAppProcessInfo> processes = activityManager.getRunningAppProcesses();
+            for (ActivityManager.RunningAppProcessInfo info : processes) {
+                if (info.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                    if (info.importanceReasonComponent != null) {
+                        return info.importanceReasonComponent.getPackageName();
+                    } else {
+                        return info.pkgList[0];
+                    }
+                }
+            }
+        }
+
+        return context.getPackageName();
+    }
+
 
     /**
      * パッケージ固有の情報を特定ディレクトリにdumpする。

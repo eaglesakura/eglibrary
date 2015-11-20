@@ -18,7 +18,6 @@ import com.eaglesakura.util.Util;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 描画ループ等を構築する必要が有る場合に使用する
@@ -498,8 +497,8 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
     }
 
     @Override
-    public void initializetWindowDevice(Object windowSurface, IEGLContextGroup contextGroup) {
-        super.initializetWindowDevice(windowSurface, contextGroup);
+    public void initializeWindowDevice(Object windowSurface, IEGLContextGroup contextGroup) {
+        super.initializeWindowDevice(windowSurface, contextGroup);
         if (windowSurface instanceof TextureView || windowSurface instanceof SurfaceTexture) {
             // TextureViewはVSyncが取れないため、自前のVSyncを行う。
             vsyncEnable = true;

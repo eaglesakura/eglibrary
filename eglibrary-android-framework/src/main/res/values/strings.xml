@@ -2,6 +2,7 @@
 <resources>
 
     <string name="Common.Dialog.Title.Error">エラー</string>
+    <string name="Common.Dialog.Title.Check">確認</string>
     <string name="Common.Cancel">キャンセル</string>
     <string name="Common.OK">OK</string>
 
