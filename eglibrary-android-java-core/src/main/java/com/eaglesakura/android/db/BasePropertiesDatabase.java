@@ -258,8 +258,8 @@ public class BasePropertiesDatabase {
     /**
      * キャッシュをデータベースに保存する
      */
-    public void commit() {
-        Map<String, String> commitValues = new HashMap<String, String>();
+    public synchronized void commit() {
+        Map<String, String> commitValues = new HashMap<>();
 
         // Commitする内容を抽出する
         {
@@ -280,7 +280,7 @@ public class BasePropertiesDatabase {
         // 保存する
         TextKeyValueStore kvs = new TextKeyValueStore(context, databaseFile);
         try {
-            kvs.open();
+            kvs.open(false);
             kvs.putInTx(commitValues);
 
             // コミットが成功したらmodified属性を元に戻す
