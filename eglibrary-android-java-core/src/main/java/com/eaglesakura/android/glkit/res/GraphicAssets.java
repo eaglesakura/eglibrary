@@ -15,7 +15,6 @@ import java.io.InputStream;
 /**
  *
  */
-@JCClass(cppNamespace = "es.glkit")
 public class GraphicAssets {
 
     /**
@@ -24,7 +23,6 @@ public class GraphicAssets {
      * @param context
      * @return
      */
-    @JCMethod
     public static AssetManager getAssets(Context context) {
         return context.getAssets();
     }
@@ -36,7 +34,6 @@ public class GraphicAssets {
      * @param recycle
      * @return
      */
-    @JCMethod
     public static DecodedImage decodeImage(Bitmap bitmap, boolean recycle) {
         return DecodedImage.decodeFromBitmap(bitmap, recycle);
     }
@@ -48,7 +45,6 @@ public class GraphicAssets {
      * @param path
      * @return
      */
-    @JCMethod
     public static Bitmap loadImageFromAssets(Context context, String path) {
         InputStream is = null;
         try {
@@ -74,7 +70,6 @@ public class GraphicAssets {
      * @param CameraTextureRenderer_MODE
      * @return
      */
-    @JCMethod
     public static CameraTextureRenderer connectCamera(Context context, int CameraTextureRenderer_MODE) {
         try {
             CameraTextureRenderer result = new CameraTextureRenderer(context);

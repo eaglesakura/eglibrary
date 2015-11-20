@@ -84,16 +84,6 @@ public class EGL11Device implements IEGLDevice {
         this.context = group.createContext();
     }
 
-    @Override
-    public Context getApplicationContext() {
-        return controller.getApplicationContext();
-    }
-
-    @Override
-    public AssetManager getAssetManager() {
-        return controller.getAssetManager();
-    }
-
     void destroySurface() {
         synchronized (surfaceLock) {
             if (hasSurface()) {

@@ -1,15 +1,8 @@
 package com.eaglesakura.android.glkit.egl;
 
-import android.content.Context;
-import android.content.res.AssetManager;
-
-import com.eaglesakura.jc.annotation.JCClass;
-import com.eaglesakura.jc.annotation.JCMethod;
-
 /**
  * Surface/Contextを1グループ化したクラス
  */
-@JCClass(cppNamespace = "es.glkit")
 public interface IEGLDevice {
 
     /**
@@ -17,37 +10,31 @@ public interface IEGLDevice {
      *
      * @return バインドに成功したらtrue
      */
-    @JCMethod
     boolean bind();
 
     /**
      * GL処理対象からアンバインドする
      */
-    @JCMethod
     void unbind();
 
     /**
      * サーフェイスの大きさをピクセル単位で取得する
      */
-    @JCMethod
     int getSurfaceWidth();
 
     /**
      * サーフェイスの大きさをピクセル単位で取得する
      */
-    @JCMethod
     int getSurfaceHeight();
 
     /**
      * 廃棄処理を行う
      */
-    @JCMethod
     void dispose();
 
     /**
      * ウィンドウデバイスであればtrue
      */
-    @JCMethod
     boolean isWindowDevice();
 
     /**
@@ -60,7 +47,6 @@ public interface IEGLDevice {
      *
      * @return
      */
-    @JCMethod
     boolean isBinded();
 
     /**
@@ -68,7 +54,6 @@ public interface IEGLDevice {
      * <br>
      * bindされていない、もしくは別スレッドでbindされていたらfalseを返す。
      */
-    @JCMethod
     boolean isBindedThread();
 
     /**
@@ -78,7 +63,6 @@ public interface IEGLDevice {
      * @param width  サーフェイスの幅ピクセル数
      * @param height サーフェイスの高さピクセル数
      */
-    @JCMethod
     void createPBufferSurface(int width, int height);
 
     /**
@@ -98,7 +82,6 @@ public interface IEGLDevice {
     /**
      * 画面内に情報を反映する
      */
-    @JCMethod
     void swapBuffers();
 
     /**
@@ -106,13 +89,11 @@ public interface IEGLDevice {
      *
      * @return
      */
-    @JCMethod
     boolean hasSurfaceDestroyRequest();
 
     /**
      * レンダリング対象として有効なEGLSurfaceを持っていればtrue
      */
-    @JCMethod
     boolean hasSurface();
 
     /**
@@ -120,22 +101,5 @@ public interface IEGLDevice {
      *
      * @return
      */
-    @JCMethod
     boolean hasContext();
-
-    /**
-     * ApplicationContextを取得する
-     *
-     * @return
-     */
-    @JCMethod
-    Context getApplicationContext();
-
-    /**
-     * AssetManagerを取得する
-     *
-     * @return
-     */
-    @JCMethod
-    AssetManager getAssetManager();
 }

@@ -12,19 +12,16 @@ import com.eaglesakura.util.LogUtil;
 /**
  * カメラプレビューをテクスチャに焼きこむクラス
  */
-@JCClass(cppNamespace = "es.glkit")
 public class CameraTextureRenderer extends CameraManager {
 
     /**
      * メインカメラを起動する
      */
-    @JCField
     public static final int CAMERAMODE_MAIN = 0;
 
     /**
      * サブカメラを起動する
      */
-    @JCField
     public static final int CAMERAMODE_SUB = 1;
 
     /**
@@ -36,7 +33,6 @@ public class CameraTextureRenderer extends CameraManager {
         super(context);
     }
 
-    @JCMethod
     public boolean requestOrientation(int orientation) {
         return requestOrientation(OrientationSpec.fromDegree(orientation));
     }
@@ -47,7 +43,6 @@ public class CameraTextureRenderer extends CameraManager {
      * @param textureName 焼きこみ対象のteture / glGenTexturesしたばかりのオブジェクトが必要
      * @return
      */
-    @JCMethod
     public boolean startPreview(int textureName) {
         try {
             previewSurface = new PreviewSurfaceTexture(textureName);
@@ -72,7 +67,6 @@ public class CameraTextureRenderer extends CameraManager {
      *
      * @return
      */
-    @JCMethod
     @Override
     public boolean stopPreview() {
         if (previewSurface == null) {
@@ -96,7 +90,6 @@ public class CameraTextureRenderer extends CameraManager {
      *
      * @return
      */
-    @JCMethod
     public PreviewSurfaceTexture getPreviewSurface() {
         return previewSurface;
     }
