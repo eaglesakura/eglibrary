@@ -12,7 +12,6 @@ import java.nio.FloatBuffer;
 /**
  * MediaPlayerやCameraのキャプチャ対象テクスチャとして管理される
  */
-@JCClass(cppNamespace = "es.glkit")
 public class PreviewSurfaceTexture extends SurfaceTexture implements SurfaceTexture.OnFrameAvailableListener {
     /**
      * キャプチャの準備が出来たらtrue
@@ -45,7 +44,6 @@ public class PreviewSurfaceTexture extends SurfaceTexture implements SurfaceText
      *
      * @return
      */
-    @JCMethod
     public boolean renderingToTexture() {
         synchronized (this) {
             // キャプチャ準備ができていたら焼きこむ
@@ -65,7 +63,6 @@ public class PreviewSurfaceTexture extends SurfaceTexture implements SurfaceText
      *
      * @return
      */
-    @JCMethod
     public FloatBuffer getTextureMatrix() {
         // 行列のキャプチャを試みる
 //        if (!matrixCompleted)

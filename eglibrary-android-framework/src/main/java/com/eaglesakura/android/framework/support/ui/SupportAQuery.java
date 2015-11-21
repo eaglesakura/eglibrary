@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -31,6 +32,10 @@ public class SupportAQuery extends AbstractAQuery<SupportAQuery> {
 
     public SupportAQuery(Activity act, View root) {
         super(act, root);
+    }
+
+    public SupportAQuery(Fragment fragment) {
+        super(fragment.getView());
     }
 
     public SupportAQuery checkedChange(final CompoundButton.OnCheckedChangeListener listener) {

@@ -14,8 +14,6 @@ import com.eaglesakura.android.glkit.egl.IEGLContextGroup;
 import com.eaglesakura.android.glkit.egl.IEGLDevice;
 import com.eaglesakura.android.glkit.egl.IEGLManager;
 import com.eaglesakura.android.thread.UIHandler;
-import com.eaglesakura.jc.annotation.JCClass;
-import com.eaglesakura.jc.annotation.JCMethod;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 
@@ -26,7 +24,6 @@ import com.eaglesakura.util.Util;
  * <br>
  * 処理はウィンドウサーフェイスを持つ必要がなく、オフスクリーンレンダリングを可能とする。
  */
-@JCClass(cppNamespace = "es.glkit")
 @SuppressWarnings("NewApi")
 public abstract class GLProcessingManager {
     protected final IEGLManager eglManager;
@@ -83,7 +80,6 @@ public abstract class GLProcessingManager {
      *
      * @return
      */
-    @JCMethod
     public IEGLManager getEglManager() {
         return eglManager;
     }
@@ -93,12 +89,10 @@ public abstract class GLProcessingManager {
      *
      * @return
      */
-    @JCMethod
     public IEGLDevice getDevice() {
         return device;
     }
 
-    @JCMethod
     public AssetManager getAssets() {
         return context.getAssets();
     }

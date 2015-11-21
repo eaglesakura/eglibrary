@@ -1,16 +1,10 @@
 package com.eaglesakura.android.glkit.egl;
 
-import android.content.Context;
-
-import com.eaglesakura.jc.annotation.JCClass;
-import com.eaglesakura.jc.annotation.JCMethod;
-
 /**
  * EGL操作を抽象化するクラス
  * <br>
  * EGL操作にはウィンドウサーフェイスが必須ではなく、ウィンドウサーフェイス無しで動作することも許可する。
  */
-@JCClass(cppNamespace = "es.glkit")
 public interface IEGLManager {
 
     /**
@@ -30,6 +24,5 @@ public interface IEGLManager {
      *
      * @return　生成したデバイス
      */
-    @JCMethod
     IEGLDevice newDevice(IEGLContextGroup contextGroup);
 }

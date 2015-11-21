@@ -18,7 +18,6 @@ import javax.microedition.khronos.egl.EGL10;
 /**
  * GLKit系Util
  */
-@JCClass(cppNamespace = "es.glkit")
 public class GLKitUtil {
 
     /**
@@ -97,63 +96,4 @@ public class GLKitUtil {
         LogUtil.log("Unsupported Class(%s)", surface.getClass().getName());
         return null;
     }
-
-    /**
-     * デバイスにレンダリングされている内容をキャプチャする
-     * <br>
-     * 呼び出し時点でdeviceがこのThreadにバインドされていなければならない。
-     * <br>
-     * キャプチャは必ずARGB8888で行われる。
-     *
-     * @param device キャプチャ対象のデバイス
-     * @return キャプチャしたBitmap
-     */
-    public static Bitmap captureDevice(IEGLDevice device) {
-        return captureDevice(device, Bitmap.Config.ARGB_8888);
-    }
-
-    /**
-     * デバイスにレンダリングされている内容をキャプチャする
-     * <br>
-     * 呼び出し時点でdeviceがこのThreadにバインドされていなければならない。
-     * <br>
-     * 新たにBitmapを生成するため処理は重い。
-     *
-     * @param device キャプチャ対象のデバイス
-     * @return キャプチャしたBitmap
-     */
-    public static Bitmap captureDevice(IEGLDevice device, Bitmap.Config config) {
-        Bitmap screen = Bitmap.createBitmap(device.getSurfaceWidth(), device.getSurfaceHeight(), config);
-        return captureDevice(device, screen);
-    }
-
-    /**
-     * デバイスにレンダリングされている内容をdstキャプチャする。
-     *
-     * @param device キャプチャ対象デバイス
-     * @param dst    キャプチャしたピクセル内容の格納先
-     * @return
-     */
-    public static Bitmap captureDevice(IEGLDevice device, Bitmap dst) {
-        if (!device.isBindedThread()) {
-            throw new IllegalStateException("!device.isBindedThread()");
-        }
-
-        if (!nativeCaptureDevice(device, dst)) {
-            // 何らかの原因でキャプチャが失敗した
-            throw new IllegalStateException("nativeCaptureDevice(device, dst)");
-        }
-
-        return dst;
-    }
-
-    /**
-     * 速度優先のため、Nativeでキャプチャ操作を行う
-     *
-     * @param device キャプチャ対象デバイス
-     * @param dst    格納先
-     * @return 成功したらtrue
-     */
-    @JCMethod
-    static native boolean nativeCaptureDevice(IEGLDevice device, Bitmap dst);
 }

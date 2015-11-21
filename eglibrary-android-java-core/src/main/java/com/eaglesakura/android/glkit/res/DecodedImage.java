@@ -11,7 +11,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
-@JCClass(cppNamespace = "es.glkit")
 public class DecodedImage {
     /**
      * 幅
@@ -36,7 +35,6 @@ public class DecodedImage {
      *
      * @return
      */
-    @JCMethod
     public int getWidth() {
         return width;
     }
@@ -46,7 +44,6 @@ public class DecodedImage {
      *
      * @return
      */
-    @JCMethod
     public int getHeight() {
         return height;
     }
@@ -56,7 +53,6 @@ public class DecodedImage {
      *
      * @return
      */
-    @JCMethod
     public Buffer getPixels() {
         return pixels;
     }
@@ -68,7 +64,6 @@ public class DecodedImage {
      * @param image
      * @return
      */
-    @JCMethod
     public static DecodedImage decodeFromBitmap(Bitmap image, boolean recycle) {
         if (image == null) {
             return null;
