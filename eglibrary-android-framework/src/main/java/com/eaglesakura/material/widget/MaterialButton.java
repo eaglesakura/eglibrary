@@ -11,14 +11,11 @@ import android.support.v4.graphics.ColorUtils;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.Gravity;
 
-import com.eaglesakura.android.graphics.Graphics;
 import com.eaglesakura.android.framework.R;
+import com.eaglesakura.android.graphics.Graphics;
 import com.eaglesakura.util.LogUtil;
-
-import static android.support.v7.internal.widget.ThemeUtils.getDisabledThemeAttrColor;
 
 /**
  *
@@ -141,7 +138,8 @@ public class MaterialButton extends AppCompatButton {
 
         // Disabled state
         states[i] = DISABLED_STATE_SET;
-        colors[i] = getDisabledThemeAttrColor(context, R.attr.colorButtonNormal);
+        // TODO disable colorを直す
+//        colors[i] = getDisabledThemeAttrColor(context, R.attr.colorButtonNormal);
         i++;
 
         states[i] = PRESSED_STATE_SET;
