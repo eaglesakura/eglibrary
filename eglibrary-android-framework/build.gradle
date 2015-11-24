@@ -11,10 +11,11 @@ configurations {
 }
 
 def ANDROID_SUPPORT_LIB_VERSION = "23.0.+"
+def ANDROID_PLAYSERVICE_LIB_VERSION = "8.3.+"
 
 dependencies {
-    compile "com.google.android.gms:play-services-plus:7.8.+"
-    compile "com.google.android.gms:play-services-gcm:7.8.+"
+    compile "com.google.android.gms:play-services-plus:${ANDROID_PLAYSERVICE_LIB_VERSION}"
+    compile "com.google.android.gms:play-services-gcm:${ANDROID_PLAYSERVICE_LIB_VERSION}"
     compile 'com.android.support:support-annotations:+'
 
     /**
