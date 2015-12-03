@@ -16,8 +16,6 @@ public class CommandServer {
 
     private final ICommandServerService impl;
 
-    static final int COMMAND_DEFAULT = 0x31033150;
-
     private Map<String, ServiceClient> clients = new HashMap<>();
 
     public CommandServer(IBinder binder, Service service) {
