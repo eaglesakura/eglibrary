@@ -18,7 +18,9 @@ public class CommandServer {
 
     private Map<String, ServiceClient> clients = new HashMap<>();
 
-    public CommandServer(IBinder binder, Service service) {
+    public static final byte[] CLIENT_NOT_FOUND = new byte[0];
+
+    public CommandServer(Service service) {
         this.service = service;
         this.impl = new ServerImpl();
     }
@@ -64,8 +66,96 @@ public class CommandServer {
         }
     }
 
+    protected byte[] postToClient(String id, String cmd, byte[] buffer) throws RemoteException {
+        ServiceClient client;
+        synchronized (clients) {
+            client = clients.get(id);
+        }
+
+        if (client != null) {
+            return client.callback.postToClient(cmd, buffer);
+        } else {
+            return CLIENT_NOT_FOUND;
+        }
+    }
+
+    /**
+     * データを送信し、戻り値は無視する
+     *
+     * @param cmd
+     * @param buffer
+     * @throws RemoteException
+     */
+    protected void broadcastToClientNoResults(String cmd, byte[] buffer) throws RemoteException {
+        Map<String, ServiceClient> clients;
+
+        synchronized (this.clients) {
+            clients = new HashMap<>(this.clients);
+        }
+
+        Iterator<Map.Entry<String, ServiceClient>> iterator = clients.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, ServiceClient> entry = iterator.next();
+            entry.getValue().callback.postToClient(cmd, buffer);
+        }
+    }
+
+
+    /**
+     * データを送信し、戻り値一覧を取得する
+     *
+     * @param cmd
+     * @param buffer
+     * @return
+     * @throws RemoteException
+     */
+    protected void broadcastToClient(String cmd, byte[] buffer, ClientResultCallback callback) throws RemoteException {
+        Map<String, ServiceClient> clients;
+
+        synchronized (this.clients) {
+            clients = new HashMap<>(this.clients);
+        }
+
+        Iterator<Map.Entry<String, ServiceClient>> iterator = clients.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, ServiceClient> entry = iterator.next();
+            ServiceClient client = entry.getValue();
+            byte[] clientResult = client.callback.postToClient(cmd, buffer);
+            callback.onClientExecuted(client.id, client.callback, cmd, clientResult);
+        }
+    }
+
+    /**
+     * データを送信し、戻り値一覧を取得する
+     *
+     * @param cmd
+     * @param buffer
+     * @return
+     * @throws RemoteException
+     */
+    protected Map<String, byte[]> broadcastToClient(String cmd, byte[] buffer) throws RemoteException {
+        Map<String, ServiceClient> clients;
+
+        synchronized (this.clients) {
+            clients = new HashMap<>(this.clients);
+        }
+
+        Map<String, byte[]> results = new HashMap<>();
+        Iterator<Map.Entry<String, ServiceClient>> iterator = clients.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, ServiceClient> entry = iterator.next();
+            results.put(entry.getKey(), entry.getValue().callback.postToClient(cmd, buffer));
+        }
+
+        return results;
+    }
+
     protected byte[] onReceivedDataFromClient(String cmd, byte[] buffer) throws RemoteException {
         return null;
+    }
+
+    public interface ClientResultCallback {
+        void onClientExecuted(String id, ICommandClientCallback client, String cmd, byte[] result);
     }
 
     class ServiceClient {

@@ -1,12 +1,26 @@
-if (!hasProperty("EGLIBRARY_PATH_SRC_ROOT")) {
-    ext.EGLIBRARY_PATH_SRC_ROOT = ".."
-}
-
-if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
-    ext.EGLIBRARY_ARTIFACT_VERSION = ""
-}
-
 ext {
+    /**
+     * Deploy Version
+     *
+     * 0.2.2  : bugfix
+     * 0.2.3  : update android support-lib 22.1.0
+     * 0.2.4  : support google play publish
+     * 0.2.5  : support circle ci
+     * 0.2.6  : update Bluetooth P2P
+     * 0.2.7  : build JDK1.7
+     * 0.2.8  : update NDK MakefileGenerator
+     * 0.2.9  : merge modules
+     * 0.2.10 : update google play
+     */
+    EGLIBRARY_ARTIFACT_VERSION = "0.2.10"
+
+    /**
+     * ソースコードパス設定
+     */
+    if (!hasProperty("EGLIBRARY_PATH_SRC_ROOT")) {
+        EGLIBRARY_PATH_SRC_ROOT = ".."
+    }
+
     EGLIBRARY_PATH_JAVA_CORE = "${EGLIBRARY_PATH_SRC_ROOT}/src/java/core"
     EGLIBRARY_PATH_JAVA_GEO = "${EGLIBRARY_PATH_SRC_ROOT}/src/java/geo"
     EGLIBRARY_PATH_JAVA_JSON = "${EGLIBRARY_PATH_SRC_ROOT}/src/java/json"

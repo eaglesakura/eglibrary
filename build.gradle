@@ -20,22 +20,6 @@ allprojects {
     }
 }
 
-ext {
-    /**
-     * Deploy Version
-     *
-     * 0.2.2 : bugfix
-     * 0.2.3 : update android support-lib 22.1.0
-     * 0.2.4 : support google play publish
-     * 0.2.5 : support circle ci
-     * 0.2.6 : update Bluetooth P2P
-     * 0.2.7 : build JDK1.7
-     * 0.2.8 : update NDK MakefileGenerator
-     * 0.2.9 : merge modules
-     */
-    EGLIBRARY_ARTIFACT_VERSION = "0.2.9"
-}
-
 void rsyncJavadoc(String projectName) {
     def src = file("${projectName}/build/docs/javadoc/");
     def dst = new File("${System.env.MAVEN_LOCAL_REPO}/doc/${projectName}/");
