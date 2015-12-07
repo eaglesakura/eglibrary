@@ -8,9 +8,6 @@ import android.os.IBinder;
 
 import com.eaglesakura.android.bluetooth.BluetoothUtil;
 
-import com.eaglesakura.android.bluetooth.beacon.IBeaconScanCallback;
-import com.eaglesakura.android.bluetooth.beacon.IBeaconScanService;
-
 /**
  * BeaconScanServiceを利用するコントローラー
  */

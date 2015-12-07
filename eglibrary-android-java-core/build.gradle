@@ -1,6 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'android-apt'
 
+apply from: "../path.gradle"
+
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
@@ -48,9 +50,17 @@ android {
         main {
             manifest.srcFile 'AndroidManifest.xml'
             java.srcDirs = [
-                    '../eglibrary-java-core/src/main/java',
-                    'src/main/java', 'src/main/generated/dao'
+                    "${EGLIBRARY_PATH_JAVA_CORE}", "${EGLIBRARY_PATH_JAVA_GEO}", "${EGLIBRARY_PATH_JAVA_JSON}",
+                    "${EGLIBRARY_PATH_ANDROID_CORE}/java", "${EGLIBRARY_PATH_ANDROID_COREDEBUG}/java",
+                    "${EGLIBRARY_PATH_ANDROID_CAMERA}/java", "${EGLIBRARY_PATH_ANDROID_BLUETOOTH}/java",
+                    "${EGLIBRARY_PATH_ANDROID_DAO}/java", "${EGLIBRARY_PATH_ANDROID_DAO}/dao",
+                    "${EGLIBRARY_PATH_ANDROID_GLKIT}/java", "${EGLIBRARY_PATH_ANDROID_GLKITMEDIA}/java",
             ]
+
+            res.srcDirs = [
+                    "${EGLIBRARY_PATH_ANDROID_CORE}/res",
+                    "${EGLIBRARY_PATH_ANDROID_CAMERA}/res",
+            ];
         }
     }
 

@@ -2,7 +2,7 @@
 package com.eaglesakura.android.bluetooth.beacon;
 
 import com.eaglesakura.android.bluetooth.beacon.IBeaconScanService;
-import com.eaglesakura.android.bluetooth.beacon.data.PeripheralBeacon;
+import PeripheralBeacon;
 
 interface IBeaconScanCallback {
     /**

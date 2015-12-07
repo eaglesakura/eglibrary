@@ -56,7 +56,10 @@ android {
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src/main/java', 'src/main/dao', 'src/main/gen-prop', 'src/main/generated/dao']
+            java.srcDirs = [
+                    'src/main/java',
+                    'src/main/dao', 'src/main/gen-prop', 'src/main/generated/dao'
+            ]
         }
     }
 
