@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.eaglesakura.json.JSON;
 import com.eaglesakura.thread.MultiRunningTasks;
+import com.eaglesakura.util.EncodeUtil;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.StringUtil;
 import com.google.protobuf.GeneratedMessage;
@@ -19,6 +20,8 @@ import com.google.protobuf.GeneratedMessage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.HashMap;
@@ -257,6 +260,41 @@ public class BasePropertiesDatabase {
      */
     protected void addProperty(String key, String defaultValue) {
         propMap.put(key, new Property(key, defaultValue));
+    }
+
+    public byte[] toByteArray() {
+        Map<String, byte[]> datas = new HashMap<>();
+        Iterator<Map.Entry<String, Property>> itr = propMap.entrySet().iterator();
+        while (itr.hasNext()) {
+            Map.Entry<String, Property> entry = itr.next();
+            Property prop = entry.getValue();
+            datas.put(prop.key, prop.value.getBytes());
+        }
+        return EncodeUtil.toByteArray(datas);
+    }
+
+    public void fromByteArray(byte[] buffer) throws IOException {
+        try {
+            Map<String, byte[]> datas = EncodeUtil.toKeyValue(buffer);
+
+            Iterator<Map.Entry<String, Property>> itr = propMap.entrySet().iterator();
+            while (itr.hasNext()) {
+                Map.Entry<String, Property> entry = itr.next();
+                Property prop = entry.getValue();
+
+                byte[] value = datas.get(prop.key);
+                if (value != null) {
+                    // 値が書き込まれていた場合はそちらを優先
+                    prop.value = new String(value);
+                } else {
+                    // 値が書き込まれていないので、デフォルトを復元
+                    prop.value = prop.defaultValue;
+                }
+            }
+        } catch (Exception e) {
+            LogUtil.log(e);
+            throw new IOException("Format Error");
+        }
     }
 
     /**
@@ -523,4 +561,27 @@ public class BasePropertiesDatabase {
             prop.value = prop.defaultValue;
         }
     }
+
+    /**
+     * 生成されたbyte[]からインスタンスを復元する
+     *
+     * @param context
+     * @param clazz
+     * @param data
+     * @param <T>
+     * @return
+     */
+    public static <T extends BasePropertiesDatabase> T createInstance(Context context, Class<T> clazz, byte[] data) {
+        try {
+            Constructor<T> constructor = clazz.getConstructor(Context.class, String.class);
+            T instance = constructor.newInstance(context, null);
+            instance.fromByteArray(data);
+
+            return instance;
+        } catch (Exception e) {
+            LogUtil.log(e);
+            return null;
+        }
+    }
+
 }

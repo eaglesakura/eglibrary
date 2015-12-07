@@ -10,7 +10,7 @@ configurations {
     apt
 }
 
-def ANDROID_SUPPORT_LIB_VERSION = "23.1.+"
+def ANDROID_SUPPORT_LIB_VERSION = "23.0.+"
 def ANDROID_PLAYSERVICE_LIB_VERSION = "7.8.+"
 
 dependencies {

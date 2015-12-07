@@ -97,7 +97,7 @@ public class PermissionUtil {
 
     @SuppressLint("NewApi")
     public static boolean isUsageStatsAllowed(Context context) {
-        if (Build.VERSION.SDK_INT < 19) {
+        if (Build.VERSION.SDK_INT <= 19) {
             return true;
         }
 
