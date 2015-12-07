@@ -1,6 +1,5 @@
 package com.eaglesakura.android.camera;
 
-import com.eaglesakura.jc.annotation.JCMethod;
 import com.eaglesakura.math.MathUtil;
 
 /**
@@ -19,7 +18,6 @@ public class OrientationSpec {
      *
      * @return
      */
-    @JCMethod
     public int getDegree() {
         return degree;
     }
@@ -29,7 +27,6 @@ public class OrientationSpec {
      *
      * @return
      */
-    @JCMethod
     public boolean isVertical() {
         return degree == 90 || degree == 180;
     }
@@ -39,7 +36,6 @@ public class OrientationSpec {
      *
      * @return
      */
-    @JCMethod
     public boolean isHorizontal() {
         return !isVertical();
     }
@@ -47,25 +43,21 @@ public class OrientationSpec {
     /**
      * 回転0度
      */
-    @JCMethod
     public static final OrientationSpec ROTATE_0 = new OrientationSpec(0);
 
     /**
      * 回転90度
      */
-    @JCMethod
     public static final OrientationSpec ROTATE_90 = new OrientationSpec(90);
 
     /**
      * 回転180度
      */
-    @JCMethod
     public static final OrientationSpec ROTATE_180 = new OrientationSpec(180);
 
     /**
      * 回転270度
      */
-    @JCMethod
     public static final OrientationSpec ROTATE_270 = new OrientationSpec(270);
 
     /**
@@ -74,7 +66,6 @@ public class OrientationSpec {
      * @param rotate
      * @return
      */
-    @JCMethod
     public static final OrientationSpec fromDegree(int rotate) {
         rotate = (int) MathUtil.normalizeDegree(rotate);
         rotate = (rotate / 90) * 90;    // 90度区切りに修正する

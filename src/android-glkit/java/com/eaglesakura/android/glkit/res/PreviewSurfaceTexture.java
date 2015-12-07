@@ -4,9 +4,6 @@ import android.annotation.TargetApi;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
 
-import com.eaglesakura.jc.annotation.JCClass;
-import com.eaglesakura.jc.annotation.JCMethod;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;

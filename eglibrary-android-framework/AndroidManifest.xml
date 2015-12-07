@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.eaglesakura.android.framework">
+          package="com.eaglesakura.android">
 
     <application>
         <!-- ライセンス表示 -->

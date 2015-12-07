@@ -1,9 +1,7 @@
 package com.eaglesakura.android.glkit.gl;
 
-import com.eaglesakura.android.message.JointMessage;
-
 /**
- * {@link JointMessage} のハンドリングが完了したことを通知する
+ * メッセージハンドリングが完了したことを通知する
  */
 public interface MessageHandlingListener {
     /**

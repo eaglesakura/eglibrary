@@ -1,10 +1,12 @@
 apply plugin: 'com.android.library'
 apply plugin: 'android-apt'
 
+apply from: "../path.gradle"
+
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-def APPLICATION_ID = "com.eaglesakura.android.framework"
+def APPLICATION_ID = "com.eaglesakura.android"
 
 configurations {
     apt
@@ -14,9 +16,20 @@ def ANDROID_SUPPORT_LIB_VERSION = "23.0.+"
 def ANDROID_PLAYSERVICE_LIB_VERSION = "7.8.+"
 
 dependencies {
-    compile "com.google.android.gms:play-services-plus:${ANDROID_PLAYSERVICE_LIB_VERSION}"
-    compile "com.google.android.gms:play-services-gcm:${ANDROID_PLAYSERVICE_LIB_VERSION}"
-    compile 'com.android.support:support-annotations:+'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.4.+'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.+'
+
+    /**
+     * Database
+     */
+    compile 'de.greenrobot:greendao:1.3.+'
+    compile 'com.google.protobuf:protobuf-java:2.5.+'
+
+    /**
+     * Network
+     */
+    compile 'com.mcxiaoke.volley:library-aar:1.0.+@aar'
+    compile 'com.google.http-client:google-http-client-android:1.18.+'
 
     /**
      * support libs
@@ -29,9 +42,11 @@ dependencies {
     compile "com.android.support:design:${ANDROID_SUPPORT_LIB_VERSION}"
 
     /**
-     * floating action button
+     * Play Service
      */
-    compile 'com.melnykov:floatingactionbutton:1.0.+'
+    compile "com.google.android.gms:play-services-plus:${ANDROID_PLAYSERVICE_LIB_VERSION}"
+    compile "com.google.android.gms:play-services-gcm:${ANDROID_PLAYSERVICE_LIB_VERSION}"
+    compile 'com.android.support:support-annotations:+'
 
     /**
      * annotations
@@ -40,7 +55,10 @@ dependencies {
     compile "org.androidannotations:androidannotations-api:3.0.+"
     compile "com.googlecode.android-query:android-query:+"
 
-    compile project(':eglibrary-android-java-core')
+    /**
+     * Joint
+     */
+    compile 'com.eaglesakura:joint-connector-annotation:0.1.13'
 }
 
 
@@ -57,8 +75,38 @@ android {
         main {
             manifest.srcFile 'AndroidManifest.xml'
             java.srcDirs = [
-                    'src/main/java',
-                    'src/main/dao', 'src/main/gen-prop', 'src/main/generated/dao'
+                    "${EGLIBRARY_PATH_JAVA_CORE}",
+                    "${EGLIBRARY_PATH_JAVA_GEO}",
+                    "${EGLIBRARY_PATH_JAVA_JSON}",
+                    "${EGLIBRARY_PATH_ANDROID_CORE}/java",
+                    "${EGLIBRARY_PATH_ANDROID_COREDEBUG}/java",
+                    "${EGLIBRARY_PATH_ANDROID_CAMERA}/java",
+                    "${EGLIBRARY_PATH_ANDROID_BLUETOOTH}/java",
+                    "${EGLIBRARY_PATH_ANDROID_DAO}/java", "${EGLIBRARY_PATH_ANDROID_DAO}/dao",
+                    "${EGLIBRARY_PATH_ANDROID_NET}/java", "${EGLIBRARY_PATH_ANDROID_NET}/dao",
+                    "${EGLIBRARY_PATH_ANDROID_GLKIT}/java",
+                    "${EGLIBRARY_PATH_ANDROID_GLKITMEDIA}/java",
+
+                    "${EGLIBRARY_PATH_ANDROID_FRAMEWORK}/java", "${EGLIBRARY_PATH_ANDROID_FRAMEWORK}/prop",
+                    "${EGLIBRARY_PATH_ANDROID_BEACON}/java",
+
+                    "${EGLIBRARY_PATH_ANDROID_JOINT}/java",
+            ]
+
+            res.srcDirs = [
+                    "${EGLIBRARY_PATH_ANDROID_CORE}/res",
+                    "${EGLIBRARY_PATH_ANDROID_CAMERA}/res",
+
+                    "${EGLIBRARY_PATH_ANDROID_FRAMEWORK}/res",
+            ];
+
+            aidl.srcDirs = [
+                    "${EGLIBRARY_PATH_ANDROID_CORE}/aidl",
+                    "${EGLIBRARY_PATH_ANDROID_BEACON}/aidl",
+            ]
+
+            assets.srcDirs = [
+                    "${EGLIBRARY_PATH_ANDROID_FRAMEWORK}/assets",
             ]
         }
     }

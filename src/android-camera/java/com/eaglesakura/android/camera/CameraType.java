@@ -2,24 +2,18 @@ package com.eaglesakura.android.camera;
 
 import android.hardware.Camera;
 
-import com.eaglesakura.jc.annotation.JCClass;
-import com.eaglesakura.jc.annotation.JCField;
-import com.eaglesakura.jc.annotation.JCMethod;
-
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * カメラの種類ごとに管理する
  */
-@JCClass(cppNamespace = "es")
 public class CameraType {
     private static final Map<Integer, CameraType> gCameraTypeMap;
 
     /**
      * メインカメラ
      */
-    @JCField
     public static final CameraType TYPE_MAIN;
 
     /**
@@ -27,7 +21,6 @@ public class CameraType {
      * <br>
      * ただし、カメラが物理的に１つしか無い場合はnullとなる
      */
-    @JCField
     public static final CameraType TYPE_SUB;
 
     static {
@@ -80,7 +73,6 @@ public class CameraType {
      *
      * @return
      */
-    @JCMethod
     public boolean isFrontCamera() {
         return info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT;
     }
@@ -90,7 +82,6 @@ public class CameraType {
      *
      * @return
      */
-    @JCMethod
     public boolean isRearCamera() {
         return !isFrontCamera();
     }
@@ -100,7 +91,6 @@ public class CameraType {
      *
      * @return
      */
-    @JCMethod
     public static boolean hasMainCamera() {
         return TYPE_MAIN != null;
     }
@@ -110,7 +100,6 @@ public class CameraType {
      *
      * @return
      */
-    @JCMethod
     public static boolean hasSubCamera() {
         return TYPE_SUB != null;
     }

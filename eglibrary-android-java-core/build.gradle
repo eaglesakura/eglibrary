@@ -6,10 +6,6 @@ apply from: "../path.gradle"
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
-    ext.EGLIBRARY_ARTIFACT_VERSION = ""
-}
-
 configurations {
     apt
 }
@@ -29,11 +25,6 @@ dependencies {
      */
     compile 'com.mcxiaoke.volley:library-aar:1.0.+@aar'
     compile 'com.google.http-client:google-http-client-android:1.18.+'
-
-    /**
-     * Joint
-     */
-    compile 'com.eaglesakura:joint-connector-annotation:0.1.13'
 }
 
 android {
@@ -50,17 +41,27 @@ android {
         main {
             manifest.srcFile 'AndroidManifest.xml'
             java.srcDirs = [
-                    "${EGLIBRARY_PATH_JAVA_CORE}", "${EGLIBRARY_PATH_JAVA_GEO}", "${EGLIBRARY_PATH_JAVA_JSON}",
-                    "${EGLIBRARY_PATH_ANDROID_CORE}/java", "${EGLIBRARY_PATH_ANDROID_COREDEBUG}/java",
-                    "${EGLIBRARY_PATH_ANDROID_CAMERA}/java", "${EGLIBRARY_PATH_ANDROID_BLUETOOTH}/java",
+                    "${EGLIBRARY_PATH_JAVA_CORE}",
+                    "${EGLIBRARY_PATH_JAVA_GEO}",
+                    "${EGLIBRARY_PATH_JAVA_JSON}",
+                    "${EGLIBRARY_PATH_ANDROID_CORE}/java",
+                    "${EGLIBRARY_PATH_ANDROID_COREDEBUG}/java",
+                    "${EGLIBRARY_PATH_ANDROID_CAMERA}/java",
+                    "${EGLIBRARY_PATH_ANDROID_BLUETOOTH}/java",
                     "${EGLIBRARY_PATH_ANDROID_DAO}/java", "${EGLIBRARY_PATH_ANDROID_DAO}/dao",
-                    "${EGLIBRARY_PATH_ANDROID_GLKIT}/java", "${EGLIBRARY_PATH_ANDROID_GLKITMEDIA}/java",
+                    "${EGLIBRARY_PATH_ANDROID_NET}/java", "${EGLIBRARY_PATH_ANDROID_NET}/dao",
+                    "${EGLIBRARY_PATH_ANDROID_GLKIT}/java",
+                    "${EGLIBRARY_PATH_ANDROID_GLKITMEDIA}/java",
             ]
 
             res.srcDirs = [
                     "${EGLIBRARY_PATH_ANDROID_CORE}/res",
                     "${EGLIBRARY_PATH_ANDROID_CAMERA}/res",
             ];
+
+            aidl.srcDirs = [
+                    "${EGLIBRARY_PATH_ANDROID_CORE}/aidl",
+            ]
         }
     }
 
