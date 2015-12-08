@@ -1,3 +1,10 @@
+/**
+ * ソースコードパス設定
+ */
+if (!hasProperty("EGLIBRARY_PATH_SRC_ROOT")) {
+    ext.EGLIBRARY_PATH_SRC_ROOT = ".."
+}
+
 ext {
     /**
      * Deploy Version
@@ -13,13 +20,6 @@ ext {
      * 0.2.10 : update google play
      */
     EGLIBRARY_ARTIFACT_VERSION = "0.2.10"
-
-    /**
-     * ソースコードパス設定
-     */
-    if (!hasProperty("EGLIBRARY_PATH_SRC_ROOT")) {
-        EGLIBRARY_PATH_SRC_ROOT = ".."
-    }
 
     EGLIBRARY_PATH_JAVA_CORE = "${EGLIBRARY_PATH_SRC_ROOT}/src/java/core"
     EGLIBRARY_PATH_JAVA_GEO = "${EGLIBRARY_PATH_SRC_ROOT}/src/java/geo"

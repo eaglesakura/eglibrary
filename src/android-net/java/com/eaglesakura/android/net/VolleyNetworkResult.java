@@ -143,6 +143,7 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
 
             @Override
             protected Response<T> parseNetworkResponse(NetworkResponse networkResponse) {
+                String errorMessage = "parse error";
                 try {
                     connectEndTime = System.currentTimeMillis();
                     LogUtil.log("%s volley received(%s) %.1f KB",
@@ -152,7 +153,7 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
                             getRespTimeMs()
                     );
 
-
+                    errorMessage = "hash calc error";
                     currentDataHash = EncodeUtil.genMD5(networkResponse.data);
                     LogUtil.log("data(%s) hash old(%s) -> new(%s) modified(%s)",
                             url,
@@ -161,14 +162,23 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
                     );
 
                     downloadedDataSize = networkResponse.data.length;
-                    Response<T> result = Response.success(parser.parse(self(), new ByteArrayInputStream(networkResponse.data)), getCacheEntry());
+
+
+                    errorMessage = "parse failed :: " + parser;
+                    T resultValue = parser.parse(self(), new ByteArrayInputStream(networkResponse.data));
+
+                    errorMessage = "Resp error";
+                    Response<T> result = Response.success(resultValue, getCacheEntry());
+
                     // キャッシュに追加する
                     if (cacheTimeoutMs > 10) {
+                        errorMessage = "put cache";
                         putCache(url, networkResponse.headers, httpMethod, Arrays.copyOf(networkResponse.data, networkResponse.data.length), cacheTimeoutMs);
                     }
+                    errorMessage = "completed";
                     return result;
                 } catch (Exception e) {
-                    return Response.error(new VolleyError("parse error"));
+                    return Response.error(new VolleyError(errorMessage));
                 }
             }
 
