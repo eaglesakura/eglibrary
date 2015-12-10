@@ -9,8 +9,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
@@ -108,6 +110,71 @@ public class EncodeUtil {
     }
 
     /**
+     * ファイル配列をシリアライズする
+     *
+     * @param data
+     * @return
+     */
+    public static byte[] toByteArray(List<byte[]> data) {
+        try {
+            int sumSize = 4;
+            for (byte[] file : data) {
+                sumSize += (file.length + 4);
+            }
+
+            ByteArrayOutputStream os = new ByteArrayOutputStream(sumSize);
+            DataOutputStream dos = new DataOutputStream(os, false);
+
+            dos.writeS32(data.size());
+            Iterator<byte[]> iterator = data.iterator();
+            while (iterator.hasNext()) {
+                byte[] file = iterator.next();
+                dos.writeFile(file);
+            }
+
+            return os.toByteArray();
+        } catch (Exception e) {
+            throw new IllegalStateException();
+        }
+    }
+
+    /**
+     * toByteArrayでシリアライズしたデータをデシリアライズする
+     *
+     * @param buffer
+     * @return
+     */
+    public static List<byte[]> toByteArrayList(byte[] buffer) {
+        return toByteArrayList(buffer, 0, buffer.length);
+    }
+
+    /**
+     * toByteArrayでシリアライズしたデータをデシリアライズする
+     *
+     * @param buffer
+     * @return
+     */
+    public static List<byte[]> toByteArrayList(byte[] buffer, int offset, int length) {
+        try {
+
+            ByteArrayInputStream is = new ByteArrayInputStream(buffer, offset, length);
+            DataInputStream dis = new DataInputStream(is, false);
+
+            List<byte[]> result = new ArrayList<>();
+            final int num = dis.readS32();
+
+            for (int i = 0; i < num; ++i) {
+                result.add(dis.readFile());
+            }
+
+            return result;
+        } catch (Exception e) {
+            LogUtil.log(e);
+            throw new IllegalArgumentException("FormatError");
+        }
+    }
+
+    /**
      * Key-Valueデータを圧縮する
      *
      * @param data
@@ -161,6 +228,13 @@ public class EncodeUtil {
         }
     }
 
+    /**
+     * データをGZIP圧縮するか、そのまま返却する
+     * 容量の小さいほうが採用される。
+     *
+     * @param buffer
+     * @return
+     */
     public static byte[] compressOrRaw(byte[] buffer) {
         if (buffer.length > 1024) {
             // ある程度データが大きくないと非効率的である
@@ -177,7 +251,7 @@ public class EncodeUtil {
     }
 
     /**
-     * GZIPバッファをデコードする。失敗したらnullを返却する。
+     * GZIPバッファをデコードする。失敗したら元のオブジェクトを返却する。
      *
      * @param buffer 解凍対象バッファ
      * @return 解凍したバッファ

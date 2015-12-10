@@ -152,7 +152,7 @@ public abstract class CommandClient {
     public <T extends BasePropertiesDatabase> T postToServerAsProps(String cmd, byte[] buffer, Class<T> clazz) throws RemoteException {
         byte[] ret = requestPostToServer(cmd, buffer);
         if (ret != null && ret.length > 0) {
-            return BasePropertiesDatabase.createInstance(context, clazz, ret);
+            return BasePropertiesDatabase.deserializeInstance(context, clazz, ret);
         } else {
             return null;
         }

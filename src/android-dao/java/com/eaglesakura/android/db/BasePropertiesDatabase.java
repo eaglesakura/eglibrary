@@ -23,9 +23,11 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -563,6 +565,51 @@ public class BasePropertiesDatabase {
     }
 
     /**
+     * 配列をシリアライズする
+     *
+     * @param datas
+     * @param <T>
+     * @return
+     */
+    public static <T extends BasePropertiesDatabase> byte[] serialize(List<T> datas) {
+        List<byte[]> serializeArray = new ArrayList<>();
+        for (T item : datas) {
+            serializeArray.add(item.toByteArray());
+        }
+
+        return EncodeUtil.compressOrRaw(EncodeUtil.toByteArray(serializeArray));
+    }
+
+    /**
+     * シリアライズされたバッファからクラスを復元する
+     *
+     * @param context
+     * @param clazz
+     * @param buffer
+     * @param <T>
+     * @return
+     */
+    public static <T extends BasePropertiesDatabase> List<T> deserializeToArray(Context context, Class<T> clazz, byte[] buffer) {
+        buffer = EncodeUtil.decompressOrRaw(buffer);
+
+        List<byte[]> deserializeArray = EncodeUtil.toByteArrayList(buffer);
+        List<T> result = new ArrayList<>();
+        try {
+            Constructor<T> constructor = clazz.getConstructor(Context.class, String.class);
+            for (byte[] data : deserializeArray) {
+                T instance = constructor.newInstance(context, null);
+                instance.fromByteArray(data);
+                result.add(instance);
+            }
+
+            return result;
+        } catch (Exception e) {
+            LogUtil.log(e);
+            return null;
+        }
+    }
+
+    /**
      * 生成されたbyte[]からインスタンスを復元する
      *
      * @param context
@@ -571,7 +618,7 @@ public class BasePropertiesDatabase {
      * @param <T>
      * @return
      */
-    public static <T extends BasePropertiesDatabase> T createInstance(Context context, Class<T> clazz, byte[] data) {
+    public static <T extends BasePropertiesDatabase> T deserializeInstance(Context context, Class<T> clazz, byte[] data) {
         try {
             Constructor<T> constructor = clazz.getConstructor(Context.class, String.class);
             T instance = constructor.newInstance(context, null);
