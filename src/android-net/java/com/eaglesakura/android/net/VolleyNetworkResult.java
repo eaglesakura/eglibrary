@@ -27,9 +27,11 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
 
     final long cacheTimeoutMs;
 
-    final Map<String, String> params;
+    final Map<String, String> postParams;
 
-    final byte[] buffer;
+    final Map<String, String> headers;
+
+    final byte[] postBuffer;
 
     final NetworkConnector.RequestParser<T> parser;
 
@@ -39,28 +41,30 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
 
     long connectEndTime;
 
-    public VolleyNetworkResult(String url, NetworkConnector connector, NetworkConnector.RequestParser<T> parser, int volleyMethod, long cacheTimeoutMs, Map<String, String> params) {
+    public VolleyNetworkResult(String url, NetworkConnector connector, NetworkConnector.RequestParser<T> parser, int volleyMethod, NetworkConnector.IConnectParams params) {
         super(url);
 
         this.connector = connector;
-        this.cacheTimeoutMs = cacheTimeoutMs;
-        this.params = params;
+        this.cacheTimeoutMs = params.getCacheTimeoutMs();
+        this.postParams = params.getRequestParams();
         this.parser = parser;
-        this.buffer = null;
+        this.headers = params.getHeaders();
+        this.postBuffer = params.getPostBuffer();
         this.volleyMethod = volleyMethod;
-        httpMethod = volleyMethod == Request.Method.GET ? "GET" : "POST";
-    }
 
-    public VolleyNetworkResult(String url, NetworkConnector connector, NetworkConnector.RequestParser<T> parser, int volleyMethod, long cacheTimeoutMs, byte[] buffer) {
-        super(url);
-
-        this.connector = connector;
-        this.cacheTimeoutMs = cacheTimeoutMs;
-        this.params = null;
-        this.buffer = buffer;
-        this.parser = parser;
-        this.volleyMethod = volleyMethod;
-        httpMethod = volleyMethod == Request.Method.GET ? "GET" : "POST";
+        switch (volleyMethod) {
+            case Request.Method.GET:
+                httpMethod = "GET";
+                break;
+            case Request.Method.POST:
+                httpMethod = "POST";
+                break;
+            case Request.Method.HEAD:
+                httpMethod = "HEAD";
+                break;
+            default:
+                throw new IllegalArgumentException("Method : " + volleyMethod);
+        }
     }
 
 
@@ -119,18 +123,19 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
                 onError(volleyError);
             }
         }) {
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                if (params != null && !params.isEmpty()) {
-                    return params;
+                if (postParams != null && !postParams.isEmpty()) {
+                    return postParams;
                 }
                 return super.getParams();
             }
 
             @Override
             public byte[] getBody() throws AuthFailureError {
-                if (buffer != null) {
-                    return buffer;
+                if (postBuffer != null) {
+                    return postBuffer;
                 }
 
                 return super.getBody();
@@ -138,7 +143,12 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                return connector.factory.newHttpHeaders(url, httpMethod);
+                Map<String, String> defHeader = connector.factory.newHttpHeaders(url, httpMethod);
+                if (headers != null && !headers.isEmpty()) {
+                    headers.putAll(defHeader);
+                    return headers;
+                }
+                return defHeader;
             }
 
             @Override

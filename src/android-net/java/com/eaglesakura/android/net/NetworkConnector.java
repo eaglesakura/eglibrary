@@ -28,6 +28,7 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
@@ -195,7 +196,7 @@ public class NetworkConnector {
      * @param <T>
      * @return
      */
-    public <T> NetworkResult<T> get(String url, RequestParser<T> parser, long cacheTimeoutMs, File downloadFile) {
+    public <T> NetworkResult<T> get(String url, RequestParser<T> parser, final long cacheTimeoutMs, File downloadFile) {
         if (url == null || !url.startsWith("http")) {
             return newUrlErrorResult(url);
         }
@@ -204,13 +205,32 @@ public class NetworkConnector {
                 url,
                 this,
                 factory.newLargeRequest(url, "GET"),
-                cacheTimeoutMs,
                 parser,
-                null,
+                new IConnectParams() {
+                    @Override
+                    public long getCacheTimeoutMs() {
+                        return cacheTimeoutMs;
+                    }
+
+                    @Override
+                    public Map<String, String> getHeaders() {
+                        return new HashMap<>();
+                    }
+
+                    @Override
+                    public Map<String, String> getRequestParams() {
+                        return new HashMap<>();
+                    }
+
+                    @Override
+                    public byte[] getPostBuffer() {
+                        return null;
+                    }
+                },
                 downloadFile
         );
         start(result);
-        return result;
+        return get(url, parser, cacheTimeoutMs, RequestType.GoogleHttpClient);
     }
 
     /**
@@ -223,7 +243,41 @@ public class NetworkConnector {
      * @param <T>
      * @return
      */
-    public <T> NetworkResult<T> get(String url, RequestParser<T> parser, long cacheTimeoutMs, RequestType type) {
+    public <T> NetworkResult<T> get(String url, RequestParser<T> parser, final long cacheTimeoutMs, RequestType type) {
+        return get(url, parser, new IConnectParams() {
+            @Override
+            public long getCacheTimeoutMs() {
+                return cacheTimeoutMs;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() {
+                return new HashMap<>();
+            }
+
+            @Override
+            public Map<String, String> getRequestParams() {
+                return new HashMap<>();
+            }
+
+            @Override
+            public byte[] getPostBuffer() {
+                return null;
+            }
+        }, type);
+    }
+
+    /**
+     * ネットワーク経由でデータを取得する
+     *
+     * @param url
+     * @param parser
+     * @param params
+     * @param type
+     * @param <T>
+     * @return
+     */
+    public <T> NetworkResult<T> get(String url, RequestParser<T> parser, final IConnectParams params, RequestType type) {
         if (url == null || !url.startsWith("http")) {
             return newUrlErrorResult(url);
         }
@@ -233,18 +287,18 @@ public class NetworkConnector {
                     url,
                     this,
                     factory.newLargeRequest(url, "GET"),
-                    cacheTimeoutMs,
                     parser,
-                    null,
+                    params,
                     null
             );
 
             start(result);
             return result;
         } else {
-            return connect(url, parser, Request.Method.GET, cacheTimeoutMs, (Map<String, String>) null);
+            return connect(url, parser, Request.Method.GET, params);
         }
     }
+
 
     public static Map<String, String> asMap(Collection<String> keyValues) {
         if (keyValues.size() % 2 != 0) {
@@ -272,8 +326,28 @@ public class NetworkConnector {
      * @param <T>
      * @return
      */
-    public <T> NetworkResult<T> post(String url, RequestParser<T> parser, Map<String, String> params, long cacheTimeoutMs) {
-        return connect(url, parser, Request.Method.POST, cacheTimeoutMs, params);
+    public <T> NetworkResult<T> post(String url, RequestParser<T> parser, final Map<String, String> params, final long cacheTimeoutMs) {
+        return connect(url, parser, Request.Method.POST, new IConnectParams() {
+            @Override
+            public long getCacheTimeoutMs() {
+                return cacheTimeoutMs;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() {
+                return null;
+            }
+
+            @Override
+            public Map<String, String> getRequestParams() {
+                return params;
+            }
+
+            @Override
+            public byte[] getPostBuffer() {
+                return null;
+            }
+        });
     }
 
     /**
@@ -286,8 +360,52 @@ public class NetworkConnector {
      * @param <T>
      * @return
      */
-    public <T> NetworkResult<T> post(String url, RequestParser<T> parser, byte[] data, long cacheTimeoutMs) {
-        return connect(url, parser, Request.Method.POST, cacheTimeoutMs, data);
+    public <T> NetworkResult<T> post(String url, RequestParser<T> parser, final byte[] data, final long cacheTimeoutMs) {
+        return connect(url, parser, Request.Method.POST, new IConnectParams() {
+            @Override
+            public long getCacheTimeoutMs() {
+                return cacheTimeoutMs;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() {
+                return new HashMap<>();
+            }
+
+            @Override
+            public Map<String, String> getRequestParams() {
+                return null;
+            }
+
+            @Override
+            public byte[] getPostBuffer() {
+                return data;
+            }
+        });
+    }
+
+    /**
+     * 接続情報を取得する
+     */
+    public interface IConnectParams {
+        long getCacheTimeoutMs();
+
+        Map<String, String> getHeaders();
+
+        /**
+         * POST対象のkey-valueを取得する
+         *
+         * @return
+         */
+        Map<String, String> getRequestParams();
+
+        /**
+         * POST対象のbyte配列を取得する。
+         * このメソッドは先に呼びだされ、nullの場合はgetPostParams()がチェックされる
+         *
+         * @return
+         */
+        byte[] getPostBuffer();
     }
 
     /**
@@ -298,9 +416,43 @@ public class NetworkConnector {
      * @param <T>
      * @return
      */
-    public <T> NetworkResult<T> post(String url, RequestParser<T> parser, Map<String, String> params) {
-        return connect(url, parser, Request.Method.POST, 0, params);
+    public <T> NetworkResult<T> post(String url, RequestParser<T> parser, final Map<String, String> params) {
+        return connect(url, parser, Request.Method.POST, new IConnectParams() {
+            @Override
+            public long getCacheTimeoutMs() {
+                return 0;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() {
+                return new HashMap<>();
+            }
+
+            @Override
+            public Map<String, String> getRequestParams() {
+                return params;
+            }
+
+            @Override
+            public byte[] getPostBuffer() {
+                return null;
+            }
+        });
     }
+
+
+    /**
+     * ネットワーク経由でデータを送信する
+     *
+     * @param url
+     * @param parser
+     * @param <T>
+     * @return
+     */
+    public <T> NetworkResult<T> post(String url, RequestParser<T> parser, IConnectParams params) {
+        return connect(url, parser, Request.Method.POST, params);
+    }
+
 
     /**
      * URLエラーが発生した場合のハンドリングResultを返す
@@ -330,35 +482,14 @@ public class NetworkConnector {
      *
      * @param url
      * @param parser
-     * @param cacheTimeoutMs
      * @param <T>
      * @return
      */
-    protected <T> NetworkResult<T> connect(final String url, final RequestParser<T> parser, final int volleyMethod, final long cacheTimeoutMs, final Map<String, String> params) {
+    protected <T> NetworkResult<T> connect(final String url, final RequestParser<T> parser, final int volleyMethod, IConnectParams params) {
         if (url == null || !url.startsWith("http")) {
             return newUrlErrorResult(url);
         }
-
-        NetworkResult<T> result = new VolleyNetworkResult<>(url, this, parser, volleyMethod, cacheTimeoutMs, params);
-        start(result);
-        return result;
-    }
-
-    /**
-     * ネットワーク経由でデータを取得する
-     *
-     * @param url
-     * @param parser
-     * @param cacheTimeoutMs
-     * @param <T>
-     * @return
-     */
-    protected <T> NetworkResult<T> connect(final String url, final RequestParser<T> parser, final int volleyMethod, final long cacheTimeoutMs, final byte[] buffer) {
-        if (url == null || !url.startsWith("http")) {
-            return newUrlErrorResult(url);
-        }
-
-        NetworkResult<T> result = new VolleyNetworkResult<>(url, this, parser, volleyMethod, cacheTimeoutMs, buffer);
+        NetworkResult<T> result = new VolleyNetworkResult<>(url, this, parser, volleyMethod, params);
         start(result);
         return result;
     }
@@ -637,6 +768,16 @@ public class NetworkConnector {
     };
 
     /**
+     * byte配列に変換する
+     */
+    public static RequestParser<byte[]> BYTEARRAY_PARSER = new RequestParser<byte[]>() {
+        @Override
+        public byte[] parse(NetworkResult<byte[]> sender, InputStream data) throws Exception {
+            return IOUtil.toByteArray(data, false);
+        }
+    };
+
+    /**
      * JSONを単純にパースする
      *
      * @param <T>
@@ -702,5 +843,19 @@ public class NetworkConnector {
 
             return blend;
         }
+    }
+
+    /**
+     * コンテンツのRangeを指定してダウンロードする。
+     *
+     * @param header
+     * @param offset
+     * @param length
+     * @return
+     */
+    public static String setRange(Map<String, String> header, int offset, int length) {
+        String result = String.format("bytes=%d-%d", offset, (offset + length - 1));
+        header.put("Range", result);
+        return result;
     }
 }

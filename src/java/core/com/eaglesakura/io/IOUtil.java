@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -670,6 +671,18 @@ public class IOUtil {
         }
         try {
             is.close();
+        } catch (Exception e) {
+        }
+    }
+
+
+    public static void close(RandomAccessFile raf) {
+        if (raf == null) {
+            return;
+        }
+
+        try {
+            raf.close();
         } catch (Exception e) {
         }
     }

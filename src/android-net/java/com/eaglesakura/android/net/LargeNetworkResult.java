@@ -36,21 +36,24 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
 
     final Map<String, String> params;
 
+    final Map<String, String> headers;
+
     boolean aborted;
 
     final File downloadFile;
 
     final File cacheFile;
 
-    public LargeNetworkResult(String url, NetworkConnector connector, HttpRequest request, long cacheTimeoutMs, NetworkConnector.RequestParser<T> parser, Map<String, String> params, File downloadFile) {
+    public LargeNetworkResult(String url, NetworkConnector connector, HttpRequest request, NetworkConnector.RequestParser<T> parser, NetworkConnector.IConnectParams params, File downloadFile) {
         super(url);
         this.parser = parser;
         this.request = request;
         this.connector = connector;
-        this.cacheTimeoutMs = cacheTimeoutMs;
-        this.params = params;
+        this.cacheTimeoutMs = params.getCacheTimeoutMs();
+        this.params = params.getRequestParams();
         this.database = connector.getCacheDatabase();
         this.downloadFile = downloadFile;
+        this.headers = params.getHeaders();
         if (downloadFile == null) {
             this.cacheFile = null;
         } else {
