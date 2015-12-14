@@ -31,20 +31,21 @@ public final class LogUtil {
     }
 
     public interface Logger {
-        public void i(String msg);
+        void i(String msg);
 
-        public void d(String msg);
+        void d(String msg);
     }
 
     /**
      * Android用Logger
      */
-    static class AndroidLogger implements Logger {
-        Class<?> clazz;
-        Method i;
-        Method d;
+    public static class AndroidLogger implements Logger {
+        private Class<?> clazz;
+        private Method i;
+        private Method d;
+        private boolean stackInfo = false;
 
-        AndroidLogger(Class<?> logClass) {
+        public AndroidLogger(Class<?> logClass) {
             this.clazz = logClass;
             try {
                 this.i = clazz.getMethod("i", String.class, String.class);
@@ -54,10 +55,23 @@ public final class LogUtil {
             }
         }
 
+        public AndroidLogger setStackInfo(boolean stackInfo) {
+            this.stackInfo = stackInfo;
+            return this;
+        }
+
         @Override
         public void i(String msg) {
             try {
-                i.invoke(clazz, tag, msg);
+                if (stackInfo) {
+                    StackTraceElement[] trace = new Exception().getStackTrace();
+                    StackTraceElement elem = trace[3];
+                    i.invoke(clazz, tag,
+                            String.format("%s[%d] : %s", elem.getFileName(), elem.getLineNumber(), msg)
+                    );
+                } else {
+                    i.invoke(clazz, tag, msg);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -66,7 +80,11 @@ public final class LogUtil {
         @Override
         public void d(String msg) {
             try {
-                d.invoke(clazz, tag, msg);
+                StackTraceElement[] trace = new Exception().getStackTrace();
+                StackTraceElement elem = trace[3];
+                d.invoke(clazz, tag,
+                        String.format("%s[%d] : %s", elem.getFileName(), elem.getLineNumber(), msg)
+                );
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -79,12 +97,14 @@ public final class LogUtil {
     static class BasicLogger implements Logger {
         @Override
         public void i(String msg) {
-            System.out.println(msg);
+            StackTraceElement[] trace = new Exception().getStackTrace();
+            StackTraceElement elem = trace[3];
+            System.out.println(String.format("%s[%d] : %s", elem.getFileName(), elem.getLineNumber(), msg));
         }
 
         @Override
         public void d(String msg) {
-            System.out.println(msg);
+            this.i(msg);
         }
     }
 
