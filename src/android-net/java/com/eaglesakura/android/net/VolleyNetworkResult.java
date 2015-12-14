@@ -163,7 +163,6 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
 
                     downloadedDataSize = networkResponse.data.length;
 
-
                     errorMessage = "parse failed :: " + parser;
                     T resultValue = parser.parse(self(), new ByteArrayInputStream(networkResponse.data));
 

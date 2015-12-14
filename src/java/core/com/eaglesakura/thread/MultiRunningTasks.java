@@ -17,17 +17,16 @@ public class MultiRunningTasks {
          * この処理は同時に複数呼ばれることはない。
          *
          * @param runnner
-         *
          * @return falseを返した場合、タスクの実行を行わない。
          */
-        public boolean begin(MultiRunningTasks runnner);
+        boolean begin(MultiRunningTasks runnner);
 
         /**
          * 実際の処理を行わせる。
          *
          * @param runner
          */
-        public void run(MultiRunningTasks runner);
+        void run(MultiRunningTasks runner);
 
         /**
          * 終了時に呼ばれる。<BR>
@@ -35,7 +34,7 @@ public class MultiRunningTasks {
          *
          * @param runner
          */
-        public void finish(MultiRunningTasks runner);
+        void finish(MultiRunningTasks runner);
     }
 
     List<Thread> threads = new ArrayList<Thread>();
@@ -45,10 +44,16 @@ public class MultiRunningTasks {
 
     boolean exit = false;
 
+    boolean autoStart = false;
+
     String threadName = MultiRunningTasks.class.getName();
 
     public MultiRunningTasks(int maxThreads) {
         this.maxThreads = maxThreads;
+    }
+
+    public void setAutoStart(boolean autoStart) {
+        this.autoStart = autoStart;
     }
 
     /**
@@ -59,6 +64,10 @@ public class MultiRunningTasks {
     public synchronized MultiRunningTasks pushBack(Task task) {
         synchronized (this) {
             tasks.add(task);
+        }
+
+        if (autoStart) {
+            start();
         }
         return this;
     }
@@ -91,14 +100,19 @@ public class MultiRunningTasks {
      *
      * @param task
      */
-    public synchronized void pushFront(Task task) {
+    public synchronized MultiRunningTasks pushFront(Task task) {
         synchronized (this) {
             tasks.add(0, task);
         }
+
+        if (autoStart) {
+            start();
+        }
+        return this;
     }
 
-    public void pushFront(final Runnable runnable) {
-        pushFront(new Task() {
+    public MultiRunningTasks pushFront(final Runnable runnable) {
+        return pushFront(new Task() {
             @Override
             public boolean begin(MultiRunningTasks runnner) {
                 return true;

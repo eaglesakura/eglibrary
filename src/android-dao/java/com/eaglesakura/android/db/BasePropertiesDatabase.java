@@ -81,10 +81,12 @@ public class BasePropertiesDatabase {
     }
 
     protected BasePropertiesDatabase(Context context, String dbName) {
-        this.context = context.getApplicationContext();
-        if (!StringUtil.isEmpty(dbName)) {
-            // 対象のDBが指定されている
-            this.databaseFile = context.getDatabasePath(dbName);
+        if (context != null) {
+            this.context = context.getApplicationContext();
+            if (!StringUtil.isEmpty(dbName)) {
+                // 対象のDBが指定されている
+                this.databaseFile = context.getDatabasePath(dbName);
+            }
         }
     }
 
@@ -270,7 +272,9 @@ public class BasePropertiesDatabase {
         while (itr.hasNext()) {
             Map.Entry<String, Property> entry = itr.next();
             Property prop = entry.getValue();
-            datas.put(prop.key, prop.value.getBytes());
+            if (!StringUtil.isEmpty(prop.value)) {
+                datas.put(prop.key, prop.value.getBytes());
+            }
         }
         return EncodeUtil.toByteArray(datas);
     }
