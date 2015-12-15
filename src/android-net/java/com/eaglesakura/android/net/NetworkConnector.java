@@ -854,9 +854,11 @@ public class NetworkConnector {
      * @param length
      * @return
      */
-    public static String setRange(Map<String, String> header, int offset, int length) {
+    public static String setRange(Map<String, String> header, long offset, long length) {
         String result = String.format("bytes=%d-%d", offset, (offset + length - 1));
-        header.put("Range", result);
+        if (header != null) {
+            header.put("Range", result);
+        }
         return result;
     }
 
