@@ -23,6 +23,7 @@ import com.eaglesakura.android.util.ImageUtil;
 import com.eaglesakura.io.IOUtil;
 import com.eaglesakura.json.JSON;
 import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.StringUtil;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
@@ -857,5 +858,28 @@ public class NetworkConnector {
         String result = String.format("bytes=%d-%d", offset, (offset + length - 1));
         header.put("Range", result);
         return result;
+    }
+
+    /**
+     * コンテンツ全体の長さを取得する
+     *
+     * @param headers
+     * @return 不明な場合は0を返却する
+     */
+    public static long getContentFullSize(Map<String, String> headers) {
+        String range = headers.get("Content-Range");
+        String length = headers.get("Content-Length");
+        try {
+            if (!StringUtil.isEmpty(range)) {
+                String[] split = range.split("/");
+                return Long.parseLong(split[1]);
+            }
+
+            if (!StringUtil.isEmpty(length)) {
+                return Long.parseLong(length);
+            }
+        } catch (Exception e) {
+        }
+        return 0;
     }
 }

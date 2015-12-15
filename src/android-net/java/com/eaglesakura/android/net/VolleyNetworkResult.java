@@ -13,6 +13,7 @@ import com.eaglesakura.util.LogUtil;
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -40,6 +41,8 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
     final long connectStartTime = System.currentTimeMillis();
 
     long connectEndTime;
+
+    Map<String, String> receivedHeaders = new HashMap<>();
 
     public VolleyNetworkResult(String url, NetworkConnector connector, NetworkConnector.RequestParser<T> parser, int volleyMethod, NetworkConnector.IConnectParams params) {
         super(url);
@@ -115,6 +118,15 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
         }
     }
 
+    /**
+     * 受信したヘッダを取得する
+     *
+     * @return
+     */
+    public Map<String, String> getReceivedHeaders() {
+        return receivedHeaders;
+    }
+
     void loadFromNetwork() {
         volleyRequest = new Request<T>(volleyMethod, url, new Response.ErrorListener() {
             @Override
@@ -171,6 +183,9 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
                             "" + isDataModified()
                     );
 
+                    if (networkResponse.headers != null) {
+                        receivedHeaders = networkResponse.headers;
+                    }
                     downloadedDataSize = networkResponse.data.length;
 
                     errorMessage = "parse failed :: " + parser;

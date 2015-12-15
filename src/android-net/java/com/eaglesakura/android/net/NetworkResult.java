@@ -6,6 +6,8 @@ import com.eaglesakura.time.Timer;
 import com.eaglesakura.util.Util;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * ネットワークの戻り値を管理する
@@ -73,6 +75,17 @@ public abstract class NetworkResult<T> {
         } else {
             return !oldDataHash.equals(currentDataHash);
         }
+    }
+
+    /**
+     * 受信したhttpヘッダを取得する。
+     * <p/>
+     * ただし、対応してい場合は空のMapが返却される。
+     *
+     * @return
+     */
+    public Map<String, String> getReceivedHeaders() {
+        return new HashMap<>();
     }
 
     /**
