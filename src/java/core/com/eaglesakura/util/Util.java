@@ -176,6 +176,10 @@ public class Util {
         Key createKey(Value value);
     }
 
+    public static boolean isEmpty(byte[] item) {
+        return item == null || item.length == 0;
+    }
+
     public static <T> boolean isEmpty(T[] item) {
         return item == null || item.length == 0;
     }
