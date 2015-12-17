@@ -585,6 +585,23 @@ public class BasePropertiesDatabase {
     }
 
     /**
+     * Key-Valueマップをシリアライズする
+     *
+     * @param datas
+     * @return
+     */
+    public static byte[] serialize(Map<String, BasePropertiesDatabase> datas) {
+        Map<String, byte[]> serializeMap = new HashMap<>();
+
+        Iterator<Map.Entry<String, BasePropertiesDatabase>> iterator = datas.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, BasePropertiesDatabase> entry = iterator.next();
+            serializeMap.put(entry.getKey(), entry.getValue().toByteArray());
+        }
+        return EncodeUtil.compressOrRaw(EncodeUtil.toByteArray(serializeMap));
+    }
+
+    /**
      * シリアライズされたバッファからクラスを復元する
      *
      * @param context
@@ -611,6 +628,19 @@ public class BasePropertiesDatabase {
             LogUtil.log(e);
             return null;
         }
+    }
+
+    /**
+     * Key-Valueからデシリアライズする。
+     * デシリアライズ先は不明であるため、byte[]までの解凍に留める。
+     *
+     * @param context
+     * @param buffer
+     * @return
+     */
+    public static Map<String, byte[]> deserializeToSerializedMap(Context context, byte[] buffer) {
+        buffer = EncodeUtil.decompressOrRaw(buffer);
+        return EncodeUtil.toKeyValue(buffer);
     }
 
     /**
