@@ -33,12 +33,7 @@ import java.util.Map;
 /**
  * 簡易設定用のプロパティを保持するためのクラス
  */
-public class BasePropertiesDatabase {
-    /**
-     * 保存用のデータベースファイル
-     */
-    protected File databaseFile;
-
+public abstract class BaseProperties {
     /**
      * app context
      */
@@ -47,9 +42,13 @@ public class BasePropertiesDatabase {
     /**
      * ロード済みのプロパティ
      */
-    Map<String, Property> propMap = new HashMap<String, Property>();
+    protected final Map<String, Property> propMap = new HashMap<String, Property>();
 
-    class Property {
+    public BaseProperties(Context context) {
+        this.context = context;
+    }
+
+    protected class Property {
         /**
          * 現在の値
          */
@@ -76,26 +75,8 @@ public class BasePropertiesDatabase {
         }
     }
 
-    protected BasePropertiesDatabase() {
-
-    }
-
-    protected BasePropertiesDatabase(Context context, String dbName) {
-        if (context != null) {
-            this.context = context.getApplicationContext();
-            if (!StringUtil.isEmpty(dbName)) {
-                // 対象のDBが指定されている
-                this.databaseFile = context.getDatabasePath(dbName);
-            }
-        }
-    }
-
-    public void setDatabaseFile(File databaseFile) {
-        this.databaseFile = databaseFile;
-    }
-
     public void setContext(Context context) {
-        this.context = context;
+        this.context = context.getApplicationContext();
     }
 
     public String getStringProperty(String key) {
@@ -134,10 +115,6 @@ public class BasePropertiesDatabase {
         return Double.parseDouble(getStringProperty(key));
     }
 
-    public <T> T getJsonProperty(String key, Class<T> pojo) {
-        return JSON.decodeOrNull(getStringProperty(key), pojo);
-    }
-
     /**
      * PNG形式で保存してあるBitmapを取得する
      *
@@ -172,23 +149,16 @@ public class BasePropertiesDatabase {
         }
     }
 
-    /**
-     * protocol buffersオブジェクトを取得する
-     *
-     * @param key
-     * @param proto
-     * @param <T>
-     */
-    public <T extends com.google.protobuf.GeneratedMessage> T getProtobufProperty(String key, Class<T> proto) {
-        try {
-            byte[] prop = getByteArrayProperty(key);
-            Method method = proto.getMethod("parseFrom", byte[].class);
-            return (T) method.invoke(proto, prop);
-        } catch (Exception e) {
-            LogUtil.log(e);
-            return null;
-        }
-    }
+//    public <T extends com.google.protobuf.GeneratedMessage> T getProtobufProperty(String key, Class<T> proto) {
+//        try {
+//            byte[] prop = getByteArrayProperty(key);
+//            Method method = proto.getMethod("parseFrom", byte[].class);
+//            return (T) method.invoke(proto, prop);
+//        } catch (Exception e) {
+//            LogUtil.log(e);
+//            return null;
+//        }
+//    }
 
     /**
      * Viewの値からpropertyを指定する
@@ -347,213 +317,6 @@ public class BasePropertiesDatabase {
     }
 
     /**
-     * キャッシュをデータベースに保存する
-     */
-    public synchronized void commit() {
-        Map<String, String> commitValues = new HashMap<>();
-
-        // Commitする内容を抽出する
-        {
-            Iterator<Map.Entry<String, Property>> iterator = propMap.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Property property = iterator.next().getValue();
-                if (property.modified) {
-                    commitValues.put(property.key, property.value);
-                }
-            }
-        }
-
-        // 不要であれば何もしない
-        if (commitValues.isEmpty()) {
-            return;
-        }
-
-        // 保存する
-        TextKeyValueStore kvs = new TextKeyValueStore(context, databaseFile);
-        try {
-            kvs.open(false);
-            kvs.putInTx(commitValues);
-
-            // コミットが成功したらmodified属性を元に戻す
-            {
-                Iterator<Map.Entry<String, Property>> iterator = propMap.entrySet().iterator();
-                while (iterator.hasNext()) {
-                    Property property = iterator.next().getValue();
-                    property.modified = false;
-                }
-            }
-        } finally {
-            kvs.close();
-        }
-    }
-
-    /**
-     * 非同期で値を保存する。
-     * その間、値を書き換えても値の保証はしない。
-     */
-    public void commitAsync() {
-        commitAsync(null);
-    }
-
-    private static MultiRunningTasks gTaskQueue = new MultiRunningTasks(1);
-
-    static {
-        gTaskQueue.setThreadPoolMode(false);
-        gTaskQueue.setThreadName("Prop Commit");
-    }
-
-    public void commitAsync(final PropsAsyncListener listener) {
-        gTaskQueue.pushBack(new Runnable() {
-            @Override
-            public void run() {
-                commit();
-                if (listener != null) {
-                    listener.onAsyncCompleted(BasePropertiesDatabase.this);
-                }
-            }
-        }).start();
-    }
-
-    /**
-     * 指定したキーのみをDBからロードする
-     *
-     * @param key
-     */
-    public void load(String key) {
-        load(new String[]{key});
-    }
-
-    /**
-     * 指定したキーのみをDBからロードする
-     *
-     * @param keys
-     */
-    public void load(String[] keys) {
-        // Contextを持たないため読込が行えない
-        if (context == null || databaseFile == null || keys.length == 0) {
-            return;
-        }
-
-        TextKeyValueStore kvs = new TextKeyValueStore(context, databaseFile);
-        try {
-            kvs.open();
-
-            for (String key : keys) {
-                Property property = propMap.get(key);
-                if (property != null) {
-                    property.value = kvs.get(property.key, property.defaultValue);
-                    property.modified = false;
-                }
-            }
-
-        } finally {
-            kvs.close();
-        }
-    }
-
-    /**
-     * データをDBからロードする
-     * <br>
-     * 既存のキャッシュはクリーンされる
-     */
-    public void load() {
-        // Contextを持たないため読込が行えない
-        if (context == null || databaseFile == null) {
-            return;
-        }
-
-        TextKeyValueStore kvs = new TextKeyValueStore(context, databaseFile);
-        try {
-            kvs.open();
-
-            Iterator<Map.Entry<String, Property>> iterator = propMap.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Property value = iterator.next().getValue();
-                // リロードする。読み込めなかった場合は規定のデフォルト値を持たせる
-                value.value = kvs.get(value.key, value.defaultValue);
-                // sync直後なのでcommit対象ではない
-                value.modified = false;
-            }
-        } finally {
-            kvs.close();
-        }
-    }
-
-    /**
-     * 非同期でデータを読み込む
-     */
-    public void loadAsync() {
-        (new Thread() {
-            @Override
-            public void run() {
-                load();
-            }
-        }).start();
-    }
-
-    public void loadAsync(final PropsAsyncListener listener) {
-        (new Thread() {
-            @Override
-            public void run() {
-                load();
-                listener.onAsyncCompleted(BasePropertiesDatabase.this);
-            }
-        }).start();
-    }
-
-    public interface PropsAsyncListener {
-        public void onAsyncCompleted(BasePropertiesDatabase database);
-    }
-
-    /**
-     * 全てのプロパティを最新に保つ
-     */
-    public void commitAndLoad() {
-        // Contextを持たないため読込が行えない
-        if (context == null || databaseFile == null) {
-            return;
-        }
-
-        Map<String, String> commitValues = new HashMap<String, String>();
-        TextKeyValueStore kvs = new TextKeyValueStore(context, databaseFile);
-        try {
-            kvs.open();
-
-            Iterator<Map.Entry<String, Property>> iterator = propMap.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Property value = iterator.next().getValue();
-                // リロードする。読み込めなかった場合は規定のデフォルト値を持たせる
-                if (value.modified) {
-                    // 変更がある値はDBへ反映リストに追加
-                    commitValues.put(value.key, value.value);
-                } else {
-                    // 変更が無いならばDBから読み出す
-                    value.value = kvs.get(value.key, value.defaultValue);
-                }
-                // sync直後なのでcommit対象ではない
-                value.modified = false;
-            }
-
-            // 変更を一括更新
-            kvs.putInTx(commitValues);
-        } finally {
-            kvs.close();
-        }
-    }
-
-    /**
-     * 非同期にコミット＆ロードを行い、設定を最新に保つ
-     */
-    public void commitAndLoadAsync() {
-        gTaskQueue.pushBack(new Runnable() {
-            @Override
-            public void run() {
-                commitAndLoad();
-            }
-        }).start();
-    }
-
-    /**
      * 値を全てデフォルト化する
      */
     public void clear() {
@@ -575,7 +338,7 @@ public class BasePropertiesDatabase {
      * @param <T>
      * @return
      */
-    public static <T extends BasePropertiesDatabase> byte[] serialize(List<T> datas) {
+    public static <T extends BaseProperties> byte[] serialize(List<T> datas) {
         List<byte[]> serializeArray = new ArrayList<>();
         for (T item : datas) {
             serializeArray.add(item.toByteArray());
@@ -590,12 +353,12 @@ public class BasePropertiesDatabase {
      * @param datas
      * @return
      */
-    public static byte[] serialize(Map<String, BasePropertiesDatabase> datas) {
+    public static byte[] serialize(Map<String, BaseProperties> datas) {
         Map<String, byte[]> serializeMap = new HashMap<>();
 
-        Iterator<Map.Entry<String, BasePropertiesDatabase>> iterator = datas.entrySet().iterator();
+        Iterator<Map.Entry<String, BaseProperties>> iterator = datas.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<String, BasePropertiesDatabase> entry = iterator.next();
+            Map.Entry<String, BaseProperties> entry = iterator.next();
             serializeMap.put(entry.getKey(), entry.getValue().toByteArray());
         }
         return EncodeUtil.compressOrRaw(EncodeUtil.toByteArray(serializeMap));
@@ -610,7 +373,7 @@ public class BasePropertiesDatabase {
      * @param <T>
      * @return
      */
-    public static <T extends BasePropertiesDatabase> List<T> deserializeToArray(Context context, Class<T> clazz, byte[] buffer) {
+    public static <T extends BaseProperties> List<T> deserializeToArray(Context context, Class<T> clazz, byte[] buffer) {
         buffer = EncodeUtil.decompressOrRaw(buffer);
 
         List<byte[]> deserializeArray = EncodeUtil.toByteArrayList(buffer);
@@ -652,7 +415,7 @@ public class BasePropertiesDatabase {
      * @param <T>
      * @return
      */
-    public static <T extends BasePropertiesDatabase> T deserializeInstance(Context context, Class<T> clazz, byte[] data) {
+    public static <T extends BaseProperties> T deserializeInstance(Context context, Class<T> clazz, byte[] data) {
         try {
             Constructor<T> constructor = clazz.getConstructor(Context.class, String.class);
             T instance = constructor.newInstance(context, null);

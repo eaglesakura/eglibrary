@@ -2,7 +2,10 @@ package com.eaglesakura.android.framework.db;
 
 import android.content.Context;
 
-public class BasicSettings extends com.eaglesakura.android.db.BasePropertiesDatabase {
+import com.eaglesakura.android.db.BaseProperties;
+import com.eaglesakura.android.db.BasePropertiesDatabase;
+
+public class BasicSettings extends BasePropertiesDatabase {
     public BasicSettings(Context context){ super(context, "appfw.db"); _initialize(); }
     public BasicSettings(Context context, String dbFileName){ super(context, dbFileName); _initialize(); }
     protected void _initialize() {

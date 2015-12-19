@@ -18,11 +18,11 @@ import java.util.Map;
 /**
  * Key-Valueのシンプルなデータベース
  */
-public class TextKeyValueStore extends BaseDatabase<DaoSession> {
+public class GDTextKeyValueStore extends BaseDatabase<DaoSession> {
 
     private final File dbFilePath;
 
-    public TextKeyValueStore(Context context, File file) {
+    public GDTextKeyValueStore(Context context, File file) {
         super(context, DaoMaster.class);
         this.dbFilePath = file;
     }

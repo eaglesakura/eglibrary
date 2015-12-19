@@ -7,7 +7,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
 
-import com.eaglesakura.android.db.BasePropertiesDatabase;
+import com.eaglesakura.android.db.BaseProperties;
 import com.eaglesakura.android.service.aidl.ICommandClientCallback;
 import com.eaglesakura.android.service.aidl.ICommandServerService;
 import com.eaglesakura.android.thread.UIHandler;
@@ -149,10 +149,10 @@ public abstract class CommandClient {
      * @return
      * @throws RemoteException
      */
-    public <T extends BasePropertiesDatabase> T postToServerAsProps(String cmd, byte[] buffer, Class<T> clazz) throws RemoteException {
+    public <T extends BaseProperties> T postToServerAsProps(String cmd, byte[] buffer, Class<T> clazz) throws RemoteException {
         byte[] ret = requestPostToServer(cmd, buffer);
         if (ret != null && ret.length > 0) {
-            return BasePropertiesDatabase.deserializeInstance(context, clazz, ret);
+            return BaseProperties.deserializeInstance(context, clazz, ret);
         } else {
             return null;
         }
