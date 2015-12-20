@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v7.graphics.Palette;
+import android.support.v7.internal.widget.ThemeUtils;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -54,23 +55,21 @@ public class MaterialButton extends AppCompatButton {
             Resources res = getResources();
             LogUtil.log("has attribute");
             TypedArray typedArray = context.obtainStyledAttributes(attrs, new int[]{
-                    R.attr.esmButtonBaseColor,
-                    R.attr.esmButtonHighlightColorWeight,
-                    R.attr.esmButtonTextColorMode,
+                    R.attr.buttonBaseColor,
+                    R.attr.buttonHighlightWeight,
+                    R.attr.buttonTextColorMode,
             });
             int baseColor = typedArray.getColor(0, res.getColor(R.color.EsMaterial_Grey_500));
             this.styleBaseColor = baseColor;
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            {
+                final float weight = typedArray.getFloat(1, 0.9f);
                 // Kitkatは独自に色合いを変えてあげる必要がある
-                float weight = typedArray.getFloat(1, 0.9f);
                 int a = (int) (weight * Color.alpha(baseColor));
                 int r = (int) (weight * Color.red(baseColor));
                 int g = (int) (weight * Color.green(baseColor));
                 int b = (int) (weight * Color.blue(baseColor));
 
                 setSupportBackgroundTintList(createButtonColorStateList(context, baseColor, Color.argb(a, r, g, b)));
-            } else {
-                setSupportBackgroundTintList(createButtonColorStateList(context, baseColor, baseColor));
             }
 
             // base colorから各種TextColorを生成する
@@ -139,7 +138,7 @@ public class MaterialButton extends AppCompatButton {
         // Disabled state
         states[i] = DISABLED_STATE_SET;
         // TODO disable colorを直す
-//        colors[i] = getDisabledThemeAttrColor(context, R.attr.colorButtonNormal);
+        colors[i] = ThemeUtils.getDisabledThemeAttrColor(context, R.attr.colorButtonNormal);
         i++;
 
         states[i] = PRESSED_STATE_SET;
