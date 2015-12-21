@@ -48,6 +48,16 @@ public abstract class BaseProperties {
         this.context = context;
     }
 
+    /**
+     * このコンストラクタは互換性のためにあるため、dbNameは無視される。
+     *
+     * @param context
+     * @param dbName
+     */
+    public BaseProperties(Context context, String dbName) {
+        this(context);
+    }
+
     protected class Property {
         /**
          * 現在の値
@@ -147,6 +157,13 @@ public abstract class BaseProperties {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * このLoadメソッドはサブクラスとの互換性のためにあるため、このクラスでは何も行わない。
+     */
+    public void load() {
+        // Stub!!
     }
 
 //    public <T extends com.google.protobuf.GeneratedMessage> T getProtobufProperty(String key, Class<T> proto) {
