@@ -3,6 +3,7 @@ package com.eaglesakura.thread;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 
 /**
@@ -160,8 +161,12 @@ public class MultiRunningTasks {
         do {
             while ((_task = nextTask()) != null) {
                 //!     タスクの実行
-                _task.run(MultiRunningTasks.this);
-                finish(_task);
+                try {
+                    _task.run(MultiRunningTasks.this);
+                    finish(_task);
+                } catch (Exception e) {
+                    LogUtil.log(e);
+                }
             }
             Util.sleep(100);
         } while (!exit || !tasks.isEmpty());

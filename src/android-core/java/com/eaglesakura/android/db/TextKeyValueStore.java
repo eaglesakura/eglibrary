@@ -90,9 +90,9 @@ public class TextKeyValueStore {
         this.dbFile = dbFile;
         this.tableName = tableName;
 
-        DELETE_TBL_SQL = "drop table if exists " + tableName;
-        CREATE_TBL_SQL = "create table if not exists " + tableName + " (" + DB_KEY + " text primary key, " + DB_VALUE
-                + " text, " + DB_DATE + " integer )";
+        DELETE_TBL_SQL = "DROP TABLE IF EXISTS " + tableName;
+        CREATE_TBL_SQL = "CREATE TABLE IF NOT EXISTS " + tableName + " (" + DB_KEY + " TEXT PRIMARY KEY NOT NULL UNIQUE , " + DB_VALUE
+                + " TEXT, " + DB_DATE + " INTEGER )";
     }
 
     /**
