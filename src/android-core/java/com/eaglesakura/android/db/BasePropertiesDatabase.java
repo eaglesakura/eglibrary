@@ -260,7 +260,14 @@ public abstract class BasePropertiesDatabase extends BaseProperties {
             public void run() {
                 commitAndLoad();
             }
-        }).start();
+        });
     }
 
+    /**
+     *
+     * @param runnable
+     */
+    public static void runInTaskQueue(Runnable runnable) {
+        gTaskQueue.pushBack(runnable);
+    }
 }
