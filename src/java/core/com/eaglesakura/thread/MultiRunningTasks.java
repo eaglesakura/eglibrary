@@ -3,6 +3,7 @@ package com.eaglesakura.thread;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.eaglesakura.time.Timer;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 
@@ -48,6 +49,13 @@ public class MultiRunningTasks {
     boolean autoStart = false;
 
     String threadName = MultiRunningTasks.class.getName();
+
+    /**
+     * スレッドを保持しておく時間
+     * <p/>
+     * タスクがなくても最低限この時間は待機させる。
+     */
+    long threadPoolTime = 1000;
 
     public MultiRunningTasks(int maxThreads) {
         this.maxThreads = maxThreads;
@@ -152,11 +160,21 @@ public class MultiRunningTasks {
     }
 
     /**
+     * スレッドを起動したままプールしておく時間を設定する
+     *
+     * @param threadPoolTime
+     */
+    public void setThreadPoolTime(long threadPoolTime) {
+        this.threadPoolTime = threadPoolTime;
+    }
+
+    /**
      * タスクを実行する。
      */
     protected void runTask(final Thread thread) {
         Task _task = null;
 
+        Timer pendingTimer = new Timer();
         //! 次のタスクを受け取る。
         do {
             while ((_task = nextTask()) != null) {
@@ -167,9 +185,12 @@ public class MultiRunningTasks {
                 } catch (Exception e) {
                     LogUtil.log(e);
                 }
+
+                // 保留時間をリセットする
+                pendingTimer.start();
             }
-            Util.sleep(100);
-        } while (!exit || !tasks.isEmpty());
+            Util.sleep(1);
+        } while (!exit || !tasks.isEmpty() || pendingTimer.end() < threadPoolTime);
 
         //! 実行中タスクを削除する
         synchronized (threads) {

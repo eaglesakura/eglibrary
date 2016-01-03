@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.eaglesakura.android.async.AsyncTaskController;
 import com.eaglesakura.android.thread.AsyncAction;
 import com.eaglesakura.json.JSON;
 import com.eaglesakura.thread.MultiRunningTasks;
@@ -104,16 +105,10 @@ public abstract class BasePropertiesDatabase extends BaseProperties {
         commitAsync(null);
     }
 
-    private static MultiRunningTasks gTaskQueue = new MultiRunningTasks(1);
-
-    static {
-        gTaskQueue.setThreadPoolMode(false);
-        gTaskQueue.setThreadName("PropIO");
-        gTaskQueue.setAutoStart(true);
-    }
+    private static AsyncTaskController gTaskController = new AsyncTaskController(1);
 
     public void commitAsync(final PropsAsyncListener listener) {
-        gTaskQueue.pushBack(new Runnable() {
+        gTaskController.pushBack(new Runnable() {
             @Override
             public void run() {
                 commit();
@@ -193,7 +188,7 @@ public abstract class BasePropertiesDatabase extends BaseProperties {
      * 非同期でデータを読み込む
      */
     public void loadAsync() {
-        gTaskQueue.pushBack(new Runnable() {
+        gTaskController.pushBack(new Runnable() {
             @Override
             public void run() {
                 load();
@@ -202,7 +197,7 @@ public abstract class BasePropertiesDatabase extends BaseProperties {
     }
 
     public void loadAsync(final PropsAsyncListener listener) {
-        gTaskQueue.pushBack(new Runnable() {
+        gTaskController.pushBack(new Runnable() {
             @Override
             public void run() {
                 load();
@@ -255,7 +250,7 @@ public abstract class BasePropertiesDatabase extends BaseProperties {
      * 非同期にコミット＆ロードを行い、設定を最新に保つ
      */
     public void commitAndLoadAsync() {
-        gTaskQueue.pushBack(new Runnable() {
+        gTaskController.pushBack(new Runnable() {
             @Override
             public void run() {
                 commitAndLoad();
@@ -264,10 +259,9 @@ public abstract class BasePropertiesDatabase extends BaseProperties {
     }
 
     /**
-     *
      * @param runnable
      */
     public static void runInTaskQueue(Runnable runnable) {
-        gTaskQueue.pushBack(runnable);
+        gTaskController.pushBack(runnable);
     }
 }

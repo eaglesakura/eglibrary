@@ -243,6 +243,27 @@ public class TaskPipeline {
     }
 
     /**
+     * メインタスクの終了待ちを行う
+     */
+    public void await() {
+        final Object lock = new Object();
+        synchronized (lock) {
+            try {
+                pushBackMain(new Runnable() {
+                    @Override
+                    public void run() {
+                        synchronized (lock) {
+                            lock.notifyAll();
+                        }
+                    }
+                });
+                lock.wait(1000 * 30);
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    /**
      * 特定のグループが処理終了するまで待機する
      * <p/>
      * これは主にメインスレッドやメインストリーム側から呼び出す。
