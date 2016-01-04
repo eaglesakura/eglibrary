@@ -18,7 +18,7 @@ import com.eaglesakura.util.LogUtil;
  * 別プロセスServiceと通信するためのインターフェース
  */
 public abstract class CommandClient {
-    private final Context context;
+    protected final Context context;
 
     private ICommandServerService server;
 
@@ -165,7 +165,7 @@ public abstract class CommandClient {
      * @param buffer
      * @return
      */
-    protected byte[] onReceivedData(String cmd, byte[] buffer) {
+    protected byte[] onReceivedData(String cmd, byte[] buffer) throws RemoteException {
         return null;
     }
 

@@ -6,9 +6,12 @@ import android.os.RemoteException;
 
 import com.eaglesakura.android.service.aidl.ICommandClientCallback;
 import com.eaglesakura.android.service.aidl.ICommandServerService;
+import com.eaglesakura.android.thread.UIHandler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class CommandServer {
@@ -38,6 +41,19 @@ public class CommandServer {
         }
     }
 
+
+    /**
+     * 指定したクライアントに接続されていればtrue
+     *
+     * @param id
+     * @return
+     */
+    public boolean hasClient(String id) {
+        synchronized (clients) {
+            return clients.containsKey(id);
+        }
+    }
+
     class ServerImpl extends ICommandServerService.Stub {
         @Override
         public byte[] postToServer(String cmd, byte[] buffer) throws RemoteException {
@@ -45,25 +61,63 @@ public class CommandServer {
         }
 
         @Override
-        public void registerCallback(String id, ICommandClientCallback callback) throws RemoteException {
+        public void registerCallback(final String id, final ICommandClientCallback callback) throws RemoteException {
             synchronized (clients) {
                 ServiceClient client = new ServiceClient(id, callback);
                 clients.put(id, client);
             }
+
+            UIHandler.postUI(new Runnable() {
+                @Override
+                public void run() {
+                    onRegisterClient(id, callback);
+                }
+            });
         }
 
         @Override
         public void unregisterCallback(ICommandClientCallback callback) throws RemoteException {
+            final List<String> idList = new ArrayList<>();
             synchronized (clients) {
                 Iterator<Map.Entry<String, ServiceClient>> iterator = clients.entrySet().iterator();
                 while (iterator.hasNext()) {
                     Map.Entry<String, ServiceClient> item = iterator.next();
                     if (callback == item.getValue().callback) {
+                        idList.add(item.getKey());
                         iterator.remove();
                     }
                 }
             }
+
+            UIHandler.postUI(new Runnable() {
+                @Override
+                public void run() {
+                    for (String id : idList) {
+                        onUnregisterClient(id);
+                    }
+                }
+            });
+
         }
+    }
+
+    /**
+     * コールバック登録が行われた
+     *
+     * @param id
+     * @param callback
+     */
+    protected void onRegisterClient(String id, ICommandClientCallback callback) {
+
+    }
+
+    /**
+     * コールバックが削除された
+     *
+     * @param id
+     */
+    protected void onUnregisterClient(String id) {
+
     }
 
     protected byte[] postToClient(String id, String cmd, byte[] buffer) throws RemoteException {

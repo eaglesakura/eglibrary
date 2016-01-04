@@ -49,14 +49,17 @@ public class AsyncTaskController {
         AsyncTaskResult<T> result = new AsyncTaskResult<>(this);
         result.task = task;
 
-        if (front) {
-            taskQueue.add(0, result);
-        } else {
-            taskQueue.add(result);
-        }
-
         // タスクを追加する
-        threads.execute(runner);
+        if (!disposed) {
+
+            if (front) {
+                taskQueue.add(0, result);
+            } else {
+                taskQueue.add(result);
+            }
+
+            threads.execute(runner);
+        }
         return result;
     }
 
