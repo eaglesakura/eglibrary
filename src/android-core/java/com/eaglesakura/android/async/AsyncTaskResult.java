@@ -53,12 +53,11 @@ public final class AsyncTaskResult<T> {
      */
     public AsyncTaskResult<T> setListener(Listener<T> listener) {
         synchronized (resultLock) {
-            this.listener = listener;
-
             // 既にタスクが完了してしまっている場合はリスナをコールさせてローカルに残さない
             if (isTaskFinished()) {
-                handleListener();
-                this.listener = null;
+                handleListener(listener);
+            } else {
+                this.listener = listener;
             }
         }
         return this;
@@ -112,7 +111,7 @@ public final class AsyncTaskResult<T> {
         synchronized (resultLock) {
             this.result = result;
             this.error = error;
-            handleListener();
+            handleListener(this.listener);
             this.listener = null;
         }
 
@@ -124,15 +123,18 @@ public final class AsyncTaskResult<T> {
     /**
      * リスナのハンドリングを行う
      */
-    void handleListener() {
+    void handleListener(final Listener<T> callListener) {
+        if (callListener == null) {
+            return;
+        }
         controller.taskHandler.request(new Runnable() {
             @Override
             public void run() {
-                if (listener != null) {
+                if (callListener != null) {
                     if (result != null) {
-                        listener.onTaskCompleted(AsyncTaskResult.this, result);
+                        callListener.onTaskCompleted(AsyncTaskResult.this, result);
                     } else {
-                        listener.onTaskFailed(AsyncTaskResult.this, error);
+                        callListener.onTaskFailed(AsyncTaskResult.this, error);
                     }
                 }
             }
