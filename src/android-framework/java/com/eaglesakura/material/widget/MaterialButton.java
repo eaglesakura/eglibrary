@@ -9,7 +9,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v7.graphics.Palette;
-import android.support.v7.internal.widget.ThemeUtils;
+//import android.support.v7.internal.widget.ThemeUtils;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -138,7 +138,8 @@ public class MaterialButton extends AppCompatButton {
         // Disabled state
         states[i] = DISABLED_STATE_SET;
         // TODO disable colorを直す
-        colors[i] = ThemeUtils.getDisabledThemeAttrColor(context, R.attr.colorButtonNormal);
+//        colors[i] = ThemeUtils.getDisabledThemeAttrColor(context, R.attr.colorButtonNormal);
+        colors[i] = ColorUtils.compositeColors(colorControlHighlight, colorButtonNormal);
         i++;
 
         states[i] = PRESSED_STATE_SET;

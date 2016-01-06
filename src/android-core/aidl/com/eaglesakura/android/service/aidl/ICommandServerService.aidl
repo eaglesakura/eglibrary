@@ -5,7 +5,7 @@ import com.eaglesakura.android.service.aidl.ICommandClientCallback;
 
 interface ICommandServerService {
     /**
-     * Map<String, byte[]>のエンコードデータを受け取り、同じくそれを返す
+     * エンコードデータを受け取り、同じくそれを返す
      */
     byte[] postToServer(String cmd, in byte[] buffer);
 
