@@ -5,6 +5,20 @@ if (!hasProperty("EGLIBRARY_PATH_SRC_ROOT")) {
     ext.EGLIBRARY_PATH_SRC_ROOT = ".."
 }
 
+/**
+ * サポートライブラリバージョン
+ */
+if(!hasProperty("EGLIBRARY_ANDROID_SUPPORT_LIB_VERSION")) {
+    ext.EGLIBRARY_ANDROID_SUPPORT_LIB_VERSION = "23.1.+"
+}
+
+/**
+ * Play Service バージョン
+ */
+if(!hasProperty("EGLIBRARY_ANDROID_PLAYSERVICE_LIB_VERSION")) {
+    ext.EGLIBRARY_ANDROID_PLAYSERVICE_LIB_VERSION = "7.8.+"
+}
+
 ext {
     /**
      * Deploy Version
@@ -18,8 +32,11 @@ ext {
      * 0.2.8  : update NDK MakefileGenerator
      * 0.2.9  : merge modules
      * 0.2.10 : update google play
+     * 0.2.11 : update dependencies
      */
-    EGLIBRARY_ARTIFACT_VERSION = "0.2.10"
+    EGLIBRARY_ARTIFACT_VERSION = "0.2.11"
+
+    EGLIBRARY_APPLICATION_ID = "com.eaglesakura.android"
 
     EGLIBRARY_PATH_JAVA_CORE = "${EGLIBRARY_PATH_SRC_ROOT}/src/java/core"
     EGLIBRARY_PATH_JAVA_GEO = "${EGLIBRARY_PATH_SRC_ROOT}/src/java/geo"

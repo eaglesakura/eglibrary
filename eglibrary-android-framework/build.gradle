@@ -12,9 +12,6 @@ configurations {
     apt
 }
 
-def ANDROID_SUPPORT_LIB_VERSION = "23.0.+"
-def ANDROID_PLAYSERVICE_LIB_VERSION = "7.8.+"
-
 dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.4.+'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.4.+'
@@ -34,18 +31,18 @@ dependencies {
     /**
      * support libs
      */
-    compile "com.android.support:support-v4:${ANDROID_SUPPORT_LIB_VERSION}"
-    compile "com.android.support:appcompat-v7:${ANDROID_SUPPORT_LIB_VERSION}"
-    compile "com.android.support:cardview-v7:${ANDROID_SUPPORT_LIB_VERSION}"
-    compile "com.android.support:recyclerview-v7:${ANDROID_SUPPORT_LIB_VERSION}"
-    compile "com.android.support:palette-v7:${ANDROID_SUPPORT_LIB_VERSION}"
-    compile "com.android.support:design:${ANDROID_SUPPORT_LIB_VERSION}"
+    compile "com.android.support:support-v4:${EGLIBRARY_ANDROID_SUPPORT_LIB_VERSION}"
+    compile "com.android.support:appcompat-v7:${EGLIBRARY_ANDROID_SUPPORT_LIB_VERSION}"
+    compile "com.android.support:cardview-v7:${EGLIBRARY_ANDROID_SUPPORT_LIB_VERSION}"
+    compile "com.android.support:recyclerview-v7:${EGLIBRARY_ANDROID_SUPPORT_LIB_VERSION}"
+    compile "com.android.support:palette-v7:${EGLIBRARY_ANDROID_SUPPORT_LIB_VERSION}"
+    compile "com.android.support:design:${EGLIBRARY_ANDROID_SUPPORT_LIB_VERSION}"
 
     /**
      * Play Service
      */
-    compile "com.google.android.gms:play-services-plus:${ANDROID_PLAYSERVICE_LIB_VERSION}"
-    compile "com.google.android.gms:play-services-gcm:${ANDROID_PLAYSERVICE_LIB_VERSION}"
+    compile "com.google.android.gms:play-services-plus:${EGLIBRARY_ANDROID_PLAYSERVICE_LIB_VERSION}"
+    compile "com.google.android.gms:play-services-gcm:${EGLIBRARY_ANDROID_PLAYSERVICE_LIB_VERSION}"
     compile 'com.android.support:support-annotations:+'
 
     /**
