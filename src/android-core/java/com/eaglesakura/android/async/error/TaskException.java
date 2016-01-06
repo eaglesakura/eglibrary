@@ -1,4 +1,4 @@
-package com.eaglesakura.android.async;
+package com.eaglesakura.android.async.error;
 
 public abstract class TaskException extends Exception {
     public TaskException() {

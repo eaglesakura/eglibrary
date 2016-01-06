@@ -110,28 +110,6 @@ android.libraryVariants.all { variant ->
         archives sourcesJar
     }
 }
-//task javadoc(type: Javadoc) {
-//    title = "Android Release API"
-//    description "Generates Javadoc for Release."
-//    source = android.sourceSets.main.java.srcDirs
-//    ext.androidJar =
-//            "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-//    classpath = files(android.libraryVariants.release.javaCompile.classpath.files) + files(ext.androidJar)
-//    options.links("http://docs.oracle.com/javase/7/docs/api/");
-//    options.links("http://d.android.com/reference/");
-//    exclude '**/BuildConfig.java'
-//    exclude '**/R.java'
-//}
-//
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-//    classifier = 'javadoc'
-//    from javadoc.destinationDir
-//}
-//
-//artifacts {
-//    archives javadocJar
-//    archives sourcesJar
-//}
 
 uploadArchives {
     repositories {
@@ -160,12 +138,6 @@ uploadArchives {
         }
 
         dependencies {
-            dependency {
-                groupId = 'com.eaglesakura'
-                artifactId = 'eglibrary-java-core'
-                version = EGLIBRARY_ARTIFACT_VERSION
-                scope = 'compile'
-            }
             dependency {
                 groupId = 'de.greenrobot'
                 artifactId = 'greendao'

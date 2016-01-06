@@ -4,8 +4,8 @@ public interface IAsyncTask<T> {
     /**
      * タスクを実行する
      *
-     * @param controller
+     * @param result     戻り値の格納先。キャンセルチェックにも使える
      * @return
      */
-    T doInBackground(AsyncTaskController controller) throws Exception;
+    T doInBackground(AsyncTaskResult<T> result) throws Exception;
 }

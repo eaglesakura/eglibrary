@@ -1,5 +1,11 @@
 package com.eaglesakura.android.async;
 
+import com.eaglesakura.android.async.error.TaskCanceledException;
+import com.eaglesakura.android.async.error.TaskException;
+import com.eaglesakura.android.async.error.TaskFailedException;
+import com.eaglesakura.android.async.error.TaskTimeoutException;
+import com.eaglesakura.util.LogUtil;
+
 public final class AsyncTaskResult<T> {
     private final AsyncTaskController controller;
 
@@ -70,10 +76,19 @@ public final class AsyncTaskResult<T> {
      * @return
      * @throws Exception
      */
-    public T await(long timeoutMs) throws Exception {
+    public T await(long timeoutMs) throws TaskException {
         synchronized (awaitLock) {
             if (!isTaskFinished()) {
-                awaitLock.wait(timeoutMs);
+                try {
+                    awaitLock.wait(timeoutMs);
+                } catch (Exception e) {
+                    LogUtil.log(e);
+                }
+
+                // 処理がタイムアウトした
+                if (!isTaskFinished()) {
+                    throw new TaskTimeoutException();
+                }
             }
         }
 
@@ -82,12 +97,21 @@ public final class AsyncTaskResult<T> {
     }
 
     /**
-     * タスクが成功、もしくは失敗していたらtrue
+     * タスクが成功、もしくは失敗・キャンセルしていたらtrue
      *
      * @return
      */
     public boolean isTaskFinished() {
-        return result != null || error != null;
+        return result != null || error != null || canceled;
+    }
+
+    /**
+     * タスクを実行しているコントローラを取得する
+     *
+     * @return
+     */
+    public AsyncTaskController getController() {
+        return controller;
     }
 
     /**
@@ -103,7 +127,7 @@ public final class AsyncTaskResult<T> {
                 throw new TaskCanceledException();
             }
 
-            result = task.doInBackground(controller);
+            result = task.doInBackground(this);
         } catch (Exception e) {
             error = e;
         }
@@ -131,11 +155,15 @@ public final class AsyncTaskResult<T> {
             @Override
             public void run() {
                 if (callListener != null) {
-                    if (result != null) {
+                    if (canceled) {
+                        callListener.onTaskCanceled(AsyncTaskResult.this);
+                    } else if (result != null) {
                         callListener.onTaskCompleted(AsyncTaskResult.this, result);
                     } else {
                         callListener.onTaskFailed(AsyncTaskResult.this, error);
                     }
+
+                    callListener.onTaskFinalize(AsyncTaskResult.this);
                 }
             }
         });
@@ -146,16 +174,40 @@ public final class AsyncTaskResult<T> {
      *
      * @throws Exception
      */
-    void throwIfError() throws Exception {
+    void throwIfError() throws TaskException {
         if (error == null) {
             return;
         }
-        throw error;
+        throw new TaskFailedException(error);
     }
 
     public interface Listener<T> {
+        /**
+         * @param task
+         * @param result
+         */
         void onTaskCompleted(AsyncTaskResult<T> task, T result);
 
+        /**
+         * タスクがキャンセルされた場合に呼び出される
+         *
+         * @param task
+         */
+        void onTaskCanceled(AsyncTaskResult<T> task);
+
+        /**
+         * タスクが失敗した場合に呼び出される
+         *
+         * @param task
+         * @param error
+         */
         void onTaskFailed(AsyncTaskResult<T> task, Exception error);
+
+        /**
+         * タスクの完了時に必ず呼び出される
+         *
+         * @param task
+         */
+        void onTaskFinalize(AsyncTaskResult<T> task);
     }
 }
