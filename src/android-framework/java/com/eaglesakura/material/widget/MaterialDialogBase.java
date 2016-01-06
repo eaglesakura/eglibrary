@@ -1,16 +1,12 @@
 package com.eaglesakura.material.widget;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatDialog;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 
-import com.androidquery.AQuery;
 import com.eaglesakura.android.R;
+import com.eaglesakura.android.aquery.AQuery;
 
 /**
  * Material Design support Dialog

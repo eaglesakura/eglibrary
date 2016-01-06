@@ -10,8 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.androidquery.AQuery;
 import com.eaglesakura.android.R;
+import com.eaglesakura.android.aquery.AQuery;
 import com.eaglesakura.android.framework.support.ui.BaseActivity;
 import com.eaglesakura.android.thread.AsyncAction;
 import com.eaglesakura.android.thread.UIHandler;

@@ -1,5 +1,5 @@
 include ':eglibrary-java-core'
-include ':eglibrary-java-spreadsheet'
+//include ':eglibrary-java-spreadsheet'
 include ':eglibrary-android-java-core'
 include ':eglibrary-groovy-core'
 include ':eglibrary-gradle-plugin'

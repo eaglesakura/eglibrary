@@ -6,10 +6,9 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.Fragment;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.androidquery.AbstractAQuery;
+import com.eaglesakura.android.aquery.AbstractAQuery;
 import com.eaglesakura.android.net.NetworkConnector;
 import com.eaglesakura.android.widget.SupportNetworkImageView;
 import com.eaglesakura.material.widget.support.SupportRecyclerView;
@@ -36,17 +35,6 @@ public class SupportAQuery extends AbstractAQuery<SupportAQuery> {
 
     public SupportAQuery(Fragment fragment) {
         super(fragment.getView());
-    }
-
-    public SupportAQuery checkedChange(final CompoundButton.OnCheckedChangeListener listener) {
-        if (view instanceof CompoundButton) {
-            ((CompoundButton) view).setOnCheckedChangeListener(listener);
-        }
-        return this;
-    }
-
-    public <T extends View> T getView(Class<T> clazz) {
-        return (T) getView();
     }
 
     public SupportAQuery emptyText(int stringRes) {
