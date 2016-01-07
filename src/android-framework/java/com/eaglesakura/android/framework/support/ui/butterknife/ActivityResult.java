@@ -32,19 +32,6 @@ public class ActivityResult {
             }
         }
 
-        // Fragmentの場合は、子を巡ってハンドリング対象を探す
-        if (sender instanceof Fragment) {
-            List<Fragment> fragments = ((Fragment) sender).getChildFragmentManager().getFragments();
-            if (fragments != null) {
-                for (Fragment child : fragments) {
-                    if (invoke(child, requestCode, resultCode, data)) {
-                        // 子がハンドリングに成功した
-                        return true;
-                    }
-                }
-            }
-        }
-
         return false;
     }
 
@@ -72,6 +59,19 @@ public class ActivityResult {
             }
 
             clazz = clazz.getSuperclass();
+        }
+
+        // Fragmentの場合は、子を巡ってハンドリング対象を探す
+        if (sender instanceof Fragment) {
+            List<Fragment> fragments = ((Fragment) sender).getChildFragmentManager().getFragments();
+            if (fragments != null) {
+                for (Fragment child : fragments) {
+                    if (invoke(child, requestCode, resultCode, data)) {
+                        // 子がハンドリングに成功した
+                        return true;
+                    }
+                }
+            }
         }
         return false;
     }

@@ -59,7 +59,7 @@ public abstract class BaseFragment extends Fragment {
 
     private int injectionLayoutId;
 
-    protected void requestInjection(@LayoutRes int layoutId) {
+    public void requestInjection(@LayoutRes int layoutId) {
         injectionLayoutId = layoutId;
         injectionViews = (injectionLayoutId != 0);
     }
