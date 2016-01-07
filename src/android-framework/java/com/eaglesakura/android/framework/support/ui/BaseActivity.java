@@ -20,6 +20,8 @@ import android.view.KeyEvent;
 import android.view.View;
 
 import com.eaglesakura.android.R;
+import com.eaglesakura.android.async.AsyncTaskController;
+import com.eaglesakura.android.async.AsyncTaskResult;
 import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.android.framework.support.ui.butterknife.ActivityResult;
 import com.eaglesakura.android.framework.support.ui.message.LocalMessageReceiver;
@@ -385,7 +387,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
      *
      * @param runner
      */
-    protected void runBackground(Runnable runner) {
-        FrameworkCentral.getTaskController().pushBack(runner);
+    protected AsyncTaskResult<AsyncTaskController> runBackground(Runnable runner) {
+        return FrameworkCentral.getTaskController().pushBack(runner);
     }
 }

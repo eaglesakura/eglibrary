@@ -31,6 +31,16 @@ public class PermissionUtil {
             }
         },
 
+        BluetoothLE {
+            @Override
+            public String[] getPermissions() {
+                return new String[]{
+                        Manifest.permission.BLUETOOTH,
+                        Manifest.permission.BLUETOOTH_ADMIN,
+                };
+            }
+        },
+
         GoogleMap {
             @Override
             public String[] getPermissions() {

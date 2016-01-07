@@ -1277,8 +1277,27 @@ public abstract class AbstractAQuery<T extends AbstractAQuery<T>> {
         return self();
     }
 
-    public <T extends View> T getView(Class<T> clazz) {
-        return (T) getView();
+    public <ViewType extends View> ViewType getView(Class<ViewType> clazz) {
+        return (ViewType) getView();
     }
 
+    /**
+     * 指定Viewのセットアップを行う
+     *
+     * @param clazz
+     * @param callback
+     * @param <ViewType>
+     * @return
+     */
+    public <ViewType extends View> T call(Class<ViewType> clazz, SettingCallback<ViewType> callback) {
+        ViewType view = getView(clazz);
+        if (view != null) {
+            callback.run(view);
+        }
+        return self();
+    }
+
+    public interface SettingCallback<ViewType> {
+        void run(ViewType view);
+    }
 }

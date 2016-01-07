@@ -12,6 +12,10 @@ import android.view.ViewGroup;
 
 import com.eaglesakura.android.R;
 import com.eaglesakura.android.aquery.AQuery;
+import com.eaglesakura.android.async.AsyncTaskController;
+import com.eaglesakura.android.async.AsyncTaskResult;
+import com.eaglesakura.android.async.IAsyncTask;
+import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.android.framework.support.ui.BaseActivity;
 import com.eaglesakura.android.thread.AsyncAction;
 import com.eaglesakura.android.thread.UIHandler;
@@ -78,16 +82,16 @@ public class LicenseViewActivity extends BaseActivity {
      * 全てのLicenseを読み込む
      */
     void loadLicenseList() {
-        new AsyncAction("License Load") {
-            List<LicenseItem> licenses = new ArrayList<>();
 
+        FrameworkCentral.getTaskController().pushBack(new IAsyncTask<List<LicenseItem>>() {
             @Override
-            protected Object onBackgroundAction() throws Exception {
+            public List<LicenseItem> doInBackground(AsyncTaskResult<List<LicenseItem>> result) throws Exception {
+                List<LicenseItem> licenses = new ArrayList<>();
                 final String LICENSE_PATH = "license";
                 String[] files = getAssets().list(LICENSE_PATH);
                 for (String file : files) {
                     if (isFinishing()) {
-                        return this;
+                        return licenses;
                     }
 
                     // 拡張子が一致して、かつignoreリストに含まれていなければ登録する
@@ -100,21 +104,29 @@ public class LicenseViewActivity extends BaseActivity {
                         }
                     }
                 }
-                return this;
+                return licenses;
+            }
+        }).setListener(new AsyncTaskResult.Listener<List<LicenseItem>>() {
+            @Override
+            public void onTaskCompleted(AsyncTaskResult<List<LicenseItem>> task, List<LicenseItem> licenses) {
+                addLicenses(licenses);
             }
 
             @Override
-            protected void onSuccess(Object object) {
-                if (!isFinishing()) {
-                    addLicenses(licenses);
-                }
+            public void onTaskCanceled(AsyncTaskResult<List<LicenseItem>> task) {
+
             }
 
             @Override
-            protected void onFailure(Exception exception) {
+            public void onTaskFailed(AsyncTaskResult<List<LicenseItem>> task, Exception error) {
                 onLoadFailed();
             }
-        }.start();
+
+            @Override
+            public void onTaskFinalize(AsyncTaskResult<List<LicenseItem>> task) {
+
+            }
+        });
     }
 
     void addLicenses(List<LicenseItem> newItems) {
