@@ -1,6 +1,8 @@
 package com.eaglesakura.android.async;
 
+import com.eaglesakura.android.thread.AsyncAction;
 import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.util.AndroidUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -193,4 +195,47 @@ public class AsyncTaskController {
             executeTask();
         }
     };
+
+//    public static AsyncTaskResult<AsyncTaskController> postOrRun(final Runnable runnable) {
+//        return postOrRun(null, runnable);
+//    }
+//
+//
+//    /**
+//     * バックグラウンドならばそのまま実行し、UIスレッドならばバックグラウンドで実行する
+//     *
+//     * @param runnable
+//     */
+//    public static AsyncTaskResult<AsyncTaskController> postOrRun(AsyncTaskController controller, final Runnable runnable) {
+//        if (!AndroidUtil.isUIThread()) {
+//            // バックグラウンドならばそのまま実行する
+//            runnable.run();
+//            return null;
+//        } else {
+//            if (controller == null) {
+//                // コントローラ指定が無いため、新規スレッドで実行する
+//                new AsyncAction(runnable.toString()) {
+//                    @Override
+//                    protected Object onBackgroundAction() throws Exception {
+//                        runnable.run();
+//                        return this;
+//                    }
+//
+//                    @Override
+//                    protected void onSuccess(Object object) {
+//
+//                    }
+//
+//                    @Override
+//                    protected void onFailure(Exception exception) {
+//
+//                    }
+//                }.start();
+//                return null;
+//            } else {
+//                // コントローラ指定があるため、コントローラにタスクを投げる
+//                return controller.pushBack(runnable);
+//            }
+//        }
+//    }
 }

@@ -11,18 +11,21 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
 import com.eaglesakura.android.R;
+import com.eaglesakura.android.framework.FrameworkCentral;
+import com.eaglesakura.android.framework.support.ui.butterknife.ActivityResult;
 import com.eaglesakura.android.framework.support.ui.message.LocalMessageReceiver;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiClientToken;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiTask;
+import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.android.util.PermissionUtil;
 import com.eaglesakura.util.LogUtil;
@@ -30,18 +33,15 @@ import com.eaglesakura.util.Util;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.InstanceState;
-import org.androidannotations.annotations.UiThread;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.ButterKnife;
+import icepick.State;
 
 /**
  *
  */
-@EActivity
 public abstract class BaseActivity extends AppCompatActivity implements FragmentChooser.Callback {
 
     protected static final int REQUEST_GOOGLEPLAYSERVICE_RECOVER = 0x1100;
@@ -65,6 +65,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         super.onCreate(savedInstanceState);
 
         edgeColorToPrimaryColor();
+    }
+
+    protected void requestInjection(@LayoutRes int layoutId) {
+        setContentView(layoutId);
+        ButterKnife.bind(this);
     }
 
     public <T extends View> T findViewById(Class<T> clazz, int id) {
@@ -137,9 +142,21 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
                 });
                 dialog.show();
             } else {
-                log("Google Play Service OK!");
+                LogUtil.log("Google Play Service OK!");
             }
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (ActivityResult.invoke(this, requestCode, resultCode, data)) {
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    protected BaseActivity self() {
+        return this;
     }
 
     /**
@@ -160,35 +177,17 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         return activityResumed;
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @AfterViews
-    protected void onAfterViews() {
-
-    }
-
-    protected void log(String fmt, Object... args) {
-        Log.i(((Object) this).getClass().getSimpleName(), String.format(fmt, args));
-    }
-
-    protected void logi(String fmt, Object... args) {
-        Log.i(((Object) this).getClass().getSimpleName(), String.format(fmt, args));
-    }
-
-    protected void logd(String fmt, Object... args) {
-        Log.d(((Object) this).getClass().getSimpleName(), String.format(fmt, args));
-    }
-
     public UserNotificationController getUserNotificationController() {
         return userNotificationController;
     }
 
-    @UiThread
-    protected void toast(String fmt, Object... args) {
-        userNotificationController.toast(this, String.format(fmt, args));
+    protected void toast(final String fmt, final Object... args) {
+        runUI(new Runnable() {
+            @Override
+            public void run() {
+                userNotificationController.toast(this, String.format(fmt, args));
+            }
+        });
     }
 
     /**
@@ -223,20 +222,28 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
      *
      * @param message
      */
-    @UiThread
-    public void pushProgress(String message) {
-        userNotificationController.pushProgress(this, message);
+    public void pushProgress(final String message) {
+        UIHandler.postUI(new Runnable() {
+            @Override
+            public void run() {
+                userNotificationController.pushProgress(this, message);
+            }
+        });
     }
 
     /**
      * 処理を終了する
      */
-    @UiThread
     public void popProgress() {
-        userNotificationController.popProgress(this);
+        runUI(new Runnable() {
+            @Override
+            public void run() {
+                userNotificationController.popProgress(this);
+            }
+        });
     }
 
-    @InstanceState
+    @State
     protected FragmentChooser fragments = new FragmentChooser();
 
     /**
@@ -361,5 +368,24 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+
+    /**
+     * UIスレッドで実行する
+     *
+     * @param runnable
+     */
+    protected void runUI(Runnable runnable) {
+        UIHandler.postUIorRun(runnable);
+    }
+
+    /**
+     * バックグラウンドで実行する
+     *
+     * @param runner
+     */
+    protected void runBackground(Runnable runner) {
+        FrameworkCentral.getTaskController().pushBack(runner);
     }
 }

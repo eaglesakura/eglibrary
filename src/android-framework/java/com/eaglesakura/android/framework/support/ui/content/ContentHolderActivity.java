@@ -6,13 +6,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 
-import com.eaglesakura.android.annotations.AnnotationUtil;
 import com.eaglesakura.android.R;
 import com.eaglesakura.android.framework.support.ui.BaseActivity;
 import com.eaglesakura.android.framework.support.ui.BaseFragment;
-import com.eaglesakura.android.framework.support.ui.SupportAnnotationUtil;
-
-import org.androidannotations.annotations.EActivity;
+import com.eaglesakura.util.Util;
 
 /**
  * 親となるFragmentを指定して起動するActivityの雛形
@@ -20,7 +17,6 @@ import org.androidannotations.annotations.EActivity;
  * メインコンテンツは @+id/Content.Holder.Root を持たなければならない。
  * Toolbarは @+id/EsMaterial.Toolbar を自動的に検索し、存在するならToolbarとして自動設定する。
  */
-@EActivity
 public abstract class ContentHolderActivity extends BaseActivity {
     static final String EXTRA_ACTIVITY_LAYOUT = "EXTRA_ACTIVITY_LAYOUT";
 
@@ -41,7 +37,7 @@ public abstract class ContentHolderActivity extends BaseActivity {
 
         final int layoutId = getIntent().getIntExtra(EXTRA_ACTIVITY_LAYOUT, getDefaultLayoutId());
         if (layoutId != 0) {
-            setContentView(layoutId);
+            requestInjection(layoutId);
             Toolbar toolbar = findViewById(Toolbar.class, R.id.EsMaterial_Toolbar);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
@@ -53,7 +49,7 @@ public abstract class ContentHolderActivity extends BaseActivity {
                     String className = getIntent().getStringExtra(EXTRA_CONTENT_FRAGMENT_CLASS);
                     BaseFragment fragment = null;
                     if (className != null) {
-                        fragment = (BaseFragment) SupportAnnotationUtil.newFragment(className);
+                        fragment = Util.newInstanceOrNull(className);
                     }
 
                     if (fragment == null) {
@@ -106,7 +102,7 @@ public abstract class ContentHolderActivity extends BaseActivity {
     public static Intent createIntent(Context context,
                                       Class<? extends ContentHolderActivity> activityClass, int activityLayoutId,
                                       Class<? extends BaseFragment> contentFragment, Bundle argments) {
-        Intent intent = new Intent(context, AnnotationUtil.annotation(activityClass));
+        Intent intent = new Intent(context, activityClass);
         intent.putExtra(EXTRA_CONTENT_FRAGMENT_CLASS, contentFragment.getName());
         if (activityLayoutId != 0) {
             intent.putExtra(EXTRA_ACTIVITY_LAYOUT, activityLayoutId);

@@ -3,14 +3,19 @@ package com.eaglesakura.android.framework.support.ui;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.eaglesakura.android.framework.FrameworkCentral;
+import com.eaglesakura.android.framework.support.ui.butterknife.ActivityResult;
 import com.eaglesakura.android.framework.support.ui.message.LocalMessageReceiver;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiClientToken;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiTask;
@@ -21,12 +26,12 @@ import com.eaglesakura.util.LogUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.InstanceState;
-import org.androidannotations.annotations.UiThread;
 
 import java.util.List;
+
+import butterknife.ButterKnife;
+import icepick.Icepick;
+import icepick.State;
 
 /**
  * startActivityForResultを行う場合、ParentFragmentが存在していたらそちらのstartActivityForResultを呼び出す。
@@ -35,7 +40,6 @@ import java.util.List;
  * <br>
  * ただし、複数のonActivityResultがハンドリングされる恐れが有るため、RequestCodeの重複には十分に注意すること
  */
-@EFragment
 public abstract class BaseFragment extends Fragment {
 
     public static final int BACKSTACK_NONE = 0xFEFEFEFE;
@@ -46,10 +50,47 @@ public abstract class BaseFragment extends Fragment {
 
     private LocalMessageReceiver localMessageReceiver;
 
-    @InstanceState
-    protected boolean initializedViews = false;
+    @State
+    boolean initializedViews = false;
 
-    protected boolean fragmentResumed = false;
+    boolean fragmentResumed = false;
+
+    private boolean injectionViews = false;
+
+    private int injectionLayoutId;
+
+    protected void requestInjection(@LayoutRes int layoutId) {
+        injectionLayoutId = layoutId;
+        injectionViews = (injectionLayoutId != 0);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (injectionViews) {
+            View result = inflater.inflate(injectionLayoutId, container, false);
+//            View result = View.inflate(getActivity(), injectionLayoutId, null);
+            ButterKnife.bind(this, result);
+            // getView対策で、１クッション置いて実行する
+            UIHandler.postUI(new Runnable() {
+                @Override
+                public void run() {
+                    onAfterViews();
+                }
+            });
+            return result;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (injectionViews) {
+            ButterKnife.unbind(this);
+        }
+    }
 
     public <T extends View> T findViewById(Class<T> clazz, int id) {
         return (T) getView().findViewById(id);
@@ -86,7 +127,6 @@ public abstract class BaseFragment extends Fragment {
 
     }
 
-    @AfterViews
     protected void onAfterViews() {
         if (!initializedViews) {
             onInitializeViews();
@@ -106,6 +146,20 @@ public abstract class BaseFragment extends Fragment {
 
     public boolean isFragmentResumed() {
         return fragmentResumed;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            Icepick.restoreInstanceState(this, savedInstanceState);
+        }
     }
 
     @Override
@@ -129,13 +183,20 @@ public abstract class BaseFragment extends Fragment {
         fragmentResumed = false;
     }
 
+    protected BaseFragment self() {
+        return this;
+    }
 
-    @UiThread
-    protected void toast(String fmt, Object... args) {
-        try {
-            ((BaseActivity) getActivity()).getUserNotificationController().toast(this, String.format(fmt, args));
-        } catch (Exception e) {
-        }
+    protected void toast(final String fmt, final Object... args) {
+        UIHandler.postUIorRun(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ((BaseActivity) getActivity()).getUserNotificationController().toast(self(), String.format(fmt, args));
+                } catch (Exception e) {
+                }
+            }
+        });
 
     }
 
@@ -162,24 +223,32 @@ public abstract class BaseFragment extends Fragment {
      *
      * @param message
      */
-    @UiThread
-    protected void pushProgress(String message) {
-        try {
-            ((BaseActivity) getActivity()).getUserNotificationController().pushProgress(this, message);
-        } catch (Exception e) {
-        }
+    protected void pushProgress(final String message) {
+        runUI(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ((BaseActivity) getActivity()).getUserNotificationController().pushProgress(self(), message);
+                } catch (Exception e) {
+                }
+            }
+        });
     }
 
     /**
      * progress dialogを一段階引き下げる
      */
-    @UiThread
     protected void popProgress() {
-        try {
-            ((BaseActivity) getActivity()).getUserNotificationController().popProgress(this);
-        } catch (Exception e) {
+        runUI(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ((BaseActivity) getActivity()).getUserNotificationController().popProgress(self());
+                } catch (Exception e) {
 
-        }
+                }
+            }
+        });
     }
 
     /**
@@ -223,13 +292,17 @@ public abstract class BaseFragment extends Fragment {
      *
      * @param withBackStack backstack階層も含めて排除する場合はtrue
      */
-    @UiThread
-    public void detatchSelf(boolean withBackStack) {
-        if (withBackStack && hasBackstackIndex()) {
-            getFragmentManager().popBackStack(backstackIndex, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        } else {
-            getFragmentManager().beginTransaction().remove(this).commit();
-        }
+    public void detatchSelf(final boolean withBackStack) {
+        UIHandler.postUIorRun(new Runnable() {
+            @Override
+            public void run() {
+                if (withBackStack && hasBackstackIndex()) {
+                    getFragmentManager().popBackStack(backstackIndex, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                } else {
+                    getFragmentManager().beginTransaction().remove(self()).commit();
+                }
+            }
+        });
     }
 
     @Override
@@ -247,18 +320,6 @@ public abstract class BaseFragment extends Fragment {
 
     public boolean isDestroyedView() {
         return isDestroyed() || getActivity() == null || getView() == null;
-    }
-
-    protected void log(String fmt, Object... args) {
-        Log.i(((Object) this).getClass().getSimpleName(), String.format(fmt, args));
-    }
-
-    protected void logi(String fmt, Object... args) {
-        Log.i(((Object) this).getClass().getSimpleName(), String.format(fmt, args));
-    }
-
-    protected void logd(String fmt, Object... args) {
-        Log.d(((Object) this).getClass().getSimpleName(), String.format(fmt, args));
     }
 
     protected boolean hasChildBackStack() {
@@ -295,16 +356,7 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        List<Fragment> fragments = getChildFragmentManager().getFragments();
-        if (fragments != null) {
-            for (Fragment fragment : fragments) {
-                if (fragment != null) {
-                    fragment.onActivityResult(requestCode, resultCode, data);
-                }
-            }
-        }
+        ActivityResult.invoke(this, requestCode, resultCode, data);
     }
 
     public <T> T executeGoogleApi(GoogleApiTask<T> task) {
@@ -376,5 +428,24 @@ public abstract class BaseFragment extends Fragment {
 
     public boolean requestRuntimePermission(PermissionUtil.PermissionType type) {
         return requestRuntimePermission(type.getPermissions());
+    }
+
+
+    /**
+     * UIスレッドで実行する
+     *
+     * @param runnable
+     */
+    protected void runUI(Runnable runnable) {
+        UIHandler.postUIorRun(runnable);
+    }
+
+    /**
+     * バックグラウンドで実行する
+     *
+     * @param runner
+     */
+    protected void runBackground(Runnable runner) {
+        FrameworkCentral.getTaskController().pushBack(runner);
     }
 }

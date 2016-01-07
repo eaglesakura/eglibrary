@@ -92,7 +92,7 @@ public class LicenseViewActivity extends BaseActivity {
 
                     // 拡張子が一致して、かつignoreリストに含まれていなければ登録する
                     if (file.endsWith(".license") && ignoreFiles.indexOf(file) < 0) {
-                        log("load license(%s)", file);
+                        LogUtil.log("load license(%s)", file);
                         // １行目にOSSの表示名が格納されている
                         final LicenseItem item = newLicense(LICENSE_PATH + "/" + file);
                         if (item != null) {
@@ -129,7 +129,7 @@ public class LicenseViewActivity extends BaseActivity {
 
             @Override
             public void onBindViewHolder(final ItemViewHolder holder, final int position) {
-                log("onBindViewHolder pos(%d) title(%s) bind(%s)", position, licenseList.get(position).title, holder.toString());
+                LogUtil.log("onBindViewHolder pos(%d) title(%s) bind(%s)", position, licenseList.get(position).title, holder.toString());
                 UIHandler.postUI(new Runnable() {
                     @Override
                     public void run() {
@@ -163,7 +163,7 @@ public class LicenseViewActivity extends BaseActivity {
             is = getAssets().open(assetsPath);
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             String line = reader.readLine();
-            log("OSS(%s)", line);
+            LogUtil.log("OSS(%s)", line);
 
             return new LicenseItem(line, assetsPath);
         } catch (Exception e) {

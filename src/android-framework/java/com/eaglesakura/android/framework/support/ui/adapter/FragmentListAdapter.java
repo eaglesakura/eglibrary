@@ -7,8 +7,8 @@ import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 
 import com.eaglesakura.android.framework.support.ui.FragmentChooser;
-import com.eaglesakura.android.framework.support.ui.SupportAnnotationUtil;
 import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -161,7 +161,7 @@ public class FragmentListAdapter extends FragmentPagerAdapter {
 
         @Override
         public Fragment newFragment(FragmentListAdapter adapter, int index) {
-            return initialize(SupportAnnotationUtil.newFragment(clazz));
+            return initialize(Util.newInstanceOrNull(clazz));
         }
     }
 

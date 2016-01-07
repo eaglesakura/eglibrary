@@ -1,9 +1,9 @@
 package com.eaglesakura.android.framework.support.ui;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 
 import com.eaglesakura.util.LogUtil;
 

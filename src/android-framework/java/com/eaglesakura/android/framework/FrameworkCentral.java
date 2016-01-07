@@ -3,6 +3,7 @@ package com.eaglesakura.android.framework;
 import android.app.Application;
 
 import com.eaglesakura.android.R;
+import com.eaglesakura.android.async.AsyncTaskController;
 import com.eaglesakura.android.framework.db.BasicSettings;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.util.LogUtil;
@@ -23,6 +24,8 @@ public class FrameworkCentral {
      * 基本設定
      */
     private static BasicSettings settings;
+
+    private static AsyncTaskController taskController = new AsyncTaskController(5, 1000);
 
     /**
      * Application#onCreateで呼び出す
@@ -124,6 +127,10 @@ public class FrameworkCentral {
             LogUtil.log("not dependencies Deploygate");
             return false;
         }
+    }
+
+    public static AsyncTaskController getTaskController() {
+        return taskController;
     }
 
     /**

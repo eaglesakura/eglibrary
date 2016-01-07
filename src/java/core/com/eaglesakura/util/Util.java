@@ -187,4 +187,20 @@ public class Util {
     public static <T> boolean isEmpty(List<T> item) {
         return item == null || item.isEmpty();
     }
+
+    public static <T> T newInstanceOrNull(String className) {
+        try {
+            return (T) Class.forName(className).newInstance();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static <T> T newInstanceOrNull(Class<T> clazz) {
+        try {
+            return clazz.newInstance();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
