@@ -65,7 +65,7 @@ public final class LogUtil {
             try {
                 if (stackInfo) {
                     StackTraceElement[] trace = new Exception().getStackTrace();
-                    StackTraceElement elem = trace[3];
+                    StackTraceElement elem = trace[Math.min(trace.length - 1, 3)];
                     i.invoke(clazz, tag,
                             String.format("%s[%d] : %s", elem.getFileName(), elem.getLineNumber(), msg)
                     );
@@ -81,7 +81,7 @@ public final class LogUtil {
         public void d(String msg) {
             try {
                 StackTraceElement[] trace = new Exception().getStackTrace();
-                StackTraceElement elem = trace[3];
+                StackTraceElement elem = trace[Math.min(trace.length - 1, 3)];
                 d.invoke(clazz, tag,
                         String.format("%s[%d] : %s", elem.getFileName(), elem.getLineNumber(), msg)
                 );
@@ -98,7 +98,7 @@ public final class LogUtil {
         @Override
         public void i(String msg) {
             StackTraceElement[] trace = new Exception().getStackTrace();
-            StackTraceElement elem = trace[3];
+            StackTraceElement elem = trace[Math.min(trace.length - 1, 3)];
             System.out.println(String.format("%s[%d] : %s", elem.getFileName(), elem.getLineNumber(), msg));
         }
 

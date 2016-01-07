@@ -25,7 +25,7 @@ public abstract class CommandClient {
     private String id;
 
     public CommandClient(Context context) {
-        this.context = context;
+        this.context = context.getApplicationContext();
         this.id = getClass().getName();
     }
 
