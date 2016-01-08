@@ -1,6 +1,6 @@
 package com.eaglesakura.android.net;
 
-import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.android.util.AndroidUtil;
 import com.eaglesakura.time.Timer;
 import com.eaglesakura.util.Util;

@@ -3,7 +3,7 @@ package com.eaglesakura.android.framework;
 import android.app.Application;
 
 import com.eaglesakura.android.R;
-import com.eaglesakura.android.async.AsyncTaskController;
+import com.eaglesakura.android.thread.async.AsyncTaskController;
 import com.eaglesakura.android.framework.db.BasicSettings;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.util.LogUtil;

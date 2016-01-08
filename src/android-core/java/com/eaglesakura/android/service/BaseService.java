@@ -15,7 +15,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.android.util.AndroidUtil;
 
 /**

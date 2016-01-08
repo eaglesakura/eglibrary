@@ -1,6 +1,6 @@
-package com.eaglesakura.android.async;
+package com.eaglesakura.android.thread.async;
 
-import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.thread.ui.UIHandler;
 
 import java.util.ArrayList;
 import java.util.List;

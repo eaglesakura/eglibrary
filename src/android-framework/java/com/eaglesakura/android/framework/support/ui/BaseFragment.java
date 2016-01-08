@@ -15,19 +15,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.eaglesakura.android.framework.FrameworkCentral;
-import com.eaglesakura.android.framework.support.ui.butterknife.ActivityResult;
+import com.eaglesakura.android.oari.ActivityResult;
 import com.eaglesakura.android.framework.support.ui.message.LocalMessageReceiver;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiClientToken;
 import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiTask;
-import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.android.util.PermissionUtil;
 import com.eaglesakura.util.LogUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-
-import java.util.List;
 
 import butterknife.ButterKnife;
 import icepick.Icepick;
@@ -69,7 +67,6 @@ public abstract class BaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (injectionViews) {
             View result = inflater.inflate(injectionLayoutId, container, false);
-//            View result = View.inflate(getActivity(), injectionLayoutId, null);
             ButterKnife.bind(this, result);
             // getView対策で、１クッション置いて実行する
             UIHandler.postUI(new Runnable() {
@@ -356,7 +353,7 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        ActivityResult.invoke(this, requestCode, resultCode, data);
+        ActivityResult.invokeRecursive(this, requestCode, resultCode, data);
     }
 
     public <T> T executeGoogleApi(GoogleApiTask<T> task) {

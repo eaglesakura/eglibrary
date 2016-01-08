@@ -10,7 +10,7 @@ import android.os.RemoteException;
 import com.eaglesakura.android.db.BaseProperties;
 import com.eaglesakura.android.service.aidl.ICommandClientCallback;
 import com.eaglesakura.android.service.aidl.ICommandServerService;
-import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.android.util.AndroidUtil;
 import com.eaglesakura.util.LogUtil;
 

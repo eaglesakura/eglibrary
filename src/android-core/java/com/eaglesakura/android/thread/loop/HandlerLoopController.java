@@ -1,7 +1,9 @@
-package com.eaglesakura.android.thread;
+package com.eaglesakura.android.thread.loop;
 
 import android.os.Handler;
 
+import com.eaglesakura.android.thread.async.AsyncHandler;
+import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.time.Timer;
 
 /**
@@ -83,7 +85,7 @@ public abstract class HandlerLoopController {
     }
 
     /**
-     * 処理を行わせる
+     * このハンドラに処理を行わせる
      */
     public void post(Runnable runnable) {
         handler.post(runnable);
@@ -96,6 +98,15 @@ public abstract class HandlerLoopController {
      */
     public double getDeltaTime() {
         return deltaTime;
+    }
+
+    /**
+     * 使用しているハンドラを取得する
+     *
+     * @return
+     */
+    public Handler getHandler() {
+        return handler;
     }
 
     /**

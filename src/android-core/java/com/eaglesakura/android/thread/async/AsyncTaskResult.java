@@ -1,12 +1,12 @@
-package com.eaglesakura.android.async;
+package com.eaglesakura.android.thread.async;
 
-import com.eaglesakura.android.async.error.TaskCanceledException;
-import com.eaglesakura.android.async.error.TaskException;
-import com.eaglesakura.android.async.error.TaskFailedException;
-import com.eaglesakura.android.async.error.TaskTimeoutException;
+import com.eaglesakura.android.thread.async.error.TaskCanceledException;
+import com.eaglesakura.android.thread.async.error.TaskException;
+import com.eaglesakura.android.thread.async.error.TaskFailedException;
+import com.eaglesakura.android.thread.async.error.TaskTimeoutException;
 import com.eaglesakura.util.LogUtil;
 
-public final class AsyncTaskResult<T> {
+public class AsyncTaskResult<T> {
     private final AsyncTaskController controller;
 
     AsyncTaskResult(AsyncTaskController pipeline) {
@@ -30,7 +30,9 @@ public final class AsyncTaskResult<T> {
     /**
      * キャンセル状態であればtrue
      */
-    boolean canceled;
+    private boolean canceled;
+
+    private CancelSignal cancelSignal;
 
     private final Object awaitLock = new Object();
 
@@ -45,11 +47,24 @@ public final class AsyncTaskResult<T> {
 
     /**
      * キャンセルされていればtrue
+     * cancel()されているか、CancelSignal.isCancelがtrueの場合キャンセルとなる
      *
      * @return
      */
     public boolean isCanceled() {
+        if (cancelSignal != null && cancelSignal.isCanceled()) {
+            return true;
+        }
         return canceled;
+    }
+
+    /**
+     * キャンセルチェック用のコールバックを指定する
+     *
+     * @param cancelSignal
+     */
+    public void setCancelSignal(CancelSignal cancelSignal) {
+        this.cancelSignal = cancelSignal;
     }
 
     /**
@@ -102,7 +117,7 @@ public final class AsyncTaskResult<T> {
      * @return
      */
     public boolean isTaskFinished() {
-        return result != null || error != null || canceled;
+        return result != null || error != null || isCanceled();
     }
 
     /**
@@ -155,7 +170,7 @@ public final class AsyncTaskResult<T> {
             @Override
             public void run() {
                 if (callListener != null) {
-                    if (canceled) {
+                    if (isCanceled()) {
                         callListener.onTaskCanceled(AsyncTaskResult.this);
                     } else if (result != null) {
                         callListener.onTaskCompleted(AsyncTaskResult.this, result);
@@ -181,6 +196,25 @@ public final class AsyncTaskResult<T> {
         throw new TaskFailedException(error);
     }
 
+    /**
+     * キャンセルチェック用のコールバック
+     * <p/>
+     * cancel()メソッドを呼び出すか、このコールバックがisCanceled()==trueになった時点でキャンセル扱いとなる。
+     */
+    public interface CancelSignal {
+        /**
+         * キャンセルする場合はtrueを返す
+         *
+         * @return
+         */
+        boolean isCanceled();
+    }
+
+    /**
+     * シンプルなリスナ
+     *
+     * @param <T>
+     */
     public interface Listener<T> {
         /**
          * @param task

@@ -11,7 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 import com.eaglesakura.android.bluetooth.beacon.BeaconData;
-import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.util.LogUtil;
 
 import java.util.ArrayList;

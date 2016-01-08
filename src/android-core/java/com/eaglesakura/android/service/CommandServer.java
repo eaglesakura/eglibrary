@@ -6,7 +6,7 @@ import android.os.RemoteException;
 
 import com.eaglesakura.android.service.aidl.ICommandClientCallback;
 import com.eaglesakura.android.service.aidl.ICommandServerService;
-import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.thread.ui.UIHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;

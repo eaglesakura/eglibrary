@@ -13,7 +13,7 @@ import android.view.Window;
 import com.eaglesakura.android.glkit.egl.IEGLContextGroup;
 import com.eaglesakura.android.glkit.egl.IEGLDevice;
 import com.eaglesakura.android.glkit.egl.IEGLManager;
-import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 

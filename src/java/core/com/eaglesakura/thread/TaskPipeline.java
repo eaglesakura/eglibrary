@@ -1,6 +1,6 @@
 package com.eaglesakura.thread;
 
-import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.time.Timer;
 import com.eaglesakura.util.Util;
 
@@ -17,6 +17,7 @@ import java.util.Map;
  * 標準ではすべてのTaskPipelineオブジェクトが1つのスレッドを共有するが、必要に応じてデタッチすることが可能。
  * 既にタスクが登録されているかつデタッチが行われた場合はスレッド実行順を保証しない。
  */
+@Deprecated
 public class TaskPipeline {
     static final MultiRunningTasks globalMainTaskQueue = new MultiRunningTasks(1);
     static final MultiRunningTasks globalSubTaskQueue = new MultiRunningTasks(3);

@@ -1,4 +1,4 @@
-package com.eaglesakura.android.async;
+package com.eaglesakura.android.thread.async;
 
 /**
  * 指定の方法でコールバックを行う

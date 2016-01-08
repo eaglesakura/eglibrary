@@ -14,8 +14,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.eaglesakura.android.thread.HandlerLoopController;
-import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.thread.loop.HandlerLoopController;
+import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.android.R;
 import com.eaglesakura.math.MathUtil;

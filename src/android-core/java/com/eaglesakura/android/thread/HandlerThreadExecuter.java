@@ -5,6 +5,8 @@ import java.util.List;
 
 import android.os.Handler;
 
+import com.eaglesakura.android.thread.ui.UIHandler;
+
 public class HandlerThreadExecuter {
 
     List<Runnable> runners = new ArrayList<Runnable>();

@@ -1,4 +1,4 @@
-package com.eaglesakura.android.thread;
+package com.eaglesakura.android.thread.loop;
 
 import com.eaglesakura.time.Timer;
 import com.eaglesakura.util.Util;
@@ -6,7 +6,8 @@ import com.eaglesakura.util.Util;
 /**
  * シンプルにループを記述する
  */
-public abstract class SimpleLoopController {
+@Deprecated
+abstract class SimpleLoopController {
     Thread loopThread;
 
     /**

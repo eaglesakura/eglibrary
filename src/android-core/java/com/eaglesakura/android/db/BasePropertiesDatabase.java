@@ -1,34 +1,13 @@
 package com.eaglesakura.android.db;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 
-import com.eaglesakura.android.async.AsyncTaskController;
-import com.eaglesakura.android.thread.AsyncAction;
-import com.eaglesakura.json.JSON;
-import com.eaglesakura.thread.MultiRunningTasks;
-import com.eaglesakura.util.EncodeUtil;
-import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.android.thread.async.AsyncTaskController;
 import com.eaglesakura.util.StringUtil;
-import com.google.protobuf.GeneratedMessage;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 /**

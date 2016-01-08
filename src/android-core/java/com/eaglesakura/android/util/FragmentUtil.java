@@ -3,7 +3,7 @@ package com.eaglesakura.android.util;
 import android.app.Fragment;
 import android.os.Build;
 
-import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.util.LogUtil;
 
 public class FragmentUtil {

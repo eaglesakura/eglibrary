@@ -12,13 +12,12 @@ import android.view.ViewGroup;
 
 import com.eaglesakura.android.R;
 import com.eaglesakura.android.aquery.AQuery;
-import com.eaglesakura.android.async.AsyncTaskController;
-import com.eaglesakura.android.async.AsyncTaskResult;
-import com.eaglesakura.android.async.IAsyncTask;
+import com.eaglesakura.android.thread.async.AsyncTaskResult;
+import com.eaglesakura.android.thread.async.IAsyncTask;
 import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.android.framework.support.ui.BaseActivity;
-import com.eaglesakura.android.thread.AsyncAction;
-import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.thread.async.AsyncAction;
+import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.android.util.ViewUtil;
 import com.eaglesakura.io.IOUtil;
 import com.eaglesakura.material.widget.MaterialLicenseDialog;

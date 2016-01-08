@@ -1,8 +1,9 @@
-package com.eaglesakura.android.thread;
+package com.eaglesakura.android.thread.ui;
 
 import android.os.Handler;
 import android.os.Looper;
 
+import com.eaglesakura.android.thread.async.ThreadSyncRunnerBase;
 import com.eaglesakura.android.util.AndroidUtil;
 import com.eaglesakura.util.LogUtil;
 

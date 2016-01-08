@@ -12,9 +12,9 @@ import java.util.zip.DataFormatException;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
-import com.eaglesakura.android.thread.AsyncAction;
-import com.eaglesakura.android.thread.ThreadSyncRunnerBase;
-import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.thread.async.AsyncAction;
+import com.eaglesakura.android.thread.async.ThreadSyncRunnerBase;
+import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.io.data.DataPackage;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;

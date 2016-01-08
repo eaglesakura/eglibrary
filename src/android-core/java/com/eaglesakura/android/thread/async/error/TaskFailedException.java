@@ -1,4 +1,4 @@
-package com.eaglesakura.android.async.error;
+package com.eaglesakura.android.thread.async.error;
 
 /**
  *

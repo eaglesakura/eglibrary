@@ -10,8 +10,8 @@ import android.view.WindowManager;
 import com.eaglesakura.android.debug.window.log.DebugItemGroup;
 import com.eaglesakura.android.debug.window.log.DebugRenderingItem;
 import com.eaglesakura.android.debug.window.log.DebugText;
-import com.eaglesakura.android.thread.HandlerLoopController;
-import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.thread.loop.HandlerLoopController;
+import com.eaglesakura.android.thread.ui.UIHandler;
 
 /**
  * 毎フレーム処理のリアルタイムデバッグ出力のサポートを行う

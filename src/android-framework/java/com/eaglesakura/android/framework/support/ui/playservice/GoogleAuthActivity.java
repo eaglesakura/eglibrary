@@ -11,7 +11,7 @@ import com.eaglesakura.android.R;
 import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.android.framework.db.BasicSettings;
 import com.eaglesakura.android.framework.support.ui.BaseActivity;
-import com.eaglesakura.android.framework.support.ui.butterknife.OnActivityResult;
+import com.eaglesakura.android.oari.OnActivityResult;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.material.widget.MaterialAlertDialog;
 import com.eaglesakura.util.LogUtil;

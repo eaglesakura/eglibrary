@@ -1,6 +1,8 @@
-package com.eaglesakura.android.thread;
+package com.eaglesakura.android.thread.async;
 
 import android.os.Handler;
+
+import com.eaglesakura.android.thread.ui.UIHandler;
 
 /**
  * 非同期の処理を行う。<BR>

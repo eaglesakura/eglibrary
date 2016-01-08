@@ -1,8 +1,11 @@
-package com.eaglesakura.android.thread;
+package com.eaglesakura.android.thread.async;
 
 import android.os.Handler;
 import android.os.HandlerThread;
 
+/**
+ * 非同期実行用のハンドラ生成Util
+ */
 public class AsyncHandler extends Handler {
     final HandlerThread thread;
 
