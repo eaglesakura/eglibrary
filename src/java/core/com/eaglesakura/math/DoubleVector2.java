@@ -1,4 +1,4 @@
-package com.eaglesakura.android.graphics;
+package com.eaglesakura.math;
 
 /**
  * double値で操作を行う二次元ベクトル

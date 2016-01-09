@@ -16,8 +16,6 @@ import org.xmlpull.v1.XmlPullParserFactory;
 /**
  * XMLの要素を定義する。
  * 全てTextで保持して、内容については別途パースする。
- *
- * @author TAKESHI YAMASHITA
  */
 public class XmlElement {
     /**

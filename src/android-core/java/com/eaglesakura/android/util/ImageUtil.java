@@ -12,8 +12,8 @@ import android.graphics.PorterDuffXfermode;
 import android.media.ExifInterface;
 
 import com.eaglesakura.android.graphics.Graphics;
-import com.eaglesakura.io.IOUtil;
-import com.eaglesakura.math.MathUtil;
+import com.eaglesakura.util.IOUtil;
+import com.eaglesakura.util.MathUtil;
 import com.eaglesakura.util.LogUtil;
 
 import java.io.ByteArrayOutputStream;

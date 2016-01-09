@@ -1,8 +1,8 @@
 package com.eaglesakura.android.net;
 
 import com.eaglesakura.android.thread.ui.UIHandler;
-import com.eaglesakura.android.util.AndroidUtil;
-import com.eaglesakura.time.Timer;
+import com.eaglesakura.android.util.AndroidThreadUtil;
+import com.eaglesakura.util.Timer;
 import com.eaglesakura.util.Util;
 
 import java.io.IOException;
@@ -95,7 +95,7 @@ public abstract class NetworkResult<T> {
      * @throws IOException
      */
     public T await() throws IOException {
-        AndroidUtil.assertBackgroundThread();
+        AndroidThreadUtil.assertBackgroundThread();
 
         Timer timer = new Timer();
 

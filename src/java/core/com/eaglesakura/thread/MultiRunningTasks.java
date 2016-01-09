@@ -3,7 +3,7 @@ package com.eaglesakura.thread;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.eaglesakura.time.Timer;
+import com.eaglesakura.util.Timer;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 

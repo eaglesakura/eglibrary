@@ -20,7 +20,7 @@ import com.eaglesakura.android.dao.net.DbNetCacheDao;
 import com.eaglesakura.android.db.BaseDatabase;
 import com.eaglesakura.thread.MultiRunningTasks;
 import com.eaglesakura.android.util.ImageUtil;
-import com.eaglesakura.io.IOUtil;
+import com.eaglesakura.util.IOUtil;
 import com.eaglesakura.json.JSON;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.StringUtil;
@@ -29,7 +29,6 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;

@@ -18,7 +18,7 @@ import com.eaglesakura.android.thread.loop.HandlerLoopController;
 import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.android.R;
-import com.eaglesakura.math.MathUtil;
+import com.eaglesakura.util.MathUtil;
 import com.eaglesakura.util.LogUtil;
 
 /**

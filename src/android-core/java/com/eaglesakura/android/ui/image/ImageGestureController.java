@@ -11,9 +11,9 @@ import android.view.View;
 import com.eaglesakura.android.graphics.ImageCorrector;
 import com.eaglesakura.android.thread.loop.HandlerLoopController;
 import com.eaglesakura.android.thread.ui.UIHandler;
-import com.eaglesakura.math.MathUtil;
+import com.eaglesakura.util.MathUtil;
 import com.eaglesakura.math.Vector2;
-import com.eaglesakura.time.Timer;
+import com.eaglesakura.util.Timer;
 import com.eaglesakura.util.LogUtil;
 
 /**

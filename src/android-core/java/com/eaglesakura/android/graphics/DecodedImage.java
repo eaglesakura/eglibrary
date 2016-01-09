@@ -1,4 +1,4 @@
-package com.eaglesakura.android.glkit.res;
+package com.eaglesakura.android.graphics;
 
 import android.graphics.Bitmap;
 

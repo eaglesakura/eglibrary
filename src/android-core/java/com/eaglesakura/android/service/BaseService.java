@@ -16,7 +16,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.eaglesakura.android.thread.ui.UIHandler;
-import com.eaglesakura.android.util.AndroidUtil;
+import com.eaglesakura.android.util.AndroidThreadUtil;
 
 /**
  * 便利系メソッドを固めたUtilクラス
@@ -209,16 +209,12 @@ public abstract class BaseService extends Service {
     }
 
     protected void toast(final String fmt, final Object... args) {
-        if (!AndroidUtil.isUIThread()) {
-            UIHandler.postUI(new Runnable() {
-                @Override
-                public void run() {
-                    toast(fmt, args);
-                }
-            });
-            return;
-        }
+        UIHandler.postUIorRun(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(BaseService.this, String.format(fmt, args), Toast.LENGTH_SHORT).show();
+            }
+        });
 
-        Toast.makeText(this, String.format(fmt, args), Toast.LENGTH_SHORT).show();
     }
 }

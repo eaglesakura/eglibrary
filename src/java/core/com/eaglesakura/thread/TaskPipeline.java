@@ -1,7 +1,8 @@
 package com.eaglesakura.thread;
 
 import com.eaglesakura.android.thread.ui.UIHandler;
-import com.eaglesakura.time.Timer;
+import com.eaglesakura.util.Holder;
+import com.eaglesakura.util.Timer;
 import com.eaglesakura.util.Util;
 
 import java.util.HashMap;

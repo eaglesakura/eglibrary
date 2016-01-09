@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 
 import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.android.util.ContextUtil;
-import com.eaglesakura.io.IOUtil;
+import com.eaglesakura.util.IOUtil;
 import com.eaglesakura.util.LogUtil;
 
 import java.io.IOException;

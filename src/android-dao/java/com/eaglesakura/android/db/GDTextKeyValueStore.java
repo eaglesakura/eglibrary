@@ -18,7 +18,8 @@ import java.util.Map;
 /**
  * Key-Valueのシンプルなデータベース
  */
-public class GDTextKeyValueStore extends BaseDatabase<DaoSession> {
+@Deprecated
+class GDTextKeyValueStore extends BaseDatabase<DaoSession> {
 
     private final File dbFilePath;
 

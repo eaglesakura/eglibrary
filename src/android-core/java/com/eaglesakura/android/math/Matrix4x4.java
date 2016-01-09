@@ -6,8 +6,6 @@ import com.eaglesakura.math.Vector3;
 
 /**
  * OpenGL ESの挙動に合わせた4x4行列を管理する
- *
- * @author TAKESHI YAMASHITA
  */
 public final class Matrix4x4 {
     /**
@@ -78,7 +76,6 @@ public final class Matrix4x4 {
      *
      * @param v
      * @param result
-     *
      * @return resultの参照
      */
     public Vector3 transVector(Vector3 v, Vector3 result) {
@@ -106,7 +103,6 @@ public final class Matrix4x4 {
      * @param rotate
      * @param position
      * @param result
-     *
      * @return resultの参照
      */
     public static Matrix4x4 create(Vector3 scale, Vector3 rotate, Vector3 position, Matrix4x4 result) {
@@ -153,7 +149,6 @@ public final class Matrix4x4 {
      *
      * @param trans
      * @param result
-     *
      * @return
      */
     public Matrix4x4 multiply(Matrix4x4 trans, Matrix4x4 result) {

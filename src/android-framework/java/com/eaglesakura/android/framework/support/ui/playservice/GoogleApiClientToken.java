@@ -3,8 +3,9 @@ package com.eaglesakura.android.framework.support.ui.playservice;
 import android.os.Bundle;
 
 import com.eaglesakura.android.thread.ui.UIHandler;
+import com.eaglesakura.android.util.AndroidThreadUtil;
 import com.eaglesakura.android.util.AndroidUtil;
-import com.eaglesakura.time.Timer;
+import com.eaglesakura.util.Timer;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 import com.google.android.gms.common.ConnectionResult;
@@ -147,7 +148,7 @@ public class GoogleApiClientToken {
      * @param task
      */
     public <T> T executeGoogleApi(GoogleApiTask<T> task) {
-        if (AndroidUtil.isUIThread()) {
+        if (AndroidThreadUtil.isUIThread()) {
             throw new IllegalStateException();
         }
 

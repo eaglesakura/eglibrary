@@ -2,7 +2,7 @@ package com.eaglesakura.android.net;
 
 import com.eaglesakura.android.dao.net.DbNetCache;
 import com.eaglesakura.thread.MultiRunningTasks;
-import com.eaglesakura.io.IOUtil;
+import com.eaglesakura.util.IOUtil;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.StringUtil;
 import com.google.api.client.http.HttpHeaders;

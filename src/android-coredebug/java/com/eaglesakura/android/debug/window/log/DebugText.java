@@ -2,7 +2,7 @@ package com.eaglesakura.android.debug.window.log;
 
 import com.eaglesakura.android.graphics.FontCalculator;
 import com.eaglesakura.android.graphics.Graphics;
-import com.eaglesakura.graphics.Color;
+import com.eaglesakura.android.graphics.ColorRGBA;
 import com.eaglesakura.math.Vector2;
 
 /**
@@ -22,7 +22,7 @@ public class DebugText extends DebugRenderingItem {
     /**
      * テキスト色
      */
-    int argb = Color.WHITE;
+    int argb = ColorRGBA.WHITE;
 
     private static int DEFAULT_FONT_SIZE = 64;
 

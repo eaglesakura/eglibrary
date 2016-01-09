@@ -19,7 +19,7 @@ import com.eaglesakura.android.framework.support.ui.BaseActivity;
 import com.eaglesakura.android.thread.async.AsyncAction;
 import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.android.util.ViewUtil;
-import com.eaglesakura.io.IOUtil;
+import com.eaglesakura.util.IOUtil;
 import com.eaglesakura.material.widget.MaterialLicenseDialog;
 import com.eaglesakura.material.widget.support.SupportRecyclerView;
 import com.eaglesakura.util.LogUtil;

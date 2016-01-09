@@ -3,6 +3,7 @@ package com.eaglesakura.android.db;
 import android.content.Context;
 
 import com.eaglesakura.android.thread.async.AsyncTaskController;
+import com.eaglesakura.android.thread.async.AsyncTaskResult;
 import com.eaglesakura.util.StringUtil;
 
 import java.io.File;
@@ -76,24 +77,17 @@ public abstract class BasePropertiesDatabase extends BaseProperties {
         }
     }
 
+    private static AsyncTaskController gTaskController = new AsyncTaskController(1);
+
     /**
      * 非同期で値を保存する。
      * その間、値を書き換えても値の保証はしない。
      */
-    public void commitAsync() {
-        commitAsync(null);
-    }
-
-    private static AsyncTaskController gTaskController = new AsyncTaskController(1);
-
-    public void commitAsync(final PropsAsyncListener listener) {
-        gTaskController.pushBack(new Runnable() {
+    public AsyncTaskResult<AsyncTaskController> commitAsync() {
+        return gTaskController.pushBack(new Runnable() {
             @Override
             public void run() {
                 commit();
-                if (listener != null) {
-                    listener.onAsyncCompleted(BasePropertiesDatabase.this);
-                }
             }
         });
     }
@@ -166,27 +160,13 @@ public abstract class BasePropertiesDatabase extends BaseProperties {
     /**
      * 非同期でデータを読み込む
      */
-    public void loadAsync() {
-        gTaskController.pushBack(new Runnable() {
+    public AsyncTaskResult<AsyncTaskController> loadAsync() {
+        return gTaskController.pushBack(new Runnable() {
             @Override
             public void run() {
                 load();
             }
         });
-    }
-
-    public void loadAsync(final PropsAsyncListener listener) {
-        gTaskController.pushBack(new Runnable() {
-            @Override
-            public void run() {
-                load();
-                listener.onAsyncCompleted(BasePropertiesDatabase.this);
-            }
-        });
-    }
-
-    public interface PropsAsyncListener {
-        void onAsyncCompleted(BaseProperties database);
     }
 
     /**
@@ -228,8 +208,8 @@ public abstract class BasePropertiesDatabase extends BaseProperties {
     /**
      * 非同期にコミット＆ロードを行い、設定を最新に保つ
      */
-    public void commitAndLoadAsync() {
-        gTaskController.pushBack(new Runnable() {
+    public AsyncTaskResult<AsyncTaskController> commitAndLoadAsync() {
+        return gTaskController.pushBack(new Runnable() {
             @Override
             public void run() {
                 commitAndLoad();
@@ -240,7 +220,7 @@ public abstract class BasePropertiesDatabase extends BaseProperties {
     /**
      * @param runnable
      */
-    public static void runInTaskQueue(Runnable runnable) {
-        gTaskController.pushBack(runnable);
+    public static AsyncTaskResult<AsyncTaskController> runInTaskQueue(Runnable runnable) {
+        return gTaskController.pushBack(runnable);
     }
 }

@@ -4,7 +4,7 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
-import com.eaglesakura.math.MathUtil;
+import com.eaglesakura.util.MathUtil;
 
 public class ImageCorrector {
 

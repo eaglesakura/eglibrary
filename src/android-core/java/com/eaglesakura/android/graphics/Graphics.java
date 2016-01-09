@@ -15,8 +15,6 @@ import java.util.List;
 
 /**
  * Canvas描画のサポート
- *
- * @author TAKESHI YAMASHITA
  */
 public class Graphics {
     Canvas canvas = null;
@@ -34,19 +32,11 @@ public class Graphics {
 
 
     /**
-     *
-     */
-    @Deprecated
-    public Graphics() {
-        setFontSize(24);
-        clearMatrix();
-    }
-
-    /**
      * Canvasを指定して初期化
      */
     public Graphics(Canvas canvas) {
-        this();
+        setFontSize(24);
+        clearMatrix();
         setCanvas(canvas);
     }
 

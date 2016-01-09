@@ -9,6 +9,11 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class PermissionUtil {
 
     public enum PermissionType {
@@ -54,6 +59,40 @@ public class PermissionUtil {
         };
 
         public abstract String[] getPermissions();
+    }
+
+    /**
+     * パーミッション一覧を取得する
+     *
+     * @param types
+     * @return
+     */
+    public static Set<String> listPermissions(PermissionType[] types) {
+        Set<String> result = new HashSet<>();
+        for (PermissionType pm : types) {
+            for (String permission : pm.getPermissions()) {
+                result.add(permission);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * パーミッション一覧を取得する
+     *
+     * @param types
+     * @return
+     */
+    public static Set<String> listPermissions(Iterable<PermissionType> types) {
+        Set<String> result = new HashSet<>();
+        for (PermissionType pm : types) {
+            for (String permission : pm.getPermissions()) {
+                result.add(permission);
+            }
+        }
+
+        return result;
     }
 
     public static boolean isSupportRuntimePermission() {

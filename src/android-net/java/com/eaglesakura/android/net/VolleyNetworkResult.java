@@ -6,7 +6,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.eaglesakura.android.dao.net.DbNetCache;
-import com.eaglesakura.io.IOUtil;
+import com.eaglesakura.util.IOUtil;
 import com.eaglesakura.util.EncodeUtil;
 import com.eaglesakura.util.LogUtil;
 

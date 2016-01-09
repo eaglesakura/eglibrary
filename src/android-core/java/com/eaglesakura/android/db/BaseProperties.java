@@ -3,26 +3,16 @@ package com.eaglesakura.android.db;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 
-import com.eaglesakura.json.JSON;
-import com.eaglesakura.thread.MultiRunningTasks;
 import com.eaglesakura.util.EncodeUtil;
 import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.SerializeUtil;
 import com.eaglesakura.util.StringUtil;
-import com.google.protobuf.GeneratedMessage;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -166,46 +156,35 @@ public abstract class BaseProperties {
         // Stub!!
     }
 
-//    public <T extends com.google.protobuf.GeneratedMessage> T getProtobufProperty(String key, Class<T> proto) {
-//        try {
-//            byte[] prop = getByteArrayProperty(key);
-//            Method method = proto.getMethod("parseFrom", byte[].class);
-//            return (T) method.invoke(proto, prop);
-//        } catch (Exception e) {
-//            LogUtil.log(e);
-//            return null;
+//    /**
+//     * Viewの値からpropertyを指定する
+//     *
+//     * @param key
+//     * @param view
+//     */
+//    public void setPropertyFromView(String key, View view) {
+//        String value = null;
+//        if (view instanceof RadioGroup) {
+//            RadioGroup group = (RadioGroup) view;
+//            View selectedView = group.findViewById(group.getCheckedRadioButtonId());
+//            // Tagを指定する
+//            if (selectedView != null) {
+//                value = selectedView.getTag().toString();
+//            } else {
+//                value = "";
+//            }
+//        } else if (view instanceof EditText) {
+//            value = ((EditText) view).getText().toString();
+//        } else if (view instanceof CompoundButton) {
+//            value = String.valueOf(((CompoundButton) view).isChecked());
+//        } else if (view instanceof TextView) {
+//            value = ((TextView) view).getText().toString();
+//        }
+//
+//        if (value != null) {
+//            setProperty(key, (Object) value);
 //        }
 //    }
-
-    /**
-     * Viewの値からpropertyを指定する
-     *
-     * @param key
-     * @param view
-     */
-    public void setPropertyFromView(String key, View view) {
-        String value = null;
-        if (view instanceof RadioGroup) {
-            RadioGroup group = (RadioGroup) view;
-            View selectedView = group.findViewById(group.getCheckedRadioButtonId());
-            // Tagを指定する
-            if (selectedView != null) {
-                value = selectedView.getTag().toString();
-            } else {
-                value = "";
-            }
-        } else if (view instanceof EditText) {
-            value = ((EditText) view).getText().toString();
-        } else if (view instanceof CompoundButton) {
-            value = String.valueOf(((CompoundButton) view).isChecked());
-        } else if (view instanceof TextView) {
-            value = ((TextView) view).getText().toString();
-        }
-
-        if (value != null) {
-            setProperty(key, (Object) value);
-        }
-    }
 
     /**
      * プロパティを保存する
@@ -216,10 +195,7 @@ public abstract class BaseProperties {
     public void setProperty(String key, Object value) {
         Property prop = propMap.get(key);
 
-        // protobuf
-        if (value instanceof GeneratedMessage) {
-            value = ((com.google.protobuf.GeneratedMessage) value).toByteArray();
-        } else if (value instanceof Enum) {
+        if (value instanceof Enum) {
             value = ((Enum) value).name();
         } else if (value instanceof Bitmap) {
             try {
@@ -263,12 +239,12 @@ public abstract class BaseProperties {
                 datas.put(prop.key, prop.value.getBytes());
             }
         }
-        return EncodeUtil.toByteArray(datas);
+        return SerializeUtil.toByteArray(datas);
     }
 
     public void fromByteArray(byte[] buffer) throws IOException {
         try {
-            Map<String, byte[]> datas = EncodeUtil.toKeyValue(buffer);
+            Map<String, byte[]> datas = SerializeUtil.toKeyValue(buffer);
 
             Iterator<Map.Entry<String, Property>> itr = propMap.entrySet().iterator();
             while (itr.hasNext()) {
@@ -289,50 +265,7 @@ public abstract class BaseProperties {
             throw new IOException("Format Error");
         }
     }
-
-    /**
-     * Bundleに変換する
-     *
-     * @param compress なるべく容量を少なくする場合はtrue
-     * @return
-     */
-    public Bundle toBundle(boolean compress) {
-        Bundle bundle = new Bundle(context.getClassLoader());
-        Iterator<Map.Entry<String, Property>> itr = propMap.entrySet().iterator();
-        while (itr.hasNext()) {
-            Map.Entry<String, Property> entry = itr.next();
-            Property prop = entry.getValue();
-
-            // 圧縮しない、もしくはデフォルトと異なっている場合は変換対象
-            if (!compress || !prop.value.equals(prop.defaultValue)) {
-                bundle.putString(prop.key, prop.value);
-            }
-        }
-        return bundle;
-    }
-
-    /**
-     * Bundleから値を復元する
-     *
-     * @param bundle 復元するテーブル
-     */
-    public void fromBundle(Bundle bundle) {
-        Iterator<Map.Entry<String, Property>> itr = propMap.entrySet().iterator();
-        while (itr.hasNext()) {
-            Map.Entry<String, Property> entry = itr.next();
-            Property prop = entry.getValue();
-
-            String bunValue = bundle.getString(prop.key);
-            if (bunValue != null) {
-                // 値が書き込まれていた場合はそちらを優先
-                prop.value = bunValue;
-            } else {
-                // 値が書き込まれていないので、デフォルトを復元
-                prop.value = prop.defaultValue;
-            }
-        }
-    }
-
+    
     /**
      * 値を全てデフォルト化する
      */
@@ -361,7 +294,7 @@ public abstract class BaseProperties {
             serializeArray.add(item.toByteArray());
         }
 
-        return EncodeUtil.compressOrRaw(EncodeUtil.toByteArray(serializeArray));
+        return EncodeUtil.compressOrRaw(SerializeUtil.toByteArray(serializeArray));
     }
 
     /**
@@ -378,7 +311,7 @@ public abstract class BaseProperties {
             Map.Entry<String, BaseProperties> entry = iterator.next();
             serializeMap.put(entry.getKey(), entry.getValue().toByteArray());
         }
-        return EncodeUtil.compressOrRaw(EncodeUtil.toByteArray(serializeMap));
+        return EncodeUtil.compressOrRaw(SerializeUtil.toByteArray(serializeMap));
     }
 
     /**
@@ -393,7 +326,7 @@ public abstract class BaseProperties {
     public static <T extends BaseProperties> List<T> deserializeToArray(Context context, Class<T> clazz, byte[] buffer) {
         buffer = EncodeUtil.decompressOrRaw(buffer);
 
-        List<byte[]> deserializeArray = EncodeUtil.toByteArrayList(buffer);
+        List<byte[]> deserializeArray = SerializeUtil.toByteArrayList(buffer);
         List<T> result = new ArrayList<>();
         try {
             Constructor<T> constructor = clazz.getConstructor(Context.class, String.class);
@@ -420,7 +353,7 @@ public abstract class BaseProperties {
      */
     public static Map<String, byte[]> deserializeToSerializedMap(Context context, byte[] buffer) {
         buffer = EncodeUtil.decompressOrRaw(buffer);
-        return EncodeUtil.toKeyValue(buffer);
+        return SerializeUtil.toKeyValue(buffer);
     }
 
     /**

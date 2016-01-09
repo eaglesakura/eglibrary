@@ -12,6 +12,7 @@ import com.eaglesakura.android.debug.window.log.DebugRenderingItem;
 import com.eaglesakura.android.debug.window.log.DebugText;
 import com.eaglesakura.android.thread.loop.HandlerLoopController;
 import com.eaglesakura.android.thread.ui.UIHandler;
+import com.eaglesakura.android.graphics.ColorRGBA;
 
 /**
  * 毎フレーム処理のリアルタイムデバッグ出力のサポートを行う
@@ -163,7 +164,7 @@ public class RealtimeDebugWindow {
         debugText.setMessage(text);
         debugText.setFlags(flags);
         debugText.setRenderingTime(showTimeMs);
-        debugText.setArgb(com.eaglesakura.graphics.Color.rgba2argb(rgba));
+        debugText.setArgb(ColorRGBA.rgba2argb(rgba));
 
         addMessage(debugText);
     }

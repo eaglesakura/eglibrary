@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import com.eaglesakura.android.R;
 import com.eaglesakura.android.aquery.AQuery;
 import com.eaglesakura.android.thread.ui.UIHandler;
-import com.eaglesakura.android.util.AndroidUtil;
-import com.eaglesakura.io.IOUtil;
+import com.eaglesakura.android.util.AndroidThreadUtil;
+import com.eaglesakura.util.IOUtil;
 
 /**
  * 単純なLICENSE表示を行うFragment
@@ -96,7 +96,7 @@ public class MaterialLicenseDialog extends MaterialAlertDialog {
      * バックグラウンドスレッドから表示をリクエストする
      */
     public void showFromBackground() {
-        if (AndroidUtil.isUIThread()) {
+        if (AndroidThreadUtil.isUIThread()) {
             throw new IllegalStateException("call background thread");
         }
 

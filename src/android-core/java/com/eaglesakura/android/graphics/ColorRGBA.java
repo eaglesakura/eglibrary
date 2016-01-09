@@ -1,15 +1,13 @@
-package com.eaglesakura.graphics;
+package com.eaglesakura.android.graphics;
 
-import com.eaglesakura.math.MathUtil;
+import com.eaglesakura.util.MathUtil;
 
 /**
  * OpenGL向けRGBA色を扱う。
  * <br>
  * Canvas向けandroid.graphics.ColorクラスはARGB色であることに注意が必要。
- *
- * @author TAKESHI YAMASHITA
  */
-public class Color {
+public class ColorRGBA {
 
     /**
      * 白
@@ -56,32 +54,32 @@ public class Color {
      */
     public float b = 1;
 
-    public Color() {
+    public ColorRGBA() {
 
     }
 
-    public Color(float r, float g, float b, float a) {
+    public ColorRGBA(float r, float g, float b, float a) {
         this.r = r;
         this.g = g;
         this.b = b;
         this.a = a;
     }
 
-    public Color(int r, int g, int b, int a) {
+    public ColorRGBA(int r, int g, int b, int a) {
         this.r = (float) r / 255.0f;
         this.g = (float) g / 255.0f;
         this.b = (float) b / 255.0f;
         this.a = (float) a / 255.0f;
     }
 
-    public Color(Color origin) {
+    public ColorRGBA(ColorRGBA origin) {
         this.r = origin.r;
         this.g = origin.g;
         this.b = origin.b;
         this.a = origin.a;
     }
 
-    public Color(int rgba) {
+    public ColorRGBA(int rgba) {
         set(toColorR(rgba), toColorG(rgba), toColorB(rgba), toColorA(rgba));
     }
 
@@ -103,7 +101,7 @@ public class Color {
         set(toColorR(rgba), toColorG(rgba), toColorB(rgba), toColorA(rgba));
     }
 
-    public void set(Color color) {
+    public void set(ColorRGBA color) {
         this.r = color.r;
         this.g = color.g;
         this.b = color.b;
@@ -127,7 +125,7 @@ public class Color {
     }
 
     public int getRGBA() {
-        return Color.toColorRGBA(getIntR(), getIntG(), getIntB(), getIntA());
+        return ColorRGBA.toColorRGBA(getIntR(), getIntG(), getIntB(), getIntA());
     }
 
     /**
@@ -136,7 +134,7 @@ public class Color {
      * @param next
      * @param offset
      */
-    public void move(final Color next, final float offset) {
+    public void move(final ColorRGBA next, final float offset) {
         r = MathUtil.targetMove(r, offset, next.r);
         g = MathUtil.targetMove(g, offset, next.g);
         b = MathUtil.targetMove(b, offset, next.b);
@@ -160,7 +158,6 @@ public class Color {
      * ARGB(Canvas color)をRGBA(GL color）に変換する。
      *
      * @param argb
-     *
      * @return
      */
     public static int argb2rgba(final int argb) {
@@ -171,7 +168,6 @@ public class Color {
      * RGBA(GL color）をARGB(Canvas color)に変換する。
      *
      * @param rgba
-     *
      * @return
      */
     public static int rgba2argb(final int rgba) {
@@ -186,7 +182,6 @@ public class Color {
      * @param g
      * @param b
      * @param a
-     *
      * @return
      */
     public static int toColorRGBA(int r, int g, int b, int a) {
@@ -201,7 +196,6 @@ public class Color {
      * @param g
      * @param b
      * @param a
-     *
      * @return
      */
     public static int toColorRGBA(float r, float g, float b, float a) {
@@ -214,7 +208,6 @@ public class Color {
      * @param r
      * @param g
      * @param b
-     *
      * @return
      */
     public static short toColorRGB565(int r, int g, int b) {
@@ -228,7 +221,6 @@ public class Color {
      * RGBA色からAを取り出す。
      *
      * @param colorRGBA
-     *
      * @return
      */
     public static int toColorA(int colorRGBA) {
@@ -243,7 +235,6 @@ public class Color {
      * RGBA色からRを取り出す
      *
      * @param colorRGBA
-     *
      * @return
      */
     public static int toColorR(int colorRGBA) {
@@ -258,7 +249,6 @@ public class Color {
      * RGBA色からGを取り出す。
      *
      * @param colorRGBA
-     *
      * @return
      */
     public static int toColorG(int colorRGBA) {
@@ -273,7 +263,6 @@ public class Color {
      * RGBA色からBを取り出す。
      *
      * @param colorRGBA
-     *
      * @return
      */
     public static int toColorB(int colorRGBA) {
@@ -298,7 +287,6 @@ public class Color {
      * @param _r8 赤要素8bit
      * @param _g8 緑要素8bit
      * @param _b8 青要素8bit
-     *
      * @return HSV要素
      */
     public static float[] toHSV(int _r8, int _g8, int _b8) {
@@ -338,39 +326,38 @@ public class Color {
      * @param rgba0
      * @param rgba1
      * @param blend
-     *
      * @return
      */
     public static int blendColor(int rgba0, int rgba1, float blend) {
         int result = 0;
 
         {
-            int value0 = (Color.toColorR(rgba0));
-            int value1 = (Color.toColorR(rgba1));
+            int value0 = (ColorRGBA.toColorR(rgba0));
+            int value1 = (ColorRGBA.toColorR(rgba1));
 
             int color = (int) (MathUtil.blendValue(value0, value1, blend));
             result |= ((color & 0xff) << 24);
         }
 
         {
-            int value0 = (Color.toColorG(rgba0));
-            int value1 = (Color.toColorG(rgba1));
+            int value0 = (ColorRGBA.toColorG(rgba0));
+            int value1 = (ColorRGBA.toColorG(rgba1));
 
             int color = (int) (MathUtil.blendValue(value0, value1, blend));
             result |= ((color & 0xff) << 16);
         }
 
         {
-            int value0 = (Color.toColorB(rgba0));
-            int value1 = (Color.toColorB(rgba1));
+            int value0 = (ColorRGBA.toColorB(rgba0));
+            int value1 = (ColorRGBA.toColorB(rgba1));
 
             int color = (int) (MathUtil.blendValue(value0, value1, blend));
             result |= ((color & 0xff) << 8);
         }
 
         {
-            int value0 = (Color.toColorA(rgba0));
-            int value1 = (Color.toColorA(rgba1));
+            int value0 = (ColorRGBA.toColorA(rgba0));
+            int value1 = (ColorRGBA.toColorA(rgba1));
 
             int color = (int) (MathUtil.blendValue(value0, value1, blend));
             result |= ((color) & 0xff);

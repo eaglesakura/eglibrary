@@ -11,7 +11,7 @@ import com.eaglesakura.android.db.BaseProperties;
 import com.eaglesakura.android.service.aidl.ICommandClientCallback;
 import com.eaglesakura.android.service.aidl.ICommandServerService;
 import com.eaglesakura.android.thread.ui.UIHandler;
-import com.eaglesakura.android.util.AndroidUtil;
+import com.eaglesakura.android.util.AndroidThreadUtil;
 import com.eaglesakura.util.LogUtil;
 
 /**
@@ -51,7 +51,7 @@ public abstract class CommandClient {
     }
 
     protected void connectToSever(Intent intent) {
-        AndroidUtil.assertUIThread();
+        AndroidThreadUtil.assertUIThread();
 
         if (server != null) {
             return;
@@ -64,7 +64,7 @@ public abstract class CommandClient {
      * 切断リクエストを送る
      */
     public void disconnect() {
-        AndroidUtil.assertUIThread();
+        AndroidThreadUtil.assertUIThread();
 
         if (server == null) {
             // not connected

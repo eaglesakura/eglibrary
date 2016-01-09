@@ -10,7 +10,7 @@ import android.view.TextureView;
 import com.eaglesakura.android.glkit.egl.IEGLContextGroup;
 import com.eaglesakura.android.glkit.egl.IEGLManager;
 import com.eaglesakura.android.thread.ui.UIHandler;
-import com.eaglesakura.time.Timer;
+import com.eaglesakura.util.Timer;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 
