@@ -1,4 +1,4 @@
-package com.eaglesakura.android.framework.support.ui.adapter;
+package com.eaglesakura.android.framework.ui.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 
-import com.eaglesakura.android.framework.support.ui.FragmentChooser;
+import com.eaglesakura.android.framework.ui.FragmentChooser;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 

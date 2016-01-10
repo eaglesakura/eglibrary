@@ -1,4 +1,4 @@
-package com.eaglesakura.android.framework.support.ui;
+package com.eaglesakura.android.framework.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -16,15 +16,10 @@ import android.view.ViewGroup;
 
 import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.android.oari.ActivityResult;
-import com.eaglesakura.android.framework.support.ui.message.LocalMessageReceiver;
-import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiClientToken;
-import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiTask;
+import com.eaglesakura.android.framework.ui.message.LocalMessageReceiver;
 import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.android.util.PermissionUtil;
-import com.eaglesakura.util.LogUtil;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 
 import butterknife.ButterKnife;

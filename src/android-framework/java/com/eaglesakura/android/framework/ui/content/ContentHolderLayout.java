@@ -1,4 +1,4 @@
-package com.eaglesakura.android.framework.support.ui.content;
+package com.eaglesakura.android.framework.ui.content;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

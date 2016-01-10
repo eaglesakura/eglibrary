@@ -1,4 +1,4 @@
-package com.eaglesakura.android.framework.support.ui.license;
+package com.eaglesakura.android.framework.ui.license;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,7 @@ import com.eaglesakura.android.aquery.AQuery;
 import com.eaglesakura.android.thread.async.AsyncTaskResult;
 import com.eaglesakura.android.thread.async.IAsyncTask;
 import com.eaglesakura.android.framework.FrameworkCentral;
-import com.eaglesakura.android.framework.support.ui.BaseActivity;
+import com.eaglesakura.android.framework.ui.BaseActivity;
 import com.eaglesakura.android.thread.async.AsyncAction;
 import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.android.util.ViewUtil;
@@ -36,7 +36,7 @@ import java.util.List;
  * <br>
  * AndroidManifest.xmlに下記を追加する
  * <pre>
- * android:name="com.eaglesakura.android.framework.support.ui.license.LicenseViewActivity"
+ * android:name="com.eaglesakura.android.framework.ui.license.LicenseViewActivity"
  * android:theme="@style/EsMaterial.Theme.Grey.NoActionBar"
  * android:screenOrientation="portrait"
  * </pre>

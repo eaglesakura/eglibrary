@@ -1,10 +1,9 @@
-package com.eaglesakura.android.framework.support.ui.playservice;
+package com.eaglesakura.android.framework.ui.playservice;
 
 import android.os.Bundle;
 
 import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.android.util.AndroidThreadUtil;
-import com.eaglesakura.android.util.AndroidUtil;
 import com.eaglesakura.util.Timer;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;

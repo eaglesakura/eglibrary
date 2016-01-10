@@ -1,4 +1,4 @@
-package com.eaglesakura.android.framework.support.ui.message;
+package com.eaglesakura.android.framework.ui.message;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

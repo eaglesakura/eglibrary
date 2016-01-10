@@ -1,11 +1,11 @@
-package com.eaglesakura.android.framework.support.ui.playservice;
+package com.eaglesakura.android.framework.ui.playservice;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import com.eaglesakura.android.framework.support.ui.BaseFragment;
+import com.eaglesakura.android.framework.ui.BaseFragment;
 import com.eaglesakura.util.LogUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;

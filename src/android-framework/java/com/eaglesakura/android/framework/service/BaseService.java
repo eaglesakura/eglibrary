@@ -1,4 +1,4 @@
-package com.eaglesakura.android.service;
+package com.eaglesakura.android.framework.service;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
@@ -16,7 +16,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.eaglesakura.android.thread.ui.UIHandler;
-import com.eaglesakura.android.util.AndroidThreadUtil;
 
 /**
  * 便利系メソッドを固めたUtilクラス
@@ -46,7 +45,6 @@ public abstract class BaseService extends Service {
     int wakeUpRef;
 
     AlarmManager alarmManager;
-
     PowerManager powerManager;
     PowerManager.WakeLock wakeLock;
 

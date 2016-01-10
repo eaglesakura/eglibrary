@@ -1,4 +1,4 @@
-package com.eaglesakura.android.framework.support.ui;
+package com.eaglesakura.android.framework.ui;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -22,7 +22,7 @@ import com.eaglesakura.android.thread.async.AsyncTaskController;
 import com.eaglesakura.android.thread.async.AsyncTaskResult;
 import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.android.oari.ActivityResult;
-import com.eaglesakura.android.framework.support.ui.message.LocalMessageReceiver;
+import com.eaglesakura.android.framework.ui.message.LocalMessageReceiver;
 import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.android.util.PermissionUtil;

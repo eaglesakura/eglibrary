@@ -2,15 +2,11 @@ package com.eaglesakura.android.framework;
 
 import android.app.Application;
 
-import com.eaglesakura.android.R;
-import com.eaglesakura.android.thread.async.AsyncTaskController;
 import com.eaglesakura.android.framework.db.BasicSettings;
+import com.eaglesakura.android.thread.async.AsyncTaskController;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.util.LogUtil;
-import com.eaglesakura.util.StringUtil;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 
 /**
@@ -64,34 +60,34 @@ public class FrameworkCentral {
         settings.commitAsync();
     }
 
-    /**
-     * GCMトークンを登録する
-     */
-    public static void registerGcm() throws IOException {
-        if (!StringUtil.isEmpty(getSettings().getGcmToken())) {
-            return;
-        }
-        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getApplication());
-        String registerId = gcm.register(getApplication().getString(R.string.eglibrary_Gcm_SenderID));
+//    /**
+//     * GCMトークンを登録する
+//     */
+//    public static void registerGcm() throws IOException {
+//        if (!StringUtil.isEmpty(getSettings().getGcmToken())) {
+//            return;
+//        }
+//        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getApplication());
+//        String registerId = gcm.register(getApplication().getString(R.string.eglibrary_Gcm_SenderID));
+//
+//        if (StringUtil.isEmpty(registerId)) {
+//            throw new IllegalStateException("GCM register id == null");
+//        }
+//        getSettings().setGcmToken(registerId);
+//        getSettings().commit();
+//    }
 
-        if (StringUtil.isEmpty(registerId)) {
-            throw new IllegalStateException("GCM register id == null");
-        }
-        getSettings().setGcmToken(registerId);
-        getSettings().commit();
-    }
-
-    /**
-     * GCMトークンを無効化する
-     *
-     * @throws IOException
-     */
-    public static void unregisterGcm() throws IOException {
-        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getApplication());
-        gcm.unregister();
-        getSettings().setGcmToken("");
-        getSettings().commit();
-    }
+//    /**
+//     * GCMトークンを無効化する
+//     *
+//     * @throws IOException
+//     */
+//    public static void unregisterGcm() throws IOException {
+//        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getApplication());
+//        gcm.unregister();
+//        getSettings().setGcmToken("");
+//        getSettings().commit();
+//    }
 
     /**
      * Frameworkの設定クラスを取得する

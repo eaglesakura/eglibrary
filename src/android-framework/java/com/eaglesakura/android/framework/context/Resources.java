@@ -17,7 +17,7 @@ import java.io.InputStream;
 public class Resources {
     private static int[] displaySize = null;
 
-    public static android.content.res.Resources app() {
+    private static android.content.res.Resources app() {
         return FrameworkCentral.getApplication().getResources();
     }
 

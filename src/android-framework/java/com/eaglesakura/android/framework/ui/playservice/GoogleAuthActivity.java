@@ -1,4 +1,4 @@
-package com.eaglesakura.android.framework.support.ui.playservice;
+package com.eaglesakura.android.framework.ui.playservice;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -11,7 +11,7 @@ import android.view.KeyEvent;
 import com.eaglesakura.android.R;
 import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.android.framework.db.BasicSettings;
-import com.eaglesakura.android.framework.support.ui.BaseActivity;
+import com.eaglesakura.android.framework.ui.BaseActivity;
 import com.eaglesakura.android.oari.OnActivityResult;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.material.widget.MaterialAlertDialog;

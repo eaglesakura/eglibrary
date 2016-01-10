@@ -1,4 +1,4 @@
-package com.eaglesakura.android.framework.support.ui;
+package com.eaglesakura.android.framework.ui;
 
 import android.app.Activity;
 import android.app.ProgressDialog;

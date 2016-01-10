@@ -4,7 +4,7 @@
     <application>
         <!-- ライセンス表示 -->
         <activity
-            android:name="com.eaglesakura.android.framework.support.ui.license.LicenseViewActivity"
+            android:name=".framework.ui.license.LicenseViewActivity"
             android:theme="@style/EsMaterial.Theme.Grey.NoActionBar"
             android:screenOrientation="portrait"/>
     </application>

@@ -1,4 +1,4 @@
-package com.eaglesakura.android.framework.support.ui;
+package com.eaglesakura.android.framework.ui;
 
 import android.os.Parcel;
 import android.os.Parcelable;

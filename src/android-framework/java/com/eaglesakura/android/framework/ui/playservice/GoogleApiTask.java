@@ -1,4 +1,4 @@
-package com.eaglesakura.android.framework.support.ui.playservice;
+package com.eaglesakura.android.framework.ui.playservice;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
