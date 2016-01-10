@@ -119,6 +119,7 @@ public class GoogleApiClientToken {
 
         if (disconnected) {
             LogUtil.log("Token disconnected Req ReConnecting");
+            connectionResult = null;
             client.connect();
         }
 
@@ -234,12 +235,14 @@ public class GoogleApiClientToken {
         @Override
         public void onConnectionSuspended(int status) {
             LogUtil.log("onConnectionSuspended status(%d)", status);
+            disconnected = true;
         }
 
         @Override
         public void onConnectionFailed(ConnectionResult result) {
             LogUtil.log("onConnectionFailed connectionResult(%s)", "" + connectionResult);
             connectionResult = result;
+            disconnected = true;
 
 //            if (false) {
 //                BasicSettings settings = FrameworkCentral.getSettings();

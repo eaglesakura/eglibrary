@@ -356,58 +356,6 @@ public abstract class BaseFragment extends Fragment {
         ActivityResult.invokeRecursive(this, requestCode, resultCode, data);
     }
 
-    public <T> T executeGoogleApi(GoogleApiTask<T> task) {
-        Activity activity = getActivity();
-        if (activity == null || !(activity instanceof BaseActivity)) {
-            return null;
-        }
-        return ((BaseActivity) activity).executeGoogleApi(task);
-    }
-
-    public void executeGoogleApiUiThread(final GoogleApiTask<?> task) {
-        executeGoogleApi(new GoogleApiTask<Object>() {
-            @Override
-            public Object executeTask(final GoogleApiClient client) throws Exception {
-                UIHandler.postUI(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            task.executeTask(client);
-                        } catch (Exception e) {
-                            LogUtil.log(e);
-                        }
-                    }
-                });
-                return null;
-            }
-
-            @Override
-            public Object connectedFailed(final GoogleApiClient client, final ConnectionResult connectionResult) {
-                UIHandler.postUI(new Runnable() {
-                    @Override
-                    public void run() {
-                        task.connectedFailed(client, connectionResult);
-                    }
-                });
-                return null;
-            }
-
-            @Override
-            public boolean isCanceled() {
-                return task.isCanceled();
-            }
-        });
-    }
-
-    public GoogleApiClientToken getGoogleApiClientToken() {
-        Activity activity = getActivity();
-        if (activity == null || !(activity instanceof BaseActivity)) {
-            return null;
-        }
-
-        return ((BaseActivity) activity).getGoogleApiClientToken();
-    }
-
     /**
      * Runtime Permissionの更新を行わせる
      *

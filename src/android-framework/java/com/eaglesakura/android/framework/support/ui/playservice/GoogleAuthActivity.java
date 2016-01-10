@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 
 import com.eaglesakura.android.R;
@@ -24,7 +25,7 @@ import com.google.android.gms.plus.Plus;
 /**
  * Googleの認証を専門に行うActivity
  */
-public abstract class GoogleAuthActivity extends BaseActivity {
+public abstract class GoogleAuthActivity extends BaseActivity implements GoogleApiFragment.Callback {
 
     static final int REQUEST_GOOGLE_CLIENT_AUTH = 0x1200;
 
@@ -39,20 +40,35 @@ public abstract class GoogleAuthActivity extends BaseActivity {
 
     int retryRequest = -1;
 
+    GoogleApiClientToken googleApiClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_auth);
-
-        setGoogleApiClientToken(new GoogleApiClientToken(newGoogleApiClient()));
-        getGoogleApiClientToken().setConnectSleepTime(1000);
-        getGoogleApiClientToken().setDisconnectPendingTime(1);
+        if (savedInstanceState == null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            {
+                GoogleApiFragment fragment = new GoogleApiFragment();
+                transaction.add(fragment, fragment.createSimpleTag());
+            }
+            transaction.commit();
+        }
         initialLogout();
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    public GoogleApiClientToken newClientToken(GoogleApiFragment self) {
+        GoogleApiClientToken result = new GoogleApiClientToken(newGoogleApiClient());
+        result.setConnectSleepTime(1000);
+        result.setDisconnectPendingTime(1);
+        googleApiClient = result;
+        return result;
+    }
+
+    @Override
+    public void onGooglePlayServiceRecoverCanceled(GoogleApiFragment self, int statusCode) {
+
     }
 
     /**
@@ -66,8 +82,14 @@ public abstract class GoogleAuthActivity extends BaseActivity {
         runBackground(new Runnable() {
             @Override
             public void run() {
+                while (googleApiClient == null) {
+                    Util.sleep(1);
+                    if (isActivityDestroyed()) {
+                        return;
+                    }
+                }
 
-                getGoogleApiClientToken().executeGoogleApi(new GoogleApiTask<Object>() {
+                googleApiClient.executeGoogleApi(new GoogleApiTask<Object>() {
                     @Override
                     public Object executeTask(GoogleApiClient client) throws Exception {
                         try {
@@ -95,7 +117,7 @@ public abstract class GoogleAuthActivity extends BaseActivity {
                     }
                 });
 
-                getGoogleApiClientToken().reconnect();
+                googleApiClient.reconnect();
                 loginOnBackground();
             }
         });
@@ -112,7 +134,7 @@ public abstract class GoogleAuthActivity extends BaseActivity {
                 Util.sleep(sleepTime);
 
                 // ブロッキングログインを行う
-                getGoogleApiClientToken().executeGoogleApi(new GoogleApiTask<Object>() {
+                googleApiClient.executeGoogleApi(new GoogleApiTask<Object>() {
                     @Override
                     public Object executeTask(GoogleApiClient client) throws Exception {
                         final BasicSettings basicSettings = FrameworkCentral.getSettings();
@@ -235,7 +257,7 @@ public abstract class GoogleAuthActivity extends BaseActivity {
             // 再度ログイン処理
             retryRequest = MAX_RETRY;
             sleepTime = DEFAULT_SLEEP_TIME;
-            getGoogleApiClientToken().connect();
+            googleApiClient.connect();
             loginOnBackground();
         } else {
             // キャンセルされた場合はログイン状態も解除しなければならない

@@ -12,9 +12,11 @@ import com.eaglesakura.util.StringUtil;
 public class LocalMessageReceiver extends BroadcastReceiver {
     public static final String ACTION_RUNTIMEPERMISSION_UPDATE = "ACTION_RUNTIMEPERMISSION_UPDATE";
 
-    public static final String RUNTIMEPERMISSION_GRANTED_LIST = "RUNTIMEPERMISSION_GRANTED_LIST";
+    public static final String EXTRA_RUNTIMEPERMISSION_GRANTED_LIST = "EXTRA_RUNTIMEPERMISSION_GRANTED_LIST";
 
-    public static final String RUNTIMEPERMISSION_DENIED_LIST = "RUNTIMEPERMISSION_DENIED_LIST";
+    public static final String EXTRA_RUNTIMEPERMISSION_DENIED_LIST = "EXTRA_RUNTIMEPERMISSION_DENIED_LIST";
+
+    public static final String ACTION_GOOGLEPLAY_LOGIN_COMPLETED = "ACTION_GOOGLEPLAY_LOGIN_COMPLETED";
 
     final LocalBroadcastManager localBroadcastManager;
 
@@ -30,8 +32,8 @@ public class LocalMessageReceiver extends BroadcastReceiver {
         }
 
         if (ACTION_RUNTIMEPERMISSION_UPDATE.equals(action)) {
-            String[] granted = intent.getStringArrayExtra(RUNTIMEPERMISSION_GRANTED_LIST);
-            String[] denied = intent.getStringArrayExtra(RUNTIMEPERMISSION_DENIED_LIST);
+            String[] granted = intent.getStringArrayExtra(EXTRA_RUNTIMEPERMISSION_GRANTED_LIST);
+            String[] denied = intent.getStringArrayExtra(EXTRA_RUNTIMEPERMISSION_DENIED_LIST);
 
             if (granted == null) {
                 granted = new String[0];
@@ -49,6 +51,8 @@ public class LocalMessageReceiver extends BroadcastReceiver {
             }
 
             onRuntimePermissionUpdated(granted, denied);
+        } else if (ACTION_GOOGLEPLAY_LOGIN_COMPLETED.equals(action)) {
+            onGooglePlayLoginCompleted();
         }
     }
 
@@ -63,5 +67,9 @@ public class LocalMessageReceiver extends BroadcastReceiver {
     }
 
     protected void onRuntimePermissionUpdated(String[] granted, String[] denied) {
+    }
+
+    protected void onGooglePlayLoginCompleted() {
+
     }
 }

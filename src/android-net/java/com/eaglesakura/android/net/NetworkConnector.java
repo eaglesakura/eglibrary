@@ -17,7 +17,8 @@ import com.eaglesakura.android.dao.net.DbFileBlock;
 import com.eaglesakura.android.dao.net.DbFileBlockDao;
 import com.eaglesakura.android.dao.net.DbNetCache;
 import com.eaglesakura.android.dao.net.DbNetCacheDao;
-import com.eaglesakura.android.db.BaseDatabase;
+import com.eaglesakura.android.db.DaoDatabase;
+import com.eaglesakura.android.graphics.Graphics;
 import com.eaglesakura.thread.MultiRunningTasks;
 import com.eaglesakura.android.util.ImageUtil;
 import com.eaglesakura.util.IOUtil;
@@ -587,7 +588,7 @@ public class NetworkConnector {
 
     private static final int SUPPORTED_DATABASE_VERSION = 3;
 
-    class CacheDatabase extends BaseDatabase<DaoSession> {
+    class CacheDatabase extends DaoDatabase<DaoSession> {
         public CacheDatabase() {
             super(NetworkConnector.this.context, DaoMaster.class);
         }

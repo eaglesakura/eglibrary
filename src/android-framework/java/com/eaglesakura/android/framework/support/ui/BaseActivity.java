@@ -2,8 +2,6 @@ package com.eaglesakura.android.framework.support.ui;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
@@ -25,15 +23,11 @@ import com.eaglesakura.android.thread.async.AsyncTaskResult;
 import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.android.oari.ActivityResult;
 import com.eaglesakura.android.framework.support.ui.message.LocalMessageReceiver;
-import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiClientToken;
-import com.eaglesakura.android.framework.support.ui.playservice.GoogleApiTask;
 import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.android.util.PermissionUtil;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,17 +40,13 @@ import icepick.State;
  */
 public abstract class BaseActivity extends AppCompatActivity implements FragmentChooser.Callback {
 
-    protected static final int REQUEST_GOOGLEPLAYSERVICE_RECOVER = 0x1100;
-
-    protected static final int REQUEST_RUNTIMEPERMISSION_UPDATE = 0x1100 + 1;
+    static final int REQUEST_RUNTIMEPERMISSION_UPDATE = 0x1100 + 1;
 
     protected UserNotificationController userNotificationController = new UserNotificationController(this);
 
-    protected GoogleApiClientToken googleApiClientToken;
+    boolean activityResumed;
 
-    protected boolean activityResumed;
-
-    protected boolean playServiceCheck = false;
+    boolean activityDestroyed;
 
     protected BaseActivity() {
         fragments.setCallback(this);
@@ -115,14 +105,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         }
     }
 
-    public void setGoogleApiClientToken(GoogleApiClientToken googleApiClientToken) {
-        this.googleApiClientToken = googleApiClientToken;
-    }
-
-    public GoogleApiClientToken getGoogleApiClientToken() {
-        return googleApiClientToken;
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -132,21 +114,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
     protected void onResume() {
         super.onResume();
         activityResumed = true;
-
-        if (playServiceCheck) {
-            final int statusCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-            if (statusCode != ConnectionResult.SUCCESS) {
-                Dialog dialog = GooglePlayServicesUtil.getErrorDialog(statusCode, this, REQUEST_GOOGLEPLAYSERVICE_RECOVER, new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        onGooglePlayServiceRecoverCanceled(statusCode);
-                    }
-                });
-                dialog.show();
-            } else {
-                LogUtil.log("Google Play Service OK!");
-            }
-        }
     }
 
     @Override
@@ -161,18 +128,20 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
         return this;
     }
 
-    /**
-     * Google Play Serviceの復旧を取りやめた場合
-     *
-     * @param errorCode
-     */
-    protected void onGooglePlayServiceRecoverCanceled(int errorCode) {
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
         activityResumed = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        activityDestroyed = true;
+    }
+
+    public boolean isActivityDestroyed() {
+        return activityDestroyed;
     }
 
     public boolean isActivityResumed() {
@@ -322,17 +291,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
     }
 
     /**
-     * Google Apiの実行を行う。
-     * <br>
-     * 裏スレッドから呼び出さなくてはならない。
-     *
-     * @param task
-     */
-    public <T> T executeGoogleApi(final GoogleApiTask<T> task) {
-        return googleApiClientToken.executeGoogleApi(task);
-    }
-
-    /**
      * Runtime Permissionの更新を行わせる
      *
      * @param permissions
@@ -364,8 +322,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Fragment
                 }
             }
 
-            intent.putExtra(LocalMessageReceiver.RUNTIMEPERMISSION_GRANTED_LIST, Util.convert(granted, new String[granted.size()]));
-            intent.putExtra(LocalMessageReceiver.RUNTIMEPERMISSION_DENIED_LIST, Util.convert(denied, new String[denied.size()]));
+            intent.putExtra(LocalMessageReceiver.EXTRA_RUNTIMEPERMISSION_GRANTED_LIST, Util.convert(granted, new String[granted.size()]));
+            intent.putExtra(LocalMessageReceiver.EXTRA_RUNTIMEPERMISSION_DENIED_LIST, Util.convert(denied, new String[denied.size()]));
 
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
