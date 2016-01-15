@@ -1,3 +1,15 @@
-[submodule "ndk"]
-	path = ndk
-	url = git@github.com:eaglesakura/eglibrary-cpp.git
+[submodule "simple-utils"]
+	path = simple-utils
+	url = git@github.com:eaglesakura/simple-utils.git
+[submodule "simple-serialize"]
+	path = simple-serialize
+	url = git@github.com:eaglesakura/simple-serialize.git
+[submodule "android-text-kvs"]
+	path = android-text-kvs
+	url = git@github.com:eaglesakura/android-text-kvs.git
+[submodule "android-canvas-graphics"]
+	path = android-canvas-graphics
+	url = git@github.com:eaglesakura/android-canvas-graphics.git
+[submodule "android-simple-utils"]
+	path = android-simple-utils
+	url = git@github.com:eaglesakura/android-simple-utils.git

@@ -14,37 +14,6 @@ apply from: "../path.gradle"
 apply plugin: 'com.eaglesakura.android-support'
 
 /**
- * Key-Value StoreのDAOを出力する
- */
-task generateKeyValueStoreDao(type: com.eaglesakura.gradle.tasks.AndroidDaoGenTask) {
-    outDirectory = file("${EGLIBRARY_PATH_ANDROID_DAO}/dao").absoluteFile;
-    classPackageBase = "com.eaglesakura.android.dao";
-
-    def generateTkvs = {
-        def schema = newSchema(0x01, "tkvs");
-        def entity = schema.addEntity("DbKeyValueData");
-        // uniqueId
-        entity.addStringProperty("key").notNull().unique().primaryKey();
-        // value
-        entity.addStringProperty("value");
-        // 更新日時
-        entity.addDateProperty("date").notNull();
-    }
-    generateTkvs();
-
-    def generateBkvs = {
-        def schema = newSchema(0x01, "bkvs");
-        def entity = schema.addEntity("DbKeyValueData");
-        // uniqueId
-        entity.addStringProperty("key").notNull().unique().primaryKey();
-        // value
-        entity.addByteArrayProperty("value");
-        // 更新日時
-        entity.addDateProperty("date").notNull();
-    }
-    generateBkvs();
-}
-/**
  * ネットワークキャッシュ用のDB
  */
 task generateNetCache(type: com.eaglesakura.gradle.tasks.AndroidDaoGenTask) {
