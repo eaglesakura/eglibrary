@@ -10,6 +10,8 @@ import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.StringUtil;
 
 public class LocalMessageReceiver extends BroadcastReceiver {
+    public static final int REQUEST_RUNTIMEPERMISSION_UPDATE = 0x1100 + 1;
+
     public static final String ACTION_RUNTIMEPERMISSION_UPDATE = "ACTION_RUNTIMEPERMISSION_UPDATE";
 
     public static final String EXTRA_RUNTIMEPERMISSION_GRANTED_LIST = "EXTRA_RUNTIMEPERMISSION_GRANTED_LIST";

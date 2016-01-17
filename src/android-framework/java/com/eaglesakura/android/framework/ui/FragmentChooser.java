@@ -124,7 +124,7 @@ public final class FragmentChooser implements Parcelable {
             fragmentCaches.add(new FragmentCache(refType, tag));
         }
 
-        LogUtil.log("restore fragments(%d)", fragmentCaches.size());
+        LogUtil.log("restore fragmentChooser(%d)", fragmentCaches.size());
     }
 
     /**

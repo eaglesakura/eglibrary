@@ -1,4 +1,4 @@
-package com.eaglesakura.android.framework.ui.playservice;
+package com.eaglesakura.android.playservice;
 
 import android.os.Bundle;
 

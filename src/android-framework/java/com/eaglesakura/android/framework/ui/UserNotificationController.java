@@ -1,23 +1,28 @@
 package com.eaglesakura.android.framework.ui;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.widget.Toast;
+import android.content.Context;
 
-import com.eaglesakura.util.LogUtil;
-import com.eaglesakura.util.StringUtil;
+import com.eaglesakura.android.thread.ui.UIHandler;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Activityが表示されている間に使用される共通UIを定義する
  */
 public class UserNotificationController {
-    protected int progressNum = 0;
-    private ProgressDialog progressDialog = null;
+    protected AtomicInteger progressNum = new AtomicInteger(0);
 
-    protected Activity activity;
+    protected NotificationListener listener;
 
-    public UserNotificationController(Activity activity) {
-        this.activity = activity;
+    protected Context context;
+
+    public UserNotificationController(Context context, NotificationListener listener) {
+        this.listener = listener;
+        this.context = context;
+    }
+
+    public void setListener(NotificationListener listener) {
+        this.listener = listener;
     }
 
     /**
@@ -26,52 +31,7 @@ public class UserNotificationController {
      * @return
      */
     public boolean isProgressing() {
-        return progressNum > 0;
-    }
-
-    /**
-     * 処理中のUIを生成する
-     *
-     * @param message
-     */
-    protected void showProgressInterface(Object sender, String message) {
-        progressDialog = new ProgressDialog(activity);
-        progressDialog.setMessage(message);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-    }
-
-    /**
-     * 処理中のUIを更新する
-     *
-     * @param message
-     */
-    protected void updateProgressInterface(Object sender, String message) {
-        progressDialog.setMessage(message);
-    }
-
-    /**
-     * 処理中のUIを非表示にする
-     */
-    protected void dismissProgressInterface(Object sender) {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-            progressDialog = null;
-        }
-    }
-
-    /**
-     * Toastを表示する
-     *
-     * @param message
-     */
-    public void toast(Object sender, String message) {
-        if (StringUtil.isEmpty(message)) {
-            LogUtil.log("message is empty");
-            return;
-        }
-
-        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+        return progressNum.get() > 0;
     }
 
     /**
@@ -79,24 +39,42 @@ public class UserNotificationController {
      *
      * @param message
      */
-    public void pushProgress(Object sender, String message) {
-        if (progressNum == 0) {
-            showProgressInterface(sender, message);
-        } else {
-            updateProgressInterface(sender, message);
-        }
-        ++progressNum;
+    public void pushProgress(final Object sender, final String message) {
+        final int prg = progressNum.incrementAndGet();
+        UIHandler.postUIorRun(new Runnable() {
+            @Override
+            public void run() {
+                if (prg == 1) {
+                    // 初回起動
+                    listener.onVisibleProgress(UserNotificationController.this, sender, message);
+                } else {
+                    // 二度目以降
+                    listener.onUpdateProgress(UserNotificationController.this, prg, sender, message);
+                }
+            }
+        });
     }
 
     /**
      * 処理を終了する
      */
-    public void popProgress(Object sender) {
-        --progressNum;
-
-        if (progressNum <= 0) {
-            dismissProgressInterface(sender);
-            progressNum = 0;
+    public void popProgress(final Object sender) {
+        int prg = progressNum.decrementAndGet();
+        if (prg == 0) {
+            UIHandler.postUIorRun(new Runnable() {
+                @Override
+                public void run() {
+                    listener.onDismissProgress(UserNotificationController.this, sender);
+                }
+            });
         }
+    }
+
+    public interface NotificationListener {
+        boolean onVisibleProgress(UserNotificationController controller, Object sender, String message);
+
+        boolean onUpdateProgress(UserNotificationController controller, int refs, Object sender, String message);
+
+        boolean onDismissProgress(UserNotificationController controller, Object sender);
     }
 }

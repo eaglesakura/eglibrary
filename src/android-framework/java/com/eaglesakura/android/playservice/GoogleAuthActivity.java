@@ -1,5 +1,6 @@
-package com.eaglesakura.android.framework.ui.playservice;
+package com.eaglesakura.android.playservice;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -126,6 +127,7 @@ public abstract class GoogleAuthActivity extends BaseActivity implements GoogleA
     /**
      * バックグラウンドでログインを行う
      */
+    @SuppressLint("all")
     protected void loginOnBackground() {
         runBackground(new Runnable() {
             @Override
@@ -197,7 +199,7 @@ public abstract class GoogleAuthActivity extends BaseActivity implements GoogleA
 
                 try {
                     LogUtil.log("Attempting to resolve failed connection");
-                    connectionResult.startResolutionForResult(self(), REQUEST_GOOGLE_CLIENT_AUTH);
+                    connectionResult.startResolutionForResult(GoogleAuthActivity.this, REQUEST_GOOGLE_CLIENT_AUTH);
                 } catch (IntentSender.SendIntentException e) {
                     LogUtil.log("Exception while starting resolution activity", e);
                 }
@@ -219,7 +221,7 @@ public abstract class GoogleAuthActivity extends BaseActivity implements GoogleA
         runUI(new Runnable() {
             @Override
             public void run() {
-                MaterialAlertDialog dialog = new MaterialAlertDialog(self());
+                MaterialAlertDialog dialog = new MaterialAlertDialog(GoogleAuthActivity.this);
                 dialog.setTitle(R.string.eglibrary_GoogleApi_Error_Title);
                 dialog.setMessage(R.string.eglibrary_GoogleApi_Error_Message);
                 dialog.setPositiveButton(R.string.eglibrary_GoogleApi_Error_Retry, new DialogInterface.OnClickListener() {

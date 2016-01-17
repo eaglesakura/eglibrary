@@ -15,8 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.eaglesakura.android.framework.FrameworkCentral;
+import com.eaglesakura.android.framework.ui.state.IStateful;
+import com.eaglesakura.android.framework.util.AppSupportUtil;
 import com.eaglesakura.android.oari.ActivityResult;
-import com.eaglesakura.android.framework.ui.message.LocalMessageReceiver;
 import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.android.util.PermissionUtil;
@@ -33,20 +34,16 @@ import icepick.State;
  * <br>
  * ただし、複数のonActivityResultがハンドリングされる恐れが有るため、RequestCodeの重複には十分に注意すること
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements IStateful {
 
-    public static final int BACKSTACK_NONE = 0xFEFEFEFE;
-
-    boolean destroyed = false;
+    static final int BACKSTACK_NONE = 0xFEFEFEFE;
 
     private int backstackIndex = BACKSTACK_NONE;
-
-    private LocalMessageReceiver localMessageReceiver;
 
     @State
     boolean initializedViews = false;
 
-    boolean fragmentResumed = false;
+    IStateful.LifecycleState state = LifecycleState.NewObject;
 
     private boolean injectionViews = false;
 
@@ -55,6 +52,11 @@ public abstract class BaseFragment extends Fragment {
     public void requestInjection(@LayoutRes int layoutId) {
         injectionLayoutId = layoutId;
         injectionViews = (injectionLayoutId != 0);
+    }
+
+    @Override
+    public LifecycleState getCurrentState() {
+        return state;
     }
 
     @Nullable
@@ -107,18 +109,21 @@ public abstract class BaseFragment extends Fragment {
     }
 
     /**
-     * 初回のみ呼び出される
+     * 初回のView構築
      */
     protected void onInitializeViews() {
     }
 
     /**
-     * レストアを行う
+     * 二度目以降のView構築
      */
     protected void onRestoreViews() {
 
     }
 
+    /**
+     * View構築が完了した
+     */
     protected void onAfterViews() {
         if (!initializedViews) {
             onInitializeViews();
@@ -126,18 +131,10 @@ public abstract class BaseFragment extends Fragment {
         } else {
             onRestoreViews();
         }
-
-        if (localMessageReceiver == null) {
-            localMessageReceiver = newLocalMessageReceiver();
-        }
-    }
-
-    protected LocalMessageReceiver newLocalMessageReceiver() {
-        return null;
     }
 
     public boolean isFragmentResumed() {
-        return fragmentResumed;
+        return state == LifecycleState.OnResumed;
     }
 
     @Override
@@ -152,95 +149,25 @@ public abstract class BaseFragment extends Fragment {
         if (savedInstanceState != null) {
             Icepick.restoreInstanceState(this, savedInstanceState);
         }
+        state = LifecycleState.OnCreated;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
-        if (localMessageReceiver != null) {
-            localMessageReceiver.connect();
-        }
+        state = LifecycleState.OnStarted;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        fragmentResumed = true;
+        state = LifecycleState.OnResumed;
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        fragmentResumed = false;
-    }
-
-    protected BaseFragment self() {
-        return this;
-    }
-
-    protected void toast(final String fmt, final Object... args) {
-        UIHandler.postUIorRun(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ((BaseActivity) getActivity()).getUserNotificationController().toast(self(), String.format(fmt, args));
-                } catch (Exception e) {
-                }
-            }
-        });
-
-    }
-
-    /**
-     * toastを表示する
-     *
-     * @param resId
-     */
-    protected void toast(int resId) {
-        toast(FrameworkCentral.getApplication().getString(resId));
-    }
-
-    /**
-     * Progress Dialogを表示する
-     *
-     * @param stringId
-     */
-    protected void pushProgress(int stringId) {
-        pushProgress(getString(stringId));
-    }
-
-    /**
-     * progress dialogを表示する
-     *
-     * @param message
-     */
-    protected void pushProgress(final String message) {
-        runUI(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ((BaseActivity) getActivity()).getUserNotificationController().pushProgress(self(), message);
-                } catch (Exception e) {
-                }
-            }
-        });
-    }
-
-    /**
-     * progress dialogを一段階引き下げる
-     */
-    protected void popProgress() {
-        runUI(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ((BaseActivity) getActivity()).getUserNotificationController().popProgress(self());
-                } catch (Exception e) {
-
-                }
-            }
-        });
+        state = LifecycleState.OnPaused;
     }
 
     /**
@@ -248,7 +175,7 @@ public abstract class BaseFragment extends Fragment {
      *
      * @param backstackIndex
      */
-    public void setBackstackIndex(int backstackIndex) {
+    void setBackstackIndex(int backstackIndex) {
         this.backstackIndex = backstackIndex;
     }
 
@@ -257,7 +184,7 @@ public abstract class BaseFragment extends Fragment {
      *
      * @return
      */
-    public boolean hasBackstackIndex() {
+    boolean hasBackstackIndex() {
         return backstackIndex != BACKSTACK_NONE;
     }
 
@@ -291,7 +218,7 @@ public abstract class BaseFragment extends Fragment {
                 if (withBackStack && hasBackstackIndex()) {
                     getFragmentManager().popBackStack(backstackIndex, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 } else {
-                    getFragmentManager().beginTransaction().remove(self()).commit();
+                    getFragmentManager().beginTransaction().remove(BaseFragment.this).commit();
                 }
             }
         });
@@ -300,25 +227,22 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        this.destroyed = true;
-        if (localMessageReceiver != null) {
-            localMessageReceiver.disconnect();
-        }
+        state = LifecycleState.OnDestroyed;
     }
 
-    public boolean isDestroyed() {
-        return destroyed;
+    public boolean isFragmentDestroyed() {
+        return state == LifecycleState.OnDestroyed;
     }
 
     public boolean isDestroyedView() {
-        return isDestroyed() || getActivity() == null || getView() == null;
+        return isFragmentDestroyed() || getActivity() == null || getView() == null;
     }
 
     protected boolean hasChildBackStack() {
         return getChildFragmentManager().getBackStackEntryCount() > 0;
     }
 
-    final public String createSimpleTag() {
+    public final String createSimpleTag() {
         return ((Object) this).getClass().getSimpleName();
     }
 
@@ -358,12 +282,20 @@ public abstract class BaseFragment extends Fragment {
      * @return パーミッション取得を開始した場合はtrue
      */
     public boolean requestRuntimePermission(String[] permissions) {
-        Activity activity = getActivity();
-        if (activity instanceof BaseActivity) {
-            return ((BaseActivity) activity).requestRuntimePermissions(permissions);
-        } else {
-            return false;
-        }
+        return AppSupportUtil.requestRuntimePermissions(getActivity(), permissions);
+    }
+
+    /**
+     * Runtime Permissionのブロードキャストを行わせる
+     *
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        AppSupportUtil.onRequestPermissionsResult(getActivity(), requestCode, permissions, grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     public boolean requestRuntimePermission(PermissionUtil.PermissionType type) {
