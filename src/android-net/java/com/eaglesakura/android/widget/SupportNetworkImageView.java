@@ -13,10 +13,9 @@ import com.eaglesakura.android.net.NetworkConnector;
 import com.eaglesakura.android.net.NetworkResult;
 import com.eaglesakura.android.net.cache.CacheController;
 import com.eaglesakura.android.net.cache.FileCacheController;
-import com.eaglesakura.android.net.request.ConnectRequest;
 import com.eaglesakura.android.net.parser.RequestParser;
+import com.eaglesakura.android.net.request.ConnectRequest;
 import com.eaglesakura.android.net.request.SimpleHttpRequest;
-import com.eaglesakura.android.net_legacy.LegacyNetworkConnector;
 import com.eaglesakura.android.thread.async.AsyncTaskResult;
 import com.eaglesakura.util.LogUtil;
 
