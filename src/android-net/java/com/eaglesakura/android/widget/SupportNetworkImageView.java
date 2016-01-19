@@ -8,25 +8,29 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-import com.eaglesakura.android.net_legacy.LegacyNetworkConnector;
-import com.eaglesakura.android.net_legacy.LegacyNetworkResult;
 import com.eaglesakura.android.R;
-import com.eaglesakura.util.EncodeUtil;
+import com.eaglesakura.android.net.NetworkConnector;
+import com.eaglesakura.android.net.NetworkResult;
+import com.eaglesakura.android.net.cache.CacheController;
+import com.eaglesakura.android.net.cache.FileCacheController;
+import com.eaglesakura.android.net.request.ConnectRequest;
+import com.eaglesakura.android.net.parser.RequestParser;
+import com.eaglesakura.android.net.request.SimpleHttpRequest;
+import com.eaglesakura.android.net_legacy.LegacyNetworkConnector;
+import com.eaglesakura.android.thread.async.AsyncTaskResult;
 import com.eaglesakura.util.LogUtil;
 
 import java.io.File;
 
 /**
  * Support Network ImageView
- * <br>
- * Volleyとキャッシュ領域が別にあるため、画像キャッシュで不必要なキャッシュ領域を食わずに済む。
  */
 public class SupportNetworkImageView extends ImageView {
     protected String url;
 
-    protected LegacyNetworkConnector connector;
+    protected NetworkConnector connector;
 
-    protected LegacyNetworkResult<Bitmap> imageResult;
+    protected NetworkResult<Bitmap> imageResult;
 
     /**
      * ダウンロード失敗時に表示する画像
@@ -39,8 +43,6 @@ public class SupportNetworkImageView extends ImageView {
     protected long cacheTimeoutMs;
 
     protected OnImageListener onImageListener;
-
-    private File imageFile;
 
     public SupportNetworkImageView(Context context) {
         super(context);
@@ -68,7 +70,14 @@ public class SupportNetworkImageView extends ImageView {
             return;
         }
 
-        connector = LegacyNetworkConnector.getDefaultConnector();
+        connector = NetworkConnector.newDefaultConnector(context, 2);
+        try {
+            FileCacheController ctrl = new FileCacheController(new File(getContext().getCacheDir(), "net-img"));
+            ctrl.setExt("img");
+            connector.setCacheController(ctrl);
+        } catch (Exception e) {
+            connector.setCacheController(null);
+        }
 
         if (attrs != null) {
             LogUtil.log("has attribute");
@@ -79,18 +88,18 @@ public class SupportNetworkImageView extends ImageView {
             int cacheTimeDay = typedArray.getInteger(R.styleable.SupportNetworkImageView_cacheTimeDay, 0);
 
             cacheTimeoutMs += (1000 * cacheTimeSec);
-            cacheTimeoutMs += LegacyNetworkConnector.CACHE_ONE_MINUTE * cacheTimeMin;
-            cacheTimeoutMs += LegacyNetworkConnector.CACHE_ONE_HOUR * cacheTimeHour;
-            cacheTimeoutMs += LegacyNetworkConnector.CACHE_ONE_DAY * cacheTimeDay;
+            cacheTimeoutMs += CacheController.CACHE_ONE_MINUTE * cacheTimeMin;
+            cacheTimeoutMs += CacheController.CACHE_ONE_HOUR * cacheTimeHour;
+            cacheTimeoutMs += CacheController.CACHE_ONE_DAY * cacheTimeDay;
 
             errorImage = typedArray.getDrawable(R.styleable.SupportNetworkImageView_errorImage);
         }
 
         if (cacheTimeoutMs == 0) {
-            cacheTimeoutMs = LegacyNetworkConnector.CACHE_ONE_HOUR;
+            cacheTimeoutMs = CacheController.CACHE_ONE_HOUR;
         }
 
-        LogUtil.log("Cache time(%.2f hour) ErrorImage (%s)", (double) cacheTimeoutMs / (double) LegacyNetworkConnector.CACHE_ONE_HOUR, "" + errorImage);
+        LogUtil.log("Cache time(%.2f hour) ErrorImage (%s)", (double) cacheTimeoutMs / (double) CacheController.CACHE_ONE_HOUR, "" + errorImage);
     }
 
     /**
@@ -117,31 +126,42 @@ public class SupportNetworkImageView extends ImageView {
      * @param getUrl
      * @param parser
      */
-    public void setImageFromNetwork(final String getUrl, LegacyNetworkConnector.RequestParser<Bitmap> parser) {
+    public void setImageFromNetwork(final String getUrl, RequestParser<Bitmap> parser) {
         this.url = getUrl;
-        this.imageFile = new File(getContext().getCacheDir(), "net-img/" + EncodeUtil.genSHA1(getUrl.getBytes()) + ".img");
-        imageFile.getParentFile().mkdirs();
-        imageResult = connector.get(getUrl, parser, cacheTimeoutMs, imageFile); // large file support
-        imageResult.setListener(new LegacyNetworkResult.Listener<Bitmap>() {
+
+        SimpleHttpRequest request = new SimpleHttpRequest(ConnectRequest.Method.GET);
+        request.setUrl(getUrl, null);
+        request.getCachePolicy().setCacheLimitTimeMs(cacheTimeoutMs);
+        if (imageResult != null) {
+            imageResult.setListener(null);
+        }
+        imageResult = connector.connect(request, parser);
+        imageResult.setListener(new AsyncTaskResult.Listener<Bitmap>() {
             @Override
-            public void onDataReceived(LegacyNetworkResult<Bitmap> sender) {
+            public void onTaskCompleted(AsyncTaskResult<Bitmap> task, Bitmap result) {
                 if (getUrl.equals(url)) {
                     try {
-                        onReceivedImage(sender.getReceivedData());
+                        onReceivedImage(result);
                     } catch (Exception e) {
                         onImageLoadError();
                     }
                 }
-                imageResult = null;
             }
 
             @Override
-            public void onError(LegacyNetworkResult<Bitmap> sender) {
-                imageResult = null;
+            public void onTaskCanceled(AsyncTaskResult<Bitmap> task) {
                 onImageLoadError();
             }
 
+            @Override
+            public void onTaskFailed(AsyncTaskResult<Bitmap> task, Exception error) {
+                onImageLoadError();
+            }
 
+            @Override
+            public void onTaskFinalize(AsyncTaskResult<Bitmap> task) {
+                imageResult = null;
+            }
         });
     }
 

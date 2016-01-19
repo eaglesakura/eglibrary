@@ -3,10 +3,10 @@ package com.eaglesakura.android.net;
 import android.content.Context;
 
 import com.eaglesakura.android.net.cache.CacheController;
-import com.eaglesakura.android.net.cache.RESTfulCacheController;
+import com.eaglesakura.android.net.cache.TextCacheController;
 import com.eaglesakura.android.net.internal.GoogleHttpClientConnectImpl;
-import com.eaglesakura.android.net.request.HttpConnectRequest;
-import com.eaglesakura.android.net.request.RequestParser;
+import com.eaglesakura.android.net.request.ConnectRequest;
+import com.eaglesakura.android.net.parser.RequestParser;
 import com.eaglesakura.android.net.stream.ByteArrayStreamController;
 import com.eaglesakura.android.net.stream.StreamController;
 import com.eaglesakura.android.thread.async.AsyncTaskController;
@@ -63,7 +63,7 @@ public class NetworkConnector {
      * @param <T>
      * @return
      */
-    public <T> NetworkResult<T> connect(HttpConnectRequest request, RequestParser<T> parser) {
+    public <T> NetworkResult<T> connect(ConnectRequest request, RequestParser<T> parser) {
         GoogleHttpClientConnectImpl connect = new GoogleHttpClientConnectImpl(this, request, parser);
         return new NetworkResult<>(connect, taskController.pushBack(connect));
     }
@@ -89,7 +89,7 @@ public class NetworkConnector {
     public static NetworkConnector newDefaultConnector(Context context, int maxThreads) {
         NetworkConnector result = new NetworkConnector(context);
         result.setStreamController(new ByteArrayStreamController());
-        result.setCacheController(new RESTfulCacheController(context));
+        result.setCacheController(new TextCacheController(context));
         result.setThreadNum(maxThreads);
         return result;
     }

@@ -1,6 +1,6 @@
 package com.eaglesakura.android.net.cache;
 
-import com.eaglesakura.android.net.request.HttpConnectRequest;
+import com.eaglesakura.android.net.request.ConnectRequest;
 
 /**
  * キャッシュ制御用の
@@ -57,7 +57,7 @@ public class CachePolicy {
      * @param request
      * @return
      */
-    public String getCacheKey(HttpConnectRequest request) {
+    public String getCacheKey(ConnectRequest request) {
         return String.format("%s/%s", request.getMethod().toString(), request.getUrl());
     }
 }

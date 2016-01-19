@@ -4,8 +4,8 @@ import com.eaglesakura.android.net.Connection;
 import com.eaglesakura.android.net.NetworkConnector;
 import com.eaglesakura.android.net.RetryPolicy;
 import com.eaglesakura.android.net.cache.CacheController;
-import com.eaglesakura.android.net.request.HttpConnectRequest;
-import com.eaglesakura.android.net.request.RequestParser;
+import com.eaglesakura.android.net.request.ConnectRequest;
+import com.eaglesakura.android.net.parser.RequestParser;
 import com.eaglesakura.android.thread.async.AsyncTaskResult;
 import com.eaglesakura.android.thread.async.error.TaskCanceledException;
 import com.eaglesakura.android.thread.async.error.TaskException;
@@ -28,7 +28,7 @@ public abstract class BaseHttpConnection<T> extends Connection<T> {
 
     protected final RequestParser<T> parser;
 
-    protected final HttpConnectRequest request;
+    protected final ConnectRequest request;
 
     protected final NetworkConnector connector;
 
@@ -42,14 +42,14 @@ public abstract class BaseHttpConnection<T> extends Connection<T> {
      */
     protected String netDigest;
 
-    public BaseHttpConnection(NetworkConnector connector, HttpConnectRequest request, RequestParser<T> parser) {
+    public BaseHttpConnection(NetworkConnector connector, ConnectRequest request, RequestParser<T> parser) {
         this.parser = parser;
         this.request = request;
         this.connector = connector;
     }
 
     @Override
-    public HttpConnectRequest getRequest() {
+    public ConnectRequest getRequest() {
         return request;
     }
 
@@ -122,7 +122,7 @@ public abstract class BaseHttpConnection<T> extends Connection<T> {
      */
     protected T parseFromNet(AsyncTaskResult<T> taskResult, InputStream stream, MessageDigest digest) throws Exception {
         DigestInputStream dis = new DigestInputStream(stream, digest);
-        T parsed = parser.parse(this, taskResult, dis);
+        T parsed = parser.parse(this, taskResult, new CancelableInputStream(taskResult, dis));
         if (parsed != null) {
             // パースできたので、ダイジェストを保存する
             byte[] digestBytes = digest.digest();

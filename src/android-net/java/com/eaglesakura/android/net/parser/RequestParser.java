@@ -1,4 +1,4 @@
-package com.eaglesakura.android.net.request;
+package com.eaglesakura.android.net.parser;
 
 
 import com.eaglesakura.android.net.Connection;

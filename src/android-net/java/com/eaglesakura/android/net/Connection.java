@@ -1,7 +1,7 @@
 package com.eaglesakura.android.net;
 
 import com.eaglesakura.android.net.cache.CacheController;
-import com.eaglesakura.android.net.request.HttpConnectRequest;
+import com.eaglesakura.android.net.request.ConnectRequest;
 import com.eaglesakura.android.thread.async.IAsyncTask;
 import com.eaglesakura.util.StringUtil;
 
@@ -32,7 +32,7 @@ public abstract class Connection<T> implements IAsyncTask<T> {
      *
      * @return
      */
-    public abstract HttpConnectRequest getRequest();
+    public abstract ConnectRequest getRequest();
 
     /**
      * キャッシュを取得済みであればtrue

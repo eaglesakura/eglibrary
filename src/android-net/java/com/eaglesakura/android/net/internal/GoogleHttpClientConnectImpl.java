@@ -3,8 +3,8 @@ package com.eaglesakura.android.net.internal;
 import com.eaglesakura.android.net.HttpHeader;
 import com.eaglesakura.android.net.NetworkConnector;
 import com.eaglesakura.android.net.request.ConnectContent;
-import com.eaglesakura.android.net.request.HttpConnectRequest;
-import com.eaglesakura.android.net.request.RequestParser;
+import com.eaglesakura.android.net.request.ConnectRequest;
+import com.eaglesakura.android.net.parser.RequestParser;
 import com.eaglesakura.android.net.stream.StreamController;
 import com.eaglesakura.android.thread.async.AsyncTaskResult;
 import com.eaglesakura.android.thread.async.error.TaskCanceledException;
@@ -32,7 +32,7 @@ import java.util.Map;
 public class GoogleHttpClientConnectImpl<T> extends BaseHttpConnection<T> {
     static HttpRequestFactory requestFactory = AndroidHttp.newCompatibleTransport().createRequestFactory();
 
-    public GoogleHttpClientConnectImpl(NetworkConnector connector, HttpConnectRequest request, RequestParser<T> parser) {
+    public GoogleHttpClientConnectImpl(NetworkConnector connector, ConnectRequest request, RequestParser<T> parser) {
         super(connector, request, parser);
     }
 

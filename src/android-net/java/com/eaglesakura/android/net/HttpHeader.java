@@ -55,7 +55,7 @@ public class HttpHeader {
             }
         } catch (Exception e) {
         }
-        return 0;
+        return -1;
     }
 
     /**

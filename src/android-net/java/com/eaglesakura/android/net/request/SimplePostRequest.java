@@ -9,7 +9,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class SimplePostRequest extends HttpConnectRequest {
+public class SimplePostRequest extends ConnectRequest {
     private CachePolicy cachePolicy = new CachePolicy();
 
     private RetryPolicy retryPolicy = new RetryPolicy(10);

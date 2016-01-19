@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class SimpleHttpRequest extends HttpConnectRequest {
+public class SimpleHttpRequest extends ConnectRequest {
     private Map<String, String> params = new HashMap<>();
 
     private String encoding = "UTF-8";

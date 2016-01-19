@@ -4,7 +4,7 @@ import com.eaglesakura.android.net.HttpHeader;
 import com.eaglesakura.android.net.RetryPolicy;
 import com.eaglesakura.android.net.cache.CachePolicy;
 
-public abstract class HttpConnectRequest {
+public abstract class ConnectRequest {
     public enum Method {
         GET,
         POST,
@@ -29,7 +29,7 @@ public abstract class HttpConnectRequest {
      */
     private long connectTimeoutMs = 1000 * 10;
 
-    protected HttpConnectRequest(Method method) {
+    protected ConnectRequest(Method method) {
         this.method = method;
     }
 
