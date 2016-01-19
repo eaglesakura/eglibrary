@@ -13,3 +13,6 @@
 [submodule "android-simple-utils"]
 	path = android-simple-utils
 	url = git@github.com:eaglesakura/android-simple-utils.git
+[submodule "android-thread"]
+	path = android-thread
+	url = git@github.com:eaglesakura/android-thread.git

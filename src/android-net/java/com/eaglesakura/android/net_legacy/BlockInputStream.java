@@ -1,4 +1,4 @@
-package com.eaglesakura.android.net;
+package com.eaglesakura.android.net_legacy;
 
 import com.eaglesakura.android.dao.net.DbFileBlock;
 
@@ -11,7 +11,7 @@ import de.greenrobot.dao.query.CloseableListIterator;
  * DBからデータを読み出す
  */
 public class BlockInputStream extends InputStream {
-    NetworkConnector.CacheDatabase database;
+    LegacyNetworkConnector.CacheDatabase database;
 
     CloseableListIterator<DbFileBlock> blocks;
 
@@ -25,7 +25,7 @@ public class BlockInputStream extends InputStream {
      */
     int blockCapacity;
 
-    public BlockInputStream(NetworkConnector.CacheDatabase database, String url) throws IOException {
+    public BlockInputStream(LegacyNetworkConnector.CacheDatabase database, String url) throws IOException {
         this.database = database;
         database.open();
         blocks = database.listFileBlocks(url);

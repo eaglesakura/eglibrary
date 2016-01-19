@@ -1,4 +1,4 @@
-package com.eaglesakura.android.net;
+package com.eaglesakura.android.net_legacy;
 
 import com.eaglesakura.android.dao.net.DbFileBlock;
 
@@ -10,13 +10,13 @@ public class BlockOutputStream extends OutputStream {
 
     int currentBlockIndex = 0;
 
-    byte[] blockBuffer = new byte[NetworkConnector.BLOCK_SIZE];
+    byte[] blockBuffer = new byte[LegacyNetworkConnector.BLOCK_SIZE];
 
-    int bufferCapacity = NetworkConnector.BLOCK_SIZE;
+    int bufferCapacity = LegacyNetworkConnector.BLOCK_SIZE;
 
-    NetworkConnector.CacheDatabase database;
+    LegacyNetworkConnector.CacheDatabase database;
 
-    public BlockOutputStream(NetworkConnector.CacheDatabase database, String url, int startIndex) {
+    public BlockOutputStream(LegacyNetworkConnector.CacheDatabase database, String url, int startIndex) {
         this.database = database;
         this.currentBlockIndex = startIndex;
         this.url = url;

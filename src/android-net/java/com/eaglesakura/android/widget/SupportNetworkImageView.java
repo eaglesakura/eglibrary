@@ -8,8 +8,8 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-import com.eaglesakura.android.net.NetworkConnector;
-import com.eaglesakura.android.net.NetworkResult;
+import com.eaglesakura.android.net_legacy.LegacyNetworkConnector;
+import com.eaglesakura.android.net_legacy.LegacyNetworkResult;
 import com.eaglesakura.android.R;
 import com.eaglesakura.util.EncodeUtil;
 import com.eaglesakura.util.LogUtil;
@@ -24,9 +24,9 @@ import java.io.File;
 public class SupportNetworkImageView extends ImageView {
     protected String url;
 
-    protected NetworkConnector connector;
+    protected LegacyNetworkConnector connector;
 
-    protected NetworkResult<Bitmap> imageResult;
+    protected LegacyNetworkResult<Bitmap> imageResult;
 
     /**
      * ダウンロード失敗時に表示する画像
@@ -68,7 +68,7 @@ public class SupportNetworkImageView extends ImageView {
             return;
         }
 
-        connector = NetworkConnector.getDefaultConnector();
+        connector = LegacyNetworkConnector.getDefaultConnector();
 
         if (attrs != null) {
             LogUtil.log("has attribute");
@@ -79,18 +79,18 @@ public class SupportNetworkImageView extends ImageView {
             int cacheTimeDay = typedArray.getInteger(R.styleable.SupportNetworkImageView_cacheTimeDay, 0);
 
             cacheTimeoutMs += (1000 * cacheTimeSec);
-            cacheTimeoutMs += NetworkConnector.CACHE_ONE_MINUTE * cacheTimeMin;
-            cacheTimeoutMs += NetworkConnector.CACHE_ONE_HOUR * cacheTimeHour;
-            cacheTimeoutMs += NetworkConnector.CACHE_ONE_DAY * cacheTimeDay;
+            cacheTimeoutMs += LegacyNetworkConnector.CACHE_ONE_MINUTE * cacheTimeMin;
+            cacheTimeoutMs += LegacyNetworkConnector.CACHE_ONE_HOUR * cacheTimeHour;
+            cacheTimeoutMs += LegacyNetworkConnector.CACHE_ONE_DAY * cacheTimeDay;
 
             errorImage = typedArray.getDrawable(R.styleable.SupportNetworkImageView_errorImage);
         }
 
         if (cacheTimeoutMs == 0) {
-            cacheTimeoutMs = NetworkConnector.CACHE_ONE_HOUR;
+            cacheTimeoutMs = LegacyNetworkConnector.CACHE_ONE_HOUR;
         }
 
-        LogUtil.log("Cache time(%.2f hour) ErrorImage (%s)", (double) cacheTimeoutMs / (double) NetworkConnector.CACHE_ONE_HOUR, "" + errorImage);
+        LogUtil.log("Cache time(%.2f hour) ErrorImage (%s)", (double) cacheTimeoutMs / (double) LegacyNetworkConnector.CACHE_ONE_HOUR, "" + errorImage);
     }
 
     /**
@@ -117,14 +117,14 @@ public class SupportNetworkImageView extends ImageView {
      * @param getUrl
      * @param parser
      */
-    public void setImageFromNetwork(final String getUrl, NetworkConnector.RequestParser<Bitmap> parser) {
+    public void setImageFromNetwork(final String getUrl, LegacyNetworkConnector.RequestParser<Bitmap> parser) {
         this.url = getUrl;
         this.imageFile = new File(getContext().getCacheDir(), "net-img/" + EncodeUtil.genSHA1(getUrl.getBytes()) + ".img");
         imageFile.getParentFile().mkdirs();
         imageResult = connector.get(getUrl, parser, cacheTimeoutMs, imageFile); // large file support
-        imageResult.setListener(new NetworkResult.Listener<Bitmap>() {
+        imageResult.setListener(new LegacyNetworkResult.Listener<Bitmap>() {
             @Override
-            public void onDataReceived(NetworkResult<Bitmap> sender) {
+            public void onDataReceived(LegacyNetworkResult<Bitmap> sender) {
                 if (getUrl.equals(url)) {
                     try {
                         onReceivedImage(sender.getReceivedData());
@@ -136,7 +136,7 @@ public class SupportNetworkImageView extends ImageView {
             }
 
             @Override
-            public void onError(NetworkResult<Bitmap> sender) {
+            public void onError(LegacyNetworkResult<Bitmap> sender) {
                 imageResult = null;
                 onImageLoadError();
             }

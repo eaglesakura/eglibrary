@@ -1,4 +1,4 @@
-package com.eaglesakura.android.net;
+package com.eaglesakura.android.net_legacy;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class NetworkResultGroup {
 
-    List<NetworkResult<?>> networkResults = new ArrayList<>();
+    List<LegacyNetworkResult<?>> networkResults = new ArrayList<>();
 
     /**
      * リクエストを追加する
@@ -17,7 +17,7 @@ public class NetworkResultGroup {
      * @param networkResult
      * @return
      */
-    public <T> NetworkResult<T> add(NetworkResult<T> networkResult) {
+    public <T> LegacyNetworkResult<T> add(LegacyNetworkResult<T> networkResult) {
         networkResults.add(networkResult);
         return networkResult;
     }
@@ -30,7 +30,7 @@ public class NetworkResultGroup {
      */
     public boolean awaitAll() throws IOException {
         int modifiedCount = 0;
-        for (NetworkResult<?> result : networkResults) {
+        for (LegacyNetworkResult<?> result : networkResults) {
             result.await();
             if (result.isDataModified()) {
                 ++modifiedCount;
@@ -57,7 +57,7 @@ public class NetworkResultGroup {
     public int getDataModifiedCount() {
 
         int modifiedCount = 0;
-        for (NetworkResult<?> result : networkResults) {
+        for (LegacyNetworkResult<?> result : networkResults) {
             if (result.isDataModified()) {
                 ++modifiedCount;
             }

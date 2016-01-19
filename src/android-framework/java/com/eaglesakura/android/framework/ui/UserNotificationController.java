@@ -41,6 +41,9 @@ public class UserNotificationController {
      */
     public void pushProgress(final Object sender, final String message) {
         final int prg = progressNum.incrementAndGet();
+        if (listener == null) {
+            return;
+        }
         UIHandler.postUIorRun(new Runnable() {
             @Override
             public void run() {
@@ -60,7 +63,7 @@ public class UserNotificationController {
      */
     public void popProgress(final Object sender) {
         int prg = progressNum.decrementAndGet();
-        if (prg == 0) {
+        if (listener != null && prg == 0) {
             UIHandler.postUIorRun(new Runnable() {
                 @Override
                 public void run() {

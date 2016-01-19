@@ -1,4 +1,4 @@
-package com.eaglesakura.android.net;
+package com.eaglesakura.android.net_legacy;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -21,10 +21,10 @@ import java.util.Map;
  * <BR>
  * コードが大きくなったので、NetworkConnectorから分離
  */
-public class VolleyNetworkResult<T> extends NetworkResult<T> {
+public class VolleyNetworkResult<T> extends LegacyNetworkResult<T> {
     final String httpMethod;
 
-    final NetworkConnector connector;
+    final LegacyNetworkConnector connector;
 
     final long cacheTimeoutMs;
 
@@ -34,7 +34,7 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
 
     final byte[] postBuffer;
 
-    final NetworkConnector.RequestParser<T> parser;
+    final LegacyNetworkConnector.RequestParser<T> parser;
 
     final int volleyMethod;
 
@@ -44,7 +44,7 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
 
     Map<String, String> receivedHeaders = new HashMap<>();
 
-    public VolleyNetworkResult(String url, NetworkConnector connector, NetworkConnector.RequestParser<T> parser, int volleyMethod, NetworkConnector.IConnectParams params) {
+    public VolleyNetworkResult(String url, LegacyNetworkConnector connector, LegacyNetworkConnector.RequestParser<T> parser, int volleyMethod, LegacyNetworkConnector.IConnectParams params) {
         super(url);
 
         this.connector = connector;
@@ -73,7 +73,7 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
 
     Request<T> volleyRequest;
 
-    NetworkResult<T> self() {
+    LegacyNetworkResult<T> self() {
         return this;
     }
 
@@ -131,7 +131,7 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
         volleyRequest = new Request<T>(volleyMethod, url, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                NetworkConnector.log(volleyError);
+                LegacyNetworkConnector.log(volleyError);
                 onError(volleyError);
             }
         }) {
@@ -165,7 +165,7 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
 
             @Override
             protected Response<T> parseNetworkResponse(NetworkResponse networkResponse) {
-                String errorMessage = "parse error";
+                String errorMessage = "parseFromCache error";
                 try {
                     connectEndTime = System.currentTimeMillis();
                     LogUtil.log("%s volley received(%s) %.1f KB",
@@ -188,7 +188,7 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
                     }
                     downloadedDataSize = networkResponse.data.length;
 
-                    errorMessage = "parse failed :: " + parser;
+                    errorMessage = "parseFromCache failed :: " + parser;
                     T resultValue = parser.parse(self(), new ByteArrayInputStream(networkResponse.data));
 
                     errorMessage = "Resp error";
@@ -212,7 +212,7 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
             }
         };
         volleyRequest.setRetryPolicy(connector.factory.newRetryPolycy(url, httpMethod));
-        NetworkConnector.requests.add(volleyRequest);
+        LegacyNetworkConnector.requests.add(volleyRequest);
     }
 
     @Override
@@ -257,10 +257,10 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
             return;
         }
 
-        NetworkConnector.cacheWorkTask.pushFront(new Runnable() {
+        LegacyNetworkConnector.cacheWorkTask.pushFront(new Runnable() {
             @Override
             public void run() {
-                NetworkConnector.CacheDatabase db = connector.getCacheDatabase();
+                LegacyNetworkConnector.CacheDatabase db = connector.getCacheDatabase();
                 // ブロックとして書き出す
                 BlockOutputStream os = null;
                 try {
@@ -283,8 +283,8 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
                 cache.setUrl(url);
                 cache.setBodySize(body.length);
                 cache.setDownloadedSize(body.length);
-                cache.setBlockSize(NetworkConnector.BLOCK_SIZE);
-                cache.setCacheType(NetworkConnector.CACHETYPE_DB);
+                cache.setBlockSize(LegacyNetworkConnector.BLOCK_SIZE);
+                cache.setCacheType(LegacyNetworkConnector.CACHETYPE_DB);
                 cache.setMethod(method.toUpperCase());
                 cache.setCacheTime(new Date());
                 cache.setCacheLimit(new Date(System.currentTimeMillis() + timeoutMs));
@@ -302,7 +302,7 @@ public class VolleyNetworkResult<T> extends NetworkResult<T> {
                 }
             }
         });
-        NetworkConnector.cacheWorkTask.start();
+        LegacyNetworkConnector.cacheWorkTask.start();
     }
 
 }

@@ -1,4 +1,4 @@
-package com.eaglesakura.android.net;
+package com.eaglesakura.android.net_legacy;
 
 import com.eaglesakura.android.dao.net.DbNetCache;
 import com.eaglesakura.thread.MultiRunningTasks;
@@ -22,15 +22,15 @@ import java.util.Map;
 /**
  * 巨大なファイルを取得する
  */
-public class LargeNetworkResult<T> extends NetworkResult<T> {
+public class LargeNetworkResult<T> extends LegacyNetworkResult<T> {
 
     final HttpRequest request;
 
-    final NetworkConnector.RequestParser<T> parser;
+    final LegacyNetworkConnector.RequestParser<T> parser;
 
-    final NetworkConnector connector;
+    final LegacyNetworkConnector connector;
 
-    final NetworkConnector.CacheDatabase database;
+    final LegacyNetworkConnector.CacheDatabase database;
 
     final long cacheTimeoutMs;
 
@@ -44,7 +44,7 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
 
     final File cacheFile;
 
-    public LargeNetworkResult(String url, NetworkConnector connector, HttpRequest request, NetworkConnector.RequestParser<T> parser, NetworkConnector.IConnectParams params, File downloadFile) {
+    public LargeNetworkResult(String url, LegacyNetworkConnector connector, HttpRequest request, LegacyNetworkConnector.RequestParser<T> parser, LegacyNetworkConnector.IConnectParams params, File downloadFile) {
         super(url);
         this.parser = parser;
         this.request = request;
@@ -89,8 +89,8 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
     }
 
     void loadFromNetwork() {
-        NetworkConnector.netDownloadTask.pushBack(downloadTask);
-        NetworkConnector.netDownloadTask.start();
+        LegacyNetworkConnector.netDownloadTask.pushBack(downloadTask);
+        LegacyNetworkConnector.netDownloadTask.start();
     }
 
     InputStream openInputStream(String url) throws IOException {
@@ -134,7 +134,7 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
         }
     }
 
-    NetworkResult<T> self() {
+    LegacyNetworkResult<T> self() {
         return this;
     }
 
@@ -288,14 +288,14 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
         Runnable task = new Runnable() {
             @Override
             public void run() {
-                NetworkConnector.CacheDatabase db = database;
+                LegacyNetworkConnector.CacheDatabase db = database;
 
                 DbNetCache cache = new DbNetCache();
                 cache.setUrl(url);
                 cache.setBodySize((int) downloadedDataSize);
                 cache.setDownloadedSize((int) downloadedDataSize);
-                cache.setBlockSize(NetworkConnector.BLOCK_SIZE);
-                cache.setCacheType(NetworkConnector.CACHETYPE_DB);
+                cache.setBlockSize(LegacyNetworkConnector.BLOCK_SIZE);
+                cache.setCacheType(LegacyNetworkConnector.CACHETYPE_DB);
                 cache.setMethod(method.toUpperCase());
                 cache.setCacheTime(new Date());
                 cache.setCacheLimit(new Date(System.currentTimeMillis() + timeoutMs));
@@ -314,7 +314,7 @@ public class LargeNetworkResult<T> extends NetworkResult<T> {
             }
         };
 //        task.run();
-        NetworkConnector.cacheWorkTask.pushFront(task);
-        NetworkConnector.cacheWorkTask.start();
+        LegacyNetworkConnector.cacheWorkTask.pushFront(task);
+        LegacyNetworkConnector.cacheWorkTask.start();
     }
 }
