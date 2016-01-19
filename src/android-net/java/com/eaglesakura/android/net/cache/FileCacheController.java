@@ -51,6 +51,16 @@ public class FileCacheController implements CacheController {
         }
 
         File local = getFile(policy.getCacheKey(request));
+        if (!local.isFile()) {
+            return null;
+        }
+
+        if (System.currentTimeMillis() > (local.lastModified() + policy.getCacheLimitTimeMs())) {
+            // キャッシュの限界時間を超えているため、ファイルを削除する
+            local.delete();
+            return null;
+        }
+
         return IOUtil.toByteArrayOrNull(local);
     }
 

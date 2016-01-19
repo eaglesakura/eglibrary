@@ -9,7 +9,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.eaglesakura.android.aquery.AbstractAQuery;
-import com.eaglesakura.android.net_legacy.LegacyNetworkConnector;
+import com.eaglesakura.android.net.parser.BitmapParser;
+import com.eaglesakura.android.net.parser.RequestParser;
 import com.eaglesakura.android.widget.SupportNetworkImageView;
 import com.eaglesakura.material.widget.support.SupportRecyclerView;
 
@@ -68,7 +69,7 @@ public class SupportAQuery extends AbstractAQuery<SupportAQuery> {
      */
     public SupportAQuery imageUrl(String url, int maxWidth, int maxHeight) {
         if (view instanceof SupportNetworkImageView) {
-            ((SupportNetworkImageView) view).setImageFromNetwork(url, new LegacyNetworkConnector.ScaledImageParser(maxWidth, maxHeight));
+            ((SupportNetworkImageView) view).setImageFromNetwork(url, new BitmapParser(maxWidth, maxHeight));
         }
         return this;
     }
@@ -80,7 +81,7 @@ public class SupportAQuery extends AbstractAQuery<SupportAQuery> {
      * @param parser
      * @return
      */
-    public SupportAQuery imageUrl(String url, LegacyNetworkConnector.RequestParser<Bitmap> parser) {
+    public SupportAQuery imageUrl(String url, RequestParser<Bitmap> parser) {
         if (view instanceof SupportNetworkImageView) {
             ((SupportNetworkImageView) view).setImageFromNetwork(url, parser);
         }
