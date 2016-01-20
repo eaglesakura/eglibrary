@@ -1,24 +1,26 @@
 package com.eaglesakura.android.net.internal;
 
 import com.eaglesakura.android.net.Connection;
+import com.eaglesakura.android.net.HttpHeader;
 import com.eaglesakura.android.net.NetworkConnector;
 import com.eaglesakura.android.net.RetryPolicy;
-import com.eaglesakura.android.net.cache.CacheController;
+import com.eaglesakura.android.net.cache.ICacheController;
+import com.eaglesakura.android.net.cache.ICacheWriter;
 import com.eaglesakura.android.net.request.ConnectRequest;
 import com.eaglesakura.android.net.parser.RequestParser;
+import com.eaglesakura.android.net.stream.IStreamController;
 import com.eaglesakura.android.thread.async.AsyncTaskResult;
 import com.eaglesakura.android.thread.async.error.TaskCanceledException;
 import com.eaglesakura.android.thread.async.error.TaskException;
-import com.eaglesakura.util.EncodeUtil;
+import com.eaglesakura.util.IOUtil;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.StringUtil;
+import com.eaglesakura.util.Timer;
 import com.eaglesakura.util.Util;
 
-import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.DigestInputStream;
 import java.security.MessageDigest;
 
 /**
@@ -54,7 +56,7 @@ public abstract class BaseHttpConnection<T> extends Connection<T> {
     }
 
     @Override
-    public CacheController getCacheController() {
+    public ICacheController getCacheController() {
         return connector.getCacheController();
     }
 
@@ -68,19 +70,9 @@ public abstract class BaseHttpConnection<T> extends Connection<T> {
         return netDigest;
     }
 
-    /**
-     * パースを試みる
-     *
-     * @param buffer
-     * @return
-     */
-    private T parseFromCache(AsyncTaskResult<T> taskResult, byte[] buffer) {
-        if (Util.isEmpty(buffer)) {
-            return null;
-        }
-
+    protected MessageDigest newMessageDigest() {
         try {
-            return parser.parse(this, taskResult, new ByteArrayInputStream(buffer));
+            return MessageDigest.getInstance("MD5");
         } catch (Exception e) {
             return null;
         }
@@ -93,42 +85,91 @@ public abstract class BaseHttpConnection<T> extends Connection<T> {
      * @return
      */
     private T parseFromCache(AsyncTaskResult<T> taskResult) {
-        CacheController controller = connector.getCacheController();
+        ICacheController controller = connector.getCacheController();
         if (controller == null) {
             return null;
         }
 
+        MessageDigest digest = newMessageDigest();
+        InputStream stream = null;
         try {
-            byte[] cache = controller.getCacheOrNull(request);
-            if (cache != null) {
-                cacheDigest = EncodeUtil.genMD5(cache);
+            stream = controller.openCache(request);
+            T parsed = parseFromStream(taskResult, null, stream, null, newMessageDigest());
+            if (parsed != null) {
+                // パースに成功したら指紋を残す
+                cacheDigest = StringUtil.toHexString(digest.digest());
             }
-            return parseFromCache(taskResult, cache);
-        } catch (IOException e) {
+            return parsed;
+        } catch (Exception e) {
             // キャッシュ読み込み失敗は無視する
             LogUtil.log(e);
             return null;
+        } finally {
+            IOUtil.close(stream);
         }
     }
 
 
     /**
      * ネットワーク経由のInputStreamからパースを行う
+     * ストリームのcloseは外部に任せる
      *
      * @param stream
      * @param digest
      * @return
      * @throws Exception
      */
-    protected T parseFromNet(AsyncTaskResult<T> taskResult, InputStream stream, MessageDigest digest) throws Exception {
-        DigestInputStream dis = new DigestInputStream(stream, digest);
-        T parsed = parser.parse(this, taskResult, new CancelableInputStream(taskResult, dis));
-        if (parsed != null) {
-            // パースできたので、ダイジェストを保存する
-            byte[] digestBytes = digest.digest();
-            netDigest = StringUtil.toHexString(digestBytes);
+    protected T parseFromStream(AsyncTaskResult<T> taskResult, HttpHeader respHeader, InputStream stream, ICacheWriter cacheWriter, MessageDigest digest) throws Exception {
+        // コンテンツをラップする
+        // 必要に応じてファイルにキャッシュされたり、メモリに載せたりする。
+        IStreamController controller = connector.getStreamController();
+        InputStream readStream = null;
+        NetworkParseInputStream parseStream = null;
+        try {
+            parseStream = new NetworkParseInputStream(stream, cacheWriter, digest, taskResult);
+            if (controller != null) {
+                readStream = controller.wrapStream(this, respHeader, parseStream);
+            } else {
+                readStream = stream;
+            }
+            T parsed = parser.parse(this, taskResult, readStream);
+            return parsed;
+        } finally {
+            if (readStream != parseStream) {
+                IOUtil.close(parseStream);
+            }
+            IOUtil.close(readStream);
         }
-        return parsed;
+    }
+
+    protected ICacheWriter newCacheWriter(HttpHeader header) {
+        try {
+            ICacheController controller = connector.getCacheController();
+            if (controller != null) {
+                return controller.newCacheWriter(request, header);
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    protected void closeCacheWriter(T result, ICacheWriter writer) {
+        if (writer == null) {
+            return;
+        }
+
+        try {
+            if (result != null) {
+                writer.commit();
+            } else {
+                writer.abort();
+            }
+
+        } catch (Exception e) {
+
+        }
+
+        IOUtil.close(writer);
     }
 
     /**
@@ -139,7 +180,7 @@ public abstract class BaseHttpConnection<T> extends Connection<T> {
      */
     protected abstract T tryConnect(AsyncTaskResult<T> result, MessageDigest digest) throws IOException, TaskException;
 
-    private T parseFromNet(AsyncTaskResult<T> result) throws Exception {
+    private T parseFromStream(AsyncTaskResult<T> result) throws Exception {
         RetryPolicy retryPolicy = request.getRetryPolicy();
         int tryCount = 0;
         final int MAX_RETRY;
@@ -151,15 +192,16 @@ public abstract class BaseHttpConnection<T> extends Connection<T> {
             MAX_RETRY = 0;
         }
 
+        Timer waitTimer = new Timer();
         // 施行回数が残っていたら通信を行う
         while ((++tryCount) <= (MAX_RETRY + 1)) {
-            if (result.isCanceled()) {
-                throw new TaskCanceledException();
-            }
-
             try {
-                MessageDigest digest = MessageDigest.getInstance("MD5");
-                return tryConnect(result, digest);
+                MessageDigest digest = newMessageDigest();
+                T parsed = tryConnect(result, digest);
+                if (parsed != null) {
+                    netDigest = StringUtil.toHexString(digest.digest());
+                    return parsed;
+                }
             } catch (FileNotFoundException e) {
                 // この例外はリトライしても無駄
                 throw e;
@@ -173,6 +215,19 @@ public abstract class BaseHttpConnection<T> extends Connection<T> {
                 // Catchしきれなかった例外は何か問題が発生している
                 throw e;
             }
+
+            // 必要時間だけウェイトをかける
+            {
+                waitTimer.start();
+                // キャンセルされてない、かつウェイト時間が残っていたら眠らせる
+                while (!result.isCanceled() && (waitTimer.end() < waitTime)) {
+                    Util.sleep(1);
+                }
+                if (result.isCanceled()) {
+                    throw new TaskCanceledException();
+                }
+            }
+
 
             waitTime = retryPolicy.nextBackoffTimeMs(tryCount, waitTime);
         }
@@ -192,7 +247,7 @@ public abstract class BaseHttpConnection<T> extends Connection<T> {
             return null;
         }
 
-        parsed = parseFromNet(result);
+        parsed = parseFromStream(result);
         return parsed;
     }
 }

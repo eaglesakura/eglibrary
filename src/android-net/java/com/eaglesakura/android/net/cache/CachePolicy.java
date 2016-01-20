@@ -8,9 +8,15 @@ import com.eaglesakura.android.net.request.ConnectRequest;
 public class CachePolicy {
     /**
      * キャッシュとして許す最大容量
+     * <p/>
+     * デフォルトで1MBを許す。
      */
-    long maxItemBytes = 0;
-    long cacheLimitTimeMs = 0;
+    private long maxItemBytes = 1024 * 1024;
+
+    /**
+     * キャッシュの有効時間
+     */
+    private long cacheLimitTimeMs = 0;
 
 
     /**
@@ -51,7 +57,7 @@ public class CachePolicy {
 
     /**
      * キャッシュのキーとなる文字列を生成する。
-     *
+     * <p/>
      * 基本的にはメソッド＋URLで生成される。
      *
      * @param request
@@ -59,5 +65,13 @@ public class CachePolicy {
      */
     public String getCacheKey(ConnectRequest request) {
         return String.format("%s/%s", request.getMethod().toString(), request.getUrl());
+    }
+
+    public static long getCacheLimitTimeMs(CachePolicy policy) {
+        if (policy == null) {
+            return 0;
+        } else {
+            return policy.getCacheLimitTimeMs();
+        }
     }
 }

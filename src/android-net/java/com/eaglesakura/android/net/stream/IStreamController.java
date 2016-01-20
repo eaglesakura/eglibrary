@@ -15,7 +15,7 @@ import java.io.InputStream;
  * <p/>
  * オンメモリに乗らないキャッシュはそもそもキャッシュDBに載せられないので、ストリームコントロールと同時にキャッシュ制御も行う。
  */
-public interface StreamController {
+public interface IStreamController {
     /**
      * パーサーに渡すストリームを生成する。
      * <p/>
@@ -27,5 +27,5 @@ public interface StreamController {
      * @param originalStream
      * @return
      */
-    <T> InputStream wrapStream(Connection<T> connection, AsyncTaskResult<T> taskResult, HttpHeader respHeader, InputStream originalStream) throws IOException, TaskException;
+    <T> InputStream wrapStream(Connection<T> connection, HttpHeader respHeader, InputStream originalStream) throws IOException, TaskException;
 }

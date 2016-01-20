@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import com.eaglesakura.android.R;
 import com.eaglesakura.android.net.NetworkConnector;
 import com.eaglesakura.android.net.NetworkResult;
-import com.eaglesakura.android.net.cache.CacheController;
-import com.eaglesakura.android.net.cache.FileCacheController;
+import com.eaglesakura.android.net.cache.ICacheController;
+import com.eaglesakura.android.net.cache.file.FileCacheController;
 import com.eaglesakura.android.net.parser.RequestParser;
 import com.eaglesakura.android.net.request.ConnectRequest;
 import com.eaglesakura.android.net.request.SimpleHttpRequest;
@@ -87,18 +87,18 @@ public class SupportNetworkImageView extends ImageView {
             int cacheTimeDay = typedArray.getInteger(R.styleable.SupportNetworkImageView_cacheTimeDay, 0);
 
             cacheTimeoutMs += (1000 * cacheTimeSec);
-            cacheTimeoutMs += CacheController.CACHE_ONE_MINUTE * cacheTimeMin;
-            cacheTimeoutMs += CacheController.CACHE_ONE_HOUR * cacheTimeHour;
-            cacheTimeoutMs += CacheController.CACHE_ONE_DAY * cacheTimeDay;
+            cacheTimeoutMs += ICacheController.CACHE_ONE_MINUTE * cacheTimeMin;
+            cacheTimeoutMs += ICacheController.CACHE_ONE_HOUR * cacheTimeHour;
+            cacheTimeoutMs += ICacheController.CACHE_ONE_DAY * cacheTimeDay;
 
             errorImage = typedArray.getDrawable(R.styleable.SupportNetworkImageView_errorImage);
         }
 
         if (cacheTimeoutMs == 0) {
-            cacheTimeoutMs = CacheController.CACHE_ONE_HOUR;
+            cacheTimeoutMs = ICacheController.CACHE_ONE_HOUR;
         }
 
-        LogUtil.log("Cache time(%.2f hour) ErrorImage (%s)", (double) cacheTimeoutMs / (double) CacheController.CACHE_ONE_HOUR, "" + errorImage);
+        LogUtil.log("Cache time(%.2f hour) ErrorImage (%s)", (double) cacheTimeoutMs / (double) ICacheController.CACHE_ONE_HOUR, "" + errorImage);
     }
 
     /**

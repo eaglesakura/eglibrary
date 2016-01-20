@@ -1,6 +1,6 @@
 package com.eaglesakura.android.net;
 
-import com.eaglesakura.android.net.cache.CacheController;
+import com.eaglesakura.android.net.cache.ICacheController;
 import com.eaglesakura.android.net.request.ConnectRequest;
 import com.eaglesakura.android.thread.async.IAsyncTask;
 import com.eaglesakura.util.StringUtil;
@@ -25,7 +25,7 @@ public abstract class Connection<T> implements IAsyncTask<T> {
      *
      * @return
      */
-    public abstract CacheController getCacheController();
+    public abstract ICacheController getCacheController();
 
     /**
      * リクエスト情報を取得する

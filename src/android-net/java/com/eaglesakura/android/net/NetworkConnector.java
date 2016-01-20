@@ -2,13 +2,14 @@ package com.eaglesakura.android.net;
 
 import android.content.Context;
 
-import com.eaglesakura.android.net.cache.CacheController;
-import com.eaglesakura.android.net.cache.TextCacheController;
+import com.eaglesakura.android.net.cache.ICacheController;
+import com.eaglesakura.android.net.cache.tkvs.TextCacheController;
 import com.eaglesakura.android.net.internal.GoogleHttpClientConnectImpl;
 import com.eaglesakura.android.net.request.ConnectRequest;
 import com.eaglesakura.android.net.parser.RequestParser;
+import com.eaglesakura.android.net.stream.BufferdStreamController;
 import com.eaglesakura.android.net.stream.ByteArrayStreamController;
-import com.eaglesakura.android.net.stream.StreamController;
+import com.eaglesakura.android.net.stream.IStreamController;
 import com.eaglesakura.android.thread.async.AsyncTaskController;
 
 /**
@@ -18,16 +19,20 @@ import com.eaglesakura.android.thread.async.AsyncTaskController;
  * 同期的に結果を得たい場合はawait()でタスク待ちを行えば良い。
  */
 public class NetworkConnector {
-    final Context context;
+    private final Context context;
 
-    StreamController streamController;
+    private IStreamController streamController;
 
-    CacheController cacheController;
+    private ICacheController cacheController;
 
-    AsyncTaskController taskController;
+    private AsyncTaskController taskController;
 
     public NetworkConnector(Context context) {
         this.context = context.getApplicationContext();
+    }
+
+    public Context getContext() {
+        return context;
     }
 
     /**
@@ -39,19 +44,19 @@ public class NetworkConnector {
         taskController = new AsyncTaskController(threads, 1000 * 5);
     }
 
-    public void setStreamController(StreamController streamController) {
+    public void setStreamController(IStreamController streamController) {
         this.streamController = streamController;
     }
 
-    public StreamController getStreamController() {
+    public IStreamController getStreamController() {
         return streamController;
     }
 
-    public void setCacheController(CacheController cacheController) {
+    public void setCacheController(ICacheController cacheController) {
         this.cacheController = cacheController;
     }
 
-    public CacheController getCacheController() {
+    public ICacheController getCacheController() {
         return cacheController;
     }
 
@@ -88,9 +93,16 @@ public class NetworkConnector {
      */
     public static NetworkConnector newDefaultConnector(Context context, int maxThreads) {
         NetworkConnector result = new NetworkConnector(context);
-        result.setStreamController(new ByteArrayStreamController());
-        result.setCacheController(new TextCacheController(context));
+
         result.setThreadNum(maxThreads);
+        {
+            result.setStreamController(new BufferdStreamController(1024 * 4));
+        }
+        {
+            TextCacheController cacheController = new TextCacheController(context);
+            cacheController.setEncodeBase64(true);
+            result.setCacheController(cacheController);
+        }
         return result;
     }
 }

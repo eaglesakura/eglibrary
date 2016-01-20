@@ -2,15 +2,16 @@ package com.eaglesakura.android.net.internal;
 
 import com.eaglesakura.android.net.HttpHeader;
 import com.eaglesakura.android.net.NetworkConnector;
+import com.eaglesakura.android.net.cache.ICacheWriter;
 import com.eaglesakura.android.net.request.ConnectContent;
 import com.eaglesakura.android.net.request.ConnectRequest;
 import com.eaglesakura.android.net.parser.RequestParser;
-import com.eaglesakura.android.net.stream.StreamController;
 import com.eaglesakura.android.thread.async.AsyncTaskResult;
 import com.eaglesakura.android.thread.async.error.TaskCanceledException;
 import com.eaglesakura.android.thread.async.error.TaskException;
 import com.eaglesakura.android.thread.async.error.TaskFailedException;
 import com.eaglesakura.util.IOUtil;
+import com.eaglesakura.util.LogUtil;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
@@ -18,7 +19,9 @@ import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpStatusCodes;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -143,11 +146,13 @@ public class GoogleHttpClientConnectImpl<T> extends BaseHttpConnection<T> {
     }
 
     @Override
-    protected T tryConnect(AsyncTaskResult<T> result, MessageDigest digest) throws IOException, TaskException {
+    protected T tryConnect(AsyncTaskResult<T> taskResult, MessageDigest digest) throws IOException, TaskException {
         HttpRequest req;
         HttpResponse resp = null;
         InputStream readContent = null;
-        InputStream parseStream = null;
+        ICacheWriter cacheWriter = null;
+        T result = null;
+        HttpHeader respHeader = null;
         try {
             req = newRequest();
             req.setReadTimeout((int) request.getReadTimeoutMs());
@@ -157,39 +162,41 @@ public class GoogleHttpClientConnectImpl<T> extends BaseHttpConnection<T> {
 
             resp = req.execute();
             readContent = resp.getContent();
-            HttpHeaders headers = resp.getHeaders();
+            respHeader = wrapHeader(resp.getHeaders());
             final int status = resp.getStatusCode();
 
-            if (result.isCanceled()) {
+            if (taskResult.isCanceled()) {
                 throw new TaskCanceledException();
             }
 
-            if ((status / 100) != 2) {
+            if (status == HttpStatusCodes.STATUS_CODE_NOT_FOUND) {
+                throw new FileNotFoundException("Status Code == 404");
+            } else if ((status / 100) != 2) {
                 // 200番台以外のステータスコードは例外となる
                 throw new IOException("Status Code != 200 -> " + status);
             }
 
-            // コンテンツをラップする
-            // 必要に応じてファイルにキャッシュされたり、メモリに載せたりする。
-            StreamController controller = connector.getStreamController();
-            parseStream = controller.wrapStream(this, result, wrapHeader(headers), readContent);
+            cacheWriter = newCacheWriter(respHeader);
 
             // コンテンツのパースを行わせる
             try {
-                return parseFromNet(result, parseStream, digest);
+                result = parseFromStream(taskResult, respHeader, readContent, cacheWriter, digest);
+                return result;
             } catch (IOException e) {
                 throw e;
             } catch (TaskException e) {
                 throw e;
             } catch (Exception e) {
                 throw new TaskFailedException(e);
+            } finally {
+                if (result == null) {
+                    LogUtil.log("parse failed");
+                }
             }
         } finally {
-            if (readContent != parseStream) {
-                IOUtil.close(parseStream);
-            }
             IOUtil.close(readContent);
             close(resp);
+            closeCacheWriter(result, cacheWriter);
         }
     }
 }
