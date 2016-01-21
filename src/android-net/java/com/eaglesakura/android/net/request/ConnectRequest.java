@@ -25,7 +25,7 @@ public abstract class ConnectRequest {
     private long readTimeoutMs = 1000 * 10;
 
     /**
-     * 接続タイムアウト時間を指定sルウ
+     * 接続タイムアウト時間を指定する
      */
     private long connectTimeoutMs = 1000 * 10;
 

@@ -78,37 +78,6 @@ public abstract class BaseHttpConnection<T> extends Connection<T> {
         }
     }
 
-    /**
-     * キャッシュからデータをパースする
-     *
-     * @param taskResult
-     * @return
-     */
-    private T parseFromCache(AsyncTaskResult<T> taskResult) {
-        ICacheController controller = connector.getCacheController();
-        if (controller == null) {
-            return null;
-        }
-
-        MessageDigest digest = newMessageDigest();
-        InputStream stream = null;
-        try {
-            stream = controller.openCache(request);
-            T parsed = parseFromStream(taskResult, null, stream, null, newMessageDigest());
-            if (parsed != null) {
-                // パースに成功したら指紋を残す
-                cacheDigest = StringUtil.toHexString(digest.digest());
-            }
-            return parsed;
-        } catch (Exception e) {
-            // キャッシュ読み込み失敗は無視する
-            LogUtil.log(e);
-            return null;
-        } finally {
-            IOUtil.close(stream);
-        }
-    }
-
 
     /**
      * ネットワーク経由のInputStreamからパースを行う
@@ -173,12 +142,43 @@ public abstract class BaseHttpConnection<T> extends Connection<T> {
     }
 
     /**
+     * キャッシュからデータをパースする
+     *
+     * @param taskResult
+     * @return
+     */
+    private T tryCacheParse(AsyncTaskResult<T> taskResult) {
+        ICacheController controller = connector.getCacheController();
+        if (controller == null) {
+            return null;
+        }
+
+        MessageDigest digest = newMessageDigest();
+        InputStream stream = null;
+        try {
+            stream = controller.openCache(request);
+            T parsed = parseFromStream(taskResult, null, stream, null, newMessageDigest());
+            if (parsed != null) {
+                // パースに成功したら指紋を残す
+                cacheDigest = StringUtil.toHexString(digest.digest());
+            }
+            return parsed;
+        } catch (Exception e) {
+            // キャッシュ読み込み失敗は無視する
+            LogUtil.log(e);
+            return null;
+        } finally {
+            IOUtil.close(stream);
+        }
+    }
+
+    /**
      * 接続を行う
      *
      * @return
      * @throws IOException
      */
-    protected abstract T tryConnect(AsyncTaskResult<T> result, MessageDigest digest) throws IOException, TaskException;
+    protected abstract T tryNetworkParse(AsyncTaskResult<T> result, MessageDigest digest) throws IOException, TaskException;
 
     private T parseFromStream(AsyncTaskResult<T> result) throws Exception {
         RetryPolicy retryPolicy = request.getRetryPolicy();
@@ -197,7 +197,7 @@ public abstract class BaseHttpConnection<T> extends Connection<T> {
         while ((++tryCount) <= (MAX_RETRY + 1)) {
             try {
                 MessageDigest digest = newMessageDigest();
-                T parsed = tryConnect(result, digest);
+                T parsed = tryNetworkParse(result, digest);
                 if (parsed != null) {
                     netDigest = StringUtil.toHexString(digest.digest());
                     return parsed;
@@ -238,7 +238,7 @@ public abstract class BaseHttpConnection<T> extends Connection<T> {
     @Override
     public T doInBackground(AsyncTaskResult<T> result) throws Exception {
 
-        T parsed = parseFromCache(result);
+        T parsed = tryCacheParse(result);
         if (parsed != null) {
             return parsed;
         }

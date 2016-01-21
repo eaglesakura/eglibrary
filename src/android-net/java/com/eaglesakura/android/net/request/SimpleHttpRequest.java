@@ -2,6 +2,7 @@ package com.eaglesakura.android.net.request;
 
 import com.eaglesakura.android.net.RetryPolicy;
 import com.eaglesakura.android.net.cache.CachePolicy;
+import com.eaglesakura.util.StringUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -32,7 +33,10 @@ public class SimpleHttpRequest extends ConnectRequest {
     }
 
     private String encodeParams() {
-        StringBuilder result = new StringBuilder(this.url);
+        if (params == null || params.isEmpty()) {
+            return "";
+        }
+        StringBuilder result = new StringBuilder();
         Iterator<Map.Entry<String, String>> iterator = params.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, String> entry = iterator.next();
@@ -51,14 +55,20 @@ public class SimpleHttpRequest extends ConnectRequest {
     @Override
     public String getUrl() {
         if (getMethod() == Method.GET) {
-            // GETの場合はURLにパラメータを乗せる
+            String params = encodeParams();
+            if (StringUtil.isEmpty(params)) {
+                // パラメータが無いのでそのまま返す
+                return this.url;
+            }
+
+            // URLにパラメータを乗せる
             StringBuilder result = new StringBuilder(this.url);
             if (url.indexOf("?") < 0) {
                 result.append('?');
             } else {
                 result.append('&');
             }
-            result.append(encodeParams());
+            result.append(params);
             return result.toString();
         } else {
             return url;

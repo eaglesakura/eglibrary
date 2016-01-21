@@ -85,7 +85,8 @@ public class GoogleHttpClientConnectImpl<T> extends BaseHttpConnection<T> {
     }
 
     private HttpRequest newRequest() throws IOException {
-        GenericUrl url = new GenericUrl(request.getUrl());
+        String rawUrl = request.getUrl();
+        GenericUrl url = new GenericUrl(rawUrl);
         switch (request.getMethod()) {
             case GET:
                 return requestFactory.buildGetRequest(url);
@@ -146,7 +147,7 @@ public class GoogleHttpClientConnectImpl<T> extends BaseHttpConnection<T> {
     }
 
     @Override
-    protected T tryConnect(AsyncTaskResult<T> taskResult, MessageDigest digest) throws IOException, TaskException {
+    protected T tryNetworkParse(AsyncTaskResult<T> taskResult, MessageDigest digest) throws IOException, TaskException {
         HttpRequest req;
         HttpResponse resp = null;
         InputStream readContent = null;
