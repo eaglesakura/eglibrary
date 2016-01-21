@@ -16,3 +16,6 @@
 [submodule "android-thread"]
 	path = android-thread
 	url = git@github.com:eaglesakura/android-thread.git
+[submodule "android-net"]
+	path = android-net
+	url = git@github.com:eaglesakura/android-net.git
