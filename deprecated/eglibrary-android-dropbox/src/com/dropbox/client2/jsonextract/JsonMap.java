@@ -8,7 +8,7 @@ import java.util.Map;
  *
  * A JSON "object" (a mapping of string keys to arbitrary JSON values).
  */
-public final class JsonMap extends JsonBase<Map<String,Object>> implements Iterable<Map.Entry<String,JsonThing>> {
+public final class JsonMap extends JsonBase<Map<String, Object>> implements Iterable<Map.Entry<String, JsonThing>> {
 
     public JsonMap(Map<String, Object> internal, String path) {
         super(internal, path);
@@ -61,37 +61,51 @@ public final class JsonMap extends JsonBase<Map<String,Object>> implements Itera
     /**
      * A key+value iterator that automatically wraps every value in a JsonThing.
      */
-    private static final class WrapperIterator implements Iterator<Map.Entry<String,JsonThing>> {
+    private static final class WrapperIterator implements Iterator<Map.Entry<String, JsonThing>> {
         private final String path;
-        private final Iterator<Map.Entry<String,Object>> internal;
+        private final Iterator<Map.Entry<String, Object>> internal;
 
-        private WrapperIterator(String path, Iterator<Map.Entry<String,Object>> internal) {
+        private WrapperIterator(String path, Iterator<Map.Entry<String, Object>> internal) {
             this.path = path;
             this.internal = internal;
         }
 
-        public boolean hasNext() { return internal.hasNext(); }
-        public Map.Entry<String,JsonThing> next() {
+        public boolean hasNext() {
+            return internal.hasNext();
+        }
+
+        public Map.Entry<String, JsonThing> next() {
             return new WrappedEntry(path, internal.next());
         }
-        public void remove() { throw new UnsupportedOperationException("can't remove"); }
+
+        public void remove() {
+            throw new UnsupportedOperationException("can't remove");
+        }
     }
 
-    private static final class WrappedEntry implements Map.Entry<String,JsonThing> {
+    private static final class WrappedEntry implements Map.Entry<String, JsonThing> {
         private final String key;
         private final JsonThing value;
 
-        private WrappedEntry(String path, Map.Entry<String,Object> original) {
+        private WrappedEntry(String path, Map.Entry<String, Object> original) {
             this.key = original.getKey();
             this.value = new JsonThing(original.getValue(), pathConcatField(path, key));
         }
 
-        public String getKey() { return key; }
-        public JsonThing getValue() { return value; }
-        public JsonThing setValue(JsonThing jsonThing) { throw new UnsupportedOperationException(); }
+        public String getKey() {
+            return key;
+        }
+
+        public JsonThing getValue() {
+            return value;
+        }
+
+        public JsonThing setValue(JsonThing jsonThing) {
+            throw new UnsupportedOperationException();
+        }
     }
 
-    public Iterator<Map.Entry<String,JsonThing>> iterator() {
+    public Iterator<Map.Entry<String, JsonThing>> iterator() {
         return new WrapperIterator(path, internal.entrySet().iterator());
     }
 }

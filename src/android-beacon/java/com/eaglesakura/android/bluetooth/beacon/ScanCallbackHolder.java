@@ -1,11 +1,11 @@
 package com.eaglesakura.android.bluetooth.beacon;
 
-import android.os.RemoteException;
-
 import com.eaglesakura.android.bluetooth.BluetoothDeviceScanner;
 import com.eaglesakura.android.bluetooth.beacon.IBeaconScanCallback;
 import com.eaglesakura.android.bluetooth.beacon.data.PeripheralBeacon;
 import com.eaglesakura.util.LogUtil;
+
+import android.os.RemoteException;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -43,8 +43,6 @@ public class ScanCallbackHolder {
 
     /**
      * Beacon一覧を生成する
-     *
-     * @return
      */
     List<PeripheralBeacon> createIdlBeaconList() {
         // 不要なBeaconを削除
@@ -68,8 +66,6 @@ public class ScanCallbackHolder {
 
     /**
      * Beaconを見つけた
-     *
-     * @param cache
      */
     public void onBeaconFound(BluetoothDeviceScanner.BluetoothDeviceCache cache) {
         PeripheralBeacon beacon = createIdlBeacon(cache);

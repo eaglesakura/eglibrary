@@ -1,5 +1,9 @@
 package com.eaglesakura.lib.android.game.io.web;
 
+import com.eaglesakura.lib.android.game.io.IFile;
+import com.eaglesakura.lib.android.game.io.WebInputStream;
+import com.eaglesakura.lib.android.game.util.LogUtil;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -8,15 +12,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.eaglesakura.lib.android.game.io.IFile;
-import com.eaglesakura.lib.android.game.io.WebInputStream;
-import com.eaglesakura.lib.android.game.util.LogUtil;
-
 /**
  * Web上の1ファイルを扱う。
- * 
+ *
  * @author TAKESHI YAMASHITA
- * 
  */
 public class WebFile implements IFile {
     String uri;

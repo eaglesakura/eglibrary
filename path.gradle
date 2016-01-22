@@ -8,14 +8,14 @@ if (!hasProperty("EGLIBRARY_PATH_SRC_ROOT")) {
 /**
  * サポートライブラリバージョン
  */
-if(!hasProperty("EGLIBRARY_ANDROID_SUPPORT_LIB_VERSION")) {
+if (!hasProperty("EGLIBRARY_ANDROID_SUPPORT_LIB_VERSION")) {
     ext.EGLIBRARY_ANDROID_SUPPORT_LIB_VERSION = "23.1.+"
 }
 
 /**
  * Play Service バージョン
  */
-if(!hasProperty("EGLIBRARY_ANDROID_PLAYSERVICE_LIB_VERSION")) {
+if (!hasProperty("EGLIBRARY_ANDROID_PLAYSERVICE_LIB_VERSION")) {
     ext.EGLIBRARY_ANDROID_PLAYSERVICE_LIB_VERSION = "7.8.+"
 }
 

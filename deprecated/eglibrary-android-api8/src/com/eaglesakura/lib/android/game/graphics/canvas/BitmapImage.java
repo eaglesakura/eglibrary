@@ -1,10 +1,12 @@
 package com.eaglesakura.lib.android.game.graphics.canvas;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import com.eaglesakura.lib.android.game.graphics.ImageBase;
+import com.eaglesakura.lib.android.game.graphics.ImageCorrector;
+import com.eaglesakura.lib.android.game.io.WebInputStream;
+import com.eaglesakura.lib.android.game.resource.GarbageCollector;
+import com.eaglesakura.lib.android.game.resource.IRawResource;
+import com.eaglesakura.lib.android.game.resource.SharedRawResource;
+import com.eaglesakura.lib.android.game.util.LogUtil;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -16,18 +18,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.net.Uri;
 
-import com.eaglesakura.lib.android.game.graphics.ImageBase;
-import com.eaglesakura.lib.android.game.graphics.ImageCorrector;
-import com.eaglesakura.lib.android.game.io.WebInputStream;
-import com.eaglesakura.lib.android.game.resource.GarbageCollector;
-import com.eaglesakura.lib.android.game.resource.IRawResource;
-import com.eaglesakura.lib.android.game.resource.SharedRawResource;
-import com.eaglesakura.lib.android.game.util.LogUtil;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * 
  * @author TAKESHI YAMASHITA
- *
  */
 public class BitmapImage extends ImageBase {
 
@@ -62,7 +60,6 @@ public class BitmapImage extends ImageBase {
     /**
      * 自動でrecycleを呼び出す場合はtrue
      * デフォルトではTRUE
-     * @param set
      */
     public BitmapImage setAutoRecycle(boolean set) {
         autoRecycle = set;
@@ -90,9 +87,6 @@ public class BitmapImage extends ImageBase {
 
     /**
      * ファイルシステム上のファイルから読み込む
-     * @param file
-     * @param option
-     * @return
      */
     public BitmapImage loadFromFile(File file, LoadOption option) {
         Bitmap image = BitmapFactory.decodeFile(file.getAbsolutePath());
@@ -102,10 +96,6 @@ public class BitmapImage extends ImageBase {
 
     /**
      * Drawableから読み込む
-     * @param resources
-     * @param id
-     * @param option
-     * @return
      */
     public BitmapImage loadFromDrawable(Resources resources, int id, LoadOption option) {
         Bitmap image = BitmapFactory.decodeResource(resources, id);
@@ -115,9 +105,6 @@ public class BitmapImage extends ImageBase {
 
     /**
      * 画像ストリームから読み込む。
-     * @param is
-     * @return
-     * @throws IOException
      */
     public BitmapImage loadFromStream(InputStream is) throws IOException {
         Bitmap image = BitmapFactory.decodeStream(is);
@@ -127,11 +114,6 @@ public class BitmapImage extends ImageBase {
 
     /**
      * Uriを指定して読み込む
-     * @param context
-     * @param uri
-     * @param option
-     * @return
-     * @throws IOException
      */
     public BitmapImage loadFromUri(Context context, Uri uri, int timeout, LoadOption option) throws IOException {
         InputStream is = null;
@@ -157,9 +139,6 @@ public class BitmapImage extends ImageBase {
 
     /**
      * 最大幅・高さを指定してリサイズする。
-     * @param maxWidth
-     * @param maxHeight
-     * @return
      */
     public BitmapImage fitting(int maxWidth, int maxHeight) {
         ImageCorrector corrector = new ImageCorrector();
@@ -180,10 +159,6 @@ public class BitmapImage extends ImageBase {
 
     /**
      * 空の画像を作成する
-     * @param width
-     * @param height
-     * @param config
-     * @return
      */
     public BitmapImage create(int width, int height, Config config) {
         Bitmap image = Bitmap.createBitmap(width, height, config);
@@ -193,8 +168,6 @@ public class BitmapImage extends ImageBase {
 
     /**
      * 単一食で塗りつぶす
-     * @param colorARGB
-     * @return
      */
     public BitmapImage clear(int colorARGB) {
         Graphics g = getGraphics();
@@ -216,7 +189,6 @@ public class BitmapImage extends ImageBase {
 
     /**
      * 操作用のGraphicsを取得する。
-     * @return
      */
     public Graphics getGraphics() {
         Graphics g = new Graphics();
@@ -226,7 +198,6 @@ public class BitmapImage extends ImageBase {
 
     /**
      * 管理対象のBitmapを取得する。
-     * @return
      */
     public Bitmap getBitmap() {
         return bitmapResource.rawBitmap;
@@ -245,8 +216,8 @@ public class BitmapImage extends ImageBase {
 
     /**
      * 管理リソース
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     static class BitmapResource implements IRawResource {
         Bitmap rawBitmap = null;
@@ -269,8 +240,8 @@ public class BitmapImage extends ImageBase {
 
     /**
      * 読み込み時のオプション
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public static class LoadOption {
         /**

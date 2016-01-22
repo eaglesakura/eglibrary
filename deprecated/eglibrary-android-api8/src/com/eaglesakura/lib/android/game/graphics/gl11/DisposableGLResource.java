@@ -1,16 +1,16 @@
 package com.eaglesakura.lib.android.game.graphics.gl11;
 
-import javax.microedition.khronos.opengles.GL11;
-import javax.microedition.khronos.opengles.GL11ExtensionPack;
-
 import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
 import com.eaglesakura.lib.android.game.resource.GCResourceBase;
 import com.eaglesakura.lib.android.game.resource.IRawResource;
 
+import javax.microedition.khronos.opengles.GL11;
+import javax.microedition.khronos.opengles.GL11ExtensionPack;
+
 /**
  * 廃棄が必要なOpenGL ESの資源を管理。
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public abstract class DisposableGLResource extends GCResourceBase {
     /**
@@ -20,8 +20,8 @@ public abstract class DisposableGLResource extends GCResourceBase {
 
     /**
      * リソースの種類。
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public enum Type {
         /**
@@ -30,8 +30,8 @@ public abstract class DisposableGLResource extends GCResourceBase {
         Texture {
             @Override
             public void delete(GL11 gl, int id) {
-                gl.glDeleteTextures(1, new int[] {
-                    id
+                gl.glDeleteTextures(1, new int[]{
+                        id
                 }, 0);
             }
         },
@@ -42,8 +42,8 @@ public abstract class DisposableGLResource extends GCResourceBase {
         VertexBufferObject {
             @Override
             public void delete(GL11 gl, int id) {
-                gl.glDeleteBuffers(1, new int[] {
-                    id
+                gl.glDeleteBuffers(1, new int[]{
+                        id
                 }, 0);
             }
         },
@@ -55,8 +55,8 @@ public abstract class DisposableGLResource extends GCResourceBase {
             @Override
             public void delete(GL11 gl, int id) {
                 GL11ExtensionPack gl11 = (GL11ExtensionPack) gl;
-                gl11.glDeleteFramebuffersOES(1, new int[] {
-                    id
+                gl11.glDeleteFramebuffersOES(1, new int[]{
+                        id
                 }, 0);
             }
         },
@@ -68,24 +68,22 @@ public abstract class DisposableGLResource extends GCResourceBase {
             @Override
             public void delete(GL11 gl, int id) {
                 GL11ExtensionPack gl11 = (GL11ExtensionPack) gl;
-                gl11.glDeleteRenderbuffersOES(1, new int[] {
-                    id
+                gl11.glDeleteRenderbuffersOES(1, new int[]{
+                        id
                 }, 0);
             }
         };
 
         /**
          * リソースの削除を行わせる。
-         * @param gl
-         * @param id
          */
         public abstract void delete(GL11 gl, int id);
     }
 
     /**
      * GLの資源を示すクラス。
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public static class GLResource implements IRawResource {
         private Type type;

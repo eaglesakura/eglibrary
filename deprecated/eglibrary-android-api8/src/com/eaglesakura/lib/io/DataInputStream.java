@@ -1,21 +1,19 @@
 /**
  * データの入力を補助する。
- * 
- * 
  */
 package com.eaglesakura.lib.io;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 /**
  * データ入力を補助するクラス。
  *
- * 
- * 
+ *
+ *
  */
 public final class DataInputStream extends DisposableResource {
     /**
@@ -25,9 +23,9 @@ public final class DataInputStream extends DisposableResource {
 
     /**
      *
-     * 
+     *
      * @param is
-     * 
+     *
      */
     public DataInputStream(InputStream is) {
         reader = is;
@@ -36,13 +34,13 @@ public final class DataInputStream extends DisposableResource {
     /**
      * バッファから１バイト読み取る。
      *
-     * 
+     *
      * @return
-     * 
+     *
      */
     public byte readS8() throws IOException {
         byte[] n = {
-            0
+                0
         };
         reader.read(n, 0, n.length);
         return n[0];
@@ -51,9 +49,9 @@ public final class DataInputStream extends DisposableResource {
     /**
      * バッファから2バイト読み取る。
      *
-     * 
+     *
      * @return
-     * 
+     *
      */
     public short readS16() throws IOException {
         byte[] n = {
@@ -71,9 +69,9 @@ public final class DataInputStream extends DisposableResource {
      * バッファから3バイト読み取る。<BR>
      * 色情報等に利用可能。
      *
-     * 
+     *
      * @return
-     * 
+     *
      */
     public int readS24() throws IOException {
         byte[] n = {
@@ -87,9 +85,9 @@ public final class DataInputStream extends DisposableResource {
     /**
      * １バイト整数を取得し、読み込み位置を１バイト進める。
      *
-     * 
+     *
      * @return １バイト符号無整数。ただし、符号無を表現する関係上、戻りはint型となる。
-     * 
+     *
      */
     public int readU8() throws IOException {
         return (((int) readS8()) & 0xff);
@@ -98,9 +96,9 @@ public final class DataInputStream extends DisposableResource {
     /**
      * ２バイト整数を取得し、読み込み位置を２バイト進める。
      *
-     * 
+     *
      * @return ２バイト符号無整数。ただし、符号無を表現する関係上、戻りはint型となる。
-     * 
+     *
      */
     public int readU16() throws IOException {
         return (((int) readS16()) & 0xffff);
@@ -109,9 +107,9 @@ public final class DataInputStream extends DisposableResource {
     /**
      * バッファから4バイト読み取る。
      *
-     * 
+     *
      * @return
-     * 
+     *
      */
     public int readS32() throws IOException {
         byte[] n = {
@@ -130,9 +128,9 @@ public final class DataInputStream extends DisposableResource {
     /**
      * バッファから８バイト整数を読み取る。
      *
-     * 
+     *
      * @return
-     * 
+     *
      */
     public long readS64() throws IOException {
         byte[] n = {
@@ -184,9 +182,9 @@ public final class DataInputStream extends DisposableResource {
      * 固定小数をfloat変換して取得する。<BR>
      * GL仕様のため、符号1 整数15 小数16の固定小数を使用する。
      *
-     * 
+     *
      * @return
-     * 
+     *
      */
     public float readGLFixedFloat() throws IOException {
         return ((float) readS32()) / (float) 0x10000;
@@ -196,9 +194,9 @@ public final class DataInputStream extends DisposableResource {
      * 固定小数をdouble変換して取得する。<BR>
      * GL仕様のため、符号1 整数47 小数16の固定小数を使用する。
      *
-     * 
+     *
      * @return
-     * 
+     *
      */
     public double readGLFixedDouble() throws IOException {
         return ((double) readS64()) / (double) 0x10000;
@@ -207,10 +205,10 @@ public final class DataInputStream extends DisposableResource {
     /**
      * IEEE754形式のビット列をfloatに変換し、取得する。
      *
-     * 
+     *
      * @return
      * @throws IOException
-     * 
+     *
      */
     public float readFloat() throws IOException {
         return Float.intBitsToFloat(readS32());
@@ -219,10 +217,10 @@ public final class DataInputStream extends DisposableResource {
     /**
      * IEEE754形式のビット列をdoubleに変換し、取得する。
      *
-     * 
+     *
      * @return
      * @throws IOException
-     * 
+     *
      */
     public double readDouble() throws IOException {
         return Double.longBitsToDouble(readS64());
@@ -232,10 +230,10 @@ public final class DataInputStream extends DisposableResource {
      * 真偽の値を取得する。<BR>
      * 1byte読み取り、0ならfalse、それ以外ならtrueを返す。
      *
-     * 
+     *
      * @return
      * @throws IOException
-     * 
+     *
      */
     public boolean readBoolean() throws IOException {
         return readS8() == 0 ? false : true;
@@ -246,9 +244,9 @@ public final class DataInputStream extends DisposableResource {
      * エンコードはShiftJISである必要がある。<BR>
      * 頭2byteが文字数、後に文字配列が続く。
      *
-     * 
+     *
      * @return
-     * 
+     *
      */
     public String readString() throws IOException {
         int len = readS16();
@@ -264,10 +262,10 @@ public final class DataInputStream extends DisposableResource {
     /**
      * バッファを直接読み取る。
      *
-     * 
+     *
      * @param length
      * @return
-     * 
+     *
      */
     public byte[] readBuffer(int length) throws IOException {
         byte[] ret = new byte[length];
@@ -278,9 +276,9 @@ public final class DataInputStream extends DisposableResource {
     /**
      * ファイルを作成する。
      *
-     * 
+     *
      * @return
-     * 
+     *
      */
     public byte[] readFile() throws IOException {
         int len = readS32();
@@ -292,10 +290,10 @@ public final class DataInputStream extends DisposableResource {
     /**
      * バッファから必要な長さを読み取る。
      *
-     * 
+     *
      * @param buf
      * @param length
-     * 
+     *
      */
     public void readBuffer(byte[] buf, int length) throws IOException {
         readBuffer(buf, 0, length);
@@ -303,11 +301,11 @@ public final class DataInputStream extends DisposableResource {
 
     /**
      *
-     * 
+     *
      * @param buf
      * @param index
      * @param length
-     * 
+     *
      */
     public int readBuffer(byte[] buf, int index, int length) throws IOException {
         return reader.read(buf, index, length);
@@ -317,8 +315,8 @@ public final class DataInputStream extends DisposableResource {
      * 資源の解放を行う。<BR>
      * 内部管理する{@link #reader}のdispose()を行う。
      *
-     * 
-     * 
+     *
+     *
      */
     public void dispose() {
         if (reader != null) {
@@ -333,9 +331,9 @@ public final class DataInputStream extends DisposableResource {
 
     /**
      *
-     * 
+     *
      * @throws Throwable
-     * 
+     *
      */
     protected void finalize() throws Throwable {
         super.finalize();
@@ -345,10 +343,10 @@ public final class DataInputStream extends DisposableResource {
     /**
      * 読み取り位置を指定する。
      *
-     * 
+     *
      * @param eSeekType
      * @param pos
-     * 
+     *
      */
     public void seek(SeekType type, int pos) throws IOException {
         type.set(reader, pos);

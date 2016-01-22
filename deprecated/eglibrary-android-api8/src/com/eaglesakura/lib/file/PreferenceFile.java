@@ -12,8 +12,8 @@ import java.util.Map;
  * Key=Value
  * Key=Value
  * ...
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class PreferenceFile {
 
@@ -58,9 +58,6 @@ public class PreferenceFile {
 
     /**
      * 文字列を読み込む
-     * @param key
-     * @param def
-     * @return
      */
     public String getString(String key, String def) {
         String result = keyValue.get(key);
@@ -72,9 +69,6 @@ public class PreferenceFile {
 
     /**
      * 数値を読み込む
-     * @param key
-     * @param def
-     * @return
      */
     public int getInteger(String key, int def) {
         try {

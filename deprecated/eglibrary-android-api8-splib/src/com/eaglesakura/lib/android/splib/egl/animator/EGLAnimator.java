@@ -1,7 +1,5 @@
 package com.eaglesakura.lib.android.splib.egl.animator;
 
-import android.os.Handler;
-
 import com.eaglesakura.lib.android.game.graphics.gl11.hw.EGLManager;
 import com.eaglesakura.lib.android.game.graphics.gl11.hw.GLRenderer;
 import com.eaglesakura.lib.android.game.loop.FramerateCounter;
@@ -10,6 +8,8 @@ import com.eaglesakura.lib.android.game.util.Timer;
 import com.eaglesakura.lib.android.splib.fragment.EGLFragment;
 import com.eaglesakura.lib.list.OrderAccessList;
 import com.eaglesakura.lib.list.OrderAccessList.Iterator;
+
+import android.os.Handler;
 
 public class EGLAnimator implements Runnable {
     /**
@@ -120,8 +120,6 @@ public class EGLAnimator implements Runnable {
 
     /**
      * アップデータを削除する
-     * @param item
-     * @return
      */
     public EGLAnimator remove(Updatable item) {
         updatables.remove(item);

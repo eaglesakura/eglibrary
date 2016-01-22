@@ -1,21 +1,20 @@
 package com.eaglesakura.lib.android.game.io.fs;
 
-import java.io.File;
-
 import com.eaglesakura.lib.android.game.io.IFile;
 import com.eaglesakura.lib.android.game.io.IStorageDevice;
 
+import java.io.File;
+
 /**
  * ファイルシステムを利用したストレージ
- * 
+ *
  * @author TAKESHI YAMASHITA
- * 
  */
 public class ExternalStorage implements IStorageDevice {
     File root;
 
     /**
-     * 
+     *
      * @param root
      */
     public ExternalStorage(File root) {
@@ -23,7 +22,7 @@ public class ExternalStorage implements IStorageDevice {
     }
 
     /**
-     * 
+     *
      */
     @Override
     public IFile getRootDirectory() {

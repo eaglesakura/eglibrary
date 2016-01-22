@@ -1,17 +1,17 @@
 package com.eaglesakura.lib.android.dropbox;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-
 import com.dropbox.client2.DropboxAPI.DropboxInputStream;
 import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+
 /**
  * ダウンロードの補助クラス
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class DropboxDownloader extends DisposableResource {
     /**
@@ -41,7 +41,7 @@ public class DropboxDownloader extends DisposableResource {
 
     /**
      * レジュームを開始する
-     * @param dstFile
+     *
      * @return レジューム操作を開始したらtrue
      */
     public boolean resume(File dstFile) throws DropboxAPIException {
@@ -51,8 +51,6 @@ public class DropboxDownloader extends DisposableResource {
 
     /**
      * レンジを指定して開始する
-     * @param rangeStart
-     * @param rangeEnd
      */
     public void start(long rangeStart, long rangeEnd) throws DropboxAPIException {
         try {
@@ -73,10 +71,6 @@ public class DropboxDownloader extends DisposableResource {
     /**
      * 指定バイト数を読み込む。
      * 読み込み終わったらtrueを返す
-     * @param os
-     * @param length
-     * @return
-     * @throws DropboxAPIException
      */
     public boolean nextDownload(OutputStream os, int length) throws DropboxAPIException {
         try {
@@ -89,7 +83,7 @@ public class DropboxDownloader extends DisposableResource {
                     os.write(buffer, 0, readed);
                     // 書き込んだサイズだけ必要サイズを減らす
                     length -= readed;
-                } else /* if (readed < 0) */{
+                } else /* if (readed < 0) */ {
                     // 読み込むべきサイズが無くなった
                     return true;
                 }

@@ -1,12 +1,12 @@
 package com.eaglesakura.material.widget;
 
+import com.eaglesakura.android.R;
+import com.eaglesakura.android.aquery.AQuery;
+
 import android.content.Context;
 import android.support.v7.app.AppCompatDialog;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.eaglesakura.android.R;
-import com.eaglesakura.android.aquery.AQuery;
 
 /**
  * Material Design support Dialog
@@ -38,8 +38,6 @@ public class MaterialDialogBase extends AppCompatDialog {
 
     /**
      * タイトルの文字列を設定する
-     *
-     * @param title
      */
     public void setTitle(CharSequence title) {
         AQuery q = new AQuery(root);
@@ -48,8 +46,6 @@ public class MaterialDialogBase extends AppCompatDialog {
 
     /**
      * コンテンツ本体を指定する
-     *
-     * @param layout
      */
     public void setDialogContent(int layout) {
         setDialogContent(View.inflate(getContext(), layout, null));
@@ -69,8 +65,6 @@ public class MaterialDialogBase extends AppCompatDialog {
 
     /**
      * コンテンツ本体を指定する
-     *
-     * @param view
      */
     public void setDialogContent(View view) {
         AQuery q = new AQuery(root);

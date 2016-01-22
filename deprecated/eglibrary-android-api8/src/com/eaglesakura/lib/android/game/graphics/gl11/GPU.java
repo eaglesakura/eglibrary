@@ -1,16 +1,5 @@
 package com.eaglesakura.lib.android.game.graphics.gl11;
 
-import java.nio.ByteBuffer;
-
-import javax.microedition.khronos.egl.EGL10;
-import javax.microedition.khronos.opengles.GL10;
-import javax.microedition.khronos.opengles.GL11;
-
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Rect;
-import android.graphics.RectF;
-
 import com.eaglesakura.lib.android.game.display.VirtualDisplay;
 import com.eaglesakura.lib.android.game.graphics.Color;
 import com.eaglesakura.lib.android.game.graphics.gl11.hw.EGLManager;
@@ -18,6 +7,17 @@ import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
 import com.eaglesakura.lib.android.game.math.Matrix4x4;
 import com.eaglesakura.lib.android.game.math.Vector2;
 import com.eaglesakura.lib.android.game.util.LogUtil;
+
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Rect;
+import android.graphics.RectF;
+
+import java.nio.ByteBuffer;
+
+import javax.microedition.khronos.egl.EGL10;
+import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
 
 /**
  * OpenGL管理を行う。<BR>
@@ -37,9 +37,6 @@ public class GPU {
 
     /**
      * GL描画用スレッドを作成する。
-     * 
-     * 
-     * @param holder
      */
     public GPU(EGLManager egl) {
         this.egl = egl;
@@ -69,9 +66,6 @@ public class GPU {
 
     /**
      * メインで使用するGLインターフェースを取得する。
-     * 
-     * 
-     * @return
      */
     public GL11 getGL() {
         return gl11;
@@ -79,7 +73,6 @@ public class GPU {
 
     /**
      * VRAM領域を取得する
-     * @return
      */
     public VRAM getVRAM() {
         return egl.getVRAM();
@@ -115,7 +108,7 @@ public class GPU {
     public static final int BLEND_COLOR_ADD = 4;
 
     /**
-     * 
+     *
      * @param mode
      */
     public void setBlendMode(int mode) {
@@ -141,9 +134,6 @@ public class GPU {
 
     /**
      * バッファの消去を行う。
-     * 
-     * 
-     * @param mask
      */
     public void clear(int mask) {
         gl11.glClear(mask);
@@ -152,8 +142,6 @@ public class GPU {
     /**
      * バッファの消去を行う。<BR>
      * color / depthの両方をクリアする。
-     * 
-     * 
      */
     public void clear() {
         gl11.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT | GL10.GL_STENCIL_BUFFER_BIT);
@@ -161,12 +149,6 @@ public class GPU {
 
     /**
      * 消去色を設定する。
-     * 
-     * 
-     * @param r
-     * @param g
-     * @param b
-     * @param a
      */
     public void clearColorRGBA(float r, float g, float b, float a) {
         gl11.glClearColor(r, g, b, a);
@@ -174,12 +156,6 @@ public class GPU {
 
     /**
      * 消去色を指定する。 値は0～255で指定。
-     * 
-     * 
-     * @param r
-     * @param g
-     * @param b
-     * @param a
      */
     public void clearColorRGBA(int r, int g, int b, int a) {
         r = (r & 0xff) * 256 / 255;
@@ -191,7 +167,6 @@ public class GPU {
 
     /**
      * 消去色を指定する。
-     * @param rgba
      */
     public void clearColorRGBA(int rgba) {
         clearColorRGBA(Color.toColorR(rgba), Color.toColorG(rgba), Color.toColorB(rgba), Color.toColorA(rgba));
@@ -199,9 +174,6 @@ public class GPU {
 
     /**
      * 指定した４ｘ４行列をプッシュする。
-     * 
-     * 
-     * @param trans
      */
     public void pushMatrixF(Matrix4x4 trans) {
         gl11.glPushMatrix();
@@ -210,8 +182,6 @@ public class GPU {
 
     /**
      * 行列を取り出す。
-     * 
-     * 
      */
     public void popMatrix() {
         gl11.glPopMatrix();
@@ -276,8 +246,6 @@ public class GPU {
 
     /**
      * エラー内容をログ出力し、SUCCESS以外ならtrueを返す。
-     * @param error
-     * @return
      */
     public boolean printGlError(int error) {
         if (error != GL10.GL_NO_ERROR) {
@@ -288,7 +256,6 @@ public class GPU {
 
     /**
      * エラー内容をログ表示し、SUCCESS以外ならtrueを返す。
-     * @return
      */
     public boolean printGlError() {
         return printGlError(gl11.glGetError());
@@ -296,8 +263,6 @@ public class GPU {
 
     /**
      * エラー内容をログ出力し、SUCCESS以外ならtrueを返す。
-     * @param error
-     * @return
      */
     boolean printEglError(int error) {
         if (error != EGL10.EGL_SUCCESS) {
@@ -353,8 +318,6 @@ public class GPU {
 
     /**
      * 描画エリアを補正する。
-     * 
-     * @param correction
      */
     public void updateDrawArea(VirtualDisplay correction) {
         RectF area = correction.getDrawingArea(new RectF());
@@ -365,7 +328,6 @@ public class GPU {
 
     /**
      * バックバッファの内容を撮影し、バッファに収める
-     * @return
      */
     public Bitmap captureSurfaceRGB888(Rect area) {
         ByteBuffer buffer = ByteBuffer.allocateDirect(4 * area.width() * area.height());
@@ -392,15 +354,13 @@ public class GPU {
 
     /**
      * デバイス座標系のXをU座標に変換する
-     * @param x
-     * @return
      */
     public static float deviceX2U(float x) {
         return (x + 1.0f) / 2;
     }
 
     /**
-     * 
+     *
      * @param u
      * @return
      */
@@ -410,8 +370,6 @@ public class GPU {
 
     /**
      * デバイス座標系のYをV座標に変換する
-     * @param y
-     * @return
      */
     public static float deviceY2V(float y) {
         return 1.0f - ((y + 1.0f) / 2);
@@ -419,8 +377,6 @@ public class GPU {
 
     /**
      * V座標をデバイス座標系のYに変換する
-     * @param v
-     * @return
      */
     public static float v2DeviceU(float v) {
         return -(v * 2 - 1.0f);
@@ -428,8 +384,6 @@ public class GPU {
 
     /**
      * float値を16bit固定小数へ変換する
-     * @param f
-     * @return
      */
     public static int float2fixed(float f) {
         return (int) (f * 0x10000);
@@ -437,8 +391,6 @@ public class GPU {
 
     /**
      * 16bit固定小数値をfloatへ変換する
-     * @param fixed
-     * @return
      */
     public static float fixed2float(int fixed) {
         return (float) ((double) fixed / (double) (0x10000));

@@ -1,13 +1,14 @@
 package com.eaglesakura.lib.android.game.graphics.canvas;
 
+import com.eaglesakura.lib.android.game.display.VirtualDisplay;
+
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.view.SurfaceHolder;
 
-import com.eaglesakura.lib.android.game.display.VirtualDisplay;
-
 /**
  * SurfaceViewでのGraphics管理
+ *
  * @author TAKESHI YAMASHITA
  */
 public class SurfaceCanvas extends Graphics {
@@ -21,10 +22,10 @@ public class SurfaceCanvas extends Graphics {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param holder
-     * 
+     *
      */
     public void setHolder(SurfaceHolder holder) {
         this.holder = holder;
@@ -32,8 +33,6 @@ public class SurfaceCanvas extends Graphics {
 
     /**
      * 描画の開始を明示する。
-     * @param display
-     * @return
      */
     public boolean lock(VirtualDisplay display) {
         setCanvas(holder.lockCanvas());

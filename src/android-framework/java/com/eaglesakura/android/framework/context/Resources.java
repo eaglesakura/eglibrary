@@ -1,12 +1,12 @@
 package com.eaglesakura.android.framework.context;
 
-import android.content.res.AssetManager;
-import android.graphics.drawable.Drawable;
-
 import com.eaglesakura.android.framework.FrameworkCentral;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.util.IOUtil;
 import com.eaglesakura.util.LogUtil;
+
+import android.content.res.AssetManager;
+import android.graphics.drawable.Drawable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,8 +23,6 @@ public class Resources {
 
     /**
      * 画面サイズを取得する
-     *
-     * @return
      */
     public static int[] displaySize() {
 //        if (displaySize == null) {

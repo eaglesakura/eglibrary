@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/EsMaterial.LightGreen.Button.Ripple">
-    <item android:drawable="@drawable/prv_esm_button_lightgreen" />
+        android:color="@color/EsMaterial.LightGreen.Button.Ripple">
+    <item android:drawable="@drawable/prv_esm_button_lightgreen"/>
 </ripple>

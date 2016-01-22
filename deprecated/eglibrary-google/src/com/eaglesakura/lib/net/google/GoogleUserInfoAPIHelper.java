@@ -1,9 +1,5 @@
 package com.eaglesakura.lib.net.google;
 
-import java.io.IOException;
-
-import net.arnx.jsonic.JSON;
-
 import com.eaglesakura.lib.android.game.util.JsonModel;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.net.WebAPIConnection;
@@ -11,18 +7,20 @@ import com.eaglesakura.lib.net.WebAPIConnectorBase;
 import com.eaglesakura.lib.net.WebAPIException;
 import com.eaglesakura.lib.net.WebAPIException.Type;
 
+import net.arnx.jsonic.JSON;
+
+import java.io.IOException;
+
 /**
  * ユーザー情報を得るためのヘルパクラス
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class GoogleUserInfoAPIHelper {
 
     /**
      * ユーザーのメールアドレスを問い合わせる。
-     * @param connector
-     * @return
-     * @throws GoogleAPIException
+     *
      * @see {@link GoogleOAuth2Helper#SCOPE_USERINFO_EMAIL}
      */
     public static String getUserEmail(WebAPIConnectorBase connector) throws WebAPIException {
@@ -58,8 +56,8 @@ public class GoogleUserInfoAPIHelper {
 
     /**
      * ユーザー問い合わせの結果を格納する
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public static class UserInfoResponce extends JsonModel {
 
@@ -69,7 +67,7 @@ public class GoogleUserInfoAPIHelper {
         public String email = null;
 
         /**
-         * 
+         *
          */
         public Boolean verified_email = null;
     }

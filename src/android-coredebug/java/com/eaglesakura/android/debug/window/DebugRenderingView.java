@@ -1,13 +1,13 @@
 package com.eaglesakura.android.debug.window;
 
-import android.content.Context;
-import android.graphics.Canvas;
-import android.view.View;
-
 import com.eaglesakura.android.debug.window.log.DebugItemGroup;
 import com.eaglesakura.android.debug.window.log.DebugRenderingItem;
 import com.eaglesakura.android.graphics.Graphics;
 import com.eaglesakura.math.Vector2;
+
+import android.content.Context;
+import android.graphics.Canvas;
+import android.view.View;
 
 import java.util.List;
 
@@ -30,10 +30,6 @@ class DebugRenderingView extends View {
 
     /**
      * レンダリングに必要な領域を計算する
-     *
-     * @param renderingItems
-     * @param result
-     * @return
      */
     Vector2 calcRenderSize(List<DebugRenderingItem> renderingItems, Vector2 result) {
         result.set(0, 0);

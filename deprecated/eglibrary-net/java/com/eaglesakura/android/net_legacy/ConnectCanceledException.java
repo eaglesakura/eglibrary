@@ -5,7 +5,7 @@ import java.io.IOException;
 /**
  * エラー
  */
-public class ConnectCanceledException extends IOException{
+public class ConnectCanceledException extends IOException {
     public ConnectCanceledException() {
     }
 

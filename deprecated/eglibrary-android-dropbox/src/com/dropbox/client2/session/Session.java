@@ -22,11 +22,11 @@
 
 package com.dropbox.client2.session;
 
-import java.util.Locale;
-
 import org.apache.http.HttpRequest;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
+
+import java.util.Locale;
 
 /**
  * Keeps track of a logged in user. Contains configuration options for the

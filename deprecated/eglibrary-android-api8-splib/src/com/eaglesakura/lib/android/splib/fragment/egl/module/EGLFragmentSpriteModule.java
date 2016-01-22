@@ -30,7 +30,6 @@ public class EGLFragmentSpriteModule extends EGLFragmentModule {
 
     /**
      * バインドされているディスプレイを設定する
-     * @return
      */
     public VirtualDisplay getDisplay() {
         return display;

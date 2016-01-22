@@ -1,5 +1,12 @@
 package com.eaglesakura.material.widget;
 
+import com.eaglesakura.android.R;
+import com.eaglesakura.android.thread.loop.HandlerLoopController;
+import com.eaglesakura.android.thread.ui.UIHandler;
+import com.eaglesakura.android.util.ContextUtil;
+import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.MathUtil;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -13,13 +20,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
-
-import com.eaglesakura.android.thread.loop.HandlerLoopController;
-import com.eaglesakura.android.thread.ui.UIHandler;
-import com.eaglesakura.android.util.ContextUtil;
-import com.eaglesakura.android.R;
-import com.eaglesakura.util.MathUtil;
-import com.eaglesakura.util.LogUtil;
 
 /**
  * Ripple風にくり抜きを行う
@@ -106,8 +106,6 @@ public class RippleEffectLayout extends FrameLayout {
 
     /**
      * ラウンド効果を有効にする場合はtrue
-     *
-     * @param enableRound
      */
     public void setRoundEnable(boolean enableRound) {
         this.enableRound = enableRound;
@@ -120,8 +118,6 @@ public class RippleEffectLayout extends FrameLayout {
 
     /**
      * Rippleを設定する
-     *
-     * @param fromPosition
      */
     public void setRipple(RectF fromPosition) {
         rippleState = new RippleState();
@@ -220,8 +216,6 @@ public class RippleEffectLayout extends FrameLayout {
 
         /**
          * 移行ウェイトを取得する
-         *
-         * @return
          */
         float getMoveWeight() {
             if (startedTime == 0) {
@@ -250,8 +244,6 @@ public class RippleEffectLayout extends FrameLayout {
 
         /**
          * clip用のpathを生成する
-         *
-         * @return
          */
         Path createPath() {
             final RectF TARGET_POS = new RectF(getLeft(), getTop(), getRight(), getBottom());
@@ -287,10 +279,6 @@ public class RippleEffectLayout extends FrameLayout {
 
     /**
      * View位置を記録する
-     *
-     * @param fromView
-     * @param bundle
-     * @return
      */
     public static Bundle saveFromView(View fromView, Bundle bundle) {
         Rect position = new Rect();
@@ -303,10 +291,6 @@ public class RippleEffectLayout extends FrameLayout {
 
     /**
      * エリアを記録する
-     *
-     * @param area
-     * @param bundle
-     * @return
      */
     public static Bundle saveFromArea(RectF area, Bundle bundle) {
         if (bundle == null) {
@@ -320,8 +304,6 @@ public class RippleEffectLayout extends FrameLayout {
 
     /**
      * アニメーションを指定する
-     *
-     * @param transaction
      */
     public static void setRippleTransaction(FragmentTransaction transaction) {
         transaction.setCustomAnimations(
@@ -336,10 +318,6 @@ public class RippleEffectLayout extends FrameLayout {
      * Rippleエフェクトを開始する
      * <br>
      * このメソッドはTransaction.replaceを行う前に呼び出さなければならない
-     *
-     * @param transaction
-     * @param fromView
-     * @param targetFragment
      */
     public static void startRippleTransaction(FragmentTransaction transaction, View fromView, Fragment targetFragment) {
         setRippleTransaction(transaction);

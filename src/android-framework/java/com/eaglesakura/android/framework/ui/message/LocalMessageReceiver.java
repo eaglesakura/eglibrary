@@ -1,13 +1,13 @@
 package com.eaglesakura.android.framework.ui.message;
 
+import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.StringUtil;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
-
-import com.eaglesakura.util.LogUtil;
-import com.eaglesakura.util.StringUtil;
 
 public class LocalMessageReceiver extends BroadcastReceiver {
     public static final int REQUEST_RUNTIMEPERMISSION_UPDATE = 0x1100 + 1;

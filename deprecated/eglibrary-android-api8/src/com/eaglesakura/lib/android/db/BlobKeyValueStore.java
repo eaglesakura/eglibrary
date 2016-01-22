@@ -1,8 +1,7 @@
 package com.eaglesakura.lib.android.db;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import com.eaglesakura.lib.android.game.resource.DisposableResource;
+import com.eaglesakura.lib.android.game.util.LogUtil;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,14 +9,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.eaglesakura.lib.android.game.resource.DisposableResource;
-import com.eaglesakura.lib.android.game.util.LogUtil;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * SQLを利用した簡単なKVSを提供する。
  * insert時にはkey-valueと更新時刻が保存される。
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class BlobKeyValueStore extends DisposableResource {
 
@@ -39,7 +39,7 @@ public class BlobKeyValueStore extends DisposableResource {
     Context context;
 
     /**
-     * 
+     *
      */
     Helper helper = null;
 
@@ -107,7 +107,7 @@ public class BlobKeyValueStore extends DisposableResource {
     }
 
     /**
-     * 
+     *
      * @param key
      * @param value
      * @return
@@ -123,8 +123,6 @@ public class BlobKeyValueStore extends DisposableResource {
     /**
      * DBに値を新規登録する。
      * 登録済みの場合、上書きを行う。
-     * @param key
-     * @param value
      */
     public void insertOrUpdate(String key, byte[] value) {
         final ContentValues values = createValues(key, value);
@@ -139,8 +137,6 @@ public class BlobKeyValueStore extends DisposableResource {
     /**
      * DBに値を新規登録する。
      * 失敗した場合は何も行わない。
-     * @param key
-     * @param value
      */
     public void insert(String key, byte[] value) {
         final ContentValues values = createValues(key, value);
@@ -153,7 +149,6 @@ public class BlobKeyValueStore extends DisposableResource {
 
     /**
      * DBに書き込み済みの値を削除する
-     * @param key
      */
     public void remove(String key) {
         try {
@@ -177,7 +172,7 @@ public class BlobKeyValueStore extends DisposableResource {
     }
 
     /**
-     * 
+     *
      * @param key
      * @param _def
      * @return
@@ -194,8 +189,6 @@ public class BlobKeyValueStore extends DisposableResource {
     /**
      * キーに関連するデータを取得する。
      * 取得に失敗した場合、nullを返す。
-     * @param key
-     * @return
      */
     public Data get(String key) {
         Cursor cursor = null;
@@ -215,7 +208,6 @@ public class BlobKeyValueStore extends DisposableResource {
 
     /**
      * 内部の管理データを全て返す。
-     * @return
      */
     public List<Data> list() {
         Cursor cursor = null;
@@ -240,15 +232,13 @@ public class BlobKeyValueStore extends DisposableResource {
 
     /**
      * 値を取得する
-     * @param key
-     * @return
      */
     public byte[] getOrNull(String key) {
         Cursor cursor = null;
         try {
             String selection = DB_KEY + "='" + key + "'";
-            cursor = db.query(tableName, new String[] {
-                DB_VALUE
+            cursor = db.query(tableName, new String[]{
+                    DB_VALUE
             }, selection, null, null, null, null);
 
             cursor.moveToFirst();
@@ -264,15 +254,13 @@ public class BlobKeyValueStore extends DisposableResource {
 
     /**
      * キーが存在したらtrue
-     * @param key
-     * @return
      */
     public boolean exists(String key) {
         Cursor cursor = null;
         try {
             String selection = DB_KEY + "='" + key + "'";
-            cursor = db.query(tableName, new String[] {
-                DB_KEY
+            cursor = db.query(tableName, new String[]{
+                    DB_KEY
             }, selection, null, null, null, null);
 
             if (cursor.moveToFirst()) {
@@ -305,10 +293,6 @@ public class BlobKeyValueStore extends DisposableResource {
 
     /**
      * 値を挿入する。
-     * @param key
-     * @param value
-     * @param date
-     * @param filter
      */
     private void _insert(String key, byte[] insertValue, long insertDate, InsertFilter filter) throws Exception {
         // 存在しないから、挿入して終了
@@ -322,7 +306,7 @@ public class BlobKeyValueStore extends DisposableResource {
         }
 
         // 存在するなら、値を取得する
-        Cursor cursor = db.query(tableName, new String[] {
+        Cursor cursor = db.query(tableName, new String[]{
                 DB_VALUE, DB_DATE,
         }, DB_KEY + "='" + key + "'", null, null, null, null);
 
@@ -349,10 +333,9 @@ public class BlobKeyValueStore extends DisposableResource {
     /**
      * insertDBをこのオブジェクトが管理するDBに結合する。
      * データが競合した場合、どちらを優先するかはfilterによって確定される。
-     * @param insertDB
      */
     public void insertTo(final BlobKeyValueStore insertDB, InsertFilter filter) {
-        Cursor cursor = insertDB.db.query(tableName, new String[] {
+        Cursor cursor = insertDB.db.query(tableName, new String[]{
                 DB_KEY, DB_VALUE, DB_DATE,
         }, null, null, null, null, null);
         try {
@@ -374,7 +357,7 @@ public class BlobKeyValueStore extends DisposableResource {
 
     public void print() {
         String selection = null;
-        Cursor cursor = db.query(tableName, new String[] {
+        Cursor cursor = db.query(tableName, new String[]{
                 DB_KEY, DB_VALUE
         }, selection, null, null, null, null);
 
@@ -420,22 +403,16 @@ public class BlobKeyValueStore extends DisposableResource {
 
     /**
      * ２つのテーブルを結合する際に呼び出される。
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public interface InsertFilter {
         /**
          * insertValueで古い値を上書きするかどうかを確定する。
          * trueを返した場合、insertValueで値を上書きする。
-         * @param key
-         * @param currentValue
-         * @param currentDate
-         * @param insertValue
-         * @param insertDate
-         * @return
          */
         public boolean isOverwrite(String key, byte[] currentValue, long currentDate, byte[] insertValue,
-                long insertDate);
+                                   long insertDate);
     }
 
     private static final String[] cursorDatas = {
@@ -444,8 +421,8 @@ public class BlobKeyValueStore extends DisposableResource {
 
     /**
      * KVS内の1データを管理する。
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public class Data {
         long date = 0;
@@ -460,7 +437,6 @@ public class BlobKeyValueStore extends DisposableResource {
 
         /**
          * 保存された日付を取得する。
-         * @return
          */
         public long getDate() {
             return date;
@@ -468,7 +444,6 @@ public class BlobKeyValueStore extends DisposableResource {
 
         /**
          * key本体を取得する。
-         * @return
          */
         public String getKey() {
             return key;
@@ -476,7 +451,6 @@ public class BlobKeyValueStore extends DisposableResource {
 
         /**
          * value本体を取得する。
-         * @return
          */
         public byte[] getValue() {
             return value;
@@ -484,7 +458,6 @@ public class BlobKeyValueStore extends DisposableResource {
 
         /**
          * valueを文字列として取得する。
-         * @return
          */
         public String getValueText() {
             try {

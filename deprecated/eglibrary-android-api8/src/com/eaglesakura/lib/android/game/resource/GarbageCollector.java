@@ -1,19 +1,19 @@
 package com.eaglesakura.lib.android.game.resource;
 
+import com.eaglesakura.lib.android.game.thread.UIHandler;
+import com.eaglesakura.lib.android.game.util.ContextUtil;
+
+import android.os.Handler;
+
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import android.os.Handler;
-
-import com.eaglesakura.lib.android.game.thread.UIHandler;
-import com.eaglesakura.lib.android.game.util.ContextUtil;
-
 /**
  * GCターゲットとして扱えないリソース（GL系、Bitmap系）を一元管理する。
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class GarbageCollector {
     protected static class GCTarget {
@@ -40,7 +40,6 @@ public class GarbageCollector {
     protected Handler handler = null;
 
     /**
-     * 
      * @param gcHandler 解放対象のスレッドを示すハンドラ
      */
     public GarbageCollector(Handler gcHandler) {
@@ -56,7 +55,6 @@ public class GarbageCollector {
 
     /**
      * gc対象に追加を行う。
-     * @param resource
      */
     public void add(GCResourceBase resource) {
         // 関連するリソースを削除する
@@ -76,7 +74,6 @@ public class GarbageCollector {
 
     /**
      * gc対象から排除を行う。
-     * @param resource
      */
     public void remove(GCResourceBase resource) {
         synchronized (marks) {
@@ -96,7 +93,6 @@ public class GarbageCollector {
 
     /**
      * 指定したリソースに関連するRawResourceを解放する。
-     * @param resource
      */
     public void dispose(final GCResourceBase resource) {
         if (handler != null && !ContextUtil.isHandlerThread(handler)) {
@@ -124,7 +120,6 @@ public class GarbageCollector {
 
     /**
      * ガベージコレクション対象のクラス数を取得する。
-     * @return
      */
     public int getGcTargetCount() {
         synchronized (marks) {
@@ -134,7 +129,6 @@ public class GarbageCollector {
 
     /**
      * gc対象が空の場合、trueを返す。
-     * @return
      */
     public boolean isEmpty() {
         synchronized (marks) {
@@ -144,7 +138,8 @@ public class GarbageCollector {
 
     /**
      * 死んでいる参照を削除する。
-     * @param target 解放対象
+     *
+     * @param target  解放対象
      * @param forcing 参照有無にかかわらず強制削除する場合はtrue
      */
     private void _remove(GCTarget target, boolean forcing) {
@@ -158,6 +153,7 @@ public class GarbageCollector {
 
     /**
      * 不要なメモリを取り除く
+     *
      * @return 開放した資源の数
      */
     public int gc() {

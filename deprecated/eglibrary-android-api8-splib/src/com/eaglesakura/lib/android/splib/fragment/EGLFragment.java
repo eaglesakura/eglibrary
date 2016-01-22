@@ -1,5 +1,15 @@
 package com.eaglesakura.lib.android.splib.fragment;
 
+import com.eaglesakura.lib.android.game.graphics.gl11.GPU;
+import com.eaglesakura.lib.android.game.graphics.gl11.hw.EGLManager;
+import com.eaglesakura.lib.android.game.graphics.gl11.hw.GLRenderer;
+import com.eaglesakura.lib.android.game.thread.UIHandler;
+import com.eaglesakura.lib.android.game.util.LogUtil;
+import com.eaglesakura.lib.android.splib.fragment.egl.EGLFragmentModule;
+import com.eaglesakura.lib.android.splib.fragment.egl.EGLFragmentModuleGroup;
+import com.eaglesakura.lib.list.OrderAccessList;
+import com.eaglesakura.lib.list.OrderAccessList.Iterator;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -11,20 +21,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.eaglesakura.lib.android.game.graphics.gl11.GPU;
-import com.eaglesakura.lib.android.game.graphics.gl11.hw.EGLManager;
-import com.eaglesakura.lib.android.game.graphics.gl11.hw.GLRenderer;
-import com.eaglesakura.lib.android.game.thread.UIHandler;
-import com.eaglesakura.lib.android.game.util.LogUtil;
-import com.eaglesakura.lib.android.splib.fragment.egl.EGLFragmentModule;
-import com.eaglesakura.lib.android.splib.fragment.egl.EGLFragmentModuleGroup;
-import com.eaglesakura.lib.list.OrderAccessList;
-import com.eaglesakura.lib.list.OrderAccessList.Iterator;
-
 /**
  * EGL処理を行うFragment
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class EGLFragment extends Fragment {
     /**
@@ -125,7 +125,6 @@ public class EGLFragment extends Fragment {
 
     /**
      * SurfaceViewを作成する。
-     * @return
      */
     protected SurfaceView createSurfaceView() {
         return new SurfaceView(getActivity());
@@ -133,7 +132,6 @@ public class EGLFragment extends Fragment {
 
     /**
      * ルートモジュールを取得する
-     * @return
      */
     public EGLFragmentModuleGroup getRootModule() {
         return rootModule;
@@ -141,7 +139,6 @@ public class EGLFragment extends Fragment {
 
     /**
      * 保留リストに追加する
-     * @param worker
      */
     public void addPendingRunner(GLRenderer worker) {
         pendingWorker.add(worker);
@@ -149,7 +146,6 @@ public class EGLFragment extends Fragment {
 
     /**
      * モジュールを追加する
-     * @param module
      */
     public void addModule(EGLFragmentModule module) {
         rootModule.addModule(module);
@@ -157,8 +153,6 @@ public class EGLFragment extends Fragment {
 
     /**
      * モジュールを追加する
-     * @param module
-     * @param tag
      */
     public void addModule(EGLFragmentModule module, Object tag) {
         rootModule.addModule(module);
@@ -194,7 +188,6 @@ public class EGLFragment extends Fragment {
 
     /**
      * EGL管理クラスを取得する
-     * @return
      */
     public EGLManager getEGL() {
         return egl;
@@ -202,7 +195,6 @@ public class EGLFragment extends Fragment {
 
     /**
      * GPUを取得する
-     * @return
      */
     public GPU getGPU() {
         return egl.getGPU();
@@ -210,7 +202,6 @@ public class EGLFragment extends Fragment {
 
     /**
      * レンダリング用のハンドラを取得する
-     * @return
      */
     public Handler getRenderingHandler() {
         return renderingHandler;
@@ -218,7 +209,6 @@ public class EGLFragment extends Fragment {
 
     /**
      * レンダリング用のハンドラを指定する
-     * @param renderingHandler
      */
     public void setRenderingHandler(Handler renderingHandler) {
         this.renderingHandler = renderingHandler;
@@ -226,7 +216,6 @@ public class EGLFragment extends Fragment {
 
     /**
      * レンダリングエリア幅を取得する
-     * @return
      */
     public int getRenderAreaWidth() {
         return surfaceView.getWidth();
@@ -234,7 +223,6 @@ public class EGLFragment extends Fragment {
 
     /**
      * レンダリングエリア高さを取得する
-     * @return
      */
     public int getRenderAreaHeight() {
         return surfaceView.getHeight();
@@ -242,7 +230,6 @@ public class EGLFragment extends Fragment {
 
     /**
      * 描画用のSurfaceViewを取得する
-     * @return
      */
     public SurfaceView getSurfaceView() {
         return surfaceView;
@@ -250,14 +237,12 @@ public class EGLFragment extends Fragment {
 
     /**
      * EGLの初期化を完了した
-     * @param egl
      */
     protected void onEGLInitialized() {
     }
 
     /**
      * EGLを一時的に停止させた
-     * @param egl
      */
     protected void onEGLPause() {
         rootModule.onEGLPause();
@@ -300,7 +285,6 @@ public class EGLFragment extends Fragment {
 
     /**
      * EGLを復旧させた
-     * @param egl
      */
     protected void onEGLResume() {
         rootModule.onEGLResume();
@@ -315,7 +299,6 @@ public class EGLFragment extends Fragment {
 
     /**
      * ワーキングスレッドに登録する
-     * @param runnable
      */
     public void eglWork(final GLRenderer runnable) {
         eglWorkDelayed(runnable, 0);
@@ -323,7 +306,6 @@ public class EGLFragment extends Fragment {
 
     /**
      * ワーキングスレッドに登録する
-     * @param runnable
      */
     public void eglWorkDelayed(final GLRenderer render, long delay) {
         renderingHandler.postDelayed(new Runnable() {
@@ -336,8 +318,6 @@ public class EGLFragment extends Fragment {
 
     /**
      * 指定時刻に実行を行う
-     * @param render
-     * @param time
      */
     public void eglWorkAtTime(final GLRenderer render, long uptimeMs) {
         renderingHandler.postAtTime(new Runnable() {
@@ -410,8 +390,6 @@ public class EGLFragment extends Fragment {
 
     /**
      * イベントを直接指定して送信する
-     * @param keyCode
-     * @param action
      */
     public void onDispatchKeyEvent(final int keyCode, final int action) {
         egl.working(new GLRenderer() {
@@ -446,7 +424,6 @@ public class EGLFragment extends Fragment {
     /**
      * キーイベントを呼び出す。
      * 呼び出さない場合は特に機能しない。
-     * @param key
      */
     public void onDispatchKeyEvent(final KeyEvent key) {
         final int keyCode = key.getKeyCode();

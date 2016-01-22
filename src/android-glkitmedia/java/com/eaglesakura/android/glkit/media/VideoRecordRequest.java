@@ -1,12 +1,5 @@
 package com.eaglesakura.android.glkit.media;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.graphics.SurfaceTexture;
-import android.hardware.Camera;
-import android.media.MediaRecorder;
-import android.view.Surface;
-
 import com.eaglesakura.android.camera.CameraManager;
 import com.eaglesakura.android.camera.CameraType;
 import com.eaglesakura.android.camera.FocusModeSpec;
@@ -19,6 +12,13 @@ import com.eaglesakura.time.Timer;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.StringUtil;
 import com.eaglesakura.util.Util;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.SurfaceTexture;
+import android.hardware.Camera;
+import android.media.MediaRecorder;
+import android.view.Surface;
 
 import java.io.File;
 
@@ -173,12 +173,6 @@ public class VideoRecordRequest {
 
     /**
      * 撮影を行う
-     *
-     * @param context
-     * @param outputFile
-     * @param request
-     * @param callback
-     * @return
      */
     @SuppressLint("NewApi")
     public static boolean record(Context context, File outputFile, VideoRecordRequest request, VideoRecordCallback callback) {
@@ -295,37 +289,26 @@ public class VideoRecordRequest {
     public interface VideoRecordCallback {
         /**
          * キャンセルされていたらtrue
-         *
-         * @return
          */
         boolean isCanceled();
 
         /**
          * ビデオ録画を開始した
-         *
-         * @param request
          */
         void onRecoredStart(VideoRecordRequest request);
 
         /**
          * ビデオ録画中定期的に呼び出される
-         *
-         * @param request
-         * @param recordTimeMs
          */
         void onRecoredUpdated(VideoRecordRequest request, long recordTimeMs);
 
         /**
          * ビデオの録画を停止した
-         *
-         * @param request
          */
         void onRecoredFinished(VideoRecordRequest request);
 
         /**
          * 録画に失敗した
-         *
-         * @param request
          */
         void onRecoredFailed(VideoRecordRequest request);
 

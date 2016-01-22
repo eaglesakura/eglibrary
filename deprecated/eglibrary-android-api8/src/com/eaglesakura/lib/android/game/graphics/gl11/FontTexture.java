@@ -1,6 +1,8 @@
 package com.eaglesakura.lib.android.game.graphics.gl11;
 
-import javax.microedition.khronos.opengles.GL10;
+import com.eaglesakura.lib.android.game.graphics.Color;
+import com.eaglesakura.lib.android.game.graphics.canvas.Graphics;
+import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -11,9 +13,7 @@ import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 
-import com.eaglesakura.lib.android.game.graphics.Color;
-import com.eaglesakura.lib.android.game.graphics.canvas.Graphics;
-import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
+import javax.microedition.khronos.opengles.GL10;
 
 public class FontTexture extends BitmapTextureImage {
     protected Paint paint = new Paint();
@@ -25,7 +25,7 @@ public class FontTexture extends BitmapTextureImage {
     protected Rect bounds = new Rect();
 
     /**
-     * 
+     *
      * @param text
      * @param fontSize
      * @param glManager
@@ -38,7 +38,7 @@ public class FontTexture extends BitmapTextureImage {
     }
 
     /**
-     * 
+     *
      * @param text
      * @param fontSize
      * @param typeface
@@ -76,9 +76,6 @@ public class FontTexture extends BitmapTextureImage {
 
     /**
      * テクスチャのソースエリアを取得する。
-     * @param start
-     * @param end
-     * @return
      */
     public Rect getSrcArea(int start, int end) {
         Rect result = new Rect();
@@ -97,8 +94,6 @@ public class FontTexture extends BitmapTextureImage {
 
     /**
      * フォントを作成する。古いフォントは削除される。
-     * @param text
-     * @param fontSize
      */
     public void createFont(String text, Typeface typeface, int fontSize) {
         this.text = text;
@@ -111,11 +106,10 @@ public class FontTexture extends BitmapTextureImage {
     /**
      * フォントの描画色を設定する。
      * 白・黒以外の中途半端な色はこれで指定すると補正される。
-     * @param fontColorRGBA
      */
     public void setFontColorRGBA(int fontColorRGBA) {
         final GL10 gl = getGL();
-        gl.glTexEnvfv(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_COLOR, new float[] {
+        gl.glTexEnvfv(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_COLOR, new float[]{
                 Color.toColorRf(fontColorRGBA), //
                 Color.toColorGf(fontColorRGBA), //
                 Color.toColorBf(fontColorRGBA), //
@@ -139,7 +133,6 @@ public class FontTexture extends BitmapTextureImage {
 
     /**
      * フォントの大きさを取得する。
-     * @return
      */
     public int getFontSize() {
         return fontSize;
@@ -147,7 +140,6 @@ public class FontTexture extends BitmapTextureImage {
 
     /**
      * 生成済みのテクスチャを取得する。
-     * @return
      */
     public String getText() {
         return text;

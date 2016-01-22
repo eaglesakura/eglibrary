@@ -1,5 +1,10 @@
 package com.eaglesakura.lib.android.game.graphics.gl11.hw;
 
+import com.eaglesakura.lib.android.game.resource.DisposableResource;
+import com.eaglesakura.lib.android.game.util.LogUtil;
+
+import android.graphics.PixelFormat;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,18 +13,13 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 
-import android.graphics.PixelFormat;
-
-import com.eaglesakura.lib.android.game.resource.DisposableResource;
-import com.eaglesakura.lib.android.game.util.LogUtil;
-
 class EGLContextManager extends DisposableResource {
     /**
      * 初期化時のコンフィグスペック。
      */
     private int[] configSpec = {
-        EGL10.EGL_NONE
-    //! 終端にはEGL_NONEを入れる
+            EGL10.EGL_NONE
+            //! 終端にはEGL_NONEを入れる
     };
 
     /**
@@ -67,7 +67,7 @@ class EGLContextManager extends DisposableResource {
     private int pixelSizeS = 8;
 
     /**
-     * 
+     *
      * @return
      */
     public EGLContext getContext() {
@@ -76,7 +76,6 @@ class EGLContextManager extends DisposableResource {
 
     /**
      * Config IDを取得する
-     * @return
      */
     public EGLConfig getConfig() {
         return config;
@@ -84,7 +83,6 @@ class EGLContextManager extends DisposableResource {
 
     /**
      * contextを作成させる
-     * @param egl
      */
     public void createContext(EGLManager eglManager) {
 
@@ -173,9 +171,6 @@ class EGLContextManager extends DisposableResource {
 
     /**
      * 自動でコンフィグを設定する。
-     * 
-     * @param pixelFormat
-     * @param depth
      */
     void autoConfigSpec(int pixelFormat, boolean depth) {
         List<Integer> specs = new ArrayList<Integer>();

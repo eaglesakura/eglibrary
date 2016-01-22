@@ -1,14 +1,5 @@
 package com.eaglesakura.lib.android.splib.fragment.egl;
 
-import javax.microedition.khronos.opengles.GL11;
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
-import android.view.KeyEvent;
-import android.view.SurfaceView;
-
 import com.eaglesakura.lib.android.game.graphics.gl11.GPU;
 import com.eaglesakura.lib.android.game.graphics.gl11.hw.EGLManager;
 import com.eaglesakura.lib.android.game.graphics.gl11.hw.GLRenderer;
@@ -18,17 +9,25 @@ import com.eaglesakura.lib.android.game.util.GameUtil;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.android.splib.fragment.EGLFragment;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
+import android.view.KeyEvent;
+import android.view.SurfaceView;
+
+import javax.microedition.khronos.opengles.GL11;
+
 /**
  * {@link GL11Fragment}内で利用する、更に細かいモジュールを定義する
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public abstract class EGLFragmentModule extends DisposableResource {
     private EGLFragment fragment;
 
     /**
      * Fragmentと関連付けられた
-     * @param fragment
      */
     public void onAttach(EGLFragment fragment) {
         this.fragment = fragment;
@@ -64,7 +63,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * Fragmentにattach済みだったらtrueを返す
-     * @return
      */
     public boolean isAttached() {
         return fragment != null && fragment.isAdded();
@@ -81,7 +79,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * 自身を管理しているFragmentを取得する
-     * @return
      */
     public EGLFragment getFragment() {
         return fragment;
@@ -89,7 +86,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * EGL管理クラスを取得する
-     * @return
      */
     public EGLManager getEGL() {
         return fragment.getEGL();
@@ -97,7 +93,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * GPU管理クラスを取得する
-     * @return
      */
     public GPU getGPU() {
         return fragment.getGPU();
@@ -105,7 +100,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * VRAMを取得する
-     * @return
      */
     public VRAM getVRAM() {
         return getEGL().getVRAM();
@@ -113,7 +107,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * GLインターフェースを取得する
-     * @return
      */
     public GL11 getGL() {
         return fragment.getEGL().getGL();
@@ -121,7 +114,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * GLを関連付けたViewを取得する
-     * @return
      */
     public SurfaceView getView() {
         if (fragment == null) {
@@ -132,7 +124,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * 関連付けられたActivityを取得する
-     * @return
      */
     public Activity getActivity() {
         if (fragment == null) {
@@ -143,7 +134,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * ApplicationContextを取得する
-     * @return
      */
     public Context getApplicationContext() {
         if (fragment == null) {
@@ -154,7 +144,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * レンダリングエリアの幅を取得する
-     * @return
      */
     public int getRenderAreaWidth() {
         return fragment.getRenderAreaWidth();
@@ -162,7 +151,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * レンダリングエリアの高さを取得する
-     * @return
      */
     public int getRenderAreaHeight() {
         return fragment.getRenderAreaHeight();
@@ -170,7 +158,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * UIスレッドで動作していたらtrueを返す
-     * @return
      */
     public boolean isUIThread() {
         return GameUtil.isUIThread();
@@ -178,7 +165,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * リソースリストを取得する
-     * @return
      */
     public Resources getResources() {
         return fragment.getResources();
@@ -186,7 +172,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * アセットアクセスを行う。
-     * @return
      */
     public AssetManager getAssets() {
         return fragment.getActivity().getAssets();
@@ -194,7 +179,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * GL実行を行い、結果が戻るまで待つ
-     * @param runnable
      */
     public void work(final Runnable runnable) {
         post(new GLRenderer() {
@@ -222,7 +206,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * postを許可するタイミングである場合はtrue
-     * @return
      */
     protected boolean isPostExist() {
         return true;
@@ -230,7 +213,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * GLで実行を行う
-     * @param runnable
      */
     public void post(GLRenderer runnable) {
         if (!isAttached()) {
@@ -248,8 +230,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * GLで実行を行う
-     * @param runnable
-     * @param delay
      */
     public void postDelayed(final GLRenderer runnable, final long delay) {
         if (!isAttached()) {
@@ -284,8 +264,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * GLで実行を行う
-     * @param runnable
-     * @param uptimeMS
      */
     public void postAtTime(final GLRenderer runnable, final long uptimeMS) {
         if (isAttached()) {
@@ -331,8 +309,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * サーフェイスサイズが変更された
-     * @param width
-     * @param height
      */
     public void onGLSurfaceChanged(int width, int height) {
 
@@ -382,7 +358,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * キーイベントが呼ばれると必ず呼び出される
-     * @param event
      */
     public void onKeyEvent(KeyEvent event) {
 
@@ -390,8 +365,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * キーボードが押された
-     * @param keyCode
-     * @param event
      */
     public void onKeyDown(int keyCode, KeyEvent event) {
 
@@ -399,8 +372,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * キーボードが離された
-     * @param keyCode
-     * @param event
      */
     public void onKeyUp(int keyCode, KeyEvent event) {
 
@@ -434,7 +405,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * FragmentがResume済みだったらtrue
-     * @return
      */
     public boolean isFragmentResumed() {
         return fragment.isResumed();
@@ -442,8 +412,6 @@ public abstract class EGLFragmentModule extends DisposableResource {
 
     /**
      * アプリ用文字列を取得する。
-     * @param string_id
-     * @return
      */
     public String getString(int string_id) {
         return getResources().getString(string_id);

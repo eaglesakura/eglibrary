@@ -44,13 +44,19 @@ public final class JsonList extends JsonBase<java.util.List<Object>> implements 
         private int numReturned = 0;
         private final String path;
         private final Iterator<Object> internal;
+
         private WrapperIterator(String path, Iterator<Object> internal) {
             this.path = path;
             this.internal = internal;
         }
 
-        public boolean hasNext() { return internal.hasNext(); }
-        public void remove() { throw new UnsupportedOperationException("can't remove"); }
+        public boolean hasNext() {
+            return internal.hasNext();
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException("can't remove");
+        }
 
         public JsonThing next() {
             int index = numReturned++;
@@ -64,6 +70,7 @@ public final class JsonList extends JsonBase<java.util.List<Object>> implements 
 
     public static final class Extractor<T> extends JsonExtractor<List<T>> {
         public final JsonExtractor<T> elementExtractor;
+
         public Extractor(JsonExtractor<T> elementExtractor) {
             this.elementExtractor = elementExtractor;
         }

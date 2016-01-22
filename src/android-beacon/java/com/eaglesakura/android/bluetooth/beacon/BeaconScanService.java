@@ -1,16 +1,16 @@
 package com.eaglesakura.android.bluetooth.beacon;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.RemoteException;
-
 import com.eaglesakura.android.bluetooth.BluetoothDeviceScanner;
 import com.eaglesakura.android.bluetooth.BluetoothDeviceType;
 import com.eaglesakura.android.service.BaseService;
 import com.eaglesakura.android.thread.HandlerLoopController;
 import com.eaglesakura.android.thread.UIHandler;
 import com.eaglesakura.android.util.AndroidUtil;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
 
 import java.util.HashSet;
 import java.util.Iterator;

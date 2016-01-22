@@ -39,8 +39,6 @@ public abstract class DebugRenderingItem {
 
     /**
      * デバッグフラグを指定する
-     *
-     * @param flags
      */
     public void setFlags(int flags) {
         this.flags = flags;
@@ -48,8 +46,6 @@ public abstract class DebugRenderingItem {
 
     /**
      * レンダリングする時間を指定する
-     *
-     * @param timeMs
      */
     public void setRenderingTime(long timeMs) {
         dropTime = System.currentTimeMillis() + timeMs;
@@ -57,8 +53,6 @@ public abstract class DebugRenderingItem {
 
     /**
      * レンダリング領域のサイズを取得する
-     *
-     * @param size
      */
     public abstract void getRenderingSize(Vector2 size);
 

@@ -6,8 +6,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.eaglesakura.android.dao.net.DbNetCache;
-import com.eaglesakura.util.IOUtil;
 import com.eaglesakura.util.EncodeUtil;
+import com.eaglesakura.util.IOUtil;
 import com.eaglesakura.util.LogUtil;
 
 import java.io.ByteArrayInputStream;
@@ -120,8 +120,6 @@ public class VolleyNetworkResult<T> extends LegacyNetworkResult<T> {
 
     /**
      * 受信したヘッダを取得する
-     *
-     * @return
      */
     public Map<String, String> getReceivedHeaders() {
         return receivedHeaders;
@@ -248,9 +246,6 @@ public class VolleyNetworkResult<T> extends LegacyNetworkResult<T> {
 
     /**
      * URLを指定してキャッシュとして登録する
-     *
-     * @param url
-     * @param timeoutMs
      */
     protected void putCache(final String url, final Map<String, String> headers, final String method, final byte[] body, final long timeoutMs) {
         if (body == null || body.length == 0) {

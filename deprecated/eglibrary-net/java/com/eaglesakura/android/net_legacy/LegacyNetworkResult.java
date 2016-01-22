@@ -67,8 +67,6 @@ public abstract class LegacyNetworkResult<T> {
 
     /**
      * データが変更されている場合trueを返却する
-     *
-     * @return
      */
     public boolean isDataModified() {
         if (oldDataHash == null) {
@@ -82,8 +80,6 @@ public abstract class LegacyNetworkResult<T> {
      * 受信したhttpヘッダを取得する。
      * <p/>
      * ただし、対応してい場合は空のMapが返却される。
-     *
-     * @return
      */
     public Map<String, String> getReceivedHeaders() {
         return new HashMap<>();
@@ -91,9 +87,6 @@ public abstract class LegacyNetworkResult<T> {
 
     /**
      * タイムアウトまでデータ待ちを行う
-     *
-     * @return
-     * @throws IOException
      */
     public T await() throws IOException {
         AndroidThreadUtil.assertBackgroundThread();
@@ -139,8 +132,6 @@ public abstract class LegacyNetworkResult<T> {
 
     /**
      * 既にキャンセル済みであればtrue
-     *
-     * @return
      */
     public boolean isCanceled() {
         return canceled;
@@ -156,8 +147,6 @@ public abstract class LegacyNetworkResult<T> {
 
     /**
      * データを正常に受け取った
-     *
-     * @param receivedData
      */
     void onReceived(T receivedData) {
         synchronized (this) {
@@ -189,8 +178,6 @@ public abstract class LegacyNetworkResult<T> {
 
     /**
      * リスナを設定する
-     *
-     * @param listener
      */
     public void setListener(Listener<T> listener) {
         synchronized (this) {
@@ -206,8 +193,6 @@ public abstract class LegacyNetworkResult<T> {
 
     /**
      * バックグラウンド状態からダウンロードやキャッシュ処理を行わせる
-     *
-     * @return
      */
     abstract void startDownloadFromBackground();
 
@@ -218,24 +203,18 @@ public abstract class LegacyNetworkResult<T> {
 
     /**
      * データの受け取りをハンドリングする
-     *
-     * @param <T>
      */
     public interface Listener<T> {
         void onDataReceived(LegacyNetworkResult<T> sender);
 
         /**
          * データを
-         *
-         * @param sender
          */
         void onError(LegacyNetworkResult<T> sender);
     }
 
     /**
      * データの受け取りをハンドリングする
-     *
-     * @param <T>
      */
     public interface Listener2<T> extends Listener<T> {
         void onDownloadProgress(byte[] buffer, int size);

@@ -1,5 +1,9 @@
 package com.eaglesakura.material.widget.support;
 
+import com.eaglesakura.android.R;
+import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.StringUtil;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -11,10 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
-import com.eaglesakura.android.R;
-import com.eaglesakura.util.LogUtil;
-import com.eaglesakura.util.StringUtil;
 
 /**
  * List Support
@@ -102,10 +102,6 @@ public class SupportRecyclerView extends FrameLayout {
 
     /**
      * 空Viewを取得する
-     *
-     * @param <T>
-     *
-     * @return
      */
     public <T extends View> T getEmptyView(Class<T> clazz) {
         if (emptyViewRoot.getChildCount() == 0) {
@@ -116,8 +112,6 @@ public class SupportRecyclerView extends FrameLayout {
 
     /**
      * プログレスバーの可視状態を設定する
-     *
-     * @param visible
      */
     public void setProgressVisibly(boolean visible, int recyclerViewItemNum) {
         if (visible) {
@@ -137,10 +131,6 @@ public class SupportRecyclerView extends FrameLayout {
 
     /**
      * Adapterの選択位置を取得する
-     *
-     * @param view
-     *
-     * @return
      */
     public static int getSelectedAdapterPosition(RecyclerView view) {
         if (view == null || view.getChildCount() <= 0) {

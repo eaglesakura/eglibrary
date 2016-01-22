@@ -24,8 +24,6 @@ public class FrameCounter {
 
     /**
      * 実際のレートを取得する。
-     *
-     * @return
      */
     public int getRealRate() {
         return realRate;

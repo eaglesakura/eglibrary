@@ -2,8 +2,8 @@ package com.eaglesakura.lib.android.game.util;
 
 /**
  * 進捗状態を管理する。
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class Progress {
 
@@ -50,7 +50,6 @@ public class Progress {
 
     /**
      * 処理が完了した場合true
-     * @return
      */
     public boolean isComplete() {
         return max > 0 && progress == max;
@@ -58,7 +57,6 @@ public class Progress {
 
     /**
      * 進捗を0.0f〜1.0fのウェイトで取得する。
-     * @return
      */
     public double getProgressLevel() {
         if (max == 0) {
@@ -69,7 +67,6 @@ public class Progress {
 
     /**
      * 進捗を0.0f〜1.0fのウェイトで取得する。
-     * @return
      */
     public float getProgressLevelFloat() {
         return (float) getProgressLevel();
@@ -77,7 +74,6 @@ public class Progress {
 
     /**
      * 進捗を0〜100.0のパーセントで取得する。
-     * @return
      */
     public double getProgressPercent() {
         return getProgressLevel() * 100;
@@ -86,7 +82,6 @@ public class Progress {
     /**
      * 進捗を0〜100のパーセントで取得する。
      * 小数点以下は切り捨て。
-     * @return
      */
     public int getProgressPercentInt() {
         return (int) getProgressPercent();

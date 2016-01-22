@@ -1,19 +1,18 @@
 package com.eaglesakura.lib.android.game.graphics;
 
-import android.graphics.Rect;
-import android.util.FloatMath;
-
 import com.eaglesakura.lib.android.game.graphics.SpriteMaster.AnimationFrame;
 import com.eaglesakura.lib.android.game.input.MultiTouchInput;
 import com.eaglesakura.lib.android.game.input.MultiTouchInput.TouchPoint;
 import com.eaglesakura.lib.android.game.math.Vector2;
 import com.eaglesakura.lib.android.game.util.GameUtil;
 
+import android.graphics.Rect;
+import android.util.FloatMath;
+
 /**
  * スプライト描画情報を記録する。
- * 
+ *
  * @author TAKESHI YAMASHITA
- * 
  */
 public class Sprite {
 
@@ -81,7 +80,6 @@ public class Sprite {
 
     /**
      * マスターを指定して同一のスプライトを作成する
-     * @param master
      */
     public Sprite(SpriteMaster master) {
         if (master == null) {
@@ -93,7 +91,6 @@ public class Sprite {
 
     /**
      * 単一のスプライトを作成する。
-     * @param image
      */
     public Sprite(ImageBase image) {
         this(new SpriteMaster(image));
@@ -109,8 +106,6 @@ public class Sprite {
 
     /**
      * 現在のフレームを取得する
-     * 
-     * @return
      */
     protected AnimationFrame getCurrentFrame() {
         //! 画像が登録されていない場合、アニメーションをさせない。
@@ -124,9 +119,6 @@ public class Sprite {
 
     /**
      * 指定したグリッドへSource位置を設定する。
-     * @param onceWidth
-     * @param onceHeight
-     * @param index
      */
     public Sprite setSliceGrid(final int blockWidth, final int blockHeight, final int index) {
         Rect src = getCurrentFrame().area;
@@ -176,7 +168,6 @@ public class Sprite {
 
     /**
      * 描画領域の幅を取得する。
-     * @return
      */
     public int getDstWidth() {
         return dstArea.width();
@@ -184,7 +175,6 @@ public class Sprite {
 
     /**
      * 描画領域の高さを取得する。
-     * @return
      */
     public int getDstHeight() {
         return dstArea.height();
@@ -216,7 +206,6 @@ public class Sprite {
 
     /**
      * スプライトのスケーリング値を取得する。
-     * @return
      */
     public float getScale() {
         return scale;
@@ -225,7 +214,6 @@ public class Sprite {
     /**
      * デフォルトのスケーリング値ならtrueを返す。
      * ある程度のブレは許容する。
-     * @return
      */
     public boolean isDefaultScale() {
         return scale >= 0.99999 && scale < 1.00001;
@@ -233,7 +221,6 @@ public class Sprite {
 
     /**
      * スプライトのスケーリング値をmul倍する。
-     * @param mul
      */
     public Sprite mulScaling(float mul) {
         scale *= mul;
@@ -242,7 +229,6 @@ public class Sprite {
 
     /**
      * スプライトのスケーリング値を設定する
-     * @param scale
      */
     public Sprite setScale(float scale) {
         this.scale = scale;
@@ -251,8 +237,6 @@ public class Sprite {
 
     /**
      * 現在のフレームを取得する。
-     * 
-     * @return
      */
     public int getFrame() {
         return frame;
@@ -261,8 +245,6 @@ public class Sprite {
     /**
      * アニメーションの遷移レベルを取得する。<BR>
      * 0.0f（0%）〜1.0f（100%）で遷移する。
-     * 
-     * @return
      */
     public float getAnimationProgress() {
         float maxFrame = master.komaFrame * master.frames.size();
@@ -271,8 +253,6 @@ public class Sprite {
 
     /**
      * アニメーションが終了していたらtrueを返す。
-     * 
-     * @return
      */
     public boolean isAnimationFinish() {
         return getAnimationProgress() >= 1.0f;
@@ -281,17 +261,13 @@ public class Sprite {
     /**
      * 描画位置を設定する。<BR>
      * デフォルト設定の場合、スプライトはセンタリングされる。
-     * 
-     * @param x
-     * @param y
-     * @param flags
      */
     public Sprite setSpritePosition(int x, int y) {
         return setSpritePosition(x, y, scale, scale, POSITION_CENTER_X | POSITION_CENTER_Y);
     }
 
     /**
-     * 
+     *
      * @param x
      * @param y
      * @param flags
@@ -302,12 +278,6 @@ public class Sprite {
 
     /**
      * 描画位置を設定する。
-     * 
-     * @param x
-     * @param y
-     * @param scaleX
-     * @param scaleY
-     * @param flags
      */
     public Sprite setSpritePosition(int x, int y, float scale, int flags) {
         return setSpritePosition(x, y, scale, scale, flags);
@@ -315,12 +285,6 @@ public class Sprite {
 
     /**
      * 描画位置を設定する。
-     * 
-     * @param x
-     * @param y
-     * @param scaleX
-     * @param scaleY
-     * @param flags
      */
     public Sprite setSpritePosition(int x, int y, float scaleX, float scaleY, int flags) {
 
@@ -354,12 +318,6 @@ public class Sprite {
 
     /**
      * 描画位置を設定する。
-     * 
-     * @param x
-     * @param y
-     * @param scaleX
-     * @param scaleY
-     * @param flags
      */
     public Sprite setSpritePosition(int x, int y, int dstWidth, int dstHeight, int flags) {
         //! 横方向の補正を行う
@@ -387,8 +345,6 @@ public class Sprite {
 
     /**
      * 指定したピクセル数、描画エリアを移動する。
-     * @param x
-     * @param y
      */
     public Sprite offsetSpritePosition(int x, int y) {
         dstArea.offset(x, y);
@@ -397,8 +353,6 @@ public class Sprite {
 
     /**
      * 関連付けられたスプライトのひな形を取得する。
-     * 
-     * @return
      */
     public SpriteMaster getMaster() {
         return master;
@@ -406,8 +360,6 @@ public class Sprite {
 
     /**
      * 描画色RGBAを設定する。
-     * 
-     * @param color
      */
     public Sprite setColorRGBA(int color) {
         this.color = color;
@@ -417,7 +369,6 @@ public class Sprite {
     /**
      * 描画色RGBのみを設定する。
      * Aの値は保たれる。
-     * @param colorRGBX
      */
     public Sprite setColorRGB(int colorRGBX) {
         this.color = ((colorRGBX & 0xffffff00) | (this.color & 0xff));
@@ -426,8 +377,6 @@ public class Sprite {
 
     /**
      * 色を指定した位置へ遷移させる
-     * @param targetRGBA
-     * @param offset
      */
     public Sprite moveColorRGBA(final int targetRGBA, final int offset) {
         final int nowR = Color.toColorR(color);
@@ -445,15 +394,13 @@ public class Sprite {
                 GameUtil.targetMove(nowG, offset, nextG), //
                 GameUtil.targetMove(nowB, offset, nextB), //
                 GameUtil.targetMove(nowA, offset, nextA) //
-                );
+        );
         return this;
     }
 
     /**
      * αのみ遷移させる
      * RGBは固定される。
-     * @param targetA
-     * @param offset
      */
     public Sprite moveColorA(int targetA, int offset) {
         moveColorRGBA((color & 0xffffff00) | (targetA & 0xff), offset);
@@ -463,8 +410,6 @@ public class Sprite {
     /**
      * RGBのみ遷移させる。
      * αは固定される。
-     * @param targetRGB
-     * @param offset
      */
     public Sprite moveColorRGB(int targetRGB, int offset) {
         moveColorRGBA((targetRGB & 0xffffff00) | (color & 0xff), offset);
@@ -473,7 +418,6 @@ public class Sprite {
 
     /**
      * 画像のαのみを変更する
-     * @param alpha
      */
     public Sprite setColorA(int alpha) {
         this.color = (color & 0xffffff00) | (alpha & 0xff);
@@ -482,7 +426,6 @@ public class Sprite {
 
     /**
      * 画像のアルファのみを変更する。
-     * @param alpha
      */
     public Sprite setColorA(float alpha) {
         setColorA((int) (alpha * 255));
@@ -491,8 +434,6 @@ public class Sprite {
 
     /**
      * RGBA化された色情報を取得する。
-     * 
-     * @return
      */
     public int getColorRGBA() {
         return color;
@@ -508,11 +449,6 @@ public class Sprite {
 
     /**
      * 描画色RGBAを設定する。 値は0.0f〜1.0fである必要がある。
-     * 
-     * @param r
-     * @param g
-     * @param b
-     * @param a
      */
     public Sprite setColorRGBA(float r, float g, float b, float a) {
         color = (((int) (r * 255)) << 24) | (((int) (g * 255)) << 16) | (((int) (b * 255)) << 8)
@@ -522,8 +458,6 @@ public class Sprite {
 
     /**
      * 関連付けられた画像を取得する。
-     * 
-     * @return
      */
     public ImageBase getImage() {
         return master.image;
@@ -531,8 +465,6 @@ public class Sprite {
 
     /**
      * 描画すべき画像ブロックを取得する。
-     * 
-     * @return
      */
     public Rect getSrcRect() {
         return getCurrentFrame().area;
@@ -540,8 +472,6 @@ public class Sprite {
 
     /**
      * 描画先のエリアを取得する。
-     * 
-     * @return
      */
     public Rect getDstRect() {
         return dstArea;
@@ -549,8 +479,6 @@ public class Sprite {
 
     /**
      * 画像回転を取得する。
-     * 
-     * @return
      */
     public float getRotateDegree() {
         return rotate;
@@ -560,7 +488,6 @@ public class Sprite {
      * 回転を設定する。<BR>
      * 回転はそのまま記録され、360度系に正規化はされない。<BR>
      * スプライトは反時計回りに回転する。
-     * @param set
      */
     public void setRotateDegree(float set) {
         rotate = set;
@@ -568,8 +495,6 @@ public class Sprite {
 
     /**
      * 衝突している場合trueを返す。
-     * @param pos
-     * @return
      */
     public boolean isIntersect(Vector2 pos) {
         return isIntersect((int) pos.x, (int) pos.y);
@@ -577,8 +502,6 @@ public class Sprite {
 
     /**
      * 衝突している場合trueを返す。
-     * @param pos
-     * @return
      */
     public boolean isIntersect(int x, int y) {
         final int left = Math.min(dstArea.left, dstArea.right);
@@ -592,8 +515,6 @@ public class Sprite {
 
     /**
      * スプライトと指が接触していたらタッチ座標。
-     * @param input
-     * @return
      */
     public TouchPoint findIntersect(MultiTouchInput input) {
         for (int i = 0; i < input.getTouchPointCount(); ++i) {
@@ -609,8 +530,6 @@ public class Sprite {
     /**
      * スプライトと指が接触していたら!=nullを返す。
      * touchOnce / touch / releaseOnceの場合に!=nullを返す。
-     * @param input
-     * @return
      */
     public TouchPoint findIntersectTouchOrReleaseOnce(MultiTouchInput input) {
         for (int i = 0; i < input.getTouchPointCount(); ++i) {
@@ -625,8 +544,6 @@ public class Sprite {
 
     /**
      * スプライトと指が接触していたら!=nullを返す。
-     * @param input
-     * @return
      */
     public TouchPoint findIntersectReleaseOnce(MultiTouchInput input) {
         for (int i = 0; i < input.getTouchPointCount(); ++i) {
@@ -640,8 +557,6 @@ public class Sprite {
 
     /**
      * スプライトと指が接触していたら!=nullを返す。
-     * @param input
-     * @return
      */
     public TouchPoint isIntersectTouchOnce(MultiTouchInput input) {
         for (int i = 0; i < input.getTouchPointCount(); ++i) {
@@ -655,8 +570,6 @@ public class Sprite {
 
     /**
      * スプライトと指が接触していたら!=nullを返す。
-     * @param input
-     * @return
      */
     public TouchPoint findIntersectTouch(MultiTouchInput input) {
         for (int i = 0; i < input.getTouchPointCount(); ++i) {
@@ -671,8 +584,6 @@ public class Sprite {
     /**
      * スプライトのマスタ情報を変更する。
      * 変更後は画像SRC/DSTを補正する。
-     * @param master
-     * @return
      */
     public Sprite changeMaster(SpriteMaster master) {
         this.master = master;

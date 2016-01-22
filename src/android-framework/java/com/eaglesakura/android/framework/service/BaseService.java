@@ -1,5 +1,7 @@
 package com.eaglesakura.android.framework.service;
 
+import com.eaglesakura.android.thread.ui.UIHandler;
+
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -14,8 +16,6 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
-
-import com.eaglesakura.android.thread.ui.UIHandler;
 
 /**
  * 便利系メソッドを固めたUtilクラス
@@ -155,8 +155,6 @@ public abstract class BaseService extends Service {
 
     /**
      * セットしてあるアラームを解除する
-     *
-     * @param requestCode
      */
     protected void cancelAlarm(int requestCode) {
         Intent intent = new Intent(ACTION_SELF_WAKEUP_BROADCAST);

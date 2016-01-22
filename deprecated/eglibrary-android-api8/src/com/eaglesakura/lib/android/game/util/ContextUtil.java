@@ -1,6 +1,6 @@
 package com.eaglesakura.lib.android.game.util;
 
-import java.util.UUID;
+import com.eaglesakura.lib.android.game.math.Vector2;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -23,19 +23,18 @@ import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 
-import com.eaglesakura.lib.android.game.math.Vector2;
+import java.util.UUID;
 
 /**
  * Context関連の便利メソッドを提供する
- * 
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class ContextUtil {
 
     /**
      *
-     * 
+     *
      * @param context
      * @return
      */
@@ -45,7 +44,7 @@ public class ContextUtil {
 
     /**
      *
-     * 
+     *
      * @param context
      * @return
      */
@@ -55,7 +54,7 @@ public class ContextUtil {
 
     /**
      *
-     * 
+     *
      * @param context
      * @return
      */
@@ -65,12 +64,6 @@ public class ContextUtil {
 
     /**
      * ディスプレイのXYサイズを取得する。
-     * 
-     * 
-     * @param context
-     * @param result
-     * @return
-     * 
      */
     public static Vector2 getDisplaySize(Context context, Vector2 result) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -81,11 +74,6 @@ public class ContextUtil {
 
     /**
      * 指定方向に端末画面を固定する。
-     * 
-     * 
-     * @param context
-     * @param isVertical
-     * 
      */
     public static void setOrientation(Context context, boolean isVertical) {
         try {
@@ -102,10 +90,6 @@ public class ContextUtil {
 
     /**
      * 設定を反転する。
-     * 
-     * 
-     * @param context
-     * 
      */
     public static void toggleOrientationFixed(Context context) {
         try {
@@ -122,11 +106,11 @@ public class ContextUtil {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param context
      * @param is
-     * 
+     *
      */
     public static void setOrientationFixed(Context context, boolean is) {
         try {
@@ -148,9 +132,7 @@ public class ContextUtil {
 
     /**
      * DP->Pixを変換して返す。
-     * 
-     * @param dp
-     * @param context
+     *
      * @return 画面上のピクセル数。ただし、1ピクセル単位に四捨五入されている。
      */
     public static int dpToPix(float dp, Context context) {
@@ -162,8 +144,6 @@ public class ContextUtil {
 
     /**
      * デバッグモードならtrueを返す。
-     * 
-     * @return
      */
     public static boolean isDebug(Context context) {
         PackageManager manager = context.getPackageManager();
@@ -181,14 +161,9 @@ public class ContextUtil {
 
     /**
      * ステータスバーに簡単なメッセージを表示する。
-     * 
-     * @param message
-     * @param icon
-     * @param statusbarId
-     * @param intent
      */
     public static void sendStatusBarInfo(Context context, String title, String message, int icon, int statusbarId,
-            Intent intent) {
+                                         Intent intent) {
         try {
             //! 通知作成
             final NotificationManager nfManager = (NotificationManager) context
@@ -206,8 +181,6 @@ public class ContextUtil {
 
     /**
      * Actionバーに対応している場合、trueを返す。
-     * @param context
-     * @return
      */
     public static boolean isActionBarEnable() {
         try {
@@ -219,15 +192,9 @@ public class ContextUtil {
 
     /**
      * 文字幅を指定した幅に収まるように抑えて取得する。
-     * @param text
-     * @param fooder
-     * @param context
-     * @param textSizeDimenId
-     * @param textWidthDimenId
-     * @return
      */
     public static String getCompactString(String text, String fooder, Context context, int textSizeDimenId,
-            int textWidthDimenId) {
+                                          int textWidthDimenId) {
         int textPixelSize = context.getResources().getDimensionPixelSize(textSizeDimenId);
         int textWidthPixelSize = context.getResources().getDimensionPixelSize(textWidthDimenId);
 
@@ -236,8 +203,6 @@ public class ContextUtil {
 
     /**
      * 文字列を指定した幅に収まるように抑えて取得する。
-     * @param origin
-     * @return
      */
     public static String getCompactString(String origin, String fooder, Typeface type, int textSize, int maxWidth) {
         Paint paint = new Paint();
@@ -273,12 +238,11 @@ public class ContextUtil {
 
     /**
      * おそらく重複することが無いであろうユニークな文字列を吐き出す。
-     * @return
      */
     public static String genUUID() {
         String result = null;
         result = String.format("%s-%s-%s",
-        // 通常のUUID
+                // 通常のUUID
                 UUID.randomUUID().toString(),
                 // 現在時刻
                 EncodeUtil.genSHA1(Long.valueOf(System.currentTimeMillis()).toString().getBytes()),
@@ -289,8 +253,6 @@ public class ContextUtil {
 
     /**
      * Handlerに関連付けられていたThreadで動作している場合はtrueを返す。
-     * @param handler
-     * @return
      */
     public static boolean isHandlerThread(Handler handler) {
         return Thread.currentThread().equals(handler.getLooper().getThread());
@@ -298,7 +260,6 @@ public class ContextUtil {
 
     /**
      * ハニカムだったらtrue
-     * @return
      */
     public static boolean isHoneycomb() {
         final int sdk_int = Build.VERSION.SDK_INT;
@@ -307,8 +268,6 @@ public class ContextUtil {
 
     /**
      * 戻るキーの
-     * @param event
-     * @return
      */
     public static boolean isBackKeyEvent(KeyEvent event) {
         return event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK;
@@ -316,7 +275,6 @@ public class ContextUtil {
 
     /**
      * フルスクリーンに変更する
-     * @param activity
      */
     public static void fullScreen(Activity activity) {
         activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -324,8 +282,6 @@ public class ContextUtil {
 
     /**
      * 横方向をフルスクリーンにする
-     * @param activity
-     * @param dialog
      */
     public static void fullScreenX(Activity activity, Dialog dialog) {
         WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
@@ -335,8 +291,6 @@ public class ContextUtil {
 
     /**
      * 横方向をフルスクリーンにする
-     * @param activity
-     * @param dialog
      */
     public static void fullScreenY(Activity activity, Dialog dialog) {
         WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();

@@ -1,5 +1,14 @@
 package com.eaglesakura.android.glkit.media;
 
+import com.eaglesakura.android.glkit.egl.EGLSpecRequest;
+import com.eaglesakura.android.glkit.egl.GLESVersion;
+import com.eaglesakura.android.glkit.egl.IEGLDevice;
+import com.eaglesakura.android.glkit.egl11.EGL11Manager;
+import com.eaglesakura.android.thread.UIHandler;
+import com.eaglesakura.android.util.AndroidUtil;
+import com.eaglesakura.thread.Holder;
+import com.eaglesakura.util.LogUtil;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.PixelFormat;
@@ -9,15 +18,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
-
-import com.eaglesakura.android.glkit.egl.EGLSpecRequest;
-import com.eaglesakura.android.glkit.egl.GLESVersion;
-import com.eaglesakura.android.glkit.egl.IEGLDevice;
-import com.eaglesakura.android.glkit.egl11.EGL11Manager;
-import com.eaglesakura.android.thread.UIHandler;
-import com.eaglesakura.android.util.AndroidUtil;
-import com.eaglesakura.thread.Holder;
-import com.eaglesakura.util.LogUtil;
 
 import static android.opengl.GLES20.glDeleteTextures;
 import static android.opengl.GLES20.glGenTextures;

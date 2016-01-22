@@ -15,16 +15,13 @@ import java.util.List;
 
 /**
  * File関連の便利メソッドを提供する
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class FileUtil {
 
     /**
      * 指定箇所へファイルをコピーする。
-     * @param src
-     * @param dst
-     * @return
      */
     public static final void copy(File src, File dst) throws IOException {
         mkdir(dst.getParentFile());
@@ -49,9 +46,6 @@ public class FileUtil {
 
     /**
      * コピー先が存在しない、もしくはMD5が一致しない場合のみコピーを行い、それ以外はコピーを行わない
-     * @param src
-     * @param dst
-     * @throws IOException
      */
     public static final void copyOrUpdate(File src, File dst) throws IOException {
         if (!dst.isFile()) {
@@ -71,9 +65,6 @@ public class FileUtil {
 
     /**
      * ファイルからMD5を求める。
-     * 
-     * @param file
-     * @return
      */
     public static String genMD5(File file) {
         try {
@@ -109,8 +100,6 @@ public class FileUtil {
     /**
      * 末尾・先端のバイト列を用いた単純なハッシュを生成する
      * ファイルフォーマットによっては衝突の可能性が非常に高いため、利用する場合は十分に検討を行うこと。
-     * @param file
-     * @return
      */
     public static String genShortHash(File file, int checkLength) {
         if (!file.isFile()) {
@@ -152,9 +141,6 @@ public class FileUtil {
 
     /**
      * ファイルからMD5を求める。
-     * 
-     * @param file
-     * @return
      */
     public static String genSHA1(File file) {
         try {
@@ -189,8 +175,6 @@ public class FileUtil {
 
     /**
      * ディレクトリを再帰的に削除する。
-     * 
-     * @param root
      */
     public static void delete(File root) {
         if (root.isFile()) {
@@ -208,11 +192,6 @@ public class FileUtil {
 
     /**
      * ファイル拡張子を取得する。
-     *
-     * 
-     * @param path
-     * @return
-     * 
      */
     public static String getFileExt(String fileName) {
         if (fileName == null)
@@ -229,11 +208,8 @@ public class FileUtil {
     /**
      * 拡張子付のファイル名からファイル名のみを抜き出す
      *
-     * 
-     * @param fileName
-     *            ファイル名
+     * @param fileName ファイル名
      * @return 拡張子を取り除いたファイル名
-     * 
      */
     public static String getFileName(final String fileName) {
         if (fileName == null)
@@ -249,8 +225,6 @@ public class FileUtil {
 
     /**
      * ファイルパスからSHA1を得る。
-     * @param file
-     * @return
      */
     public static String genPathSHA1(final File file) {
         String path = file.getAbsolutePath();
@@ -260,8 +234,6 @@ public class FileUtil {
 
     /**
      * カレントディレクトリのパスを取得する。
-     * @return
-     * 
      */
     public static String getCurrentDirectoryPath() {
         return (new File(".").getAbsoluteFile().getParent());
@@ -274,8 +246,6 @@ public class FileUtil {
     /**
      * ファイルを名前順にソートする。
      * inの中身がソートされるため、戻り値は同じ参照となる。
-     * @param files
-     * @return
      */
     public static File[] sort(File[] files) {
         if (files == null) {
@@ -304,8 +274,6 @@ public class FileUtil {
 
     /**
      * 比較等の処理を行うために文字列を正規化する
-     * @param origin
-     * @return
      */
     public static String normalizeFileName(String origin) {
         origin = GameUtil.zenkakuEngToHankakuEng(origin);
@@ -319,8 +287,6 @@ public class FileUtil {
 
     /**
      * そこまでの道を含めてディレクトリを作成する。
-     * @param dir
-     * @return
      */
     public static File mkdir(File dir) {
         // 作成済みだったら何もしない
@@ -342,9 +308,6 @@ public class FileUtil {
      * parentからtargetに到達するまでの全てのファイルを取得する。
      * 戻り値にtargetとparentも含まれる。
      * 階層が上にあるFileがindexの0に近くなる。
-     * @param target
-     * @param parent
-     * @return
      */
     public static List<File> getDirectoryRoute(File target, File parent) {
         List<File> result = new LinkedList<File>();
@@ -360,8 +323,6 @@ public class FileUtil {
     /**
      * ディレクトリの中身を完全削除する。
      * dirフォルダ自体は残る。
-     * @param dir
-     * @return
      */
     public static File cleanDirectory(File dir) {
         if (dir.isFile()) {
@@ -374,9 +335,6 @@ public class FileUtil {
 
     /**
      * 同じ内容を指していた場合はtrue
-     * @param a
-     * @param b
-     * @return
      */
     public static boolean equals(File a, File b) {
         if (a == null || b == null) {

@@ -102,8 +102,6 @@ public class CameraSpec {
 
     /**
      * プレビューサイズ一覧を取得
-     *
-     * @return
      */
     public List<PictureSizeSpec> getPreviewSizes() {
         return previewSizes;
@@ -111,8 +109,6 @@ public class CameraSpec {
 
     /**
      * 撮影サイズ一覧を取得
-     *
-     * @return
      */
     public List<PictureSizeSpec> getShotSizes() {
         return shotSizes;
@@ -124,9 +120,6 @@ public class CameraSpec {
 
     /**
      * シーンをサポートしていたらtrue
-     *
-     * @param scene
-     * @return
      */
     public boolean isSupportedScene(SceneSpec scene) {
         return sceneSpecs.contains(scene);
@@ -154,8 +147,6 @@ public class CameraSpec {
 
     /**
      * フラッシュモードを持っていたらtrue
-     *
-     * @return
      */
     public boolean hasFlash() {
         for (FlashModeSpec spec : flashModeSpecs) {
@@ -176,9 +167,6 @@ public class CameraSpec {
 
     /**
      * IDからプレビューサイズを逆引きする
-     *
-     * @param id
-     * @return
      */
     public PictureSizeSpec getPreviewSize(String id) {
         for (PictureSizeSpec size : previewSizes) {
@@ -192,9 +180,6 @@ public class CameraSpec {
 
     /**
      * IDから撮影サイズを逆引きする
-     *
-     * @param id
-     * @return
      */
     public PictureSizeSpec getShotSize(String id) {
         for (PictureSizeSpec size : shotSizes) {
@@ -207,9 +192,6 @@ public class CameraSpec {
 
     /**
      * IDから撮影サイズを逆引きする
-     *
-     * @param id
-     * @return
      */
     public PictureSizeSpec getVideoSize(String id) {
         for (PictureSizeSpec size : videoSizes) {

@@ -67,7 +67,6 @@ public enum DBValueType {
 
     /**
      * SQL命令上の型名を取得する
-     * @return
      */
     public String getSqlValueType() {
         return name().toLowerCase();
@@ -77,8 +76,6 @@ public enum DBValueType {
 
     /**
      * valuesに突っ込む
-     * @param result
-     * @param origin
      */
     public abstract void toValue(ContentValues result, String key, Object origin);
 }

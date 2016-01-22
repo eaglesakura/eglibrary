@@ -1,5 +1,16 @@
 package com.eaglesakura.android.framework.ui;
 
+import com.eaglesakura.android.R;
+import com.eaglesakura.android.framework.FrameworkCentral;
+import com.eaglesakura.android.framework.ui.state.IStateful;
+import com.eaglesakura.android.framework.util.AppSupportUtil;
+import com.eaglesakura.android.oari.ActivityResult;
+import com.eaglesakura.android.thread.async.AsyncTaskController;
+import com.eaglesakura.android.thread.async.AsyncTaskResult;
+import com.eaglesakura.android.thread.ui.UIHandler;
+import com.eaglesakura.android.util.ContextUtil;
+import com.eaglesakura.util.LogUtil;
+
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -13,17 +24,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
-
-import com.eaglesakura.android.R;
-import com.eaglesakura.android.framework.ui.state.IStateful;
-import com.eaglesakura.android.framework.util.AppSupportUtil;
-import com.eaglesakura.android.thread.async.AsyncTaskController;
-import com.eaglesakura.android.thread.async.AsyncTaskResult;
-import com.eaglesakura.android.framework.FrameworkCentral;
-import com.eaglesakura.android.oari.ActivityResult;
-import com.eaglesakura.android.thread.ui.UIHandler;
-import com.eaglesakura.android.util.ContextUtil;
-import com.eaglesakura.util.LogUtil;
 
 import java.util.List;
 
@@ -183,8 +183,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IStatefu
      * Fragmentがアタッチされたタイミングで呼び出される。
      * <br>
      * このFragmentは最上位階層のみが扱われる。
-     *
-     * @param fragment
      */
     @Override
     public void onAttachFragment(Fragment fragment) {
@@ -198,7 +196,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IStatefu
     /**
      * キーイベントハンドリングを行う
      *
-     * @param event
      * @return ハンドリングを行えたらtrue
      */
     protected boolean handleFragmentsKeyEvent(KeyEvent event) {
@@ -228,7 +225,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IStatefu
     /**
      * Runtime Permissionの更新を行わせる
      *
-     * @param permissions
      * @return パーミッション取得を開始した場合はtrue
      */
     public boolean requestRuntimePermissions(String[] permissions) {
@@ -244,8 +240,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IStatefu
 
     /**
      * UIスレッドで実行する
-     *
-     * @param runnable
      */
     protected void runUI(Runnable runnable) {
         UIHandler.postUIorRun(runnable);
@@ -253,8 +247,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IStatefu
 
     /**
      * バックグラウンドで実行する
-     *
-     * @param runner
      */
     protected AsyncTaskResult<AsyncTaskController> runBackground(Runnable runner) {
         return FrameworkCentral.getTaskController().pushBack(runner);

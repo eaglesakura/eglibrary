@@ -1,16 +1,15 @@
 package com.eaglesakura.android.framework.util;
 
-import android.annotation.SuppressLint;
+import com.eaglesakura.android.framework.ui.message.LocalMessageReceiver;
+import com.eaglesakura.android.util.PermissionUtil;
+import com.eaglesakura.util.Util;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.content.LocalBroadcastManager;
-
-import com.eaglesakura.android.framework.ui.message.LocalMessageReceiver;
-import com.eaglesakura.android.util.PermissionUtil;
-import com.eaglesakura.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -31,9 +31,6 @@ public class DebugItemGroup {
 
     /**
      * 指定したフラグを全て持つアイテムを取得する
-     *
-     * @param flags
-     * @return
      */
     public List<DebugRenderingItem> listFlagItems(int flags) {
         List<DebugRenderingItem> result = new ArrayList<>();
@@ -51,15 +48,13 @@ public class DebugItemGroup {
      */
     public void clean() {
         Iterator<DebugRenderingItem> iterator = items.iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             DebugRenderingItem item = iterator.next();
         }
     }
 
     /**
      * 描画を継続したいアイテムを取得する
-     *
-     * @return
      */
     public List<DebugRenderingItem> listNonDropItems() {
         List<DebugRenderingItem> result = new ArrayList<>();

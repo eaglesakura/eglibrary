@@ -1,11 +1,5 @@
 package com.eaglesakura.lib.android.web.google.docs;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import com.eaglesakura.lib.android.game.util.LogUtil;
-import com.eaglesakura.lib.android.web.google.docs.DocsAPIException.Type;
 import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.GoogleTransport;
 import com.google.api.client.googleapis.auth.clientlogin.ClientLogin;
@@ -15,11 +9,18 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 
+import com.eaglesakura.lib.android.game.util.LogUtil;
+import com.eaglesakura.lib.android.web.google.docs.DocsAPIException.Type;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 /**
  * Google Docsからファイルをダウンロードする。
  * キャンセル・レジューム・レンジ指定に対応。
- * @author SAKURA
  *
+ * @author SAKURA
  */
 public class GoogleDocsDownloader {
 
@@ -68,8 +69,6 @@ public class GoogleDocsDownloader {
 
     /**
      * ダウンロードする長さを設定する。
-     * @param start
-     * @param length
      */
     public void setContentStartAndLength(long start, long length) {
         rangeStart = start;
@@ -78,8 +77,6 @@ public class GoogleDocsDownloader {
 
     /**
      * ダウンロードする長さを設定する。
-     * @param start
-     * @param length
      */
     public void setContentStartAndEnd(long start, long end) {
         rangeStart = start;
@@ -173,8 +170,6 @@ public class GoogleDocsDownloader {
 
     /**
      * ダウンロードを開始する。
-     * @param url
-     * @throws IOException
      */
     public void start(GoogleDocsEntries.Entry entry) throws DocsAPIException {
         LogUtil.log(entry.getTitle() + " :: " + entry.getContentSize() + "bytes = " + entry.getContentUrl());
@@ -183,9 +178,6 @@ public class GoogleDocsDownloader {
 
     /**
      * ダウンロードを開始する。
-     * @param url
-     * @param length
-     * @throws IOException
      */
     public void start(String url, long length) throws DocsAPIException {
         response = getResponse(url, length);
@@ -205,11 +197,9 @@ public class GoogleDocsDownloader {
     }
 
     /**
-     *
      * @param length ダウンロードバイト数
-     * @param os 書込み先ストリーム
+     * @param os     書込み先ストリーム
      * @return ダウンロードが終了したらtrue
-     * @throws IOException
      */
     public boolean downloadBytes(int length, OutputStream os) throws IOException {
 
@@ -237,7 +227,6 @@ public class GoogleDocsDownloader {
 
     /**
      * ダウンロードを終了する。
-     * @throws IOException
      */
     public void close() throws IOException {
         if (stream != null) {

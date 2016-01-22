@@ -1,18 +1,18 @@
 package com.eaglesakura.lib.android.splib.fragment.egl.module;
 
+import com.eaglesakura.lib.android.game.thread.UIHandler;
+import com.eaglesakura.lib.android.splib.fragment.EGLFragment;
+import com.eaglesakura.lib.android.splib.fragment.egl.EGLFragmentModule;
+
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
 
-import com.eaglesakura.lib.android.game.thread.UIHandler;
-import com.eaglesakura.lib.android.splib.fragment.EGLFragment;
-import com.eaglesakura.lib.android.splib.fragment.egl.EGLFragmentModule;
-
 /**
  * ダイアログ表示用のモジュール
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public abstract class DialogModule extends EGLFragmentModule {
 
@@ -90,7 +90,6 @@ public abstract class DialogModule extends EGLFragmentModule {
 
     /**
      * ダイアログを取得する。
-     * @return
      */
     public Dialog getDialog() {
         return dialog;
@@ -103,7 +102,6 @@ public abstract class DialogModule extends EGLFragmentModule {
 
     /**
      * ダイアログを作成する。
-     * @return
      */
     protected abstract Dialog createDialog();
 

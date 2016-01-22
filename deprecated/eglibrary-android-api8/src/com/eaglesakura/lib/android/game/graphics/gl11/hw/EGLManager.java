@@ -1,6 +1,10 @@
 package com.eaglesakura.lib.android.game.graphics.gl11.hw;
 
-import static javax.microedition.khronos.egl.EGL10.*;
+import com.eaglesakura.lib.android.game.graphics.gl11.GPU;
+import com.eaglesakura.lib.android.game.resource.DisposableResource;
+import com.eaglesakura.lib.android.game.util.LogUtil;
+
+import android.view.SurfaceHolder;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLContext;
@@ -8,11 +12,7 @@ import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
-import android.view.SurfaceHolder;
-
-import com.eaglesakura.lib.android.game.graphics.gl11.GPU;
-import com.eaglesakura.lib.android.game.resource.DisposableResource;
-import com.eaglesakura.lib.android.game.util.LogUtil;
+import static javax.microedition.khronos.egl.EGL10.*;
 
 /**
  * OpenGL管理を行う。<BR>
@@ -85,10 +85,11 @@ public class EGLManager extends DisposableResource {
 
         /**
          * GLが実行可能な状態にある場合true
-         * @return
          */
         public abstract boolean isRunning();
-    };
+    }
+
+    ;
 
     /**
      * 管理しているサーフェイス。
@@ -132,22 +133,18 @@ public class EGLManager extends DisposableResource {
     VRAM vram = null;
 
     /**
-     * 
+     *
      */
     GPU gpu;
 
     /**
      * GL描画用スレッドを作成する。
-     * 
-     * 
-     * @param holder
      */
     public EGLManager() {
     }
 
     /**
      * GLオブジェクトを取得する
-     * @return
      */
     public GL11 getGL() {
         return gl11;
@@ -155,7 +152,6 @@ public class EGLManager extends DisposableResource {
 
     /**
      * HWアクセラレーターを取得する
-     * @return
      */
     public GPU getGPU() {
         return gpu;
@@ -163,7 +159,6 @@ public class EGLManager extends DisposableResource {
 
     /**
      * 現在のEGLの状態を取得する
-     * @return
      */
     private EGLStatus_e getStatus() {
         // ディスプレイを得ていなければ初期化されていない
@@ -227,7 +222,6 @@ public class EGLManager extends DisposableResource {
 
     /**
      * レンダリングを行わせる
-     * @param renderer
      */
     public void rendering(GLRenderer renderer) {
         synchronized (GPUUtil.gpu_lock) {
@@ -266,7 +260,6 @@ public class EGLManager extends DisposableResource {
 
     /**
      * レンダリングを行わせる
-     * @param renderer
      */
     public void working(GLRenderer renderer) {
         synchronized (GPUUtil.gpu_lock) {
@@ -360,8 +353,6 @@ public class EGLManager extends DisposableResource {
 
     /**
      * エラー内容をログ出力し、SUCCESS以外ならtrueを返す。
-     * @param error
-     * @return
      */
     public boolean printGlError(int error) {
         if (error != GL10.GL_NO_ERROR) {
@@ -372,7 +363,6 @@ public class EGLManager extends DisposableResource {
 
     /**
      * エラー内容をログ表示し、SUCCESS以外ならtrueを返す。
-     * @return
      */
     public boolean printGlError() {
         return printGlError(gl11.glGetError());
@@ -380,8 +370,6 @@ public class EGLManager extends DisposableResource {
 
     /**
      * エラー内容をログ出力し、SUCCESS以外ならtrueを返す。
-     * @param error
-     * @return
      */
     boolean printEglError(int error) {
         if (error != EGL_SUCCESS) {
@@ -392,7 +380,6 @@ public class EGLManager extends DisposableResource {
 
     /**
      * エラー内容をログ表示し、SUCCESS以外ならtrueを返す。
-     * @return
      */
     boolean printEglError() {
         return printEglError(egl.eglGetError());
@@ -456,7 +443,7 @@ public class EGLManager extends DisposableResource {
     };
 
     /**
-     * 
+     *
      * @param holder
      */
     public void setSurfaceHolder(SurfaceHolder holder) {
@@ -471,7 +458,7 @@ public class EGLManager extends DisposableResource {
 
     /**
      * サーフェイスを返す。
-     * 
+     *
      * @returnx
      */
     public SurfaceHolder getSurfaceHolder() {
@@ -528,7 +515,6 @@ public class EGLManager extends DisposableResource {
 
     /**
      * VRAMを取得する
-     * @return
      */
     public VRAM getVRAM() {
         return vram;
@@ -576,7 +562,6 @@ public class EGLManager extends DisposableResource {
 
     /**
      * GL用のスレッドかどうかを確認する。
-     * @return
      */
     public boolean isGLThread() {
         if (glThread == null) {
@@ -588,7 +573,6 @@ public class EGLManager extends DisposableResource {
 
     /**
      * 初期化完了していたらtrue
-     * @return
      */
     public boolean isInitialized() {
         synchronized (GPUUtil.gpu_lock) {
@@ -598,7 +582,6 @@ public class EGLManager extends DisposableResource {
 
     /**
      * OpenGLが休止状態の場合はtrueを返す。
-     * @return
      */
     public boolean isSuspend() {
         synchronized (GPUUtil.gpu_lock) {
@@ -608,7 +591,6 @@ public class EGLManager extends DisposableResource {
 
     /**
      * OpenGLが活性化されている場合はtrue
-     * @return
      */
     public boolean isRunning() {
         synchronized (GPUUtil.gpu_lock) {

@@ -1,15 +1,15 @@
 package com.eaglesakura.android.framework.ui.content;
 
+import com.eaglesakura.android.R;
+import com.eaglesakura.android.framework.ui.BaseActivity;
+import com.eaglesakura.android.framework.ui.BaseFragment;
+import com.eaglesakura.util.Util;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
-
-import com.eaglesakura.android.R;
-import com.eaglesakura.android.framework.ui.BaseActivity;
-import com.eaglesakura.android.framework.ui.BaseFragment;
-import com.eaglesakura.util.Util;
 
 /**
  * 親となるFragmentを指定して起動するActivityの雛形
@@ -70,8 +70,6 @@ public abstract class ContentHolderActivity extends BaseActivity {
 
     /**
      * デフォルトで使用されるレイアウトIDを取得する
-     *
-     * @return
      */
     protected int getDefaultLayoutId() {
         return R.layout.activity_content_holder;
@@ -79,16 +77,11 @@ public abstract class ContentHolderActivity extends BaseActivity {
 
     /**
      * 表示するコンテンツが指定されない場合のデフォルトコンテンツを開く
-     *
-     * @return
      */
     protected abstract BaseFragment newDefaultContentFragment();
 
     /**
      * 管理用のTagを生成する
-     *
-     * @param fragment
-     * @return
      */
     protected String createTag(BaseFragment fragment) {
         return fragment.createSimpleTag();
@@ -96,8 +89,6 @@ public abstract class ContentHolderActivity extends BaseActivity {
 
     /**
      * コンテンツ表示用Intentを生成する
-     *
-     * @param contentFragment
      */
     public static Intent createIntent(Context context,
                                       Class<? extends ContentHolderActivity> activityClass, int activityLayoutId,

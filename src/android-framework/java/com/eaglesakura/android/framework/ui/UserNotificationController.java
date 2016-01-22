@@ -1,8 +1,8 @@
 package com.eaglesakura.android.framework.ui;
 
-import android.content.Context;
-
 import com.eaglesakura.android.thread.ui.UIHandler;
+
+import android.content.Context;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -27,8 +27,6 @@ public class UserNotificationController {
 
     /**
      * 何らかの処理中であればtrue
-     *
-     * @return
      */
     public boolean isProgressing() {
         return progressNum.get() > 0;
@@ -36,8 +34,6 @@ public class UserNotificationController {
 
     /**
      * 処理を開始する
-     *
-     * @param message
      */
     public void pushProgress(final Object sender, final String message) {
         final int prg = progressNum.incrementAndGet();

@@ -25,6 +25,7 @@ public final class JsonThing extends JsonBase<Object> {
     }
 
     private static final java.util.HashMap<Class<?>, String> TypeNames = new java.util.HashMap<Class<?>, String>();
+
     static {
         TypeNames.put(String.class, "a string");
         TypeNames.put(Number.class, "a number");

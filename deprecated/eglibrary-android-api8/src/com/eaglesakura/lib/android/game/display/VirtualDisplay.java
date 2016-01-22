@@ -1,10 +1,10 @@
 package com.eaglesakura.lib.android.game.display;
 
-import android.graphics.Rect;
-import android.graphics.RectF;
-
 import com.eaglesakura.lib.android.game.math.Vector2;
 import com.eaglesakura.lib.android.game.util.GameUtil;
+
+import android.graphics.Rect;
+import android.graphics.RectF;
 
 /**
  * ディスプレイサイズに関わる補正を行う。<BR>
@@ -14,9 +14,8 @@ import com.eaglesakura.lib.android.game.util.GameUtil;
  * アスペクト比は可能な限り保持するが、端数の関係で完全一致は諦めること。<BR>
  * 実際の描画を行うための解像度は必ず偶数になる。<BR>
  * 全ての入力が偶数である場合、上下の隙間のピクセル数は必ず一致する。<BR>
- * 
+ *
  * @author TAKESHI YAMASHITA
- * 
  */
 public class VirtualDisplay {
     /**
@@ -41,8 +40,8 @@ public class VirtualDisplay {
 
     /**
      * 仮想ディスプレイのフィットタイプ。
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public enum FitType {
         /**
@@ -71,8 +70,8 @@ public class VirtualDisplay {
 
     /**
      * 実ディスプレイサイズを設定する。
-     * 
-     * @param width 幅
+     *
+     * @param width  幅
      * @param height 高さ
      */
     public void setRealDisplaySize(float width, float height) {
@@ -82,7 +81,8 @@ public class VirtualDisplay {
     /**
      * 仮想ディスプレイのサイズを指定する。
      * 自動的に全画面が収まるようにフィットさせる。
-     * @param width 仮想ディスプレイ幅
+     *
+     * @param width  仮想ディスプレイ幅
      * @param height 仮想ディスプレイ高さ
      */
     public void setVirtualDisplaySize(float width, float height) {
@@ -91,10 +91,10 @@ public class VirtualDisplay {
 
     /**
      * 仮想ディスプレイサイズを設定する。
-     * 
-     * @param width 仮想ディスプレイ幅
+     *
+     * @param width  仮想ディスプレイ幅
      * @param height 仮想ディスプレイ高さ
-     * @param type 画面をフィットさせる方法
+     * @param type   画面をフィットさせる方法
      */
     public void setVirtualDisplaySize(float width, float height, FitType type) {
         virtualDisplaySize.set(width, height);
@@ -140,7 +140,7 @@ public class VirtualDisplay {
 
     /**
      * 実際の描画先の座標を取得する。
-     * 
+     *
      * @param result 結果を格納するオブジェクト。この参照が戻り値となる。
      * @return 実際の描画先の座標
      */
@@ -151,7 +151,7 @@ public class VirtualDisplay {
 
     /**
      * 実際の描画先座標を取得する。
-     * 
+     *
      * @param result 結果を格納するオブジェクト。この参照が戻り値となる。
      * @return 実際の描画先の座標
      */
@@ -162,6 +162,7 @@ public class VirtualDisplay {
 
     /**
      * 描画エリアの幅を取得する
+     *
      * @return 描画エリアの幅
      */
     public int getDrawingAreaWidth() {
@@ -170,6 +171,7 @@ public class VirtualDisplay {
 
     /**
      * 描画エリアの高さを取得する
+     *
      * @return 描画エリアの高さ
      */
     public int getDrawingAreaHeight() {
@@ -178,7 +180,7 @@ public class VirtualDisplay {
 
     /**
      * 実際の物理的なディスプレイサイズを取得する。
-     * 
+     *
      * @param result 結果を格納するオブジェクト
      * @return resultと同じ参照
      */
@@ -189,7 +191,7 @@ public class VirtualDisplay {
 
     /**
      * 仮想ディスプレイサイズを取得する。
-     * 
+     *
      * @param result 結果を格納するオブジェクト
      * @return resultと同じ参照
      */
@@ -203,7 +205,7 @@ public class VirtualDisplay {
      * 仮想ディスプレイのほうが小さい場合、 > 1.0f<BR>
      * 実ディスプレイのほうが小さい場合、 < 1.0f<BR>
      * となる。
-     * 
+     *
      * @return　デバイスのスケーリング率
      */
     public float getDeviceScaling() {
@@ -212,6 +214,7 @@ public class VirtualDisplay {
 
     /**
      * 仮想ディスプレイの横サイズの中央を取得する。
+     *
      * @return 仮想ディスプレイのX中央値
      */
     public int getVirtualDisplayCenterX() {
@@ -220,6 +223,7 @@ public class VirtualDisplay {
 
     /**
      * 仮想ディスプレイの縦サイズの中央を取得する。
+     *
      * @return 仮想ディスプレイのX中央値
      */
     public int getVirtualDisplayCenterY() {
@@ -228,6 +232,7 @@ public class VirtualDisplay {
 
     /**
      * 仮想ディスプレイの横サイズを取得する。
+     *
      * @return 仮想ディスプレイの幅
      */
     public int getVirtualDisplayWidth() {
@@ -236,6 +241,7 @@ public class VirtualDisplay {
 
     /**
      * 仮想ディスプレイの縦サイズを取得する
+     *
      * @return 仮想ディスプレイの高さ
      */
     public int getVirtualDisplayHeight() {
@@ -244,7 +250,7 @@ public class VirtualDisplay {
 
     /**
      * 指定した座標が画面外だったらtrueを返す。
-     * 
+     *
      * @param realPos 実際のデバイス座標
      * @return 画面外だったらtrue
      */
@@ -254,10 +260,10 @@ public class VirtualDisplay {
 
     /**
      * 指定した座標が画面外だったらtrueを返す。
-     * 
-     * @param left X座標
-     * @param top Y座標
-     * @param width 幅
+     *
+     * @param left   X座標
+     * @param top    Y座標
+     * @param width  幅
      * @param height 高さ
      * @return 外側だったらtrue
      */
@@ -267,9 +273,6 @@ public class VirtualDisplay {
 
     /**
      * 仮想ディスプレイの外だったらtrueを返す
-     * 
-     * @param area
-     * @return
      */
     public boolean isOutsideVirtual(int left, int top, int width, int height) {
         final int right = (left + width);
@@ -281,12 +284,9 @@ public class VirtualDisplay {
 
     /**
      * 実際のピクセル位置を仮想ディスプレイ位置に変換する。
-     * 
-     * @param realPos
-     *            ピクセル単位の位置
-     * @param result
-     *            結果を格納する参照。realPosと同じオブジェクトで問題ない。
-     * @return
+     *
+     * @param realPos ピクセル単位の位置
+     * @param result  結果を格納する参照。realPosと同じオブジェクトで問題ない。
      */
     public Vector2 projectionPixelPosition(Vector2 realPos, Vector2 result) {
         result.set((realPos.x - drawingArea.left) / scaling, (realPos.y - drawingArea.top) / scaling);
@@ -295,12 +295,9 @@ public class VirtualDisplay {
 
     /**
      * 実際のピクセル位置を正規化座標系に変換する。 GL正規化座標系のため、下側が0.0、上側が1.0となる。
-     * 
-     * @param realPos
-     *            ピクセル単位の位置
-     * @param result
-     *            結果を格納する参照。realPosと同じオブジェクトで問題ない。
-     * @return
+     *
+     * @param realPos ピクセル単位の位置
+     * @param result  結果を格納する参照。realPosと同じオブジェクトで問題ない。
      */
     public Vector2 projectionNormalizePosition(Vector2 realPos, Vector2 result) {
         projectionPixelPosition(realPos, result);
@@ -312,12 +309,11 @@ public class VirtualDisplay {
     }
 
     /**
-     * 実際のピクセル位置を正規化座標系に変換する。 
+     * 実際のピクセル位置を正規化座標系に変換する。
      * この値は、仮想ディスプレイに対するUVとして動作する。
-     * 
+     *
      * @param realPos ピクセル単位の位置
-     * @param result 結果を格納する参照。realPosと同じオブジェクトで問題ない。
-     * @return
+     * @param result  結果を格納する参照。realPosと同じオブジェクトで問題ない。
      */
     public Vector2 projectionNormalizePosition2D(Vector2 realPos, Vector2 result) {
         projectionPixelPosition(realPos, result);

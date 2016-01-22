@@ -2,9 +2,9 @@ package com.eaglesakura.gradle.tasks
 
 import com.eaglesakura.tool.log.Logger
 import de.greenrobot.daogenerator.DaoGenerator
-import org.gradle.api.DefaultTask
 import de.greenrobot.daogenerator.Schema
-import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.TaskAction
 
 /**
  * Dao出力用のタスク

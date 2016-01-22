@@ -13,9 +13,6 @@ public class NetworkResultGroup {
 
     /**
      * リクエストを追加する
-     *
-     * @param networkResult
-     * @return
      */
     public <T> LegacyNetworkResult<T> add(LegacyNetworkResult<T> networkResult) {
         networkResults.add(networkResult);
@@ -26,7 +23,6 @@ public class NetworkResultGroup {
      * 全てのデータを待つ
      *
      * @return データが一つでも更新されていたらtrueを返却する
-     * @throws IOException
      */
     public boolean awaitAll() throws IOException {
         int modifiedCount = 0;
@@ -42,8 +38,6 @@ public class NetworkResultGroup {
 
     /**
      * 一つでもデータが更新されたらtrue
-     *
-     * @return
      */
     public boolean isDataModified() {
         return getDataModifiedCount() > 0;
@@ -51,8 +45,6 @@ public class NetworkResultGroup {
 
     /**
      * 変更されたデータ数を数える
-     *
-     * @return
      */
     public int getDataModifiedCount() {
 

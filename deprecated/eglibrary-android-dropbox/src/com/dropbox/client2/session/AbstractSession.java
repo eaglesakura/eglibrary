@@ -23,13 +23,7 @@
 
 package com.dropbox.client2.session;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
-import java.util.zip.GZIPInputStream;
+import com.dropbox.client2.DropboxAPI;
 
 import org.apache.http.ConnectionReuseStrategy;
 import org.apache.http.Header;
@@ -69,7 +63,13 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 
-import com.dropbox.client2.DropboxAPI;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Keeps track of a logged in user and contains configuration options for the
@@ -111,7 +111,7 @@ public abstract class AbstractSession implements Session {
      * given access token pair.
      */
     public AbstractSession(AppKeyPair appKeyPair, AccessType type,
-            AccessTokenPair accessTokenPair) {
+                           AccessTokenPair accessTokenPair) {
         if (appKeyPair == null) throw new IllegalArgumentException("'appKeyPair' must be non-null");
         if (type == null) throw new IllegalArgumentException("'type' must be non-null");
 
@@ -124,7 +124,8 @@ public abstract class AbstractSession implements Session {
      * Links the session with the given access token and secret.
      */
     public void setAccessTokenPair(AccessTokenPair accessTokenPair) {
-        if (accessTokenPair == null) throw new IllegalArgumentException("'accessTokenPair' must be non-null");
+        if (accessTokenPair == null)
+            throw new IllegalArgumentException("'accessTokenPair' must be non-null");
         this.accessTokenPair = accessTokenPair;
     }
 
@@ -184,7 +185,7 @@ public abstract class AbstractSession implements Session {
     }
 
     private static String buildOAuthHeader(AppKeyPair appKeyPair,
-            AccessTokenPair signingTokenPair) {
+                                           AccessTokenPair signingTokenPair) {
         StringBuilder buf = new StringBuilder();
         buf.append("OAuth oauth_version=\"1.0\"");
         buf.append(", oauth_signature_method=\"PLAINTEXT\"");
@@ -365,7 +366,8 @@ public abstract class AbstractSession implements Session {
                 if (value != null && name.equalsIgnoreCase("timeout")) {
                     try {
                         timeout = Math.min(timeout, Long.parseLong(value) * 1000);
-                    } catch (NumberFormatException e) {}
+                    } catch (NumberFormatException e) {
+                    }
                 }
             }
 
@@ -384,7 +386,7 @@ public abstract class AbstractSession implements Session {
          */
         @Override
         public boolean keepAlive(final HttpResponse response,
-                final HttpContext context) {
+                                 final HttpContext context) {
             if (response == null) {
                 throw new IllegalArgumentException(
                         "HTTP response may not be null.");
@@ -490,7 +492,7 @@ public abstract class AbstractSession implements Session {
 
         @Override
         public ClientConnectionRequest requestConnection(HttpRoute route,
-                Object state) {
+                                                         Object state) {
             IdleConnectionCloserThread.ensureRunning(this, KEEP_ALIVE_DURATION_SECS, KEEP_ALIVE_MONITOR_INTERVAL_SECS);
             return super.requestConnection(route, state);
         }
@@ -503,7 +505,7 @@ public abstract class AbstractSession implements Session {
         private static IdleConnectionCloserThread thread = null;
 
         public IdleConnectionCloserThread(DBClientConnManager manager,
-                int idleTimeoutSeconds, int checkIntervalSeconds) {
+                                          int idleTimeoutSeconds, int checkIntervalSeconds) {
             super();
             this.manager = manager;
             this.idleTimeoutSeconds = idleTimeoutSeconds;
@@ -579,7 +581,7 @@ public abstract class AbstractSession implements Session {
 
         @Override
         public InputStream getContent()
-            throws IOException, IllegalStateException {
+                throws IOException, IllegalStateException {
 
             // the wrapped entity's getContent() decides about repeatability
             InputStream wrappedin = wrappedEntity.getContent();

@@ -1,21 +1,20 @@
 package com.eaglesakura.lib.android.game.activity;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.WindowManager.LayoutParams;
-
 import com.eaglesakura.lib.android.game.loop.GameLoopManagerBase;
 import com.eaglesakura.lib.android.game.loop.GameLoopManagerBase.ILoopParent;
 import com.eaglesakura.lib.android.game.math.Vector2;
 import com.eaglesakura.lib.android.game.util.ContextUtil;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.WindowManager.LayoutParams;
+
 /**
  * OpenGLES 1.1を利用したゲーム用のActivity 作成後すぐにループを開始する。
- * 
+ *
  * @author TAKESHI YAMASHITA
- * 
  */
 @Deprecated
 public abstract class GL11GameActivityBase extends Activity implements ILoopParent {
@@ -103,21 +102,18 @@ public abstract class GL11GameActivityBase extends Activity implements ILoopPare
 
     /**
      * ゲームループクラスを作成する。
-     * 
-     * @return
      */
     protected abstract GameLoopManagerBase createGameLoopManager();
 
     /**
      * 仮想ディスプレイの幅・高さを取得する。
-     * 
-     * @return
      */
     protected abstract Vector2 getVirtualDisplaySize();
 
     /**
      * Activity名称を取得する。<BR>
      * この返却値はサブクラス名がセットされる。
+     *
      * @return クラス名（デフォルトの挙動をする場合のみ）
      */
     public String name() {

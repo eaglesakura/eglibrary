@@ -1,5 +1,11 @@
 package com.eaglesakura.android.camera;
 
+import com.eaglesakura.android.util.AndroidUtil;
+import com.eaglesakura.android.util.ContextUtil;
+import com.eaglesakura.math.MathUtil;
+import com.eaglesakura.thread.Holder;
+import com.eaglesakura.util.LogUtil;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
@@ -8,12 +14,6 @@ import android.os.Build;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.TextureView;
-
-import com.eaglesakura.android.util.AndroidUtil;
-import com.eaglesakura.android.util.ContextUtil;
-import com.eaglesakura.math.MathUtil;
-import com.eaglesakura.thread.Holder;
-import com.eaglesakura.util.LogUtil;
 
 import java.util.List;
 
@@ -100,7 +100,6 @@ public class CameraManager implements Camera.AutoFocusCallback {
      * カメラの回転角を取得する
      *
      * @param spec 回転タイプ
-     * @return
      */
     public boolean requestOrientation(OrientationSpec spec) {
         try {
@@ -144,9 +143,6 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
     /**
      * シーンモードを設定する
-     *
-     * @param spec
-     * @return
      */
     public boolean requestScene(SceneSpec spec) {
         try {
@@ -257,8 +253,6 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
     /**
      * 現在のズーム値を取得する
-     *
-     * @return
      */
     public int getZoom() {
         return parameters.getZoom();
@@ -266,8 +260,6 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
     /**
      * ズームの最大値を取得する
-     *
-     * @return
      */
     public int getMaxZoom() {
         return parameters.getMaxZoom();
@@ -275,9 +267,6 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
     /**
      * ズームレベルを指定する
-     *
-     * @param zoom
-     * @return
      */
     public boolean requestZoom(int zoom) {
         try {
@@ -311,9 +300,6 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
     /**
      * フォーカスモード設定
-     *
-     * @param spec
-     * @return
      */
     public boolean requestFocusMode(FocusModeSpec spec) {
         try {
@@ -332,7 +318,6 @@ public class CameraManager implements Camera.AutoFocusCallback {
      * ホワイトバランス設定
      *
      * @param spec ホワイトバランス設定
-     * @return
      */
     public boolean requestWhiteBarance(WhiteBaranceSpec spec) {
         try {
@@ -374,8 +359,6 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
     /**
      * 撮影サイズIDを指定する
-     *
-     * @param pictureSizeId
      */
     public void setPictureSize(String pictureSizeId) {
         Camera.Size pictureSize = specs.getShotSize(pictureSizeId).getCameraSize();
@@ -418,8 +401,6 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
     /**
      * カメラに接続する
-     *
-     * @param type
      */
     public boolean connect(CameraType type) {
         if (!isConnected()) {
@@ -454,9 +435,6 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
     /**
      * 指定サーフェイスに対してプレビューを開始する
-     *
-     * @param surface
-     * @return
      */
     @SuppressLint("NewApi")
     public boolean startPreview(Object surface) {
@@ -487,8 +465,6 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
     /**
      * プレビューを停止する
-     *
-     * @return
      */
     public boolean stopPreview() {
         try {
@@ -539,8 +515,6 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
     /**
      * 現在のオートフォーカス状態を取得する
-     *
-     * @return
      */
     public AutofucusState getAutofucusState() {
         return autofucusState;
@@ -548,8 +522,6 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
     /**
      * オートフォーカスの処理中であればtrue
-     *
-     * @return
      */
     public boolean isAutofocusProcessing() {
         return autofucusState == AutofucusState.Processing;
@@ -585,8 +557,6 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
     /**
      * オートフォーカスを開始する
-     *
-     * @return
      */
     public boolean startAutofocus() {
         synchronized (lock) {
@@ -607,8 +577,6 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
     /**
      * オートフォーカス処理に失敗していたらtrue
-     *
-     * @return
      */
     public boolean isAutofocusFailed() {
         return autofucusState == AutofucusState.Failed;
@@ -616,8 +584,6 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
     /**
      * オートフォーカス処理に成功していたらtrue
-     *
-     * @return
      */
     public boolean isAutofocusCompleted() {
         return autofucusState == AutofucusState.Completed;
@@ -647,8 +613,6 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
     /**
      * オートフォーカス処理をキャンセルする
-     *
-     * @return
      */
     public boolean cancelAutofocus() {
         synchronized (lock) {
@@ -683,8 +647,6 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
     /**
      * プレビュー幅を取得する
-     *
-     * @return
      */
     public int getPreviewWidth() {
         return parameters.getPreviewSize().width;
@@ -692,8 +654,6 @@ public class CameraManager implements Camera.AutoFocusCallback {
 
     /**
      * プレビュー高さを取得する
-     *
-     * @return
      */
     public int getPreviewHeight() {
         return parameters.getPreviewSize().height;
@@ -705,19 +665,12 @@ public class CameraManager implements Camera.AutoFocusCallback {
     public interface CameraManagerListener {
         /**
          * オートフォーカス状態が変更された
-         *
-         * @param success
-         * @param camera
          */
         void onAutoFocus(boolean success, CameraManager camera);
     }
 
     /**
      * カメラスペックを取得する
-     *
-     * @param context
-     * @param type
-     * @return
      */
     public static CameraSpec loadCameraSpec(Context context, CameraType type) {
         CameraManager cameraManager = new CameraManager(context);

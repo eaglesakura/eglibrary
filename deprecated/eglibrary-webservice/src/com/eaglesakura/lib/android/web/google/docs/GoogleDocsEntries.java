@@ -1,22 +1,5 @@
 package com.eaglesakura.lib.android.web.google.docs;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import com.eaglesakura.lib.android.game.util.GameUtil;
-import com.eaglesakura.lib.android.game.util.LogUtil;
-import com.eaglesakura.lib.android.web.google.docs.DocsAPIException.Type;
 import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.GoogleTransport;
 import com.google.api.client.googleapis.GoogleUrl;
@@ -31,10 +14,28 @@ import com.google.api.client.util.Key;
 import com.google.api.client.xml.XmlNamespaceDictionary;
 import com.google.api.client.xml.atom.AtomParser;
 
+import com.eaglesakura.lib.android.game.util.GameUtil;
+import com.eaglesakura.lib.android.game.util.LogUtil;
+import com.eaglesakura.lib.android.web.google.docs.DocsAPIException.Type;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Google Docs内部のファイルを管理する。
- * @author SAKURA
  *
+ * @author SAKURA
  */
 public class GoogleDocsEntries {
 
@@ -95,7 +96,6 @@ public class GoogleDocsEntries {
 
     /**
      * 次のAPI戻り値を持っている場合trueを返す。
-     * @return
      */
     public boolean hasNextResult() {
         return nextURL != null;
@@ -103,7 +103,6 @@ public class GoogleDocsEntries {
 
     /**
      * 次のページを読み込む。
-     * @throws IOException
      */
     public void getNextPage() throws DocsAPIException {
         if (hasNextResult()) {
@@ -113,9 +112,6 @@ public class GoogleDocsEntries {
 
     /**
      * Google Docs APIの指定URLから情報を取得する。
-     * @param _url
-     * @return
-     * @throws IOException
      */
     public byte[] getResult(String _url, String method) throws DocsAPIException {
         HttpTransport transport = GoogleTransport.create();
@@ -169,8 +165,8 @@ public class GoogleDocsEntries {
 
     /**
      * docsにアクセスし、アイテム一覧を取得する。
+     *
      * @param keyword 検索ワード。nullですべて取得。
-     * @throws IOException
      */
     public void accessURL(String _url, String method) throws DocsAPIException {
         HttpTransport transport = GoogleTransport.create();
@@ -264,8 +260,8 @@ public class GoogleDocsEntries {
 
     /**
      * docsにアクセスし、アイテム一覧を取得する。
+     *
      * @param keyword 検索ワード。nullですべて取得。
-     * @throws IOException
      */
     public void search(String keyword, boolean isQuery) throws DocsAPIException {
         String url = "https://docs.google.com/feeds/default/private/full";
@@ -285,9 +281,6 @@ public class GoogleDocsEntries {
 
     /**
      * 全てのアイテムを一括で取得する。
-     * @param keyword
-     * @param isQuery
-     * @throws IOException
      */
     public void searchFullPage(String keyword, boolean isQuery, boolean sort) throws DocsAPIException {
         search(keyword, isQuery);
@@ -303,7 +296,6 @@ public class GoogleDocsEntries {
 
     /**
      * Google Docsフォルダを取得する。
-     * @return
      */
     public Directory getDocsDirectory() throws DocsAPIException {
 
@@ -346,7 +338,6 @@ public class GoogleDocsEntries {
     /**
      * Docsのアイテムをディレクトリを所属させる。
      * どこにも所属していないアイテムはRootに所属させる。
-     * @param root
      */
     public void bindDirectory(Directory root) {
         for (Entry entry : entries) {
@@ -370,8 +361,6 @@ public class GoogleDocsEntries {
 
     /**
      * 同名のファイルを持っていたらtrue
-     * @param name
-     * @return
      */
     public int hasItem(String name) {
         int result = 0;
@@ -407,8 +396,8 @@ public class GoogleDocsEntries {
 
     /**
      * Google Docs内の１アイテム。
-     * @author SAKURA
      *
+     * @author SAKURA
      */
     public class Entry {
         String title = null;
@@ -480,7 +469,6 @@ public class GoogleDocsEntries {
 
         /**
          * 更新日を取得する
-         * @return
          */
         public Date getUpdated() {
             return updated;
@@ -488,7 +476,6 @@ public class GoogleDocsEntries {
 
         /**
          * ファイルタイトル。
-         * @return
          */
         public String getTitle() {
             return title;
@@ -497,7 +484,6 @@ public class GoogleDocsEntries {
         /**
          * ファイルのMD5情報を取得する。
          * MD5を持たない（ディレクトリとか）はnullを返す。
-         * @return
          */
         public String getMd5() {
             return md5;
@@ -505,7 +491,6 @@ public class GoogleDocsEntries {
 
         /**
          * MD5情報を持っていたらtrueを返す。
-         * @return
          */
         public boolean hasMD5() {
             return md5 != null;
@@ -513,7 +498,6 @@ public class GoogleDocsEntries {
 
         /**
          * コンテンツの元URL。
-         * @return
          */
         public String getContentUrl() {
             return contentUrl;
@@ -525,7 +509,6 @@ public class GoogleDocsEntries {
 
         /**
          * 親属性を取得する。
-         * @return
          */
         public Link getParentLink() {
             return parent;
@@ -533,7 +516,6 @@ public class GoogleDocsEntries {
 
         /**
          * 自分の属性を取得する。
-         * @return
          */
         public Link getSelfLink() {
             return self;
@@ -617,8 +599,8 @@ public class GoogleDocsEntries {
 
     /**
      * Docs内部のフォルダを示す。
-     * @author SAKURA
      *
+     * @author SAKURA
      */
     public class Directory {
         /**
@@ -653,7 +635,6 @@ public class GoogleDocsEntries {
 
         /**
          * フォルダを構成する。
-         * @param item
          */
         public Directory(Entry item) {
             title = item.title;
@@ -672,7 +653,6 @@ public class GoogleDocsEntries {
 
         /**
          * ディレクトリを追加する。
-         * @param dir
          */
         public void addDirectory(Directory dir) {
             if (childs.indexOf(dir) < 0) {
@@ -683,7 +663,6 @@ public class GoogleDocsEntries {
 
         /**
          * リンクするアイテムを追加する。
-         * @param item
          */
         public void addEntry(Entry item) {
             if (items.indexOf(item) < 0) {
@@ -720,8 +699,6 @@ public class GoogleDocsEntries {
         /**
          * URLからディレクトリを検索する。
          * サブディレクトリも検索対象となる。
-         * @param href
-         * @return
          */
         public Directory searchHref(String href) {
             if (getHref().equals(href)) {
@@ -797,8 +774,6 @@ public class GoogleDocsEntries {
 
         /**
          * rootから見て階層構造的にフォルダを作成・取得する。
-         * @param root
-         * @return
          */
         public File mkdir(File root) {
 

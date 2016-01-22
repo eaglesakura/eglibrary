@@ -1,20 +1,20 @@
 package com.eaglesakura.lib.android.db;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-
-import android.content.Context;
-
 import com.eaglesakura.lib.android.game.graphics.canvas.BitmapImage;
 import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.game.resource.GarbageCollector;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
+import android.content.Context;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+
 /**
  * On Memoryで済む程度の小さな画像キャッシュを提供する。
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class ImageCacheDatabase extends DisposableResource {
     File file = null;
@@ -39,7 +39,7 @@ public class ImageCacheDatabase extends DisposableResource {
     }
 
     /**
-     * 
+     *
      * @param key
      * @param loader
      * @return
@@ -91,17 +91,11 @@ public class ImageCacheDatabase extends DisposableResource {
     public interface Loader {
         /**
          * キャッシュがヒットしなかった場合、画像バイナリを読み込む。
-         * @param store
-         * @param key
-         * @return
          */
         public byte[] load(ImageCacheDatabase db, String key) throws IOException;
 
         /**
          * 読み出された画像を利用するならtrueを返す。
-         * @param image
-         * @param date
-         * @return
          */
         public boolean isExist(ImageCacheDatabase db, BitmapImage image, long date);
     }

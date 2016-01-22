@@ -1,9 +1,9 @@
 package com.eaglesakura.android.net_legacy;
 
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestFactory;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -24,10 +24,11 @@ import com.eaglesakura.thread.MultiRunningTasks;
 import com.eaglesakura.util.IOUtil;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.StringUtil;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestFactory;
+
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
 
 import java.io.File;
 import java.io.InputStream;
@@ -177,12 +178,6 @@ public class LegacyNetworkConnector {
 
     /**
      * ネットワーク経由でデータを取得する
-     *
-     * @param url
-     * @param parser
-     * @param cacheTimeoutMs
-     * @param <T>
-     * @return
      */
     public <T> LegacyNetworkResult<T> get(String url, RequestParser<T> parser, long cacheTimeoutMs) {
         return get(url, parser, cacheTimeoutMs, RequestType.GoogleHttpClient);
@@ -190,12 +185,6 @@ public class LegacyNetworkConnector {
 
     /**
      * 保存ファイルを指定してDLする
-     *
-     * @param url
-     * @param parser
-     * @param downloadFile
-     * @param <T>
-     * @return
      */
     public <T> LegacyNetworkResult<T> get(String url, RequestParser<T> parser, final long cacheTimeoutMs, File downloadFile) {
         if (url == null || !url.startsWith("http")) {
@@ -236,13 +225,6 @@ public class LegacyNetworkConnector {
 
     /**
      * ネットワーク経由でデータを取得する
-     *
-     * @param url
-     * @param parser
-     * @param cacheTimeoutMs
-     * @param type
-     * @param <T>
-     * @return
      */
     public <T> LegacyNetworkResult<T> get(String url, RequestParser<T> parser, final long cacheTimeoutMs, RequestType type) {
         return get(url, parser, new IConnectParams() {
@@ -270,13 +252,6 @@ public class LegacyNetworkConnector {
 
     /**
      * ネットワーク経由でデータを取得する
-     *
-     * @param url
-     * @param parser
-     * @param params
-     * @param type
-     * @param <T>
-     * @return
      */
     public <T> LegacyNetworkResult<T> get(String url, RequestParser<T> parser, final IConnectParams params, RequestType type) {
         if (url == null || !url.startsWith("http")) {
@@ -320,12 +295,6 @@ public class LegacyNetworkConnector {
 
     /**
      * ネットワーク経由でデータを送信する
-     *
-     * @param url
-     * @param parser
-     * @param cacheTimeoutMs
-     * @param <T>
-     * @return
      */
     public <T> LegacyNetworkResult<T> post(String url, RequestParser<T> parser, final Map<String, String> params, final long cacheTimeoutMs) {
         return connect(url, parser, Request.Method.POST, new IConnectParams() {
@@ -353,13 +322,6 @@ public class LegacyNetworkConnector {
 
     /**
      * byte配列を直接POSTする
-     *
-     * @param url
-     * @param parser
-     * @param data
-     * @param cacheTimeoutMs
-     * @param <T>
-     * @return
      */
     public <T> LegacyNetworkResult<T> post(String url, RequestParser<T> parser, final byte[] data, final long cacheTimeoutMs) {
         return connect(url, parser, Request.Method.POST, new IConnectParams() {
@@ -395,27 +357,18 @@ public class LegacyNetworkConnector {
 
         /**
          * POST対象のkey-valueを取得する
-         *
-         * @return
          */
         Map<String, String> getRequestParams();
 
         /**
          * POST対象のbyte配列を取得する。
          * このメソッドは先に呼びだされ、nullの場合はgetPostParams()がチェックされる
-         *
-         * @return
          */
         byte[] getPostBuffer();
     }
 
     /**
      * ネットワーク経由でデータを送信する
-     *
-     * @param url
-     * @param parser
-     * @param <T>
-     * @return
      */
     public <T> LegacyNetworkResult<T> post(String url, RequestParser<T> parser, final Map<String, String> params) {
         return connect(url, parser, Request.Method.POST, new IConnectParams() {
@@ -444,11 +397,6 @@ public class LegacyNetworkConnector {
 
     /**
      * ネットワーク経由でデータを送信する
-     *
-     * @param url
-     * @param parser
-     * @param <T>
-     * @return
      */
     public <T> LegacyNetworkResult<T> post(String url, RequestParser<T> parser, IConnectParams params) {
         return connect(url, parser, Request.Method.POST, params);
@@ -457,10 +405,6 @@ public class LegacyNetworkConnector {
 
     /**
      * URLエラーが発生した場合のハンドリングResultを返す
-     *
-     * @param url
-     * @param <T>
-     * @return
      */
     protected <T> LegacyNetworkResult<T> newUrlErrorResult(final String url) {
         LegacyNetworkResult<T> result = new LegacyNetworkResult<T>(url) {
@@ -480,11 +424,6 @@ public class LegacyNetworkConnector {
 
     /**
      * ネットワーク経由でデータを取得する
-     *
-     * @param url
-     * @param parser
-     * @param <T>
-     * @return
      */
     protected <T> LegacyNetworkResult<T> connect(final String url, final RequestParser<T> parser, final int volleyMethod, IConnectParams params) {
         if (url == null || !url.startsWith("http")) {
@@ -497,9 +436,6 @@ public class LegacyNetworkConnector {
 
     /**
      * バックグラウンド処理を行う
-     *
-     * @param result
-     * @param <T>
      */
     protected <T> void start(final LegacyNetworkResult<T> result) {
         cacheWorkTask.pushBack(new Runnable() {
@@ -517,10 +453,6 @@ public class LegacyNetworkConnector {
 
     /**
      * タイムアウトチェックを行い、必要であればdropする
-     *
-     * @param cache
-     * @param timeoutMs
-     * @return
      */
     protected boolean dropTimeoutCache(DbNetCache cache, long timeoutMs) {
         if ((cache.getCacheTime().getTime() + timeoutMs) < System.currentTimeMillis()) {
@@ -542,9 +474,6 @@ public class LegacyNetworkConnector {
 
     /**
      * URLを指定してキャッシュを取得する
-     *
-     * @param url
-     * @return
      */
     protected DbNetCache loadCache(String url) {
         CacheDatabase db = getCacheDatabase();
@@ -576,8 +505,6 @@ public class LegacyNetworkConnector {
 
     /**
      * キャッシュ用DBを取得する
-     *
-     * @return
      */
     protected synchronized CacheDatabase getCacheDatabase() {
         if (cacheDatabase == null) {
@@ -613,8 +540,6 @@ public class LegacyNetworkConnector {
 
         /**
          * データを追記する
-         *
-         * @param block
          */
         public void put(DbFileBlock block) {
             session.getDbFileBlockDao().insert(block);
@@ -622,9 +547,6 @@ public class LegacyNetworkConnector {
 
         /**
          * キャッシュを取得する
-         *
-         * @param url
-         * @return
          */
         public DbNetCache get(String url) {
             return session.getDbNetCacheDao().load(url);
@@ -632,9 +554,6 @@ public class LegacyNetworkConnector {
 
         /**
          * 有効期間が切れていないキャッシュを取得する
-         *
-         * @param url
-         * @return
          */
         public DbNetCache getIfExist(String url) {
             List<DbNetCache> list = session.getDbNetCacheDao().queryBuilder()
@@ -688,8 +607,6 @@ public class LegacyNetworkConnector {
 
     /**
      * オブジェクトのパースを行う
-     *
-     * @param <T>
      */
     public interface RequestParser<T> {
         T parse(LegacyNetworkResult<T> sender, InputStream data) throws Exception;
@@ -731,17 +648,11 @@ public class LegacyNetworkConnector {
 
         /**
          * Http認証に必要なヘッダを指定
-         *
-         * @return
          */
         Map<String, String> newHttpHeaders(String url, String method);
 
         /**
          * 大容量のデータを受け取る場合に利用するリクエスト
-         *
-         * @param url
-         * @param method
-         * @return
          */
         HttpRequest newLargeRequest(String url, String method);
     }
@@ -780,8 +691,6 @@ public class LegacyNetworkConnector {
 
     /**
      * JSONを単純にパースする
-     *
-     * @param <T>
      */
     public static class JsonParser<T> implements RequestParser<T> {
         final Class<T> clazz;
@@ -848,11 +757,6 @@ public class LegacyNetworkConnector {
 
     /**
      * コンテンツのRangeを指定してダウンロードする。
-     *
-     * @param header
-     * @param offset
-     * @param length
-     * @return
      */
     public static String setRange(Map<String, String> header, long offset, long length) {
         String result = String.format("bytes=%d-%d", offset, (offset + length - 1));
@@ -865,7 +769,6 @@ public class LegacyNetworkConnector {
     /**
      * コンテンツ全体の長さを取得する
      *
-     * @param headers
      * @return 不明な場合は0を返却する
      */
     public static long getContentFullSize(Map<String, String> headers) {

@@ -22,22 +22,15 @@
 
 package com.dropbox.client2;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Scanner;
-
-import javax.net.ssl.SSLException;
+import com.dropbox.client2.DropboxAPI.RequestAndResponse;
+import com.dropbox.client2.exception.DropboxException;
+import com.dropbox.client2.exception.DropboxIOException;
+import com.dropbox.client2.exception.DropboxParseException;
+import com.dropbox.client2.exception.DropboxSSLException;
+import com.dropbox.client2.exception.DropboxServerException;
+import com.dropbox.client2.exception.DropboxUnlinkedException;
+import com.dropbox.client2.session.Session;
+import com.dropbox.client2.session.Session.ProxyInfo;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
@@ -56,15 +49,22 @@ import org.apache.http.protocol.HTTP;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import com.dropbox.client2.DropboxAPI.RequestAndResponse;
-import com.dropbox.client2.exception.DropboxException;
-import com.dropbox.client2.exception.DropboxIOException;
-import com.dropbox.client2.exception.DropboxParseException;
-import com.dropbox.client2.exception.DropboxSSLException;
-import com.dropbox.client2.exception.DropboxServerException;
-import com.dropbox.client2.exception.DropboxUnlinkedException;
-import com.dropbox.client2.session.Session;
-import com.dropbox.client2.session.Session.ProxyInfo;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Scanner;
+
+import javax.net.ssl.SSLException;
 
 /**
  * This class is mostly used internally by {@link DropboxAPI} for creating and
@@ -88,69 +88,71 @@ public class RESTUtility {
      * Creates and sends a request to the Dropbox API, parses the response as
      * JSON, and returns the result.
      *
-     * @param method GET or POST.
-     * @param host the hostname to use. Should be either api server,
-     *         content server, or web server.
-     * @param path the URL path, starting with a '/'.
+     * @param method     GET or POST.
+     * @param host       the hostname to use. Should be either api server,
+     *                   content server, or web server.
+     * @param path       the URL path, starting with a '/'.
      * @param apiVersion the API version to use. This should almost always be
-     *         set to {@code DropboxAPI.VERSION}.
-     * @param params the URL params in an array, with the even numbered
-     *         elements the parameter names and odd numbered elements the
-     *         values, e.g. <code>new String[] {"path", "/Public", "locale",
-     *         "en"}</code>.
-     * @param session the {@link Session} to use for this request.
-     *
+     *                   set to {@code DropboxAPI.VERSION}.
+     * @param params     the URL params in an array, with the even numbered
+     *                   elements the parameter names and odd numbered elements the
+     *                   values, e.g. <code>new String[] {"path", "/Public", "locale",
+     *                   "en"}</code>.
+     * @param session    the {@link Session} to use for this request.
      * @return a parsed JSON object, typically a Map or a JSONArray.
-     *
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code.
-     * @throws DropboxIOException if any network-related error occurs.
+     * @throws DropboxServerException   if the server responds with an error
+     *                                  code. See the constants in {@link DropboxServerException}
+     *                                  for
+     *                                  the meaning of each error code.
+     * @throws DropboxIOException       if any network-related error occurs.
      * @throws DropboxUnlinkedException if the user has revoked access.
-     * @throws DropboxParseException if a malformed or unknown response was
-     *         received from the server.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     * @throws DropboxParseException    if a malformed or unknown response was
+     *                                  received from the server.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     static public Object request(RequestMethod method, String host, String path, int apiVersion, String[] params,
-            Session session) throws DropboxException {
+                                 Session session) throws DropboxException {
         HttpResponse resp = streamRequest(method, host, path, apiVersion, params, session).response;
         return parseAsJSON(resp);
     }
 
     /**
-    * Creates and sends a request to the Dropbox API, and returns a
-    * {@link RequestAndResponse} containing the {@link HttpUriRequest} and
-    * {@link HttpResponse}.
-    *
-    * @param method GET or POST.
-    * @param host the hostname to use. Should be either api server,
-    *         content server, or web server.
-    * @param path the URL path, starting with a '/'.
-    * @param apiVersion the API version to use. This should almost always be
-    *         set to {@code DropboxAPI.VERSION}.
-    * @param params the URL params in an array, with the even numbered
-    *         elements the parameter names and odd numbered elements the
-    *         values, e.g. <code>new String[] {"path", "/Public", "locale",
-    *         "en"}</code>.
-    * @param session the {@link Session} to use for this request.
-    *
-    * @return a parsed JSON object, typically a Map or a JSONArray.
-    *
-    * @throws DropboxServerException if the server responds with an error
-    *         code. See the constants in {@link DropboxServerException} for
-    *         the meaning of each error code.
-    * @throws DropboxIOException if any network-related error occurs.
-    * @throws DropboxUnlinkedException if the user has revoked access.
-    * @throws DropboxException for any other unknown errors. This is also a
-    *         superclass of all other Dropbox exceptions, so you may want to
-    *         only catch this exception which signals that some kind of error
-    *         occurred.
-    */
+     * Creates and sends a request to the Dropbox API, and returns a
+     * {@link RequestAndResponse} containing the {@link HttpUriRequest} and
+     * {@link HttpResponse}.
+     *
+     * @param method     GET or POST.
+     * @param host       the hostname to use. Should be either api server,
+     *                   content server, or web server.
+     * @param path       the URL path, starting with a '/'.
+     * @param apiVersion the API version to use. This should almost always be
+     *                   set to {@code DropboxAPI.VERSION}.
+     * @param params     the URL params in an array, with the even numbered
+     *                   elements the parameter names and odd numbered elements the
+     *                   values, e.g. <code>new String[] {"path", "/Public", "locale",
+     *                   "en"}</code>.
+     * @param session    the {@link Session} to use for this request.
+     * @return a parsed JSON object, typically a Map or a JSONArray.
+     * @throws DropboxServerException   if the server responds with an error
+     *                                  code. See the constants in {@link DropboxServerException}
+     *                                  for
+     *                                  the meaning of each error code.
+     * @throws DropboxIOException       if any network-related error occurs.
+     * @throws DropboxUnlinkedException if the user has revoked access.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
+     */
     static public RequestAndResponse streamRequest(RequestMethod method, String host, String path, int apiVersion,
-            String params[], Session session) throws DropboxException {
+                                                   String params[], Session session) throws DropboxException {
         HttpUriRequest req = null;
         String target = null;
 
@@ -193,21 +195,22 @@ public class RESTUtility {
      * Reads in content from an {@link HttpResponse} and parses it as JSON.
      *
      * @param response the {@link HttpResponse}.
-     *
      * @return a parsed JSON object, typically a Map or a JSONArray.
-     *
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code.
-     * @throws DropboxIOException if any network-related error occurs while
-     *         reading in content from the {@link HttpResponse}.
+     * @throws DropboxServerException   if the server responds with an error
+     *                                  code. See the constants in {@link DropboxServerException}
+     *                                  for
+     *                                  the meaning of each error code.
+     * @throws DropboxIOException       if any network-related error occurs while
+     *                                  reading in content from the {@link HttpResponse}.
      * @throws DropboxUnlinkedException if the user has revoked access.
-     * @throws DropboxParseException if a malformed or unknown response was
-     *         received from the server.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     * @throws DropboxParseException    if a malformed or unknown response was
+     *                                  received from the server.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public static Object parseAsJSON(HttpResponse response) throws DropboxException {
         Object result = null;
@@ -266,17 +269,16 @@ public class RESTUtility {
      * string.
      *
      * @param response the {@link HttpResponse}.
-     *
      * @return a map of parameter names to values from the query string.
-     *
-     * @throws DropboxIOException if any network-related error occurs while
-     *         reading in content from the {@link HttpResponse}.
+     * @throws DropboxIOException    if any network-related error occurs while
+     *                               reading in content from the {@link HttpResponse}.
      * @throws DropboxParseException if a malformed or unknown response was
-     *         received from the server.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                               received from the server.
+     * @throws DropboxException      for any other unknown errors. This is also a
+     *                               superclass of all other Dropbox exceptions, so you may want to
+     *                               only catch this exception which signals that some kind of
+     *                               error
+     *                               occurred.
      */
     public static Map<String, String> parseAsQueryString(HttpResponse response) throws DropboxException {
         HttpEntity entity = response.getEntity();
@@ -311,19 +313,20 @@ public class RESTUtility {
      * returns an {@link HttpResponse}.
      *
      * @param session the session to use.
-     * @param req the request to execute.
-     *
+     * @param req     the request to execute.
      * @return an {@link HttpResponse}.
-     *
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code.
-     * @throws DropboxIOException if any network-related error occurs.
+     * @throws DropboxServerException   if the server responds with an error
+     *                                  code. See the constants in {@link DropboxServerException}
+     *                                  for
+     *                                  the meaning of each error code.
+     * @throws DropboxIOException       if any network-related error occurs.
      * @throws DropboxUnlinkedException if the user has revoked access.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public static HttpResponse execute(Session session, HttpUriRequest req) throws DropboxException {
         return execute(session, req, -1);
@@ -333,22 +336,23 @@ public class RESTUtility {
      * Executes an {@link HttpUriRequest} with the given {@link Session} and
      * returns an {@link HttpResponse}.
      *
-     * @param session the session to use.
-     * @param req the request to execute.
+     * @param session                 the session to use.
+     * @param req                     the request to execute.
      * @param socketTimeoutOverrideMs if >= 0, the socket timeout to set on
-     *         this request. Does nothing if set to a negative number.
-     *
+     *                                this request. Does nothing if set to a negative number.
      * @return an {@link HttpResponse}.
-     *
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code.
-     * @throws DropboxIOException if any network-related error occurs.
+     * @throws DropboxServerException   if the server responds with an error
+     *                                  code. See the constants in {@link DropboxServerException}
+     *                                  for
+     *                                  the meaning of each error code.
+     * @throws DropboxIOException       if any network-related error occurs.
      * @throws DropboxUnlinkedException if the user has revoked access.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public static HttpResponse execute(Session session, HttpUriRequest req, int socketTimeoutOverrideMs)
             throws DropboxException {
@@ -390,7 +394,7 @@ public class RESTUtility {
                 // This is from that bug, and retrying hasn't fixed it.
                 throw new DropboxIOException("Apache HTTPClient encountered an error. No response, try again.");
             } else if (response.getStatusLine().getStatusCode() != DropboxServerException._200_OK
-            // support resume
+                    // support resume
                     && response.getStatusLine().getStatusCode() != 206) {
                 // This will throw the right thing: either a DropboxServerException or a DropboxProxyException
                 parseAsJSON(response);
@@ -411,16 +415,15 @@ public class RESTUtility {
     /**
      * Creates a URL for a request to the Dropbox API.
      *
-     * @param host the Dropbox host (i.e., api server, content server, or web
-     *         server).
+     * @param host       the Dropbox host (i.e., api server, content server, or web
+     *                   server).
      * @param apiVersion the API version to use. You should almost always use
-     *         {@code DropboxAPI.VERSION} for this.
-     * @param target the target path, staring with a '/'.
-     * @param params any URL params in an array, with the even numbered
-     *         elements the parameter names and odd numbered elements the
-     *         values, e.g. <code>new String[] {"path", "/Public", "locale",
-     *         "en"}</code>.
-     *
+     *                   {@code DropboxAPI.VERSION} for this.
+     * @param target     the target path, staring with a '/'.
+     * @param params     any URL params in an array, with the even numbered
+     *                   elements the parameter names and odd numbered elements the
+     *                   values, e.g. <code>new String[] {"path", "/Public", "locale",
+     *                   "en"}</code>.
      * @return a full URL for making a request.
      */
     public static String buildURL(String host, int apiVersion, String target, String[] params) {
@@ -452,7 +455,6 @@ public class RESTUtility {
      * cannot be parsed.
      *
      * @param date a date returned by the API.
-     *
      * @return a {@link Date}.
      */
     public static Date parseDate(String date) {

@@ -1,11 +1,8 @@
 package com.eaglesakura.lib.android.web.twitter;
 
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.auth.AccessToken;
-import twitter4j.auth.RequestToken;
-import twitter4j.conf.ConfigurationBuilder;
+import com.eaglesakura.lib.android.game.util.ContextUtil;
+import com.eaglesakura.lib.android.game.util.LogUtil;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -20,16 +17,20 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout.LayoutParams;
 
-import com.eaglesakura.lib.android.game.util.ContextUtil;
-import com.eaglesakura.lib.android.game.util.LogUtil;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
+import twitter4j.conf.ConfigurationBuilder;
 
 /**
  * Twitterログインをサポートするクラス
- * 
+ *
  * 利用するには事前にTwitterのデベロッパーサイトでアプリの登録を行い、トークン、トークンシークレットを取得して
  * コールバックURLを設定しておく必要がある。
- * @author Takeshi
  *
+ * @author Takeshi
  */
 public class TwitterLoginActivity extends Activity {
 

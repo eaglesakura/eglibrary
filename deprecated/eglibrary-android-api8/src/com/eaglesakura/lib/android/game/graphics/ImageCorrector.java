@@ -1,10 +1,10 @@
 package com.eaglesakura.lib.android.game.graphics;
 
+import com.eaglesakura.lib.android.game.display.VirtualDisplay;
+
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
-
-import com.eaglesakura.lib.android.game.display.VirtualDisplay;
 
 public class ImageCorrector {
 
@@ -43,10 +43,6 @@ public class ImageCorrector {
 
     /**
      * レンダリング範囲を設定する。
-     * @param x
-     * @param y
-     * @param width
-     * @param height
      */
     public void setRenderArea(int x, int y, int width, int height) {
         renderArea.set(x, y, x + width, y + height);
@@ -54,10 +50,6 @@ public class ImageCorrector {
 
     /**
      * レンダリング範囲を設定する。
-     * @param x
-     * @param y
-     * @param width
-     * @param height
      */
     public void setRenderArea(float x, float y, float width, float height) {
         renderArea.set(x, y, x + width, y + height);
@@ -65,7 +57,6 @@ public class ImageCorrector {
 
     /**
      * レンダリング範囲を設定する。
-     * @param display
      */
     public void setRenderArea(VirtualDisplay display) {
         display.getDrawingArea(renderArea);
@@ -73,8 +64,6 @@ public class ImageCorrector {
 
     /**
      * 画像の幅・高さから画像のアスペクトを設定する。
-     * @param width
-     * @param height
      */
     public void setImageAspect(int width, int height) {
         aspect = (float) width / (float) height;
@@ -83,7 +72,6 @@ public class ImageCorrector {
 
     /**
      * 画像のアスペクト比を取得する。
-     * @return
      */
     public float getImageAspect() {
         return aspect;
@@ -91,7 +79,6 @@ public class ImageCorrector {
 
     /**
      * フィッティングを指定して初期化する。
-     * @param fitting
      */
     public void setDefaultFitting(FitType fitting) {
         this.fitting = fitting;
@@ -108,7 +95,6 @@ public class ImageCorrector {
 
     /**
      * X方向に長い画像
-     * @return
      */
     public boolean isXLongImage() {
         return aspect > 1;
@@ -116,7 +102,6 @@ public class ImageCorrector {
 
     /**
      * Y方向に長い画像
-     * @return
      */
     public boolean isYLongImage() {
         return aspect <= 1;
@@ -124,7 +109,6 @@ public class ImageCorrector {
 
     /**
      * X方向に長いエリア
-     * @return
      */
     public boolean isXLongArea() {
         return renderArea.width() > renderArea.height();
@@ -132,7 +116,6 @@ public class ImageCorrector {
 
     /**
      * Y方向に長いエリア
-     * @return
      */
     public boolean isYLongArea() {
         return renderArea.height() >= renderArea.width();
@@ -148,9 +131,6 @@ public class ImageCorrector {
 
     /**
      * デフォルトのレンダリングエリアを取得する。
-     * @param fitting
-     * @param result
-     * @return
      */
     public RectF getDefaultRenderArea(FitType fitting, RectF result) {
         float width = 0;
@@ -190,8 +170,6 @@ public class ImageCorrector {
 
     /**
      * 画像エリアを取得する。
-     * @param result
-     * @return
      */
     public RectF getImageArea(RectF result) {
         result.set(imageArea);
@@ -225,7 +203,6 @@ public class ImageCorrector {
 
     /**
      * 実際に画像を描画するエリア取得
-     * @return
      */
     public float getImageAreaLeft() {
         return imageArea.left;
@@ -233,7 +210,6 @@ public class ImageCorrector {
 
     /**
      * 実際に画像を描画するエリア取得
-     * @return
      */
     public float getImageAreaTop() {
         return imageArea.top;
@@ -241,7 +217,6 @@ public class ImageCorrector {
 
     /**
      * 実際に画像を描画するエリア取得
-     * @return
      */
     public float getImageAreaRight() {
         return imageArea.right;
@@ -249,7 +224,6 @@ public class ImageCorrector {
 
     /**
      * 実際に画像を描画するエリア取得
-     * @return
      */
     public float getImageAreaBottom() {
         return imageArea.bottom;
@@ -257,7 +231,6 @@ public class ImageCorrector {
 
     /**
      * 実際に画像を描画するエリア取得
-     * @return
      */
     public float getImageAreaWidth() {
         return imageArea.width();
@@ -265,7 +238,6 @@ public class ImageCorrector {
 
     /**
      * 実際に画像を描画するエリア取得
-     * @return
      */
     public float getImageAreaHeight() {
         return imageArea.height();
@@ -273,8 +245,6 @@ public class ImageCorrector {
 
     /**
      * 画像エリアを取得する。
-     * @param result
-     * @return
      */
     public Rect getImageArea(Rect result) {
         result.set((int) imageArea.left, (int) imageArea.top, (int) imageArea.right, (int) imageArea.bottom);
@@ -283,8 +253,6 @@ public class ImageCorrector {
 
     /**
      * レンダリング領域を取得する。
-     * @param result
-     * @return
      */
     public RectF getRenderArea(RectF result) {
         result.set(renderArea);
@@ -293,8 +261,6 @@ public class ImageCorrector {
 
     /**
      * レンダリング領域を取得する
-     * @param result
-     * @return
      */
     public Rect getRenderArea(Rect result) {
         result.set((int) renderArea.left, (int) renderArea.top, (int) renderArea.right, (int) renderArea.bottom);
@@ -303,8 +269,6 @@ public class ImageCorrector {
 
     /**
      * ピクセル座標からU座標に変換する。
-     * @param x
-     * @return
      */
     public float pixToImageU(float x) {
         final float offset = x - imageArea.left;
@@ -320,8 +284,6 @@ public class ImageCorrector {
 
     /**
      * ピクセル座標からV座標に変換する。
-     * @param y
-     * @return
      */
     public float pixToImageV(float y) {
         final float offset = y - imageArea.top;
@@ -337,9 +299,6 @@ public class ImageCorrector {
 
     /**
      * x/y地点を中心としてスケーリングを行う。
-     * @param x
-     * @param y
-     * @param scale
      */
     public void scale(float x, float y, float scale) {
         Matrix m = new Matrix();
@@ -355,9 +314,6 @@ public class ImageCorrector {
 
     /**
      * 画像エリア地点を中心としてスケーリングを行う。
-     * @param x
-     * @param y
-     * @param scale
      */
     public void scale(float scale) {
         Matrix m = new Matrix();
@@ -373,8 +329,6 @@ public class ImageCorrector {
 
     /**
      * イメージエリアの位置をオフセットさせる。
-     * @param x
-     * @param y
      */
     public void offset(float x, float y) {
         imageArea.offset(x, y);
@@ -382,7 +336,6 @@ public class ImageCorrector {
 
     /**
      * レンダリングエリアとジェスチャエリアの中心が同じならtrueを返す。
-     * @return
      */
     public boolean isCenterFitting() {
         return imageArea.centerX() == renderArea.centerX() && imageArea.centerY() == renderArea.centerY();
@@ -390,7 +343,6 @@ public class ImageCorrector {
 
     /**
      * ピクセル数ベースで拡大率を取得する。
-     * @return
      */
     public float getPixelScale() {
         return (imageArea.width() * imageArea.height()) / defPixels;
@@ -398,7 +350,6 @@ public class ImageCorrector {
 
     /**
      * デフォルトのスケーリング値の場合true
-     * @return
      */
     public boolean isDefaultPixelScale() {
         final float scale = getPixelScale();

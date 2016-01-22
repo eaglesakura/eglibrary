@@ -1,5 +1,12 @@
 package com.eaglesakura.lib.net.google;
 
+import com.eaglesakura.lib.android.game.util.GameUtil;
+import com.eaglesakura.lib.android.game.util.JsonModel;
+import com.eaglesakura.lib.android.game.util.LogUtil;
+import com.eaglesakura.lib.net.WebAPIException;
+
+import net.arnx.jsonic.JSON;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -7,17 +14,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import net.arnx.jsonic.JSON;
-
-import com.eaglesakura.lib.android.game.util.GameUtil;
-import com.eaglesakura.lib.android.game.util.JsonModel;
-import com.eaglesakura.lib.android.game.util.LogUtil;
-import com.eaglesakura.lib.net.WebAPIException;
-
 /**
  * Googleの認証用ヘルパ
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class GoogleOAuth2Helper {
     private static final String ENDPOINT = "https://accounts.google.com/o/oauth2";
@@ -37,7 +37,6 @@ public class GoogleOAuth2Helper {
     /**
      * 認証コードを取得する
      * 各コードは"https://code.google.com/apis/console"から作成
-     * @throws GDataException
      */
     public static String getAuthorizationUrl(final String clientId, final String redirectUri, final String[] scopeUrls)
             throws WebAPIException {
@@ -76,10 +75,9 @@ public class GoogleOAuth2Helper {
 
     /**
      * 取得した認証コードからアクセス用のトークンとリフレーッシュトークンを作成する
-     * @param authCode
      */
     public static AuthToken getAuthToken(final String clientId, final String clientSecret, final String redirectUri,
-            final String authCode) throws WebAPIException {
+                                         final String authCode) throws WebAPIException {
 
         try {
             // パラメータを組み立てる
@@ -139,10 +137,9 @@ public class GoogleOAuth2Helper {
 
     /**
      * 取得した認証コードからアクセス用のトークンとリフレーッシュトークンを作成する
-     * @param authCode
      */
     public static AuthToken refreshAuthToken(final String clientId, final String clientSecret,
-            final String refreshTocken) throws WebAPIException {
+                                             final String refreshTocken) throws WebAPIException {
 
         try {
             // パラメータを組み立てる
@@ -206,8 +203,8 @@ public class GoogleOAuth2Helper {
 
     /**
      * エラーコード解析用
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public static class ErrorCode extends JsonModel {
         public String error = null;
@@ -225,12 +222,12 @@ public class GoogleOAuth2Helper {
         public String refresh_token = null;
 
         /**
-         * 
+         *
          */
         public String token_type = null;
 
         /**
-         * 
+         *
          */
         public Integer expires_in = null;
     }

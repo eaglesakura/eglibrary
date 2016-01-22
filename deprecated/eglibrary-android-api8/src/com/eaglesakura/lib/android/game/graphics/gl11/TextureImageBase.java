@@ -1,11 +1,5 @@
 package com.eaglesakura.lib.android.game.graphics.gl11;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.microedition.khronos.opengles.GL10;
-import javax.microedition.khronos.opengles.GL11;
-
 import com.eaglesakura.lib.android.game.graphics.ImageBase;
 import com.eaglesakura.lib.android.game.graphics.gl11.DisposableGLResource.GLResource;
 import com.eaglesakura.lib.android.game.graphics.gl11.DisposableGLResource.Type;
@@ -13,11 +7,17 @@ import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
 import com.eaglesakura.lib.android.game.math.Vector2;
 import com.eaglesakura.lib.android.game.resource.IRawResource;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
+
 /**
  * GLES 1.1でのテクスチャを管理する。<BR>
  * GLのテクスチャサイズ制限を回避するため、画像サイズは2^nピクセルになるよう余白が追加される。
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public abstract class TextureImageBase extends ImageBase {
 
@@ -85,8 +85,6 @@ public abstract class TextureImageBase extends ImageBase {
 
     /**
      * テクスチャ管理番号を取得する。
-     * 
-     * @return
      */
     public int getTextureID() {
         return textureId;
@@ -144,7 +142,6 @@ public abstract class TextureImageBase extends ImageBase {
     /**
      * 横方向のテクスチャスケーリングを取得する。
      * Origin-Texture Width / GLES-Texture Widthが格納される。
-     * @return
      */
     public float getTextureScaleX() {
         return textureScale.x;
@@ -153,7 +150,6 @@ public abstract class TextureImageBase extends ImageBase {
     /**
      * 縦方向のテクスチャスケーリングを取得する。
      * Origin-Texture Height / GLES-Texture Heightが格納される。
-     * @return
      */
     public float getTextureScaleY() {
         return textureScale.y;
@@ -161,8 +157,6 @@ public abstract class TextureImageBase extends ImageBase {
 
     /**
      * テクスチャのフィルタを指定する。 フィルタはリニアの場合true／ニアレストネイバー法の場合はfalseを指定する。
-     * 
-     * @param linear
      */
     public void setTextureLinearFilter(boolean linear) {
         if (textureId == VRAM.NULL) {
@@ -182,8 +176,6 @@ public abstract class TextureImageBase extends ImageBase {
 
     /**
      * baseSizeをテクスチャに適した大きさに変更する。
-     * @param baseSize
-     * @return
      */
     protected static int toGLTextureSize(int baseSize) {
         int result = 2;

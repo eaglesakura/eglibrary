@@ -1,5 +1,9 @@
 package com.eaglesakura.lib.android.game.graphics.gl11.hw;
 
+import com.eaglesakura.lib.android.game.util.LogUtil;
+
+import android.annotation.SuppressLint;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,14 +11,10 @@ import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
 
-import android.annotation.SuppressLint;
-
-import com.eaglesakura.lib.android.game.util.LogUtil;
-
 /**
  * 指定したspecを満たすEGLConfigを取得する
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 @SuppressLint("DefaultLocale")
 public class EGLConfigSelector {
@@ -53,20 +53,12 @@ public class EGLConfigSelector {
      * 初期化時のコンフィグスペック。
      */
     private int[] configSpec = {
-        EGL10.EGL_NONE
-    //! 終端にはEGL_NONEを入れる
+            EGL10.EGL_NONE
+            //! 終端にはEGL_NONEを入れる
     };
 
     /**
      * RGBAをそれぞれ指定して作成する
-     * @param egl
-     * @param display
-     * @param rSize
-     * @param gSize
-     * @param bSize
-     * @param aSize
-     * @param dSize
-     * @param sSize
      */
     public EGLConfigSelector(int rSize, int gSize, int bSize, int aSize, int dSize, int sSize) {
 

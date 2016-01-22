@@ -1,17 +1,17 @@
 package com.eaglesakura.lib.android.game.graphics.gl11.hw;
 
+import com.eaglesakura.lib.android.game.resource.DisposableResource;
+
+import android.view.SurfaceHolder;
+
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
 
-import android.view.SurfaceHolder;
-
-import com.eaglesakura.lib.android.game.resource.DisposableResource;
-
 /**
  * Displayから生成したSurfaceを管理する
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 class EGLDisplaySurfaceManager extends DisposableResource {
 
@@ -32,7 +32,6 @@ class EGLDisplaySurfaceManager extends DisposableResource {
 
     /**
      * レンダリング用サーフェイスを取得する
-     * @return
      */
     public EGLSurface getSurface() {
         return surface;

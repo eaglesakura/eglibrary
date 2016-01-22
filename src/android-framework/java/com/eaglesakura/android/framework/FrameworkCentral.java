@@ -1,11 +1,11 @@
 package com.eaglesakura.android.framework;
 
-import android.app.Application;
-
 import com.eaglesakura.android.framework.db.BasicSettings;
 import com.eaglesakura.android.thread.async.AsyncTaskController;
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.util.LogUtil;
+
+import android.app.Application;
 
 import java.lang.reflect.Method;
 
@@ -25,8 +25,6 @@ public class FrameworkCentral {
 
     /**
      * Application#onCreateで呼び出す
-     *
-     * @param application
      */
     public static void onApplicationCreate(Application application) {
         FrameworkCentral.application = application;
@@ -91,8 +89,6 @@ public class FrameworkCentral {
 
     /**
      * Frameworkの設定クラスを取得する
-     *
-     * @return
      */
     public static BasicSettings getSettings() {
         return settings;

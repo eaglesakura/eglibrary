@@ -1,15 +1,15 @@
 package com.eaglesakura.lib.android.view;
 
+import com.eaglesakura.lib.android.game.util.LogUtil;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.eaglesakura.lib.android.game.util.LogUtil;
-
 /**
- * 
- * 
+ *
+ *
  */
 public class LooperSurfaceView extends SurfaceView implements SurfaceHolder.Callback, ILooperSurface {
     /**
@@ -19,11 +19,6 @@ public class LooperSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     /**
      * ループを行うサーフェイスを扱う。
-     * 
-     * 
-     * @param context
-     * @param attribute
-     * 
      */
     public LooperSurfaceView(Context context, AttributeSet attribute) {
         super(context, attribute);
@@ -31,10 +26,10 @@ public class LooperSurfaceView extends SurfaceView implements SurfaceHolder.Call
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param context
-     * 
+     *
      */
     public LooperSurfaceView(Context context) {
         super(context);
@@ -43,10 +38,6 @@ public class LooperSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     /**
      * サーフェイスが作成されている場合、trueを返す。
-     * 
-     * 
-     * @return
-     * 
      */
     @Override
     public boolean isCreated() {
@@ -55,9 +46,6 @@ public class LooperSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     /**
      * 終了処理を行う。
-     * 
-     * 
-     * 
      */
     public void dispose() {
 
@@ -65,10 +53,6 @@ public class LooperSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     /**
      * サーフェイスが作成された。
-     * 
-     * 
-     * @param arg0
-     * 
      */
     @Override
     public void surfaceCreated(SurfaceHolder arg0) {
@@ -77,13 +61,6 @@ public class LooperSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     /**
      * サーフェイスが変更された。
-     * 
-     * 
-     * @param holder
-     * @param format
-     * @param width
-     * @param height
-     * 
      */
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -93,10 +70,6 @@ public class LooperSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     /**
      * サーフェイスが破棄された。
-     * 
-     * 
-     * @param holder
-     * 
      */
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {

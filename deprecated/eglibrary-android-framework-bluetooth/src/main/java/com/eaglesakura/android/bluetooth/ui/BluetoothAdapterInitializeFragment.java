@@ -1,5 +1,13 @@
 package com.eaglesakura.android.bluetooth.ui;
 
+import com.eaglesakura.android.bluetooth.BluetoothUtil;
+import com.eaglesakura.android.framework.bluetooth.R;
+import com.eaglesakura.android.util.FragmentUtil;
+
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.InstanceState;
+import org.androidannotations.annotations.OnActivityResult;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -9,14 +17,6 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-
-import com.eaglesakura.android.bluetooth.BluetoothUtil;
-import com.eaglesakura.android.framework.bluetooth.R;
-import com.eaglesakura.android.util.FragmentUtil;
-
-import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.InstanceState;
-import org.androidannotations.annotations.OnActivityResult;
 
 /**
  * BluetoothがONであることを保証するFragment
@@ -63,8 +63,6 @@ public class BluetoothAdapterInitializeFragment extends Fragment {
 
     /**
      * bluetoothアダプターが有効になっていたらtrue
-     *
-     * @return
      */
     @SuppressLint("NewApi")
     boolean isAdapterEnable() {
@@ -96,9 +94,6 @@ public class BluetoothAdapterInitializeFragment extends Fragment {
 
     /**
      * bluetoothチェックの戻り
-     *
-     * @param result
-     * @param data
      */
     @OnActivityResult(REQUEST_BLUETOOTH_ENABLE)
     void resultBluetoothEnable(int result, Intent data) {
@@ -131,8 +126,6 @@ public class BluetoothAdapterInitializeFragment extends Fragment {
     public interface BluetoothAdapterInitializeListener {
         /**
          * 初期化に成功した
-         *
-         * @param self
          */
         void onBluetoothAdapterInitialized(BluetoothAdapterInitializeFragment self);
 

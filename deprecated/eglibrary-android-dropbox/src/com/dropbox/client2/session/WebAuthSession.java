@@ -22,33 +22,33 @@
 
 package com.dropbox.client2.session;
 
-import java.util.Map;
-
-import org.apache.http.HttpResponse;
-
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.RESTUtility;
 import com.dropbox.client2.RESTUtility.RequestMethod;
 import com.dropbox.client2.exception.DropboxException;
 import com.dropbox.client2.exception.DropboxParseException;
 
+import org.apache.http.HttpResponse;
+
+import java.util.Map;
+
 /**
  * Keeps track of a logged in user contains configuration options for the
  * {@link DropboxAPI}. This type of {@link Session} uses the web OAuth flow
  * to authenticate users:
  * <ol>
- *   <li>A request token + secret and redirect URL are retrieved using
- *   {@link WebAuthSession#getAuthInfo()} or
- *   {@link WebAuthSession#getAuthInfo(String)}.</li>
- *   <li>You store the request token + secret, and redirect the
- *   user to the redirect URL where they will authenticate with Dropbox and
- *   grant your app permission to access their account.</li>
- *   <li>Dropbox will redirect back to your site if it was provided a URL to
- *   do so (otherwise, you have to ask the user when he/she is done).</li>
- *   <li>The user's access token + secret are set on this session when you
- *   call {@link WebAuthSession#retrieveWebAccessToken(RequestTokenPair)} with
- *   the previously-saved request token + secret. You have a limited amount
- *   of time to make this call or the request token will expire.</li>
+ * <li>A request token + secret and redirect URL are retrieved using
+ * {@link WebAuthSession#getAuthInfo()} or
+ * {@link WebAuthSession#getAuthInfo(String)}.</li>
+ * <li>You store the request token + secret, and redirect the
+ * user to the redirect URL where they will authenticate with Dropbox and
+ * grant your app permission to access their account.</li>
+ * <li>Dropbox will redirect back to your site if it was provided a URL to
+ * do so (otherwise, you have to ask the user when he/she is done).</li>
+ * <li>The user's access token + secret are set on this session when you
+ * call {@link WebAuthSession#retrieveWebAccessToken(RequestTokenPair)} with
+ * the previously-saved request token + secret. You have a limited amount
+ * of time to make this call or the request token will expire.</li>
  * </ol>
  */
 public class WebAuthSession extends AbstractSession {
@@ -104,21 +104,24 @@ public class WebAuthSession extends AbstractSession {
      * {@link WebAuthSession#getAuthInfo(String)}.
      *
      * @return a {@link WebAuthInfo}, from which you can obtain the URL to
-     *         redirect the user to and a request token + secret to log the
-     *         user in later.
-     *
+     * redirect the user to and a request token + secret to log the
+     * user in later.
      * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code. The most common error codes you
-     *         can expect from this call are 500, 502, and 503 (all related to
-     *         internal Dropbox server issues).
-     * @throws DropboxIOException if any network-related error occurs.
-     * @throws DropboxParseException if a malformed or unknown response was
-     *         received from the server.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                code. See the constants in {@link DropboxServerException} for
+     *                                the meaning of each error code. The most common error codes
+     *                                you
+     *                                can expect from this call are 500, 502, and 503 (all related
+     *                                to
+     *                                internal Dropbox server issues).
+     * @throws DropboxIOException     if any network-related error occurs.
+     * @throws DropboxParseException  if a malformed or unknown response was
+     *                                received from the server.
+     * @throws DropboxException       for any other unknown errors. This is also a
+     *                                superclass of all other Dropbox exceptions, so you may want
+     *                                to
+     *                                only catch this exception which signals that some kind of
+     *                                error
+     *                                occurred.
      */
     public WebAuthInfo getAuthInfo() throws DropboxException {
         return getAuthInfo(null);
@@ -130,24 +133,25 @@ public class WebAuthSession extends AbstractSession {
      * non-trivial amount of time due to a network operation.
      *
      * @param callbackUrl the URL to which Dropbox will redirect the user after
-     *         he/she has authenticated on the Dropbox site.
-     *
+     *                    he/she has authenticated on the Dropbox site.
      * @return a {@link WebAuthInfo}, from which you can obtain the URL to
-     *         redirect the user to and a request token + secret to log the
-     *         user in later.
-     *
+     * redirect the user to and a request token + secret to log the
+     * user in later.
      * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code. The most common error codes you
-     *         can expect from this call are 500, 502, and 503 (all for
-     *         internal Dropbox server issues).
-     * @throws DropboxIOException if any network-related error occurs.
-     * @throws DropboxParseException if a malformed or unknown response was
-     *         received from the server.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                code. See the constants in {@link DropboxServerException} for
+     *                                the meaning of each error code. The most common error codes
+     *                                you
+     *                                can expect from this call are 500, 502, and 503 (all for
+     *                                internal Dropbox server issues).
+     * @throws DropboxIOException     if any network-related error occurs.
+     * @throws DropboxParseException  if a malformed or unknown response was
+     *                                received from the server.
+     * @throws DropboxException       for any other unknown errors. This is also a
+     *                                superclass of all other Dropbox exceptions, so you may want
+     *                                to
+     *                                only catch this exception which signals that some kind of
+     *                                error
+     *                                occurred.
      */
     public WebAuthInfo getAuthInfo(String callbackUrl) throws DropboxException {
         setUpToken("/oauth/request_token");
@@ -159,12 +163,12 @@ public class WebAuthSession extends AbstractSession {
 
         String[] args;
         if (callbackUrl != null) {
-            args = new String[] {
+            args = new String[]{
                     "oauth_token", requestTokenPair.key, "oauth_callback", callbackUrl, "locale",
                     getLocale().toString()
             };
         } else {
-            args = new String[] {
+            args = new String[]{
                     "oauth_token", requestTokenPair.key, "locale", getLocale().toString()
             };
         }
@@ -183,23 +187,25 @@ public class WebAuthSession extends AbstractSession {
      * site.
      *
      * @param requestTokenPair the request token pair from the {@link WebAuthInfo}
-     *         returned from {@code getAuthInfo()}.
-     *
+     *                         returned from {@code getAuthInfo()}.
      * @return the Dropbox UID of the authenticated user.
-     *
      * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code. The most common error codes you
-     *         can expect from this call are 401 (bad request token), 403 (bad
-     *         app key pair), 500, 502, and 503 (all for internal Dropbox
-     *         server issues).
-     * @throws DropboxIOException if any network-related error occurs.
-     * @throws DropboxParseException if a malformed or unknown response was
-     *         received from the server.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                code. See the constants in {@link DropboxServerException} for
+     *                                the meaning of each error code. The most common error codes
+     *                                you
+     *                                can expect from this call are 401 (bad request token), 403
+     *                                (bad
+     *                                app key pair), 500, 502, and 503 (all for internal Dropbox
+     *                                server issues).
+     * @throws DropboxIOException     if any network-related error occurs.
+     * @throws DropboxParseException  if a malformed or unknown response was
+     *                                received from the server.
+     * @throws DropboxException       for any other unknown errors. This is also a
+     *                                superclass of all other Dropbox exceptions, so you may want
+     *                                to
+     *                                only catch this exception which signals that some kind of
+     *                                error
+     *                                occurred.
      */
     public String retrieveWebAccessToken(RequestTokenPair requestTokenPair) throws DropboxException {
         setAccessTokenPair(requestTokenPair);
@@ -209,7 +215,7 @@ public class WebAuthSession extends AbstractSession {
 
     private Map<String, String> setUpToken(String path) throws DropboxException {
         HttpResponse response = RESTUtility.streamRequest(RequestMethod.GET, getAPIServer(), path, DropboxAPI.VERSION,
-                new String[] {
+                new String[]{
                         "locale", getLocale().toString()
                 }, this).response;
         Map<String, String> result = RESTUtility.parseAsQueryString(response);

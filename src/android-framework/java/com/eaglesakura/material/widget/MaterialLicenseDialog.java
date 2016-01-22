@@ -1,14 +1,14 @@
 package com.eaglesakura.material.widget;
 
-import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.eaglesakura.android.R;
 import com.eaglesakura.android.aquery.AQuery;
 import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.android.util.AndroidThreadUtil;
 import com.eaglesakura.util.IOUtil;
+
+import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
 
 /**
  * 単純なLICENSE表示を行うFragment
@@ -55,8 +55,6 @@ public class MaterialLicenseDialog extends MaterialAlertDialog {
 
     /**
      * RawリソースからIDを指定する
-     *
-     * @param rawId
      */
     public void setLicenseFromRawResource(int rawId) {
         try {

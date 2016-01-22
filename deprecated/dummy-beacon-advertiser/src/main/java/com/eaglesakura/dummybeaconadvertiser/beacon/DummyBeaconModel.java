@@ -16,9 +16,6 @@ public class DummyBeaconModel {
 
     /**
      * advertise用のデータを生成する
-     *
-     * @param model
-     * @return
      */
     public static byte[] buildBuffer(DummyBeaconModel model) {
         LogUtil.log("beacon(%s-%d-%d) txPower(%d)", model.uuid, model.major, model.minor, model.txPower);

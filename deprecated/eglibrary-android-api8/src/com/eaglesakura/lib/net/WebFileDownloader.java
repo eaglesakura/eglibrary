@@ -1,19 +1,19 @@
 package com.eaglesakura.lib.net;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
 import com.eaglesakura.lib.android.game.io.BufferTargetOutputStream;
 import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.game.util.FileUtil;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
 /**
  * ファイル用のダウンローダー
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class WebFileDownloader extends DisposableResource {
 
@@ -26,7 +26,7 @@ public class WebFileDownloader extends DisposableResource {
     byte[] buffer = new byte[1024 * 16];
 
     /**
-     * 
+     *
      * @param connector
      * @param item
      * @throws GoogleAPIException
@@ -40,7 +40,7 @@ public class WebFileDownloader extends DisposableResource {
 
     /**
      * レジュームを開始する
-     * @param dstFile
+     *
      * @return レジューム操作を開始したらtrue
      */
     public boolean resume(File dstFile) throws WebAPIException {
@@ -55,8 +55,6 @@ public class WebFileDownloader extends DisposableResource {
 
     /**
      * レンジを指定して開始する
-     * @param rangeStart
-     * @param rangeEnd
      */
     public void start(long rangeStart, long rangeEnd) throws WebAPIException {
         connection = connector.download(downloadUrl, rangeStart, rangeEnd);
@@ -71,10 +69,8 @@ public class WebFileDownloader extends DisposableResource {
 
     /**
      * 指定バイト数をDLする
-     * @param os
-     * @param length
+     *
      * @return 読み込みが終了したらtrue
-     * @throws GoogleAPIException
      */
     public boolean nextDownload(OutputStream os, int length) throws WebAPIException {
         try {
@@ -87,7 +83,7 @@ public class WebFileDownloader extends DisposableResource {
                     os.write(buffer, 0, readed);
                     // 書き込んだサイズだけ必要サイズを減らす
                     length -= readed;
-                } else /* if (readed < 0) */{
+                } else /* if (readed < 0) */ {
                     // 読み込むべきサイズが無くなった
                     return true;
                 }
@@ -111,35 +107,27 @@ public class WebFileDownloader extends DisposableResource {
 
     /**
      * ダウンロード中の制御を行わせる。
-     *
      */
     public interface DownloadCallback {
         /**
          * ダウンロードをキャンセルする場合はtrueを返す
-         * @return
          */
         boolean isCanceled(WebFileDownloader downloader);
 
         /**
          * ダウンロードを開始するタイミングで呼び出される
-         * @param file
          */
         void onStart(WebFileDownloader downloader, File dstFile);
 
         /**
          * ダウンロードの進捗が進むごとに呼び出される。
          * ファイルが小さい場合は呼び出されない場合もある
-         * @param file
-         * @param downloaded
          */
         void onUpdate(WebFileDownloader downloader, File file, long downloaded);
     }
 
     /**
      * ダウンロードを行わせる。
-     * @param downloader
-     * @param dstFile
-     * @param callback
      */
     public static boolean download(WebFileDownloader downloader, File dstFile, DownloadCallback callback)
             throws WebAPIException {

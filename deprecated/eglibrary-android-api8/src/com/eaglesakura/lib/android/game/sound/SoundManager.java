@@ -1,9 +1,7 @@
 package com.eaglesakura.lib.android.game.sound;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.eaglesakura.lib.android.game.resource.DisposableResource;
+import com.eaglesakura.lib.android.game.util.LogUtil;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
@@ -11,13 +9,15 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
-import com.eaglesakura.lib.android.game.resource.DisposableResource;
-import com.eaglesakura.lib.android.game.util.LogUtil;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * SE管理クラス
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class SoundManager extends DisposableResource {
     Map<Object, MediaPlayer> medias = new HashMap<Object, MediaPlayer>();
@@ -34,7 +34,6 @@ public class SoundManager extends DisposableResource {
 
     /**
      * {@link AudioManager#STREAM_MUSIC}がデフォルトで設定されている。
-     * @param streamType
      */
     public void setStreamType(int streamType) {
         this.streamType = streamType;
@@ -47,10 +46,10 @@ public class SoundManager extends DisposableResource {
 
     /**
      * 効果音のローディングを行う。
-     * @param id 再生に利用する効果音ID
+     *
+     * @param id     再生に利用する効果音ID
      * @param source 音源URI
      * @return 成功した場合true
-     * @throws IOException
      */
     public boolean load(Object id, Uri source) {
         unload(id);
@@ -94,6 +93,7 @@ public class SoundManager extends DisposableResource {
 
     /**
      * 効果音を再生する。
+     *
      * @param id {@link #load(Object, Uri)}で指定した効果音ID
      */
     public void play(Object id) {
@@ -113,7 +113,6 @@ public class SoundManager extends DisposableResource {
 
     /**
      * 指定したIDの効果音を解放する。
-     * @param id
      */
     public void unload(Object id) {
         MediaPlayer player = medias.get(id);
@@ -125,8 +124,6 @@ public class SoundManager extends DisposableResource {
 
     /**
      * ロード済みだったらtrueを返す。
-     * @param id
-     * @return
      */
     public boolean isLoaded(Object id) {
         return medias.get(id) != null;

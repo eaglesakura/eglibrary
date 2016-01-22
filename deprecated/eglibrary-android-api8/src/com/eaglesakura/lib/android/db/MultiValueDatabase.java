@@ -1,12 +1,7 @@
 package com.eaglesakura.lib.android.db;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.eaglesakura.lib.android.game.resource.DisposableResource;
+import com.eaglesakura.lib.android.game.util.LogUtil;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -15,8 +10,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 
-import com.eaglesakura.lib.android.game.resource.DisposableResource;
-import com.eaglesakura.lib.android.game.util.LogUtil;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class MultiValueDatabase extends DisposableResource {
 
@@ -62,8 +62,6 @@ public class MultiValueDatabase extends DisposableResource {
 
     /**
      * プライマリキーがkey一致するオブジェクトを取得する
-     * @param key
-     * @return
      */
     public Data getOrNull(Object key) {
         Cursor cursor = null;
@@ -86,9 +84,6 @@ public class MultiValueDatabase extends DisposableResource {
 
     /**
      * keyName = valueに一致する値を列挙する
-     * @param keyName
-     * @param value
-     * @return
      */
     public List<Data> list(String keyName, Object value) {
         return list(keyName, value, SelectionType.Equal, valueList.fullColmnList());
@@ -99,9 +94,7 @@ public class MultiValueDatabase extends DisposableResource {
     }
 
     /**
-     * 
      * @author TAKESHI YAMASHITA
-     *
      */
     public enum SelectionType {
         Equal {
@@ -150,8 +143,6 @@ public class MultiValueDatabase extends DisposableResource {
 
     /**
      * 特定キーが最大値のデータを取得する
-     * @param keyName
-     * @return
      */
     public Data maxData(String keyName, String[] colmns) {
         String sql = String.format("%s = (select max(%s) from %s)", keyName, keyName, valueList.tableName);
@@ -166,8 +157,6 @@ public class MultiValueDatabase extends DisposableResource {
 
     /**
      * 特定キーが最小値のデータを取得する
-     * @param keyName
-     * @return
      */
     public Data minData(String keyName, String[] colmns) {
         String sql = String.format("%s = (select min(%s) from %s)", keyName, keyName, valueList.tableName);
@@ -182,9 +171,6 @@ public class MultiValueDatabase extends DisposableResource {
 
     /**
      * selectionを直接指定して取得する
-     * @param rawSelection
-     * @param colmns
-     * @return
      */
     public List<Data> list(String rawSelection, String[] colmns) {
         if (colmns == null) {
@@ -213,10 +199,6 @@ public class MultiValueDatabase extends DisposableResource {
     /**
      * keyName = valueに一致する値を列挙する
      * colmnsに指定したカラムのみを取得する
-     * @param keyName
-     * @param value
-     * @param colmns
-     * @return
      */
     public List<Data> list(String keyName, Object value, SelectionType selectType, String[] colmns) {
         final String selection = valueList.getColmun(keyName).createSelection(value, selectType);
@@ -226,8 +208,6 @@ public class MultiValueDatabase extends DisposableResource {
 
     /**
      * データの更新を行い、失敗したら挿入を行う
-     * @param key
-     * @param values
      */
     public boolean updateOrInsert(Map<String, Object> values) {
         try {
@@ -253,8 +233,6 @@ public class MultiValueDatabase extends DisposableResource {
 
     /**
      * 指定したカラムの全レコードを一括で全て上書きする
-     * @param columnName
-     * @param value
      */
     public boolean replaseAll(String columnName, Object value) {
         try {
@@ -282,8 +260,6 @@ public class MultiValueDatabase extends DisposableResource {
 
     /**
      * データの挿入を行う。
-     * @param key
-     * @param values
      */
     public boolean insertOrUpdate(Map<String, Object> values) {
         try {
@@ -330,7 +306,6 @@ public class MultiValueDatabase extends DisposableResource {
 
     /**
      * 主キーが一致する項目を削除する
-     * @param key
      */
     public void remove(String key) {
         try {
@@ -355,14 +330,14 @@ public class MultiValueDatabase extends DisposableResource {
 
     /**
      * ユーザーに返すデータ。
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public static class Data {
         Bundle bundle;
 
         /**
-         * 
+         *
          * @param cursor
          * @param valueList
          */
@@ -372,9 +347,6 @@ public class MultiValueDatabase extends DisposableResource {
 
         /**
          * 直接取得する
-         * @param col
-         * @param def
-         * @return
          */
         public Object get(Column col, Object def) {
             switch (col.type) {
@@ -391,7 +363,7 @@ public class MultiValueDatabase extends DisposableResource {
         }
 
         /**
-         * 
+         *
          * @param key
          * @param def
          * @return
@@ -401,7 +373,7 @@ public class MultiValueDatabase extends DisposableResource {
         }
 
         /**
-         * 
+         *
          * @param key
          * @param def
          * @return
@@ -411,7 +383,7 @@ public class MultiValueDatabase extends DisposableResource {
         }
 
         /**
-         * 
+         *
          * @param key
          * @param def
          * @return
@@ -422,9 +394,6 @@ public class MultiValueDatabase extends DisposableResource {
 
         /**
          * テキストを取得する
-         * @param key
-         * @param def
-         * @return
          */
         public String getText(String key, String def) {
             String result = bundle.getString(key);
@@ -437,9 +406,6 @@ public class MultiValueDatabase extends DisposableResource {
 
         /**
          * 実数値を取得する
-         * @param key
-         * @param def
-         * @return
          */
         public double getReal(String key, double def) {
             return bundle.getDouble(key, def);
@@ -447,8 +413,6 @@ public class MultiValueDatabase extends DisposableResource {
 
         /**
          * blob値を取得する。
-         * @param key
-         * @return
          */
         public byte[] getBlob(String key, byte[] def) {
             byte[] result = bundle.getByteArray(key);
@@ -462,8 +426,8 @@ public class MultiValueDatabase extends DisposableResource {
 
     /**
      * データ情報
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public static class Column {
         /**
@@ -483,7 +447,6 @@ public class MultiValueDatabase extends DisposableResource {
 
         /**
          * SQL命令を作成する
-         * @return
          */
         public String sql() {
             return name + " " + type.getSqlValueType();
@@ -491,8 +454,6 @@ public class MultiValueDatabase extends DisposableResource {
 
         /**
          * Select文用のキーワードを作成する
-         * @param value
-         * @return
          */
         public String createSelection(Object value, SelectionType select) {
             if (type == DBValueType.Text) {
@@ -513,8 +474,8 @@ public class MultiValueDatabase extends DisposableResource {
 
     /**
      * 値のリストを作成する
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public static class ValueList {
         /**
@@ -530,7 +491,6 @@ public class MultiValueDatabase extends DisposableResource {
 
         /**
          * プライマリを指定して生成する。
-         * @param primary
          */
         public ValueList(String tableName) {
             this.tableName = tableName;
@@ -538,7 +498,6 @@ public class MultiValueDatabase extends DisposableResource {
 
         /**
          * プライマリキーを指定する
-         * @param primary
          */
         public void setPrimary(Column primary) {
             this.primary = primary;
@@ -546,7 +505,6 @@ public class MultiValueDatabase extends DisposableResource {
 
         /**
          * カラムを追加する。
-         * @param c
          */
         public void addColmn(Column c) {
             columns.add(c);
@@ -561,7 +519,6 @@ public class MultiValueDatabase extends DisposableResource {
 
         /**
          * create命令を作成する。
-         * @return
          */
         public String sqlCreateCommand() {
             StringBuffer buffer = new StringBuffer();
@@ -594,8 +551,6 @@ public class MultiValueDatabase extends DisposableResource {
 
         /**
          * Drop命令を返す。
-         * @param tableName
-         * @return
          */
         public String sqlDropCommand() {
             return "drop table if exists " + tableName;
@@ -614,8 +569,6 @@ public class MultiValueDatabase extends DisposableResource {
 
         /**
          * Bundleに変換する
-         * @param cursor
-         * @return
          */
         public Bundle toBundle(Cursor cursor) {
             Bundle result = new Bundle();
@@ -630,7 +583,6 @@ public class MultiValueDatabase extends DisposableResource {
 
         /**
          * 全カラムを返す。
-         * @return
          */
         public String[] fullColmnList() {
             int num = (primary != null ? 1 : 0) + columns.size();
@@ -661,9 +613,6 @@ public class MultiValueDatabase extends DisposableResource {
 
         /**
          * コンテンツ格納用のValuesを取得する。
-         * @param primary
-         * @param datas
-         * @return
          */
         public ContentValues toContentValues(Map<String, Object> datas) {
             ContentValues result = new ContentValues();

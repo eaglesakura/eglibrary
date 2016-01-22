@@ -1,13 +1,13 @@
 package com.eaglesakura.lib.android.view;
 
+import com.eaglesakura.lib.android.game.thread.UIHandler;
+
 import android.content.Context;
 import android.os.Handler;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.ScaleGestureDetector.OnScaleGestureListener;
-
-import com.eaglesakura.lib.android.game.thread.UIHandler;
 
 public class MultiGestureDetector implements android.view.GestureDetector.OnGestureListener, OnScaleGestureListener {
 
@@ -19,21 +19,20 @@ public class MultiGestureDetector implements android.view.GestureDetector.OnGest
 
     /**
      * スケールと通常のジェスチャの両方を受け取る。
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public interface OnMultiGestureListener extends android.view.GestureDetector.OnGestureListener,
             OnScaleGestureListener {
 
         /**
          * タッチが終わった時に追加で呼び出される。
-         * @param me
          */
         void onTouchEnd(MotionEvent me, boolean scalingNow);
     }
 
     /**
-     * 
+     *
      * @param context
      * @param listener
      */
@@ -45,7 +44,6 @@ public class MultiGestureDetector implements android.view.GestureDetector.OnGest
 
     /**
      * ロングタップの有効・無効を設定する。
-     * @param set
      */
     public void setIsLongpressEnabled(boolean set) {
         gesture.setIsLongpressEnabled(set);
@@ -53,8 +51,6 @@ public class MultiGestureDetector implements android.view.GestureDetector.OnGest
 
     /**
      * タッチイベントを中継する。
-     * @param event
-     * @return
      */
     public boolean onTouchEvent(MotionEvent event) {
         gesture.onTouchEvent(event);
@@ -70,7 +66,6 @@ public class MultiGestureDetector implements android.view.GestureDetector.OnGest
 
     /**
      * リスナを更新する。
-     * @param listener
      */
     public void setListener(OnMultiGestureListener listener) {
         this.listener = listener;

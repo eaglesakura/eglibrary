@@ -14,7 +14,6 @@ public class Timer {
 
     /**
      * タイマーを開始する。
-     * @param startTime
      */
     public void setStartTime(long startTime) {
         this.startTime = startTime;
@@ -30,7 +29,6 @@ public class Timer {
 
     /**
      * ストップウォッチを停止し、時間を取得する。
-     * @return
      */
     public long end() {
         endTime = System.currentTimeMillis();
@@ -44,7 +42,6 @@ public class Timer {
     /**
      * {@link #start()}を呼び出した後、一度でも
      * {@link #end()}を呼び出したらtrue
-     * @return
      */
     public boolean isEnd() {
         return endTime != startTime;

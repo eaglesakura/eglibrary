@@ -1,6 +1,12 @@
 package com.eaglesakura.lib.net.google.drive.fragment;
 
-import java.io.File;
+import com.eaglesakura.lib.android.game.thread.AsyncAction;
+import com.eaglesakura.lib.android.game.thread.UIHandler;
+import com.eaglesakura.lib.android.game.util.FileUtil;
+import com.eaglesakura.lib.android.game.util.LogUtil;
+import com.eaglesakura.lib.net.WebAPIException;
+import com.eaglesakura.lib.net.google.GoogleOAuth2Helper;
+import com.eaglesakura.lib.net.google.GoogleOAuth2Helper.AuthToken;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -19,18 +25,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebViewDatabase;
 
-import com.eaglesakura.lib.android.game.thread.AsyncAction;
-import com.eaglesakura.lib.android.game.thread.UIHandler;
-import com.eaglesakura.lib.android.game.util.FileUtil;
-import com.eaglesakura.lib.android.game.util.LogUtil;
-import com.eaglesakura.lib.net.WebAPIException;
-import com.eaglesakura.lib.net.google.GoogleOAuth2Helper;
-import com.eaglesakura.lib.net.google.GoogleOAuth2Helper.AuthToken;
+import java.io.File;
 
 /**
  * GData認証を行うためのFragment
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class GoogleOAuth2Fragment extends Fragment {
     /**
@@ -70,7 +70,7 @@ public class GoogleOAuth2Fragment extends Fragment {
     }
 
     /**
-     * 
+     *
      * @param clientId
      * @param clientSecret
      */
@@ -142,7 +142,6 @@ public class GoogleOAuth2Fragment extends Fragment {
 
     /**
      * フラグメントが生きている場合はtrue
-     * @return
      */
     protected boolean isExist() {
         if (getActivity() == null) {
@@ -162,7 +161,6 @@ public class GoogleOAuth2Fragment extends Fragment {
 
     /**
      * 認証URL取得中のダイアログ
-     * @return
      */
     protected Dialog createAuthUrlLoadingDialog() {
         ProgressDialog result = new ProgressDialog(getActivity());
@@ -172,7 +170,6 @@ public class GoogleOAuth2Fragment extends Fragment {
 
     /**
      * アクセストークン取得中のダイアログを作成する
-     * @return
      */
     protected Dialog createAccesTokenLoadingDialog() {
         ProgressDialog result = new ProgressDialog(getActivity());
@@ -182,7 +179,6 @@ public class GoogleOAuth2Fragment extends Fragment {
 
     /**
      * 認証コードを取得できた
-     * @param authCode
      */
     protected void onReceiveAuthCode(final String authCode) {
         if (!isExist()) {
@@ -237,7 +233,6 @@ public class GoogleOAuth2Fragment extends Fragment {
 
     /**
      * 認証用のURLを取得した
-     * @param url
      */
     protected void onReceiveAuthorizationUrl(final String url) {
         if (!isExist()) {
@@ -312,7 +307,7 @@ public class GoogleOAuth2Fragment extends Fragment {
     }
 
     /**
-     * 
+     *
      */
     protected void startAuthorization() {
         final Dialog dialog = createAuthUrlLoadingDialog();
@@ -369,12 +364,10 @@ public class GoogleOAuth2Fragment extends Fragment {
 
     /**
      * OAuth2のトークン取得状態を受け取るリスナ
-     *
      */
     public interface OAuth2Listener {
         /**
          * トークンの作成に成功した
-         * @param token
          */
         public void onMakeTokenComplete(GoogleOAuth2Fragment fragment, GoogleOAuth2Helper.AuthToken token);
 

@@ -1,17 +1,17 @@
 package com.eaglesakura.lib.android.game.graphics;
 
-import java.security.MessageDigest;
-
-import android.graphics.Bitmap;
-
 import com.eaglesakura.lib.android.game.resource.GCResourceBase;
 import com.eaglesakura.lib.android.game.resource.GarbageCollector;
 import com.eaglesakura.lib.android.game.util.GameUtil;
 
+import android.graphics.Bitmap;
+
+import java.security.MessageDigest;
+
 /**
  * 画像を管理する。<BR>
  * 画像の管理方法についてはサブクラスに一任し、こちらでは関与しない。
- * 
+ *
  * @author TAKESHI YAMASHITA
  */
 public abstract class ImageBase extends GCResourceBase {
@@ -22,20 +22,16 @@ public abstract class ImageBase extends GCResourceBase {
 
     /**
      * 画像幅を取得する
-     * @return
      */
     public abstract int getWidth();
 
     /**
      * 画像高を取得する
-     * @return
      */
     public abstract int getHeight();
 
     /**
      * 画像RGBA情報からSHA1指紋を作成する。
-     * @param bitmap
-     * @return
      */
     public static String genSHA1(Bitmap bitmap) {
         final int[] pixels = new int[bitmap.getWidth()];

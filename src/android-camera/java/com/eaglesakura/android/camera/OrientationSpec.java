@@ -15,8 +15,6 @@ public class OrientationSpec {
 
     /**
      * 回転角を取得する
-     *
-     * @return
      */
     public int getDegree() {
         return degree;
@@ -24,8 +22,6 @@ public class OrientationSpec {
 
     /**
      * 縦向きである場合はtrue
-     *
-     * @return
      */
     public boolean isVertical() {
         return degree == 90 || degree == 180;
@@ -33,8 +29,6 @@ public class OrientationSpec {
 
     /**
      * 横向きであればtrue
-     *
-     * @return
      */
     public boolean isHorizontal() {
         return !isVertical();
@@ -62,9 +56,6 @@ public class OrientationSpec {
 
     /**
      * 回転角度から取得する
-     *
-     * @param rotate
-     * @return
      */
     public static final OrientationSpec fromDegree(int rotate) {
         rotate = (int) MathUtil.normalizeDegree(rotate);

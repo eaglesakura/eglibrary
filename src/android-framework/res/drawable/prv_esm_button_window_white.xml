@@ -3,22 +3,22 @@
     <selector>
         <item android:state_enabled="false">
             <shape android:shape="rectangle">
-                <solid android:color="@color/EsMaterial.White.Button.Disabled" />
+                <solid android:color="@color/EsMaterial.White.Button.Disabled"/>
             </shape>
         </item>
         <item android:state_focused="true">
             <shape android:shape="rectangle">
-                <solid android:color="@color/EsMaterial.White.Button.Focused" />
+                <solid android:color="@color/EsMaterial.White.Button.Focused"/>
             </shape>
         </item>
         <item android:state_pressed="true">
             <shape android:shape="rectangle">
-                <solid android:color="@color/EsMaterial.White.Button.Pressed" />
+                <solid android:color="@color/EsMaterial.White.Button.Pressed"/>
             </shape>
         </item>
         <item>
             <shape android:shape="rectangle">
-                <solid android:color="@color/EsMaterial.White.Button.Normal" />
+                <solid android:color="@color/EsMaterial.White.Button.Normal"/>
             </shape>
         </item>
     </selector>

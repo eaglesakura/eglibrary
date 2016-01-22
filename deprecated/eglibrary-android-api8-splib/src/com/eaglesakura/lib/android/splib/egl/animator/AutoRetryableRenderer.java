@@ -5,8 +5,8 @@ import com.eaglesakura.lib.android.game.graphics.gl11.hw.SimpleRenderer;
 
 /**
  * 自動でリトライを行うレンダラ
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public abstract class AutoRetryableRenderer extends SimpleRenderer {
     protected EGLAnimator animator;

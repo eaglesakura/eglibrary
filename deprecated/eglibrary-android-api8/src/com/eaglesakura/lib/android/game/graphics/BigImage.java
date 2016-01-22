@@ -1,7 +1,7 @@
 package com.eaglesakura.lib.android.game.graphics;
 
-import java.io.IOException;
-import java.io.InputStream;
+import com.eaglesakura.lib.android.game.math.Vector2;
+import com.eaglesakura.lib.android.game.util.LogUtil;
 
 import android.content.ContentResolver;
 import android.content.res.Resources;
@@ -11,8 +11,8 @@ import android.graphics.BitmapFactory.Options;
 import android.graphics.Rect;
 import android.net.Uri;
 
-import com.eaglesakura.lib.android.game.math.Vector2;
-import com.eaglesakura.lib.android.game.util.LogUtil;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class BigImage {
 
@@ -23,9 +23,6 @@ public class BigImage {
 
     /**
      * 巨大な画像を前提として読み込みを行う。
-     * @param resource
-     * @param drawableId
-     * @return
      */
     public static Bitmap loadBitmap(Resources resource, int drawableId, int maxPixels, Vector2 originSize) {
         Options option = new Options();
@@ -53,9 +50,6 @@ public class BigImage {
 
     /**
      * 巨大な画像を前提として読み込みを行う。
-     * @param resource
-     * @param drawableId
-     * @return
      */
     public static Bitmap loadBitmap(ContentResolver resolver, Uri uri, int maxPixels, Vector2 originSize)
             throws IOException {

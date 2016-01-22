@@ -1,19 +1,19 @@
 package com.eaglesakura.lib.net.google;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-
 import com.eaglesakura.lib.android.game.util.EncodeUtil;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.net.WebAPIConnectorBase;
 import com.eaglesakura.lib.net.WebAPIException;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+
 /**
  * GoogleのOAuth2で接続を行うためのヘルパ
  * トークンのリセット要請が行われた場合、自動的にトークンは再生成される。
  * その際、リスナがよばれるため、トークン保存を忘れないこと。
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class GoogleAPIConnector extends WebAPIConnectorBase {
 
@@ -40,7 +40,7 @@ public class GoogleAPIConnector extends WebAPIConnectorBase {
     TokenListener listener;
 
     public GoogleAPIConnector(String clientId, String clientSecret, String accessToken, String refreshToken,
-            TokenListener listener) {
+                              TokenListener listener) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.listener = listener;
@@ -50,6 +50,7 @@ public class GoogleAPIConnector extends WebAPIConnectorBase {
 
     /**
      * アクセストークンをリセットする
+     *
      * @return 新しいトークン
      */
     public synchronized String refreshAccessToken() throws WebAPIException {
@@ -94,36 +95,32 @@ public class GoogleAPIConnector extends WebAPIConnectorBase {
     public interface TokenListener {
         /**
          * トークンがリセットされた場合に呼び出される。
-         * @param newToken
          */
         void onAccessTokenReset(GoogleAPIConnector connector, String newToken);
     }
 
     /**
      * アップロード中の制御を行う
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public interface UploadCallback {
         /**
          * 指定した範囲の内容をdstに書き込む
-         * @param buffer
-         * @param startIndex 読み込みたい開始index {@link InputStream#skip(long)}を行える。
+         *
+         * @param startIndex    読み込みたい開始index {@link InputStream#skip(long)}を行える。
          * @param requestLength 読み込みたいバイト数
          * @return 読み込めたバイト数
-         * @throws IOException
          */
         int getUploadSource(byte[] dst, long startIndex, long requestLength) throws IOException;
 
         /**
          * アップロードサイズを取得する
-         * @return
          */
         int getUploadSize();
 
         /**
          * キャンセルを行う場合はtrueを返す
-         * @return
          */
         int isCanceled();
     }

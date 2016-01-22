@@ -1,5 +1,13 @@
 package com.eaglesakura.android.framework.ui;
 
+import com.eaglesakura.android.framework.FrameworkCentral;
+import com.eaglesakura.android.framework.ui.state.IStateful;
+import com.eaglesakura.android.framework.util.AppSupportUtil;
+import com.eaglesakura.android.oari.ActivityResult;
+import com.eaglesakura.android.thread.ui.UIHandler;
+import com.eaglesakura.android.util.ContextUtil;
+import com.eaglesakura.android.util.PermissionUtil;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -13,15 +21,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.eaglesakura.android.framework.FrameworkCentral;
-import com.eaglesakura.android.framework.ui.state.IStateful;
-import com.eaglesakura.android.framework.util.AppSupportUtil;
-import com.eaglesakura.android.oari.ActivityResult;
-import com.eaglesakura.android.thread.ui.UIHandler;
-import com.eaglesakura.android.util.ContextUtil;
-import com.eaglesakura.android.util.PermissionUtil;
-
 
 import butterknife.ButterKnife;
 import icepick.Icepick;
@@ -96,8 +95,6 @@ public abstract class BaseFragment extends Fragment implements IStateful {
 
     /**
      * ActionBarを取得する
-     *
-     * @return
      */
     public ActionBar getActionBar() {
         Activity activity = getActivity();
@@ -172,8 +169,6 @@ public abstract class BaseFragment extends Fragment implements IStateful {
 
     /**
      * backstack idを指定する
-     *
-     * @param backstackIndex
      */
     void setBackstackIndex(int backstackIndex) {
         this.backstackIndex = backstackIndex;
@@ -181,8 +176,6 @@ public abstract class BaseFragment extends Fragment implements IStateful {
 
     /**
      * Backstackを持つならばtrue
-     *
-     * @return
      */
     boolean hasBackstackIndex() {
         return backstackIndex != BACKSTACK_NONE;
@@ -194,8 +187,6 @@ public abstract class BaseFragment extends Fragment implements IStateful {
 
     /**
      * バックスタックが一致したらtrue
-     *
-     * @return
      */
     @SuppressLint("NewApi")
     public boolean isCurrentBackstack() {
@@ -278,7 +269,6 @@ public abstract class BaseFragment extends Fragment implements IStateful {
     /**
      * Runtime Permissionの更新を行わせる
      *
-     * @param permissions
      * @return パーミッション取得を開始した場合はtrue
      */
     public boolean requestRuntimePermission(String[] permissions) {
@@ -287,10 +277,6 @@ public abstract class BaseFragment extends Fragment implements IStateful {
 
     /**
      * Runtime Permissionのブロードキャストを行わせる
-     *
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -305,8 +291,6 @@ public abstract class BaseFragment extends Fragment implements IStateful {
 
     /**
      * UIスレッドで実行する
-     *
-     * @param runnable
      */
     protected void runUI(Runnable runnable) {
         UIHandler.postUIorRun(runnable);
@@ -314,8 +298,6 @@ public abstract class BaseFragment extends Fragment implements IStateful {
 
     /**
      * バックグラウンドで実行する
-     *
-     * @param runner
      */
     protected void runBackground(Runnable runner) {
         FrameworkCentral.getTaskController().pushBack(runner);

@@ -1,16 +1,15 @@
 package com.eaglesakura.lib.android.game.graphics;
 
+import android.graphics.Rect;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import android.graphics.Rect;
 
 /**
  * スプライト表示用の1オブジェクトを示す。<BR>
  * スプライトはアニメーションを含み、1画像シートから複数の画像ブロックを切り出してアニメーション化することができる。
- * 
+ *
  * @author TAKESHI YAMASHITA
- * 
  */
 public class SpriteMaster {
     ImageBase image;
@@ -42,8 +41,6 @@ public class SpriteMaster {
 
     /**
      * フレームを追加する。
-     * 
-     * @param frame
      */
     void addAnimationFrame(final AnimationFrame frame) {
         frames.add(frame);
@@ -51,9 +48,6 @@ public class SpriteMaster {
 
     /**
      * フレームを追加する。
-     * 
-     * @param texture
-     * @param area
      */
     public void addAnimationFrame(final Rect area) {
         AnimationFrame frame = new AnimationFrame();
@@ -64,13 +58,10 @@ public class SpriteMaster {
     /**
      * 1ブロックの画像の大きさとインデックスを指定して画像位置を決定する。<BR>
      * 画像は必ず横方向に並んでいるものとする。
-     * 
-     * @param blockWidth
-     *            ブロック幅
-     * @param blockHeight
-     *            ブロック高
-     * @param index
-     *            ブロック番号
+     *
+     * @param blockWidth  ブロック幅
+     * @param blockHeight ブロック高
+     * @param index       ブロック番号
      */
     public void addAnimationFrame(final int blockWidth, final int blockHeight, final int index) {
         Rect src = new Rect();
@@ -91,11 +82,6 @@ public class SpriteMaster {
 
     /**
      * 複数の画像ブロックを一括に登録する。
-     * 
-     * @param blockWidth
-     * @param blockHeight
-     * @param startIndex
-     * @param num
      */
     public void addAnimationFrames(final int blockWidth, final int blockHeight, final int startIndex, final int num) {
         for (int i = 0; i < num; ++i) {
@@ -128,8 +114,7 @@ public class SpriteMaster {
 
     /**
      * 終端に来た場合のループコマ数を指定する。 <BR>
-     * 
-     * @param endOffset
+     *
      * @see #ANIMATION_LOOPING
      * @see #ANIMATION_STOP
      */
@@ -139,8 +124,6 @@ public class SpriteMaster {
 
     /**
      * 新規のスプライトコピーを作成する。
-     * 
-     * @return
      */
     public Sprite newSprite() {
         return new Sprite(this);
@@ -148,8 +131,6 @@ public class SpriteMaster {
 
     /**
      * 一コマの表示フレーム数を設定する。
-     * 
-     * @param komaFrame
      */
     public void setKomaFrame(int komaFrame) {
         komaFrame = Math.max(1, komaFrame);
@@ -165,7 +146,6 @@ public class SpriteMaster {
 
     /**
      * 元画像を取得する
-     * @return
      */
     public ImageBase getImage() {
         return image;

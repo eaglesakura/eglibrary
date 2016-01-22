@@ -1,5 +1,7 @@
 package com.eaglesakura.lib.android.game.io.fs;
 
+import com.eaglesakura.lib.android.game.io.IFile;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -9,13 +11,10 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.eaglesakura.lib.android.game.io.IFile;
-
 /**
  * ファイルシステムを扱ったシステム
- * 
+ *
  * @author TAKESHI YAMASHITA
- * 
  */
 public class FSFile implements IFile {
     File file;

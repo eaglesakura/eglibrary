@@ -1,13 +1,8 @@
 package com.eaglesakura.android.playservice;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentSender;
-import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.view.KeyEvent;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.plus.Plus;
 
 import com.eaglesakura.android.R;
 import com.eaglesakura.android.framework.FrameworkCentral;
@@ -18,9 +13,15 @@ import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.material.widget.MaterialAlertDialog;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.plus.Plus;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentSender;
+import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 
 
 /**
@@ -74,8 +75,6 @@ public abstract class GoogleAuthActivity extends BaseActivity implements GoogleA
 
     /**
      * Google API Clientを生成する
-     *
-     * @return
      */
     protected abstract GoogleApiClient.Builder newGoogleApiClient();
 
@@ -189,8 +188,6 @@ public abstract class GoogleAuthActivity extends BaseActivity implements GoogleA
 
     /**
      * Google Play Serviceにログインを行わせる
-     *
-     * @param connectionResult
      */
     protected void showLoginDialog(final ConnectionResult connectionResult) {
         runUI(new Runnable() {
@@ -249,9 +246,6 @@ public abstract class GoogleAuthActivity extends BaseActivity implements GoogleA
 
     /**
      * ログイン戻りの対応
-     *
-     * @param resultCode
-     * @param data
      */
     @OnActivityResult(REQUEST_GOOGLE_CLIENT_AUTH)
     protected void resultGoogleClientAuth(int resultCode, Intent data) {

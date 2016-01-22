@@ -1,12 +1,12 @@
 package com.eaglesakura.spreadsheet;
 
+import com.eaglesakura.proguard.NonProguardModel;
 import com.eaglesakura.spreadsheet.generic.Author;
 import com.eaglesakura.spreadsheet.generic.Content;
 import com.eaglesakura.spreadsheet.generic.IntegerField;
 import com.eaglesakura.spreadsheet.generic.Link;
 import com.eaglesakura.spreadsheet.generic.StringField;
 import com.eaglesakura.spreadsheet.generic.Title;
-import com.eaglesakura.proguard.NonProguardModel;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;

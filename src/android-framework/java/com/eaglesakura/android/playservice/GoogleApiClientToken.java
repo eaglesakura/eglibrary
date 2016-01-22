@@ -1,14 +1,15 @@
 package com.eaglesakura.android.playservice;
 
-import android.os.Bundle;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.android.util.AndroidThreadUtil;
-import com.eaglesakura.util.Timer;
 import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.Timer;
 import com.eaglesakura.util.Util;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
+
+import android.os.Bundle;
 
 /**
  *
@@ -81,8 +82,6 @@ public class GoogleApiClientToken {
 
     /**
      * ログインが完了していたらtrueを返却する
-     *
-     * @return
      */
     public boolean isLoginCompleted() {
         return client != null && client.isConnected();
@@ -90,8 +89,6 @@ public class GoogleApiClientToken {
 
     /**
      * 最後に取得したコネクション情報を取得する
-     *
-     * @return
      */
     public ConnectionResult getConnectionResult() {
         return connectionResult;
@@ -144,8 +141,6 @@ public class GoogleApiClientToken {
      * Google Apiの実行を行う。
      * <br>
      * 裏スレッドから呼び出さなくてはならない。
-     *
-     * @param task
      */
     public <T> T executeGoogleApi(GoogleApiTask<T> task) {
         if (AndroidThreadUtil.isUIThread()) {

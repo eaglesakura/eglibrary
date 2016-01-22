@@ -1,8 +1,5 @@
 package com.eaglesakura.android.glkit.media;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-
 import com.eaglesakura.android.camera.CameraManager;
 import com.eaglesakura.android.camera.CameraType;
 import com.eaglesakura.android.camera.FlashModeSpec;
@@ -13,6 +10,9 @@ import com.eaglesakura.android.util.AndroidUtil;
 import com.eaglesakura.math.Vector2;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.StringUtil;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
 
 /**
  * 撮影時の条件を列挙する
@@ -126,8 +126,6 @@ public class CameraShotRequest {
 
     /**
      * シーン設定
-     *
-     * @param sceneMode
      */
     public CameraShotRequest scene(SceneSpec sceneMode) {
         this.sceneSpec = sceneMode;
@@ -136,8 +134,6 @@ public class CameraShotRequest {
 
     /**
      * 撮影サイズのIDを設定する
-     *
-     * @param shotSizeId
      */
     public CameraShotRequest shotSizeId(String shotSizeId) {
         this.shotSizeId = shotSizeId;
@@ -149,7 +145,6 @@ public class CameraShotRequest {
      * <br>
      * UIThreadからは呼び出してはいけない。
      *
-     * @param request
      * @return 撮影されたJpeg画像
      */
     @SuppressLint("NewApi")

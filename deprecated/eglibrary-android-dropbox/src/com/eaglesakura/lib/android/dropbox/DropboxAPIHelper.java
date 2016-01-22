@@ -11,8 +11,8 @@ import com.eaglesakura.lib.android.game.util.LogUtil;
 
 /**
  * API呼び出し補助クラス
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class DropboxAPIHelper {
     String token;
@@ -25,7 +25,7 @@ public class DropboxAPIHelper {
     DropboxAPI<AndroidAuthSession> api = null;
 
     /**
-     * 
+     *
      * @param token
      * @param tokenSecret
      */
@@ -40,7 +40,6 @@ public class DropboxAPIHelper {
 
     /**
      * アカウントに対してログインする。
-     * @throws DropboxAPIException
      */
     public void login() throws DropboxAPIException {
         try {
@@ -57,8 +56,6 @@ public class DropboxAPIHelper {
 
     /**
      * ユーザーのディスプレイ表示名を取得する
-     * @return
-     * @throws DropboxAPIException
      */
     public String getUserDisplayName() throws DropboxAPIException {
         try {
@@ -71,9 +68,6 @@ public class DropboxAPIHelper {
 
     /**
      * 詳細データを取得する
-     * @param path
-     * @return
-     * @throws DropboxAPIException
      */
     public Entry metadata(String path) throws DropboxAPIException {
         try {
@@ -86,7 +80,6 @@ public class DropboxAPIHelper {
 
     /**
      * APIクラス本体を取得する
-     * @return
      */
     public DropboxAPI<AndroidAuthSession> getAPI() {
         return api;

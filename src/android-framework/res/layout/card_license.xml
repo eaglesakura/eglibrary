@@ -6,25 +6,25 @@
               android:orientation="vertical">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/eglibrary.License.Item.Root"
-        style="@style/EsMaterial.CardView.Light.NoHorizontalMargin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:layout_marginTop="1dp"
-        android:clickable="true"
-        tools:targetApi="11">
-
-        <TextView
-            android:id="@+id/eglibrary.License.Item.Name"
-            style="@style/EsMaterial.Font.Normal"
+            android:id="@+id/eglibrary.License.Item.Root"
+            style="@style/EsMaterial.CardView.Light.NoHorizontalMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/EsMaterial.Button.Margin"
-            android:layout_marginRight="@dimen/EsMaterial.Button.Margin"
-            android:gravity="center_vertical"
-            android:minHeight="@dimen/EsMaterial.Button.MinHeight"/>
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="1dp"
+            android:clickable="true"
+            tools:targetApi="11">
+
+        <TextView
+                android:id="@+id/eglibrary.License.Item.Name"
+                style="@style/EsMaterial.Font.Normal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/EsMaterial.Button.Margin"
+                android:layout_marginRight="@dimen/EsMaterial.Button.Margin"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/EsMaterial.Button.MinHeight"/>
 
     </android.support.v7.widget.CardView>
 </LinearLayout>

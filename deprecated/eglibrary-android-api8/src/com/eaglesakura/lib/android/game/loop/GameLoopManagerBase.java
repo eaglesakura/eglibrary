@@ -1,7 +1,18 @@
 package com.eaglesakura.lib.android.game.loop;
 
-import java.io.IOException;
-import java.io.InputStream;
+import com.eaglesakura.lib.android.game.display.VirtualDisplay;
+import com.eaglesakura.lib.android.game.graphics.gl11.BitmapTextureImage;
+import com.eaglesakura.lib.android.game.graphics.gl11.GPU;
+import com.eaglesakura.lib.android.game.graphics.gl11.TextureImageBase;
+import com.eaglesakura.lib.android.game.graphics.gl11.hw.EGLManager;
+import com.eaglesakura.lib.android.game.input.MultiTouchInput;
+import com.eaglesakura.lib.android.game.thread.AsyncHandler;
+import com.eaglesakura.lib.android.game.thread.ThreadSyncRunnerBase;
+import com.eaglesakura.lib.android.game.thread.UIHandler;
+import com.eaglesakura.lib.android.game.util.LogUtil;
+import com.eaglesakura.lib.android.game.util.Timer;
+import com.eaglesakura.lib.android.view.CanvasView;
+import com.eaglesakura.lib.android.view.OpenGLView;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,19 +28,8 @@ import android.view.SurfaceHolder;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.eaglesakura.lib.android.game.display.VirtualDisplay;
-import com.eaglesakura.lib.android.game.graphics.gl11.BitmapTextureImage;
-import com.eaglesakura.lib.android.game.graphics.gl11.GPU;
-import com.eaglesakura.lib.android.game.graphics.gl11.TextureImageBase;
-import com.eaglesakura.lib.android.game.graphics.gl11.hw.EGLManager;
-import com.eaglesakura.lib.android.game.input.MultiTouchInput;
-import com.eaglesakura.lib.android.game.thread.AsyncHandler;
-import com.eaglesakura.lib.android.game.thread.ThreadSyncRunnerBase;
-import com.eaglesakura.lib.android.game.thread.UIHandler;
-import com.eaglesakura.lib.android.game.util.LogUtil;
-import com.eaglesakura.lib.android.game.util.Timer;
-import com.eaglesakura.lib.android.view.CanvasView;
-import com.eaglesakura.lib.android.view.OpenGLView;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * ゲームループとそれに付随するViewを管理する。 ゲームループはUIスレッドとは別スレッドを利用していることに注意すること。
@@ -95,9 +95,8 @@ public abstract class GameLoopManagerBase {
 
     /**
      * ライフサイクルの状態を取得する。
-     * 
+     *
      * @author TAKESHI YAMASHITA
-     * 
      */
     protected enum LifeCycle {
         /**
@@ -149,7 +148,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * タイマーを終了し、ログを吐き出す
-     * @param messageFormat
      */
     private void debugTimerEnd(String messageFormat) {
         if (TIME_OUTPUT) {
@@ -190,8 +188,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * 直近1フレームのフレームレートを取得する。
-     * 
-     * @return
      */
     public float getFramerateLast() {
         return runningFrameRate;
@@ -199,8 +195,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * 直近1秒のフレームレート実績値を取得する。
-     * 
-     * @return
      */
     public int getFramerateReal() {
         return framerateCounter.getRealRate();
@@ -222,7 +216,7 @@ public abstract class GameLoopManagerBase {
     static AsyncHandler gameHandle = AsyncHandler.createInstance("gameloop");
 
     /**
-     * 
+     *
      * @param context
      * @param loopParent
      */
@@ -237,8 +231,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * 仮想ディスプレイを取得する。
-     * 
-     * @return
      */
     public VirtualDisplay getVirtualDisplay() {
         return virtualDisplay;
@@ -247,7 +239,6 @@ public abstract class GameLoopManagerBase {
     /**
      * ゲームスレッド名を取得する。
      * DDMSに反映される
-     * @return
      */
     protected String getThreadName() {
         return "GameThread";
@@ -256,8 +247,6 @@ public abstract class GameLoopManagerBase {
     /**
      * マルチタッチデバイスを取得する。<BR>
      * 基本的に二点を扱う。
-     * 
-     * @return
      */
     public MultiTouchInput getMultiTouchInput() {
         return multiTouchInput;
@@ -265,8 +254,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * フレームレートをFPS単位で指定する。
-     * 
-     * @param frameRate
      */
     public void setFrameRateParSec(int frameRate) {
         this.frameRate = frameRate;
@@ -358,7 +345,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * onResumeが呼ばれてからフレームを復帰させるまでの時間
-     * @param resumeWaitTime
      */
     public void setResumeWaitTime(int resumeWaitTime) {
         this.resumeWaitTime = resumeWaitTime;
@@ -366,15 +352,13 @@ public abstract class GameLoopManagerBase {
 
     /**
      * GL管理クラスを取得する。
-     * 
-     * @return
      */
     public GPU getGLManager() {
         return glView.getGLManager();
     }
 
     /**
-     * 
+     *
      * @return
      */
     public OpenGLView getGLView() {
@@ -382,7 +366,7 @@ public abstract class GameLoopManagerBase {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public CanvasView getCanvasView() {
@@ -391,7 +375,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * 結び付けられたコンテキストを取得する。
-     * @return
      */
     public Context getContext() {
         return context;
@@ -399,8 +382,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * 描画用のViewを取得する。
-     * 
-     * @return
      */
     public ViewGroup getRootView() {
         return rootLayout;
@@ -415,8 +396,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * 次のフレームの動作を許す場合true
-     * 
-     * @return
      */
     boolean isNextFrameEnable() {
         updateLifeCycle();
@@ -425,8 +404,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * ゲームスレッドで動作を行わせる。
-     * 
-     * @param runnable
      */
     public void post(Runnable runnable) {
         if (gameHandle != null) {
@@ -436,7 +413,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * ゲームスレッドにPostし、実行が完了するまでロックする。
-     * @param runnable
      */
     public void postWithWait(final Runnable runnable) {
         if (gameHandle != null) {
@@ -452,7 +428,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * UIハンドルで動作を行わせる。
-     * @param runnable
      */
     public void postUIThread(Runnable runnable) {
         if (uiHandle != null) {
@@ -462,7 +437,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * UIスレッドにPostし、実行が完了するまでロックする。
-     * @param runnable
      */
     public void postUIThreadWithWait(final Runnable runnable) {
         (new ThreadSyncRunnerBase<Void>(uiHandle) {
@@ -486,8 +460,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * drawableのIDから画像を生成する。
-     * @param drawableId
-     * @return
      */
     public Bitmap loadBitmapDrawable(int drawableId) {
         Bitmap image = BitmapFactory.decodeResource(getContext().getResources(), drawableId);
@@ -496,8 +468,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * drawableのIDから画像を生成する。
-     * @param drawableId
-     * @return
      */
     public TextureImageBase loadImageDrawable(int drawableId) {
         Bitmap image = BitmapFactory.decodeResource(getContext().getResources(), drawableId);
@@ -509,9 +479,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * rawのidから画像を生成する。
-     * @param rawId
-     * @return
-     * @throws IOException
      */
     public TextureImageBase loadImageRaw(int rawId) throws IOException {
         InputStream is = getContext().getResources().openRawResource(rawId);
@@ -529,8 +496,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * assetsのパスから画像を生成する。
-     * @param assetsPath
-     * @return
      */
     public TextureImageBase loadImageAssets(String assetsPath) throws IOException {
         InputStream is = getContext().getAssets().open(assetsPath);
@@ -548,11 +513,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * フォント描画用のテクスチャを生成して返す。
-     * @param text
-     * @param fontSize
-     * @param boundsAddX
-     * @param boundsAddY
-     * @return
      */
     public TextureImageBase createFontTexture(String text, int fontSize, int boundsAddX, int boundsAddY) {
         Paint paint = new Paint();
@@ -630,8 +590,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * このメソッドをゲーム用スレッドから呼び出している限り、trueを返す。
-     * 
-     * @return
      */
     public boolean isGameThread() {
         return gameHandle.isHandlerThread();
@@ -639,7 +597,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * ゲームループ用のハンドラを取得する。
-     * @return
      */
     public Handler getGameHandler() {
         return gameHandle;
@@ -647,7 +604,6 @@ public abstract class GameLoopManagerBase {
 
     /**
      * UIハンドラを取得する。
-     * @return
      */
     public UIHandler getUIHandler() {
         return uiHandle;

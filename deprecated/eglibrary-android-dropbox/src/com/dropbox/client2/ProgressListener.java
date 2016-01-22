@@ -23,12 +23,12 @@
 
 package com.dropbox.client2;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.entity.HttpEntityWrapper;
+
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.entity.HttpEntityWrapper;
 
 /**
  * Receives file transfer progress updates for some API calls, e.g. getFile and
@@ -66,7 +66,7 @@ public abstract class ProgressListener {
         private final long length;
 
         public ProgressHttpEntity(final HttpEntity wrapped,
-                final ProgressListener listener) {
+                                  final ProgressListener listener) {
             super(wrapped);
             this.listener = listener;
             length = wrapped.getContentLength();

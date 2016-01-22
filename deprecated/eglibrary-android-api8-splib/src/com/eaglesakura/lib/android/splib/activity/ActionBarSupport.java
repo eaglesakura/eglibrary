@@ -1,11 +1,11 @@
 package com.eaglesakura.lib.android.splib.activity;
 
+import com.eaglesakura.lib.android.game.util.ContextUtil;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.view.MenuItem;
 import android.view.Window;
-
-import com.eaglesakura.lib.android.game.util.ContextUtil;
 
 public class ActionBarSupport {
     Activity activity = null;
@@ -50,7 +50,6 @@ public class ActionBarSupport {
 
     /**
      * 常にActionBarに表示する
-     * @param item
      */
     public void showAsAlways(MenuItem item) {
         if (ContextUtil.isActionBarEnable()) {
@@ -60,7 +59,6 @@ public class ActionBarSupport {
 
     /**
      * 表示が可能なら表示する
-     * @param item
      */
     public void showAsIfRoom(MenuItem item) {
         if (!ContextUtil.isActionBarEnable()) {

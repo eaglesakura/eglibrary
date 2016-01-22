@@ -1,11 +1,10 @@
 package com.eaglesakura.android.glkit.res;
 
-import android.content.Context;
-
 import com.eaglesakura.android.camera.CameraManager;
 import com.eaglesakura.android.camera.OrientationSpec;
-
 import com.eaglesakura.util.LogUtil;
+
+import android.content.Context;
 
 /**
  * カメラプレビューをテクスチャに焼きこむクラス
@@ -39,7 +38,6 @@ public class CameraTextureRenderer extends CameraManager {
      * プレビューを開始する。開始時点でプレビューサーフェイスを生成する。
      *
      * @param textureName 焼きこみ対象のteture / glGenTexturesしたばかりのオブジェクトが必要
-     * @return
      */
     public boolean startPreview(int textureName) {
         try {
@@ -62,8 +60,6 @@ public class CameraTextureRenderer extends CameraManager {
 
     /**
      * プレビュー終了とリソース解放を行う
-     *
-     * @return
      */
     @Override
     public boolean stopPreview() {
@@ -85,8 +81,6 @@ public class CameraTextureRenderer extends CameraManager {
 
     /**
      * プレビュー対象のサーフェイスを取得する
-     *
-     * @return
      */
     public PreviewSurfaceTexture getPreviewSurface() {
         return previewSurface;

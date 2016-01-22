@@ -1,8 +1,8 @@
 package com.eaglesakura.android.debug.window.log;
 
+import com.eaglesakura.android.graphics.ColorRGBA;
 import com.eaglesakura.android.graphics.FontCalculator;
 import com.eaglesakura.android.graphics.Graphics;
-import com.eaglesakura.android.graphics.ColorRGBA;
 import com.eaglesakura.math.Vector2;
 
 /**
@@ -66,8 +66,6 @@ public class DebugText extends DebugRenderingItem {
 
     /**
      * デフォルトのフォントサイズをピクセル単位で指定する
-     *
-     * @param defaultFontSize
      */
     public static void setDefaultFontSize(int defaultFontSize) {
         DEFAULT_FONT_SIZE = defaultFontSize;

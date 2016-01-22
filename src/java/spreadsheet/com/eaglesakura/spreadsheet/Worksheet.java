@@ -1,12 +1,12 @@
 package com.eaglesakura.spreadsheet;
 
+import com.eaglesakura.proguard.NonProguardModel;
 import com.eaglesakura.spreadsheet.generic.Author;
 import com.eaglesakura.spreadsheet.generic.Category;
 import com.eaglesakura.spreadsheet.generic.Content;
 import com.eaglesakura.spreadsheet.generic.Link;
 import com.eaglesakura.spreadsheet.generic.StringField;
 import com.eaglesakura.spreadsheet.generic.Title;
-import com.eaglesakura.proguard.NonProguardModel;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
@@ -94,11 +94,8 @@ public class Worksheet extends NonProguardModel {
     /**
      * 指定セルから特定範囲のみを抽出する
      *
-     * @param cells
      * @param minXIndex 最小のX方向のインデックス。(col ＞= (minXIndex+1)) となったセルのみを返却する
      * @param maxXIndex 最大のX方向のインデックス。(col ＜= (maxXIndex+1)) となったセルのみを返却する
-     *
-     * @return
      */
     public static List<Cell> filterColRange(List<Cell> cells, int minXIndex, int maxXIndex) {
         List<Cell> result = new ArrayList<Cell>();
@@ -121,11 +118,8 @@ public class Worksheet extends NonProguardModel {
     /**
      * 指定セルから特定範囲のみを抽出する
      *
-     * @param cells
      * @param minYIndex 最小のY方向のインデックス。(row ＞= (minXIndex+1)) となったセルのみを返却する
      * @param maxYIndex 最大のY方向のインデックス。(row ＜= (maxXIndex+1)) となったセルのみを返却する
-     *
-     * @return
      */
     public static List<Cell> filterRowRange(List<Cell> cells, int minYIndex, int maxYIndex) {
         List<Cell> result = new ArrayList<Cell>();
@@ -150,7 +144,6 @@ public class Worksheet extends NonProguardModel {
      *
      * @param worksheet 読み込み対象のワークシート
      * @param xIndex    X方向のインデックス。0以上
-     *
      * @return 読み込んだセルリスト。何も読み込めなかったら要素が0となり、nullにはならない。
      */
     public static List<Cell> listCol(Worksheet worksheet, int xIndex) {
@@ -174,7 +167,6 @@ public class Worksheet extends NonProguardModel {
      *
      * @param worksheet 読み込み対象のワークシート
      * @param yIndex    Y方向のインデックス。0以上
-     *
      * @return 読み込んだセルリスト。何も読み込めなかったら要素が0となり、nullにはならない。
      */
     public static List<Cell> listRow(Worksheet worksheet, int yIndex) {
@@ -199,7 +191,6 @@ public class Worksheet extends NonProguardModel {
      * @param worksheet 読み込み対象のワークシート
      * @param xIndex    X方向のインデックス。0以上
      * @param yIndex    Y方向のインデックス。0以上
-     *
      * @return 成功した場合セル、それ以外はnull
      */
     public static Cell find(Worksheet worksheet, int xIndex, int yIndex) {
@@ -224,7 +215,6 @@ public class Worksheet extends NonProguardModel {
      *
      * @param cells  検索対象のセル
      * @param xIndex X方向のインデックス。0以上
-     *
      * @return 成功した場合セル、それ以外はnull
      */
     public static Cell findCol(List<Cell> cells, int xIndex) {
@@ -244,7 +234,6 @@ public class Worksheet extends NonProguardModel {
      *
      * @param worksheet 検索対象のワークシート
      * @param cellName  検索対象のセル名称
-     *
      * @return 成功した場合セル、それ以外はnull
      */
     public static Cell find(Worksheet worksheet, String cellName) {
@@ -266,8 +255,6 @@ public class Worksheet extends NonProguardModel {
      *
      * @param cells セル一覧
      * @param up    昇順である場合true
-     *
-     * @return
      */
     public static List<Cell> sortRow(List<Cell> cells, final boolean up) {
         Collections.sort(cells, new Comparator<Cell>() {
@@ -296,8 +283,6 @@ public class Worksheet extends NonProguardModel {
      *
      * @param cells セル一覧
      * @param up    昇順である場合true
-     *
-     * @return
      */
     public static List<Cell> sortCol(List<Cell> cells, final boolean up) {
         Collections.sort(cells, new Comparator<Cell>() {

@@ -1,18 +1,18 @@
 package com.eaglesakura.android.glkit.gl;
 
+import com.eaglesakura.android.glkit.egl.IEGLContextGroup;
+import com.eaglesakura.android.glkit.egl.IEGLManager;
+import com.eaglesakura.android.thread.ui.UIHandler;
+import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.Timer;
+import com.eaglesakura.util.Util;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.view.Choreographer;
 import android.view.TextureView;
-
-import com.eaglesakura.android.glkit.egl.IEGLContextGroup;
-import com.eaglesakura.android.glkit.egl.IEGLManager;
-import com.eaglesakura.android.thread.ui.UIHandler;
-import com.eaglesakura.util.Timer;
-import com.eaglesakura.util.LogUtil;
-import com.eaglesakura.util.Util;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -94,8 +94,6 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
     /**
      * 実行中の自動GC間隔を設定する
      * 負の値の場合、自動gcを行わない。
-     *
-     * @param gcTimeIntervalRunningMs
      */
     public void setGcTimeIntervalRunningMs(int gcTimeIntervalRunningMs) {
         this.gcTimeIntervalRunningMs = gcTimeIntervalRunningMs;
@@ -104,8 +102,6 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
     /**
      * 休止中の自動GC間隔を設定する
      * 負の値の場合、自動gcを行わない。
-     *
-     * @param gcTimeIntervalPausingMs
      */
     public void setGcTimeIntervalPausingMs(int gcTimeIntervalPausingMs) {
         this.gcTimeIntervalPausingMs = gcTimeIntervalPausingMs;
@@ -132,8 +128,6 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
 
     /**
      * 所有者となるオブジェクトを指定する
-     *
-     * @param owner
      */
     public void setOwner(Object owner) {
         if (owner == null) {
@@ -144,8 +138,6 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
 
     /**
      * 生存期間を統一するためのオーナーオブジェクト
-     *
-     * @return
      */
     public boolean hasOwner() {
         return owner != null;
@@ -153,8 +145,6 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
 
     /**
      * オーナークラスが死んでいたらtrue
-     *
-     * @return
      */
     public boolean isOwnerDestroyed() {
         if (owner != null && owner.get() == null) {
@@ -166,8 +156,6 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
 
     /**
      * GLスレッドで実行を行わせる
-     *
-     * @param runner
      */
     public void post(Runnable runner) {
         synchronized (messageQueue) {
@@ -190,9 +178,8 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
     /**
      * GLスレッドへデータを送信し、終了時ハンドリングを行う
      *
-     * @param what     要件
-     * @param data     データ本体
-     * @param listener
+     * @param what 要件
+     * @param data データ本体
      */
     public void post(String what, Object data, MessageHandlingListener listener) {
         synchronized (messageQueue) {
@@ -426,11 +413,6 @@ public abstract class GLLoopStateManager extends GLProcessingManager {
 
     /**
      * 処理中にサーフェイスサイズが変更になったら呼び出される
-     *
-     * @param oldWidth
-     * @param oldHeight
-     * @param newWidth
-     * @param newHeight
      */
     protected abstract void onLoopSurfaceSizeChanged(int oldWidth, int oldHeight, int newWidth, int newHeight);
 

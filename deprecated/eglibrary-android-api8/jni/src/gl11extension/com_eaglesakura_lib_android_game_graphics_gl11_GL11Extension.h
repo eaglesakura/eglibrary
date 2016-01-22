@@ -18,72 +18,90 @@ extern "C" {
  * Method:    glMatrixMode
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension_glMatrixMode
-  (JNIEnv *, jobject, jint);
+JNIEXPORT void JNICALL
+Java_com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension_glMatrixMode
+(JNIEnv
+*, jobject, jint);
 
 /*
  * Class:     com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension
  * Method:    glCurrentPaletteMatrixOES
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension_glCurrentPaletteMatrixOES
-  (JNIEnv *, jobject, jint);
+JNIEXPORT void JNICALL
+Java_com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension_glCurrentPaletteMatrixOES
+(JNIEnv
+*, jobject, jint);
 
 /*
  * Class:     com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension
  * Method:    glLoadMatrixx
  * Signature: (Ljava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension_glLoadMatrixx
-  (JNIEnv *, jobject, jobject);
+JNIEXPORT void JNICALL
+Java_com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension_glLoadMatrixx
+(JNIEnv
+*, jobject, jobject);
 
 /*
  * Class:     com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension
  * Method:    glLoadMatrixf
  * Signature: (Ljava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension_glLoadMatrixf
-  (JNIEnv *, jobject, jobject);
+JNIEXPORT void JNICALL
+Java_com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension_glLoadMatrixf
+(JNIEnv
+*, jobject, jobject);
 
 /*
  * Class:     com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension
  * Method:    glEnable
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension_glEnable
-  (JNIEnv *, jobject, jint);
+JNIEXPORT void JNICALL
+Java_com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension_glEnable
+(JNIEnv
+*, jobject, jint);
 
 /*
  * Class:     com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension
  * Method:    glEnableClientState
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension_glEnableClientState
-  (JNIEnv *, jobject, jint);
+JNIEXPORT void JNICALL
+Java_com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension_glEnableClientState
+(JNIEnv
+*, jobject, jint);
 
 /*
  * Class:     com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension
  * Method:    glWeightPointerOES
  * Signature: (IIILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension_glWeightPointerOES
-  (JNIEnv *, jobject, jint, jint, jint, jobject);
+JNIEXPORT void JNICALL
+Java_com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension_glWeightPointerOES
+(JNIEnv
+*, jobject, jint, jint, jint, jobject);
 
 /*
  * Class:     com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension
  * Method:    glMatrixIndexPointerOES
  * Signature: (IIILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension_glMatrixIndexPointerOES
-  (JNIEnv *, jobject, jint, jint, jint, jobject);
+JNIEXPORT void JNICALL
+Java_com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension_glMatrixIndexPointerOES
+(JNIEnv
+*, jobject, jint, jint, jint, jobject);
 
 /*
  * Class:     com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension
  * Method:    glLoadPaletteFromModelViewMatrixOES
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension_glLoadPaletteFromModelViewMatrixOES
-  (JNIEnv *, jobject);
+JNIEXPORT void JNICALL
+Java_com_eaglesakura_lib_android_game_graphics_gl11_GL11Extension_glLoadPaletteFromModelViewMatrixOES
+(JNIEnv
+*, jobject);
 
 #ifdef __cplusplus
 }

@@ -1,22 +1,6 @@
 package com.eaglesakura.dummybeaconadvertiser;
 
-import android.bluetooth.BluetoothManager;
-import android.bluetooth.le.AdvertiseCallback;
-import android.bluetooth.le.AdvertiseSettings;
-import android.bluetooth.le.AdvertisementData;
-import android.bluetooth.le.BluetoothLeAdvertiser;
-import android.content.Context;
-import android.os.Bundle;
-import android.os.Environment;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.CompoundButton;
-import android.widget.ListView;
-import android.widget.Switch;
-
 import com.androidquery.AQuery;
-import com.eaglesakura.android.bluetooth.beacon.BeaconAdvertiseBuilder;
 import com.eaglesakura.android.framework.ui.BaseFragment;
 import com.eaglesakura.dummybeaconadvertiser.beacon.DummyBeaconModel;
 import com.eaglesakura.json.JSON;
@@ -28,12 +12,25 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
+import android.bluetooth.BluetoothManager;
+import android.bluetooth.le.AdvertiseCallback;
+import android.bluetooth.le.AdvertiseSettings;
+import android.bluetooth.le.AdvertisementData;
+import android.bluetooth.le.BluetoothLeAdvertiser;
+import android.content.Context;
+import android.os.Environment;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
+import android.widget.ListView;
+import android.widget.Switch;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  *
@@ -98,8 +95,6 @@ public class DummyBeaconAdvertiseFragment extends BaseFragment {
 
     /**
      * Beaconを更新する
-     *
-     * @param newBeacons
      */
     @UiThread
     void updateUI(DummyBeaconModel[] newBeacons) {
@@ -145,9 +140,6 @@ public class DummyBeaconAdvertiseFragment extends BaseFragment {
 
     /**
      * Viewのセットアップを行う
-     *
-     * @param convertView
-     * @param beacon
      */
     void bindView(View convertView, final DummyBeaconModel beacon) {
         final AQuery q = new AQuery(convertView);

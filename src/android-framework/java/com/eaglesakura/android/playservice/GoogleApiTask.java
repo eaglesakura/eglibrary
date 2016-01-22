@@ -9,9 +9,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 public interface GoogleApiTask<T> {
     /**
      * タスクを実行する
-     *
-     * @param client
-     * @throws Exception
      */
     T executeTask(GoogleApiClient client) throws Exception;
 
@@ -22,8 +19,6 @@ public interface GoogleApiTask<T> {
 
     /**
      * キャンセル済みであればtrue
-     *
-     * @return
      */
     boolean isCanceled();
 }

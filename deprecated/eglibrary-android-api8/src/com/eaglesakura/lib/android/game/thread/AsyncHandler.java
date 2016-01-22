@@ -1,9 +1,9 @@
 package com.eaglesakura.lib.android.game.thread;
 
+import com.eaglesakura.lib.android.game.util.Holder;
+
 import android.os.Handler;
 import android.os.Looper;
-
-import com.eaglesakura.lib.android.game.util.Holder;
 
 public class AsyncHandler extends Handler {
     Thread thread;
@@ -31,7 +31,6 @@ public class AsyncHandler extends Handler {
 
     /**
      * 所属しているスレッドを取得する。
-     * @return
      */
     public Thread getThread() {
         return getLooper().getThread();
@@ -39,7 +38,6 @@ public class AsyncHandler extends Handler {
 
     /**
      * ハンドラと同じスレッドの場合はtrue
-     * @return
      */
     public boolean isHandlerThread() {
         return Thread.currentThread().equals(getThread());
@@ -47,7 +45,6 @@ public class AsyncHandler extends Handler {
 
     /**
      * ハンドラを生成する。
-     * @return
      */
     public static AsyncHandler createInstance(String name) {
         final Holder<AsyncHandler> holder = new Holder<AsyncHandler>();

@@ -1,5 +1,8 @@
 package com.eaglesakura.lib.android.game.graphics.gl11;
 
+import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
+import com.eaglesakura.lib.android.game.resource.IRawResource;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -8,9 +11,6 @@ import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
-
-import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
-import com.eaglesakura.lib.android.game.resource.IRawResource;
 
 /**
  * 四角形ポリゴンを扱うクラス。 <BR>
@@ -22,11 +22,11 @@ import com.eaglesakura.lib.android.game.resource.IRawResource;
  * |　　　　　　　　　　| <BR>
  * ------------------- <BR>
  * left bottom / right bottom <BR>
- * 
- * 
+ *
+ *
  * データは左上、右上、左下、右下の順番に格納される。
+ *
  * @author TAKESHI YAMASHITA
- * 
  */
 public class QuadPolygon extends DisposableGLResource {
     /**

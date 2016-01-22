@@ -1,5 +1,10 @@
 package com.eaglesakura.lib.net.google.drive;
 
+import com.eaglesakura.lib.android.game.util.LogUtil;
+import com.eaglesakura.lib.net.WebAPIConnectorBase;
+import com.eaglesakura.lib.net.WebAPIException;
+import com.eaglesakura.lib.net.google.drive.GoogleDriveAPIHelper.DriveItem;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -7,16 +12,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.eaglesakura.lib.android.game.util.LogUtil;
-import com.eaglesakura.lib.net.WebAPIConnectorBase;
-import com.eaglesakura.lib.net.WebAPIException;
-import com.eaglesakura.lib.net.google.drive.GoogleDriveAPIHelper.DriveItem;
-
 /**
  * GDriveのファイルを利用してツリーを構築する。
  * ファイル検索 -> フォルダとのタグ付を後から行う場合に利用する
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class DriveFileTree {
     /**
@@ -40,7 +40,6 @@ public class DriveFileTree {
 
     /**
      * ディレクトリを取得する
-     * @return
      */
     public DriveFile getDirectory() {
         return directory;
@@ -48,7 +47,6 @@ public class DriveFileTree {
 
     /**
      * 登録されているファイル一覧を取得する
-     * @return
      */
     public List<DriveFile> getFiles() {
         return files;
@@ -56,7 +54,6 @@ public class DriveFileTree {
 
     /**
      * 子ディレクトリを取得する
-     * @return
      */
     public List<DriveFileTree> getChildren() {
         return children;
@@ -64,7 +61,6 @@ public class DriveFileTree {
 
     /**
      * 子階層を含めて保持しているファイル数を取得する
-     * @return
      */
     public int getFileCount() {
         int result = files.size();
@@ -96,7 +92,6 @@ public class DriveFileTree {
 
     /**
      * 子も含めた全ファイルのリストを作成する
-     * @return
      */
     public List<DriveFile> listFiles(List<DriveFile> result) {
         result.addAll(files);
@@ -110,9 +105,6 @@ public class DriveFileTree {
 
     /**
      * ファイルのツリー構造を構築する
-     * @param files
-     * @param connector
-     * @return
      */
     public static DriveFileTree build(List<DriveFile> files, WebAPIConnectorBase connector) throws WebAPIException {
         // フォルダのマッピング

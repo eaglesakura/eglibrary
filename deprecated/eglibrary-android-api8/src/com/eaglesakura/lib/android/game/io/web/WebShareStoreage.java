@@ -5,9 +5,8 @@ import com.eaglesakura.lib.android.game.io.IStorageDevice;
 
 /**
  * MacのＷｅｂ共有（Apache）を利用したストレージ。 基本的にRead-Only
- * 
+ *
  * @author TAKESHI YAMASHITA
- * 
  */
 public class WebShareStoreage implements IStorageDevice {
 
@@ -21,8 +20,6 @@ public class WebShareStoreage implements IStorageDevice {
 
     /**
      * 接続タイムアウトをミリ秒単位で取得する。
-     * 
-     * @return
      */
     public int getConnectTimeout() {
         return connectTimeout;

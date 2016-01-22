@@ -2,9 +2,8 @@ package com.eaglesakura.lib.list;
 
 /**
  * 逐次アクセスを行うためのリスト
- * @author TAKESHI YAMASHITA
  *
- * @param <T>
+ * @author TAKESHI YAMASHITA
  */
 public class OrderAccessList<T> {
 
@@ -27,8 +26,6 @@ public class OrderAccessList<T> {
 
     /**
      * 最初の要素を取得する。
-     * @param obj
-     * @return
      */
     private synchronized Element<T> getFirstElement(T obj) {
         if (first == null) {
@@ -42,8 +39,6 @@ public class OrderAccessList<T> {
 
     /**
      * 末尾のオブジェクトを取得する。
-     * @param obj
-     * @return
      */
     private synchronized Element<T> getLastElement(T obj) {
         if (last == null) {
@@ -54,8 +49,6 @@ public class OrderAccessList<T> {
 
     /**
      * 要素を追加する
-     * @param object
-     * @return
      */
     public boolean add(T object) {
         synchronized (lock) {
@@ -88,8 +81,6 @@ public class OrderAccessList<T> {
 
     /**
      * index指定してアイテムを取得する
-     * @param index
-     * @return
      */
     public T get(int index) {
         synchronized (lock) {
@@ -109,9 +100,6 @@ public class OrderAccessList<T> {
 
     /**
      * 要素を指定箇所に追加する
-     * @param index
-     * @param object
-     * @return
      */
     public boolean add(int index, T object) {
         synchronized (lock) {
@@ -152,7 +140,6 @@ public class OrderAccessList<T> {
 
     /**
      * サイズを取得する
-     * @return
      */
     public int size() {
         return size;
@@ -160,8 +147,6 @@ public class OrderAccessList<T> {
 
     /**
      * オブジェクトが含まれている場合はtrue
-     * @param object
-     * @return
      */
     public boolean contains(T object) {
         return indexOf(object) >= 0;
@@ -180,7 +165,6 @@ public class OrderAccessList<T> {
 
     /**
      * 指定したオブジェクトを排除する
-     * @param obj
      */
     public void remove(T obj) {
         synchronized (lock) {
@@ -197,7 +181,6 @@ public class OrderAccessList<T> {
 
     /**
      * 指定したオブジェクトを全て削除する
-     * @param obj
      */
     public void removeAll(T obj) {
         synchronized (lock) {
@@ -214,9 +197,6 @@ public class OrderAccessList<T> {
 
     /**
      * オブジェクトのインデックスを取得する。
-     * 
-     * @param object
-     * @return
      */
     public int indexOf(T object) {
         synchronized (lock) {
@@ -235,7 +215,6 @@ public class OrderAccessList<T> {
 
     /**
      * 要素が空ならtrue
-     * @return
      */
     public boolean isEmpty() {
         return size == 0;
@@ -243,7 +222,6 @@ public class OrderAccessList<T> {
 
     /**
      * 末尾から先頭へ向かってアクセスするイテレータを返す
-     * @return
      */
     public Iterator<T> revertIterator() {
         return new Iterator<T>(last, this) {
@@ -321,8 +299,8 @@ public class OrderAccessList<T> {
 
     /**
      * 連続操作用のiterator
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public static abstract class Iterator<T> {
         Element<T> current = null;
@@ -341,7 +319,6 @@ public class OrderAccessList<T> {
 
         /**
          * 次の要素を取得する
-         * @return
          */
         public T next() {
             synchronized (list.lock) {

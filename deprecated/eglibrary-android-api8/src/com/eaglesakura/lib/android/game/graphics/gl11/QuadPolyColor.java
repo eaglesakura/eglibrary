@@ -7,8 +7,8 @@ import javax.microedition.khronos.opengles.GL11;
 
 /**
  * スプライト描画時の頂点カラーを補完する
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class QuadPolyColor {
     GPU gpu;

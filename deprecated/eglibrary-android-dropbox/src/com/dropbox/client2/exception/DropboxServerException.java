@@ -23,11 +23,11 @@
 
 package com.dropbox.client2.exception;
 
-import java.util.Map;
-
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
+
+import java.util.Map;
 
 /**
  * Wraps any non-200 HTTP responses from an API call. See the constants in this
@@ -50,18 +50,18 @@ public class DropboxServerException extends DropboxException {
             if (map != null) {
                 Object err = map.get("error");
                 if (err instanceof String) {
-                    error = (String)err;
+                    error = (String) err;
                 } else if (err instanceof Map<?, ?>) {
-                    Map<String, Object> detail = (Map<String, Object>)err;
-                    for (Object val: detail.values()) {
+                    Map<String, Object> detail = (Map<String, Object>) err;
+                    for (Object val : detail.values()) {
                         if (val instanceof String) {
-                            error = (String)val;
+                            error = (String) val;
                         }
                     }
                 }
                 Object uerr = map.get("user_error");
                 if (uerr instanceof String) {
-                    userError = (String)uerr;
+                    userError = (String) uerr;
                 }
             }
         }
@@ -168,7 +168,7 @@ public class DropboxServerException extends DropboxException {
         this(response);
 
         if (rest != null && rest instanceof Map<?, ?>) {
-            parsedResponse = (Map<String, Object>)rest;
+            parsedResponse = (Map<String, Object>) rest;
             body = new Error(parsedResponse);
         }
     }
@@ -199,7 +199,7 @@ public class DropboxServerException extends DropboxException {
             if (location != null) {
                 int loc = location.indexOf("://");
                 if (loc > -1) {
-                    location = location.substring(loc+3);
+                    location = location.substring(loc + 3);
                     loc = location.indexOf("/");
                     if (loc > -1) {
                         location = location.substring(0, loc);

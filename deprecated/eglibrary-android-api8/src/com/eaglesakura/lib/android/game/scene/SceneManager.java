@@ -2,8 +2,8 @@ package com.eaglesakura.lib.android.game.scene;
 
 /**
  * シーン遷移を管理する。
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class SceneManager {
     SceneBase current = null;
@@ -16,7 +16,6 @@ public class SceneManager {
     /**
      * 次のフレームに起動するSceneを設定する。
      * 各ゲームフレーム終了時にチェックされ、nextが指定されている場合そのsceneへシーン切り替えを行う。
-     * @param next
      */
     public void setNextScene(SceneBase next) {
         this.next = next;

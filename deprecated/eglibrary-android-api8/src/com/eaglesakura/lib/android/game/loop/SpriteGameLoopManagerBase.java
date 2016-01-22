@@ -1,11 +1,11 @@
 package com.eaglesakura.lib.android.game.loop;
 
-import android.content.Context;
-
 import com.eaglesakura.lib.android.game.graphics.gl11.GPU;
 import com.eaglesakura.lib.android.game.graphics.gl11.SpriteManager;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 import com.eaglesakura.lib.android.game.util.Timer;
+
+import android.content.Context;
 
 @Deprecated
 public abstract class SpriteGameLoopManagerBase extends GameLoopManagerBase {
@@ -33,8 +33,6 @@ public abstract class SpriteGameLoopManagerBase extends GameLoopManagerBase {
 
     /**
      * 背景色を設定する。
-     * 
-     * @param backgroundColor
      */
     public void setBackgroundColor(int backgroundColor) {
         this.backgroundColor = backgroundColor;
@@ -42,7 +40,6 @@ public abstract class SpriteGameLoopManagerBase extends GameLoopManagerBase {
 
     /**
      * 背景色を取得する
-     * @return
      */
     public int getBackgroundColor() {
         return backgroundColor;
@@ -93,7 +90,6 @@ public abstract class SpriteGameLoopManagerBase extends GameLoopManagerBase {
      * このGCにはOpenGL ESの不要リソース廃棄も含まれる。
      * 0以下を設定することで、自動的なgcを行わなくする。
      * デフォルトは1分間隔。
-     * @param gcIntervalMs
      */
     public void setGcIntervalMs(int gcIntervalMs) {
         this.gcIntervalMs = gcIntervalMs;

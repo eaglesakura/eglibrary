@@ -1,9 +1,5 @@
 package com.eaglesakura.lib.android.dropbox.fragment;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.session.AccessTokenPair;
@@ -13,6 +9,10 @@ import com.eaglesakura.lib.android.dropbox.DropboxAPIException;
 import com.eaglesakura.lib.android.dropbox.DropboxAPIException.Type;
 import com.eaglesakura.lib.android.game.thread.UIHandler;
 import com.eaglesakura.lib.android.game.util.LogUtil;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
 public class DropboxAuthFragment extends Fragment {
 
@@ -95,20 +95,17 @@ public class DropboxAuthFragment extends Fragment {
     /**
      * Dropboxの認証を行う
      * Activityが継承している必要がある。
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public interface DropboxAuthListener {
         /**
          * 認証が成功した
-         * @param token
-         * @param tokenSecret
          */
         public void onAuthComplete(DropboxAuthFragment fragment, String token, String tokenSecret);
 
         /**
          * エラーが発生した
-         * @param error
          */
         public void onAuthFailed(DropboxAuthFragment fragment, DropboxAPIException.Type error);
     }

@@ -6,7 +6,6 @@ import com.eaglesakura.gradle.tasks.AndroidLocalPropertiesGenTask
 import com.eaglesakura.util.StringUtil
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.tasks.TaskAction
 
 /**
  * Androidアプリ開発用のサポートタスク

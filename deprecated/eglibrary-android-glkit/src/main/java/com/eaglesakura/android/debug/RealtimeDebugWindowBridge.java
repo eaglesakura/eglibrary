@@ -1,11 +1,11 @@
 package com.eaglesakura.android.debug;
 
-import android.content.Context;
-
 import com.eaglesakura.android.debug.window.RealtimeDebugWindow;
 import com.eaglesakura.jc.annotation.JCClass;
 import com.eaglesakura.jc.annotation.JCField;
 import com.eaglesakura.jc.annotation.JCMethod;
+
+import android.content.Context;
 
 /**
  * デバッグ描画のNDKからのブリッジ

@@ -1,17 +1,17 @@
 package com.eaglesakura.lib.android.splib.fragment.egl.module;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import android.view.KeyEvent;
-
 import com.eaglesakura.lib.android.game.util.Timer;
 import com.eaglesakura.lib.android.splib.fragment.egl.EGLFragmentModule;
 
+import android.view.KeyEvent;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * キー操作を受け取るモジュール
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class KeyModule extends EGLFragmentModule {
 
@@ -57,7 +57,7 @@ public class KeyModule extends EGLFragmentModule {
         int keyCode = -1;
 
         /**
-         * 
+         *
          */
         Timer timer = new Timer();
 
@@ -68,7 +68,6 @@ public class KeyModule extends EGLFragmentModule {
 
         /**
          * 有効ならtrue
-         * @return
          */
         public boolean isExist() {
             return exist;
@@ -90,7 +89,6 @@ public class KeyModule extends EGLFragmentModule {
 
         /**
          * キーを押している時間を取得する
-         * @return
          */
         public int getPressTime() {
             if (timer.isEnd()) {
@@ -138,8 +136,6 @@ public class KeyModule extends EGLFragmentModule {
     /**
      * キーを押している時間をミリ秒単位で取得する
      * 押されていない場合は負の値が帰る
-     * @param keyCode
-     * @return
      */
     public int getKeyPressTimeMS(int keyCode) {
         synchronized (keysMap) {
@@ -154,8 +150,6 @@ public class KeyModule extends EGLFragmentModule {
 
     /**
      * 指定したキーが押されていたらtrueを返す。
-     * @param keyCode
-     * @return
      */
     public boolean isPressed(int keyCode) {
         return getKeyPressTimeMS(keyCode) >= 0;

@@ -6,9 +6,8 @@ import com.eaglesakura.lib.android.game.util.LogUtil;
 
 /**
  * EGLの実行を行う。
- * @author TAKESHI YAMASHITA
  *
- * @param <T>
+ * @author TAKESHI YAMASHITA
  */
 public abstract class EGLWorker<T> implements GLRenderer {
     T result;
@@ -44,8 +43,6 @@ public abstract class EGLWorker<T> implements GLRenderer {
 
     /**
      * 実行を行う
-     * @param egl
-     * @return
      */
     public final T execute(EGLManager egl) {
         egl.working(this);

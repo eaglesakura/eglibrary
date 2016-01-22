@@ -1,5 +1,9 @@
 package com.eaglesakura.lib.net;
 
+import com.eaglesakura.lib.android.game.util.GameUtil;
+import com.eaglesakura.lib.android.game.util.LogUtil;
+import com.eaglesakura.lib.net.WebAPIException.Type;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -9,10 +13,6 @@ import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import com.eaglesakura.lib.android.game.util.GameUtil;
-import com.eaglesakura.lib.android.game.util.LogUtil;
-import com.eaglesakura.lib.net.WebAPIException.Type;
 
 public abstract class WebAPIConnectorBase {
 
@@ -49,9 +49,6 @@ public abstract class WebAPIConnectorBase {
 
     /**
      * 接続用のURLを生成する
-     * @param url
-     * @param argments
-     * @return
      */
     String createURL(String url, Map<String, String> argments) {
         if (argments != null && !argments.isEmpty()) {
@@ -81,7 +78,7 @@ public abstract class WebAPIConnectorBase {
 
     private void _checkResponse(int responseCode) throws WebAPIException {
         switch (responseCode) {
-        // 認証エラーには例外を返す
+            // 認証エラーには例外を返す
             case 401:
             case 403: {
                 throw new WebAPIException("Responce Error", responseCode, Type.AuthError);
@@ -142,7 +139,7 @@ public abstract class WebAPIConnectorBase {
     }
 
     private WebAPIConnection _postOrPut(String url, String method, Map<String, String> property, long rangeBegin,
-            long rangeEnd, byte[] body) throws WebAPIException {
+                                        long rangeEnd, byte[] body) throws WebAPIException {
         HttpURLConnection connection = null;
         try {
             connection = createConnection(url, method);
@@ -209,17 +206,11 @@ public abstract class WebAPIConnectorBase {
     /**
      * エラーのハンドリングを行う。
      * ハンドリングに成功したらtrueを返す。それ以外の場合は例外を投げるか、falseを返す。
-     * @param e
-     * @return
-     * @throws WebAPIException
      */
     protected abstract boolean onAuthError(WebAPIException e) throws WebAPIException;
 
     /**
      * 例外のハンドリングを行う。
-     * @param e
-     * @return
-     * @throws WebAPIException
      */
     protected boolean handleException(WebAPIException e, int tryCount) throws WebAPIException {
 
@@ -245,12 +236,6 @@ public abstract class WebAPIConnectorBase {
     /**
      * パラメータをpost | putする。
      * propertiesパラメーターに設定されている内容はリクエスト時のsetRequestProperty()メソッドに利用される
-     * @param url
-     * @param method
-     * @param properties
-     * @param buffer
-     * @return
-     * @throws WebAPIException
      */
     public WebAPIConnection postOrPut(String url, String method, Map<String, String> properties, byte[] buffer)
             throws WebAPIException {
@@ -270,10 +255,6 @@ public abstract class WebAPIConnectorBase {
 
     /**
      * GET操作を明示的に行う。argmentsは自動的にurl?key=valueに設定される。
-     * @param url
-     * @param argments
-     * @return
-     * @throws WebAPIException
      */
     public WebAPIConnection get(String url, Map<String, String> argments) throws WebAPIException {
         for (int i = 0; i < maxRetry; ++i) {
@@ -294,11 +275,6 @@ public abstract class WebAPIConnectorBase {
     /**
      * ダウンロードを明示的に行わせる。
      * 200 | 206以外が帰ってきた場合は例外として扱う。
-     * @param url
-     * @param rangeBegin
-     * @param rangeEnd
-     * @return
-     * @throws WebAPIException
      */
     public WebAPIConnection download(String url, long rangeBegin, long rangeEnd) throws WebAPIException {
         for (int i = 0; i < maxRetry; ++i) {

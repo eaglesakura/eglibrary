@@ -29,5 +29,6 @@ package com.dropbox.client2.exception;
 public class DropboxLocalStorageFullException extends DropboxException {
     private static final long serialVersionUID = 2L;
 
-    public DropboxLocalStorageFullException() {}
+    public DropboxLocalStorageFullException() {
+    }
 }

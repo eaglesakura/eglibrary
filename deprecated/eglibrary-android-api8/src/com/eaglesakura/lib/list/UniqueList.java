@@ -7,9 +7,8 @@ import java.util.Map;
 
 /**
  * 内容をUniqueに保つリストを作成する
- * @author TAKESHI YAMASHITA
  *
- * @param <E>
+ * @author TAKESHI YAMASHITA
  */
 public class UniqueList<E> {
     List<E> data = new LinkedList<E>();
@@ -17,8 +16,6 @@ public class UniqueList<E> {
 
     /**
      * 既にデータを保持していればtrue
-     * @param e
-     * @return
      */
     public boolean containts(E e) {
         return unique.get(e) != null;
@@ -26,7 +23,6 @@ public class UniqueList<E> {
 
     /**
      * データを追加する
-     * @param e
      */
     public boolean add(E e) {
         if (!containts(e)) {
@@ -39,7 +35,6 @@ public class UniqueList<E> {
 
     /**
      * 一意のリストを取得する
-     * @return
      */
     public List<E> getList() {
         return data;
@@ -47,7 +42,6 @@ public class UniqueList<E> {
 
     /**
      * リストに格納されている数を取得する
-     * @return
      */
     public int size() {
         return data.size();

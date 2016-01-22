@@ -1,8 +1,5 @@
 package com.eaglesakura.lib.android.game.graphics.canvas;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,17 +9,20 @@ import android.graphics.Paint.Style;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Canvas描画のサポート
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class Graphics {
     Canvas canvas = null;
     Paint paint = new Paint();
 
     /**
-     * 
+     *
      * @param target
      */
     public Graphics() {
@@ -32,9 +32,6 @@ public class Graphics {
 
     /**
      * 描画用のキャンバスを指定する。
-     * 
-     * 
-     * @param canvas
      */
     public void setCanvas(Canvas canvas) {
         this.canvas = canvas;
@@ -57,9 +54,6 @@ public class Graphics {
 
     /**
      * 描画時のスケーリングを指定する。
-     * 
-     * @param x
-     * @param y
      */
     public void setDrawScalling(float x, float y) {
         Matrix m = new Matrix();
@@ -69,13 +63,6 @@ public class Graphics {
 
     /**
      * 背景を特定色でクリアする。
-     * 
-     * 
-     * @param r
-     * @param g
-     * @param b
-     * @param a
-     * 
      */
     public void clearRGBA(int r, int g, int b, int a) {
         canvas.drawColor(toColorARGB(a, r, g, b), Mode.CLEAR);
@@ -83,9 +70,6 @@ public class Graphics {
 
     /**
      * 幅を取得する。
-     * 
-     * 
-     * 
      */
     public int getWidth() {
         return width;
@@ -93,10 +77,6 @@ public class Graphics {
 
     /**
      * 高さを取得する。
-     * 
-     * 
-     * @return
-     * 
      */
     public int getHeight() {
         return height;
@@ -104,10 +84,6 @@ public class Graphics {
 
     /**
      * ロックされたキャンバスを取得する。
-     * 
-     * 
-     * @return
-     * 
      */
     public Canvas getCanvas() {
         return canvas;
@@ -115,10 +91,6 @@ public class Graphics {
 
     /**
      * ペイントクラスを取得する。
-     * 
-     * 
-     * @return
-     * 
      */
     public Paint getPaint() {
         return paint;
@@ -126,12 +98,6 @@ public class Graphics {
 
     /**
      * 描画色を指定する。
-     * 
-     * 
-     * @param a
-     * @param r
-     * @param g
-     * @param b
      */
     public void setColorRGBA(int r, int g, int b, int a) {
         paint.setColor(toColorARGB(a, r, g, b));
@@ -140,9 +106,6 @@ public class Graphics {
     /**
      * アンチエイリアスの有効・無効の指定を行う。<BR>
      * デフォルトは無効である。
-     * 
-     * 
-     * @param set
      */
     public void setAntiAlias(boolean set) {
         paint.setAntiAlias(set);
@@ -150,8 +113,6 @@ public class Graphics {
 
     /**
      * 描画する太さを指定する。
-     * 
-     * @param size
      */
     public void setStrokeSize(int size) {
         paint.setStrokeWidth(size);
@@ -159,11 +120,6 @@ public class Graphics {
 
     /**
      * イメージの描画を行う。
-     * 
-     * 
-     * @param bmp
-     * @param src
-     * @param dst
      */
     public void drawBitmap(Bitmap bmp, Rect src, Rect dst) {
         canvas.drawBitmap(bmp, src, dst, paint);
@@ -171,11 +127,6 @@ public class Graphics {
 
     /**
      * イメージ描画を行う。
-     * 
-     * 
-     * @param bmp
-     * @param x
-     * @param y
      */
     public void drawBitmap(Bitmap bmp, int x, int y) {
         canvas.drawBitmap(bmp, (float) x, (float) y, paint);
@@ -183,13 +134,6 @@ public class Graphics {
 
     /**
      * イメージ描画を行う。
-     * 
-     * 
-     * @param bmp
-     * @param x
-     * @param y
-     * @param w
-     * @param h
      */
     public void drawBitmap(Bitmap bmp, int x, int y, int w, int h) {
         srcRect.set(0, 0, bmp.getWidth(), bmp.getHeight());
@@ -198,12 +142,12 @@ public class Graphics {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param x
      * @param y
      * @param r
-     * 
+     *
      */
     public void drawCircle(int x, int y, float r) {
         paint.setStyle(Style.STROKE);
@@ -211,12 +155,12 @@ public class Graphics {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param x
      * @param y
      * @param r
-     * 
+     *
      */
     public void fillCircle(int x, int y, float r) {
         paint.setStyle(Style.FILL);
@@ -225,13 +169,6 @@ public class Graphics {
 
     /**
      * 四角形の塗りつぶしを行う。
-     * 
-     * 
-     * @param x
-     * @param y
-     * @param w
-     * @param h
-     * 
      */
     public void fillRect(int x, int y, int w, int h) {
         paint.setStyle(Style.FILL);
@@ -240,13 +177,6 @@ public class Graphics {
 
     /**
      * 四角形の外枠を描画する。
-     * 
-     * 
-     * @param x
-     * @param y
-     * @param w
-     * @param h
-     * 
      */
     public void drawRect(int x, int y, int w, int h) {
         paint.setStyle(Style.STROKE);
@@ -284,15 +214,6 @@ public class Graphics {
 
     /**
      * 文字列を描画する。
-     * 
-     * 
-     * @param str
-     * @param x
-     * @param y
-     * @param start
-     * @param end
-     * @param flags
-     * 
      */
     public void drawString(String str, int x, int y, int start, int end, int flags) {
         if (start < 0 || end < 0) {
@@ -326,11 +247,6 @@ public class Graphics {
 
     /**
      * 文字列の高さを取得する。
-     * 
-     * 
-     * @param str
-     * @return
-     * 
      */
     public int getStringHeight(String str) {
         Rect r = srcRect;
@@ -340,13 +256,6 @@ public class Graphics {
 
     /**
      * 文字列の幅を取得する。
-     * 
-     * 
-     * @param str
-     * @param start
-     * @param end
-     * @return
-     * 
      */
     public int getStringWidth(String str, int start, int end) {
         Rect r = srcRect;
@@ -356,11 +265,6 @@ public class Graphics {
 
     /**
      * 文字列の幅を取得する。
-     * 
-     * 
-     * @param str
-     * @return
-     * 
      */
     public int getStringWidth(String str) {
         Rect r = srcRect;
@@ -370,13 +274,6 @@ public class Graphics {
 
     /**
      * 線を描画する。
-     * 
-     * 
-     * @param startX
-     * @param startY
-     * @param endX
-     * @param endY
-     * 
      */
     public void drawLine(int startX, int startY, int endX, int endY) {
         paint.setStyle(Style.STROKE);
@@ -385,10 +282,6 @@ public class Graphics {
 
     /**
      * 描画テキストのサイズを指定する。
-     * 
-     * 
-     * @param size
-     * 
      */
     public void setFontSize(int size) {
         paint.setTextSize((float) size);
@@ -396,14 +289,6 @@ public class Graphics {
 
     /**
      * ARGB色に変換する。
-     * 
-     * 
-     * @param a
-     * @param r
-     * @param g
-     * @param b
-     * @return
-     * 
      */
     public static int toColorARGB(int a, int r, int g, int b) {
         return Color.argb(a, r, g, b);
@@ -431,8 +316,6 @@ public class Graphics {
 
     /**
      * 現在の描画行列×matrixをCanvasに指定する。
-     * 
-     * @param matrix
      */
     public void pushMatrix(Matrix matrix) {
         Matrix tempMatrix = new Matrix(matrixStack.get(0));
@@ -443,8 +326,6 @@ public class Graphics {
 
     /**
      * 指定した行列を最上位に設定する。
-     * 
-     * @param matrix
      */
     public void loadMatrix(Matrix matrix) {
         matrixStack.remove(0);

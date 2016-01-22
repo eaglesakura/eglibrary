@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android"
-    android:paddingMode="stack">
+            android:paddingMode="stack">
     <item android:drawable="@drawable/esm_background_shadow_3"></item>
     <item>
         <inset
-            android:insetLeft="2.0dp"
-            android:insetTop="1.25dp"
-            android:insetRight="2.0dp"
-            android:insetBottom="3.5dp">
+                android:insetLeft="2.0dp"
+                android:insetTop="1.25dp"
+                android:insetRight="2.0dp"
+                android:insetBottom="3.5dp">
             <shape android:shape="rectangle">
-                <corners android:radius="@dimen/cardview_default_radius" />
-                <solid android:color="@color/EsMaterial.Background.Base" />
+                <corners android:radius="@dimen/cardview_default_radius"/>
+                <solid android:color="@color/EsMaterial.Background.Base"/>
             </shape>
         </inset>
     </item>

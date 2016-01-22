@@ -22,31 +22,6 @@
 
 package com.dropbox.client2;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.FilterInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.io.SyncFailedException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.entity.InputStreamEntity;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONValue;
-
 import com.dropbox.client2.ProgressListener.ProgressHttpEntity;
 import com.dropbox.client2.RESTUtility.RequestMethod;
 import com.dropbox.client2.exception.DropboxException;
@@ -61,6 +36,31 @@ import com.dropbox.client2.jsonextract.JsonList;
 import com.dropbox.client2.jsonextract.JsonMap;
 import com.dropbox.client2.jsonextract.JsonThing;
 import com.dropbox.client2.session.Session;
+
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.InputStreamEntity;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONValue;
+
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.FilterInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.io.SyncFailedException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Location of the Dropbox API functions.
@@ -131,16 +131,16 @@ public class DropboxAPI<SESS_T extends Session> {
          * Creates an account from a Map.
          *
          * @param map a Map that looks like:
-         * <pre>
-         * {"country": "",
-         *  "display_name": "John Q. User",
-         *  "quota_info": {
-         *    "shared": 37378890,
-         *    "quota": 62277025792,
-         *    "normal": 263758550
-         *   },
-         *  "uid": "174"}
-         * </pre>
+         *            <pre>
+         *            {"country": "",
+         *             "display_name": "John Q. User",
+         *             "quota_info": {
+         *               "shared": 37378890,
+         *               "quota": 62277025792,
+         *               "normal": 263758550
+         *              },
+         *             "uid": "174"}
+         *            </pre>
          */
         protected Account(Map<String, Object> map) {
             country = (String) map.get("country");
@@ -160,7 +160,7 @@ public class DropboxAPI<SESS_T extends Session> {
          * Creates an account object from an initial set of values.
          */
         protected Account(String country, String displayName, long uid, String referralLink, long quota,
-                long quotaNormal, long quotaShared) {
+                          long quotaNormal, long quotaShared) {
             this.country = country;
             this.displayName = displayName;
             this.uid = uid;
@@ -256,40 +256,40 @@ public class DropboxAPI<SESS_T extends Session> {
          * call. It's unlikely you'll want to create these yourself.
          *
          * @param map the map representation of the JSON received from the
-         *         metadata call, which should look like this:
-         * <pre>
-         * {
-         *    "hash": "528dda36e3150ba28040052bbf1bfbd1",
-         *    "thumb_exists": false,
-         *    "bytes": 0,
-         *    "modified": "Sat, 12 Jan 2008 23:10:10 +0000",
-         *    "path": "/Public",
-         *    "is_dir": true,
-         *    "size": "0 bytes",
-         *    "root": "dropbox",
-         *    "contents": [
-         *    {
-         *        "thumb_exists": false,
-         *        "bytes": 0,
-         *        "modified": "Wed, 16 Jan 2008 09:11:59 +0000",
-         *        "path": "/Public/\u2665asdas\u2665",
-         *        "is_dir": true,
-         *        "icon": "folder",
-         *        "size": "0 bytes"
-         *    },
-         *    {
-         *        "thumb_exists": false,
-         *        "bytes": 4392763,
-         *        "modified": "Thu, 15 Jan 2009 02:52:43 +0000",
-         *        "path": "/Public/\u540d\u79f0\u672a\u8a2d\u5b9a\u30d5\u30a9\u30eb\u30c0.zip",
-         *        "is_dir": false,
-         *        "icon": "page_white_compressed",
-         *        "size": "4.2MB"
-         *    }
-         *    ],
-         *    "icon": "folder_public"
-         * }
-         * </pre>
+         *            metadata call, which should look like this:
+         *            <pre>
+         *            {
+         *               "hash": "528dda36e3150ba28040052bbf1bfbd1",
+         *               "thumb_exists": false,
+         *               "bytes": 0,
+         *               "modified": "Sat, 12 Jan 2008 23:10:10 +0000",
+         *               "path": "/Public",
+         *               "is_dir": true,
+         *               "size": "0 bytes",
+         *               "root": "dropbox",
+         *               "contents": [
+         *               {
+         *                   "thumb_exists": false,
+         *                   "bytes": 0,
+         *                   "modified": "Wed, 16 Jan 2008 09:11:59 +0000",
+         *                   "path": "/Public/\u2665asdas\u2665",
+         *                   "is_dir": true,
+         *                   "icon": "folder",
+         *                   "size": "0 bytes"
+         *               },
+         *               {
+         *                   "thumb_exists": false,
+         *                   "bytes": 4392763,
+         *                   "modified": "Thu, 15 Jan 2009 02:52:43 +0000",
+         *                   "path": "/Public/\u540d\u79f0\u672a\u8a2d\u5b9a\u30d5\u30a9\u30eb\u30c0.zip",
+         *                   "is_dir": false,
+         *                   "icon": "page_white_compressed",
+         *                   "size": "4.2MB"
+         *               }
+         *               ],
+         *               "icon": "folder_public"
+         *            }
+         *            </pre>
          */
         @SuppressWarnings("unchecked")
         public Entry(Map<String, Object> map) {
@@ -429,9 +429,9 @@ public class DropboxAPI<SESS_T extends Session> {
          * Determines the size of the downloaded file.
          *
          * @param response The http response for the file whose size we're
-         * interested in.
+         *                 interested in.
          * @param metadata The metadata associated with the file. Can be null if
-         * unavailable.
+         *                 unavailable.
          * @return The determined file size. -1 if the size of the file can't be
          * determined.
          */
@@ -551,19 +551,20 @@ public class DropboxAPI<SESS_T extends Session> {
          * {@link DropboxInputStream} have an alternate that will copy to an
          * {@link OutputStream} for you.
          *
-         * @param os the stream to copy to.
+         * @param os       the stream to copy to.
          * @param listener an optional {@link ProgressListener} to receive progress
-         *         updates as the stream is copied, or null.
-         *
-         * @throws DropboxPartialFileException if only part of the input stream was
-         *         copied.
-         * @throws DropboxIOException for network-related errors.
+         *                 updates as the stream is copied, or null.
+         * @throws DropboxPartialFileException      if only part of the input stream was
+         *                                          copied.
+         * @throws DropboxIOException               for network-related errors.
          * @throws DropboxLocalStorageFullException if there is no more room to
-         *         write to the output stream.
-         * @throws DropboxException for any other unknown errors. This is also a
-         *         superclass of all other Dropbox exceptions, so you may want to
-         *         only catch this exception which signals that some kind of error
-         *         occurred.
+         *                                          write to the output stream.
+         * @throws DropboxException                 for any other unknown errors. This is also a
+         *                                          superclass of all other Dropbox exceptions, so
+         *                                          you may want to
+         *                                          only catch this exception which signals that
+         *                                          some kind of error
+         *                                          occurred.
          */
         public void copyStreamToOutput(OutputStream os, ProgressListener listener) throws DropboxIOException,
                 DropboxPartialFileException, DropboxLocalStorageFullException {
@@ -664,20 +665,25 @@ public class DropboxAPI<SESS_T extends Session> {
          * Executes the request.
          *
          * @return an {@link Entry} representing the uploaded file.
-         *
          * @throws DropboxPartialFileException if the request was canceled
-         *         before completion.
-         * @throws DropboxServerException if the server responds with an error
-         *         code. See the constants in {@link DropboxServerException} for
-         *         the meaning of each error code. The most common error codes
-         *         you can expect from this call are 404 (path to upload not
-         *         found), 507 (user over quota), and 400 (unexpected parent
-         *         rev).
-         * @throws DropboxIOException if any network-related error occurs.
-         * @throws DropboxException for any other unknown errors. This is also a
-         *         superclass of all other Dropbox exceptions, so you may want to
-         *         only catch this exception which signals that some kind of error
-         *         occurred.
+         *                                     before completion.
+         * @throws DropboxServerException      if the server responds with an error
+         *                                     code. See the constants in {@link DropboxServerException}
+         *                                     for
+         *                                     the meaning of each error code. The most common error
+         *                                     codes
+         *                                     you can expect from this call are 404 (path to upload
+         *                                     not
+         *                                     found), 507 (user over quota), and 400 (unexpected
+         *                                     parent
+         *                                     rev).
+         * @throws DropboxIOException          if any network-related error occurs.
+         * @throws DropboxException            for any other unknown errors. This is also a
+         *                                     superclass of all other Dropbox exceptions, so you
+         *                                     may want to
+         *                                     only catch this exception which signals that some
+         *                                     kind of error
+         *                                     occurred.
          */
         public Entry upload() throws DropboxException;
     }
@@ -704,20 +710,25 @@ public class DropboxAPI<SESS_T extends Session> {
          * Executes the request.
          *
          * @return an {@link Entry} representing the uploaded file.
-         *
          * @throws DropboxPartialFileException if the request was canceled
-         *         before completion.
-         * @throws DropboxServerException if the server responds with an error
-         *         code. See the constants in {@link DropboxServerException} for
-         *         the meaning of each error code. The most common error codes
-         *         you can expect from this call are 404 (path to upload not
-         *         found), 507 (user over quota), and 400 (unexpected parent
-         *         rev).
-         * @throws DropboxIOException if any network-related error occurs.
-         * @throws DropboxException for any other unknown errors. This is also a
-         *         superclass of all other Dropbox exceptions, so you may want to
-         *         only catch this exception which signals that some kind of error
-         *         occurred.
+         *                                     before completion.
+         * @throws DropboxServerException      if the server responds with an error
+         *                                     code. See the constants in {@link DropboxServerException}
+         *                                     for
+         *                                     the meaning of each error code. The most common error
+         *                                     codes
+         *                                     you can expect from this call are 404 (path to upload
+         *                                     not
+         *                                     found), 507 (user over quota), and 400 (unexpected
+         *                                     parent
+         *                                     rev).
+         * @throws DropboxIOException          if any network-related error occurs.
+         * @throws DropboxException            for any other unknown errors. This is also a
+         *                                     superclass of all other Dropbox exceptions, so you
+         *                                     may want to
+         *                                     only catch this exception which signals that some
+         *                                     kind of error
+         *                                     occurred.
          */
         @Override
         public Entry upload() throws DropboxException {
@@ -784,7 +795,7 @@ public class DropboxAPI<SESS_T extends Session> {
          * this to play a streaming audio or video file, and which are
          * unable to play from streaming https links.
          *
-         * @param map the parsed parameters returned from Dropbox
+         * @param map    the parsed parameters returned from Dropbox
          * @param secure if false, returns an http link
          */
         private DropboxLink(Map<String, Object> map, boolean secure) {
@@ -862,24 +873,26 @@ public class DropboxAPI<SESS_T extends Session> {
      * Returns the {@link Account} associated with the current {@link Session}.
      *
      * @return the current session's {@link Account}.
-     *
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code.
-     * @throws DropboxIOException if any network-related error occurs.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  pair on the session, or if the user has revoked access.
+     * @throws DropboxServerException   if the server responds with an error
+     *                                  code. See the constants in {@link DropboxServerException}
+     *                                  for
+     *                                  the meaning of each error code.
+     * @throws DropboxIOException       if any network-related error occurs.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public Account accountInfo() throws DropboxException {
         assertAuthenticated();
 
         @SuppressWarnings("unchecked")
         Map<String, Object> accountInfo = (Map<String, Object>) RESTUtility.request(RequestMethod.GET,
-                session.getAPIServer(), "/account/info", VERSION, new String[] {
+                session.getAPIServer(), "/account/info", VERSION, new String[]{
                         "locale", session.getLocale().toString()
                 }, session);
 
@@ -890,29 +903,32 @@ public class DropboxAPI<SESS_T extends Session> {
      * Downloads a file from Dropbox, copying it to the output stream. Returns
      * the {@link DropboxFileInfo} for the file.
      *
-     * @param path the Dropbox path to the file.
-     * @param rev the revision (from the file's metadata) of the file to
-     *         download, or null to get the latest version.
-     * @param os the {@link OutputStream} to write the file to.
+     * @param path     the Dropbox path to the file.
+     * @param rev      the revision (from the file's metadata) of the file to
+     *                 download, or null to get the latest version.
+     * @param os       the {@link OutputStream} to write the file to.
      * @param listener an optional {@link ProgressListener} to receive progress
-     *         updates as the file downloads, or null.
-     *
+     *                 updates as the file downloads, or null.
      * @return the {@link DropboxFileInfo} for the downloaded file.
-     *
-     * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code. The most common error codes you
-     *         can expect from this call are 404 (path not found) and 400 (bad
-     *         rev).
+     * @throws DropboxUnlinkedException    if you have not set an access token
+     *                                     pair on the session, or if the user has revoked access.
+     * @throws DropboxServerException      if the server responds with an error
+     *                                     code. See the constants in {@link DropboxServerException}
+     *                                     for
+     *                                     the meaning of each error code. The most common error
+     *                                     codes you
+     *                                     can expect from this call are 404 (path not found) and
+     *                                     400 (bad
+     *                                     rev).
      * @throws DropboxPartialFileException if a network error occurs during the
-     *         download.
-     * @throws DropboxIOException for some network-related errors.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                     download.
+     * @throws DropboxIOException          for some network-related errors.
+     * @throws DropboxException            for any other unknown errors. This is also a
+     *                                     superclass of all other Dropbox exceptions, so you may
+     *                                     want to
+     *                                     only catch this exception which signals that some kind of
+     *                                     error
+     *                                     occurred.
      */
     public DropboxFileInfo getFile(String path, String rev, OutputStream os, ProgressListener listener)
             throws DropboxException {
@@ -930,25 +946,28 @@ public class DropboxAPI<SESS_T extends Session> {
      * {@link DropboxInputStream} at any time.
      *
      * @param path the Dropbox path to the file.
-     * @param rev the revision (from the file's metadata) of the file to
-     *         download, or null to get the latest version.
-     *
+     * @param rev  the revision (from the file's metadata) of the file to
+     *             download, or null to get the latest version.
      * @return a {@link DropboxInputStream} from which to read the file
-     *         contents. The contents are retrieved from the network and not
-     *         stored locally.
-     *
+     * contents. The contents are retrieved from the network and not
+     * stored locally.
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code. The most common error codes you
-     *         can expect from this call are 404 (path not found) and 400 (bad
-     *         rev).
-     * @throws DropboxIOException if any network-related error occurs.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  pair on the session, or if the user has revoked access.
+     * @throws DropboxServerException   if the server responds with an error
+     *                                  code. See the constants in {@link DropboxServerException}
+     *                                  for
+     *                                  the meaning of each error code. The most common error codes
+     *                                  you
+     *                                  can expect from this call are 404 (path not found) and 400
+     *                                  (bad
+     *                                  rev).
+     * @throws DropboxIOException       if any network-related error occurs.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public DropboxInputStream getFileStream(String path, String rev) throws DropboxException {
         assertAuthenticated();
@@ -958,7 +977,7 @@ public class DropboxAPI<SESS_T extends Session> {
         }
 
         String url = "/files/" + session.getAccessType() + path;
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "rev", rev, "locale", session.getLocale().toString(),
         };
         String target = RESTUtility.buildURL(session.getContentServer(), VERSION, url, args);
@@ -972,12 +991,6 @@ public class DropboxAPI<SESS_T extends Session> {
 
     /**
      * Rangeヘッダを指定する
-     * @param path
-     * @param rev
-     * @param rangeBegin
-     * @param rangeEnd
-     * @return
-     * @throws DropboxException
      */
     public DropboxInputStream getFileStream(String path, String rev, long rangeBegin, long rangeEnd)
             throws DropboxException {
@@ -988,7 +1001,7 @@ public class DropboxAPI<SESS_T extends Session> {
         }
 
         String url = "/files/" + session.getAccessType() + path;
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "rev", rev, "locale", session.getLocale().toString(),
         };
         String target = RESTUtility.buildURL(session.getContentServer(), VERSION, url, args);
@@ -1011,36 +1024,39 @@ public class DropboxAPI<SESS_T extends Session> {
      * this to create a new file.  Note: use {@code putFileRequest()} if you want
      * to be able to cancel the upload.
      *
-     * @param path the full Dropbox path where to put the file, including
-     *         directories and filename.
-     * @param is the {@link InputStream} from which to upload.
-     * @param length the amount of bytes to read from the {@link InputStream}.
+     * @param path      the full Dropbox path where to put the file, including
+     *                  directories and filename.
+     * @param is        the {@link InputStream} from which to upload.
+     * @param length    the amount of bytes to read from the {@link InputStream}.
      * @param parentRev the rev of the file at which the user started editing
-     *         it (obtained from a metadata call), or null if this is a new
-     *         upload. If null, or if it does not match the latest rev on the
-     *         server, a copy of the file will be created and you'll receive
-     *         the new metadata upon executing the request.
-     * @param listener an optional {@link ProgressListener} to receive upload
-     *         progress updates, or null.
-     *
+     *                  it (obtained from a metadata call), or null if this is a new
+     *                  upload. If null, or if it does not match the latest rev on the
+     *                  server, a copy of the file will be created and you'll receive
+     *                  the new metadata upon executing the request.
+     * @param listener  an optional {@link ProgressListener} to receive upload
+     *                  progress updates, or null.
      * @return a metadata {@link Entry} representing the uploaded file.
-     *
      * @throws IllegalArgumentException if the file does not exist.
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
+     *                                  pair on the session, or if the user has revoked access.
      * @throws DropboxFileSizeException if the file is bigger than the
-     *         maximum allowed by the API. See
-     *         {@code DropboxAPI.MAX_UPLOAD_SIZE}.
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code. The most common error codes you
-     *         can expect from this call are 404 (path to upload not found),
-     *         507 (user over quota), and 400 (unexpected parent rev).
-     * @throws DropboxIOException if any network-related error occurs.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  maximum allowed by the API. See
+     *                                  {@code DropboxAPI.MAX_UPLOAD_SIZE}.
+     * @throws DropboxServerException   if the server responds with an error
+     *                                  code. See the constants in {@link DropboxServerException}
+     *                                  for
+     *                                  the meaning of each error code. The most common error codes
+     *                                  you
+     *                                  can expect from this call are 404 (path to upload not
+     *                                  found),
+     *                                  507 (user over quota), and 400 (unexpected parent rev).
+     * @throws DropboxIOException       if any network-related error occurs.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public Entry putFile(String path, InputStream is, long length, String parentRev, ProgressListener listener)
             throws DropboxException {
@@ -1055,33 +1071,33 @@ public class DropboxAPI<SESS_T extends Session> {
      * as the parentRev given.  Pass in null if you're expecting this to create
      * a new file.
      *
-     * @param path the full Dropbox path where to put the file, including
-     *         directories and filename.
-     * @param is the {@link InputStream} from which to upload.
-     * @param length the amount of bytes to read from the {@link InputStream}.
+     * @param path      the full Dropbox path where to put the file, including
+     *                  directories and filename.
+     * @param is        the {@link InputStream} from which to upload.
+     * @param length    the amount of bytes to read from the {@link InputStream}.
      * @param parentRev the rev of the file at which the user started editing
-     *         it (obtained from a metadata call), or null if this is a new
-     *         upload. If null, or if it does not match the latest rev on the
-     *         server, a copy of the file will be created and you'll receive
-     *         the new metadata upon executing the request.
-     * @param listener an optional {@link ProgressListener} to receive upload
-     *         progress updates, or null.
-     *
+     *                  it (obtained from a metadata call), or null if this is a new
+     *                  upload. If null, or if it does not match the latest rev on the
+     *                  server, a copy of the file will be created and you'll receive
+     *                  the new metadata upon executing the request.
+     * @param listener  an optional {@link ProgressListener} to receive upload
+     *                  progress updates, or null.
      * @return an {@link UploadRequest}.
-     *
      * @throws IllegalArgumentException if the file does not exist.
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
+     *                                  pair on the session, or if the user has revoked access.
      * @throws DropboxFileSizeException if the file is bigger than the
-     *         maximum allowed by the API. See
-     *         {@code DropboxAPI.MAX_UPLOAD_SIZE}.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  maximum allowed by the API. See
+     *                                  {@code DropboxAPI.MAX_UPLOAD_SIZE}.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public UploadRequest putFileRequest(String path, InputStream is, long length, String parentRev,
-            ProgressListener listener) throws DropboxException {
+                                        ProgressListener listener) throws DropboxException {
         return putFileRequest(path, is, length, false, parentRev, listener);
     }
 
@@ -1092,31 +1108,34 @@ public class DropboxAPI<SESS_T extends Session> {
      * to edit a file remotely and locally, then conflicts may arise and
      * you won't want to use this call: see {@code putFileRequest} instead.
      *
-     * @param path the full Dropbox path where to put the file, including
-     *         directories and filename.
-     * @param is the {@link InputStream} from which to upload.
-     * @param length the amount of bytes to read from the {@link InputStream}.
+     * @param path     the full Dropbox path where to put the file, including
+     *                 directories and filename.
+     * @param is       the {@link InputStream} from which to upload.
+     * @param length   the amount of bytes to read from the {@link InputStream}.
      * @param listener an optional {@link ProgressListener} to receive upload
-     *         progress updates, or null.
-     *
+     *                 progress updates, or null.
      * @return a metadata {@link Entry} representing the uploaded file.
-     *
      * @throws IllegalArgumentException if the file does not exist.
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
+     *                                  pair on the session, or if the user has revoked access.
      * @throws DropboxFileSizeException if the file is bigger than the
-     *         maximum allowed by the API. See
-     *         {@code DropboxAPI.MAX_UPLOAD_SIZE}.
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code. The most common error codes you
-     *         can expect from this call are 404 (path to upload not found),
-     *         507 (user over quota), and 400 (unexpected parent rev).
-     * @throws DropboxIOException if any network-related error occurs.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  maximum allowed by the API. See
+     *                                  {@code DropboxAPI.MAX_UPLOAD_SIZE}.
+     * @throws DropboxServerException   if the server responds with an error
+     *                                  code. See the constants in {@link DropboxServerException}
+     *                                  for
+     *                                  the meaning of each error code. The most common error codes
+     *                                  you
+     *                                  can expect from this call are 404 (path to upload not
+     *                                  found),
+     *                                  507 (user over quota), and 400 (unexpected parent rev).
+     * @throws DropboxIOException       if any network-related error occurs.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public Entry putFileOverwrite(String path, InputStream is, long length, ProgressListener listener)
             throws DropboxException {
@@ -1131,25 +1150,25 @@ public class DropboxAPI<SESS_T extends Session> {
      * to edit a file remotely and locally, then conflicts may arise and
      * you won't want to use this call: see {@code putFileRequest} instead.
      *
-     * @param path the full Dropbox path where to put the file, including
-     *         directories and filename.
-     * @param is the {@link InputStream} from which to upload.
-     * @param length the amount of bytes to read from the {@link InputStream}.
+     * @param path     the full Dropbox path where to put the file, including
+     *                 directories and filename.
+     * @param is       the {@link InputStream} from which to upload.
+     * @param length   the amount of bytes to read from the {@link InputStream}.
      * @param listener an optional {@link ProgressListener} to receive upload
-     *         progress updates, or null.
-     *
+     *                 progress updates, or null.
      * @return an {@link UploadRequest}.
-     *
      * @throws IllegalArgumentException if the file does not exist locally.
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
+     *                                  pair on the session, or if the user has revoked access.
      * @throws DropboxFileSizeException if the file is bigger than the
-     *         maximum allowed by the API. See
-     *         {@code DropboxAPI.MAX_UPLOAD_SIZE}.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  maximum allowed by the API. See
+     *                                  {@code DropboxAPI.MAX_UPLOAD_SIZE}.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public UploadRequest putFileOverwriteRequest(String path, InputStream is, long length, ProgressListener listener)
             throws DropboxException {
@@ -1160,34 +1179,38 @@ public class DropboxAPI<SESS_T extends Session> {
      * Downloads a thumbnail from Dropbox, copying it to the output stream.
      * Returns the {@link DropboxFileInfo} for the downloaded thumbnail.
      *
-     * @param path the Dropbox path to the file for which you want to get a
-     *         thumbnail.
-     * @param os the {@link OutputStream} to write the thumbnail to.
-     * @param size the size of the thumbnail to download.
-     * @param format the image format of the thumbnail to download.
+     * @param path     the Dropbox path to the file for which you want to get a
+     *                 thumbnail.
+     * @param os       the {@link OutputStream} to write the thumbnail to.
+     * @param size     the size of the thumbnail to download.
+     * @param format   the image format of the thumbnail to download.
      * @param listener an optional {@link ProgressListener} to receive progress
-     *         updates as the thumbnail downloads, or null.
-     *
+     *                 updates as the thumbnail downloads, or null.
      * @return the {@link DropboxFileInfo} for the downloaded thumbnail.
-     *
-     * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code. The most common error codes you
-     *         can expect from this call are 404 (path not found or can't be
-     *         thumbnailed), 415 (this type of file can't be thumbnailed), and
-     *         500 (internal error while creating thumbnail).
+     * @throws DropboxUnlinkedException    if you have not set an access token
+     *                                     pair on the session, or if the user has revoked access.
+     * @throws DropboxServerException      if the server responds with an error
+     *                                     code. See the constants in {@link DropboxServerException}
+     *                                     for
+     *                                     the meaning of each error code. The most common error
+     *                                     codes you
+     *                                     can expect from this call are 404 (path not found or
+     *                                     can't be
+     *                                     thumbnailed), 415 (this type of file can't be
+     *                                     thumbnailed), and
+     *                                     500 (internal error while creating thumbnail).
      * @throws DropboxPartialFileException if a network error occurs during the
-     *         download.
-     * @throws DropboxIOException for some network-related errors.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                     download.
+     * @throws DropboxIOException          for some network-related errors.
+     * @throws DropboxException            for any other unknown errors. This is also a
+     *                                     superclass of all other Dropbox exceptions, so you may
+     *                                     want to
+     *                                     only catch this exception which signals that some kind of
+     *                                     error
+     *                                     occurred.
      */
     public DropboxFileInfo getThumbnail(String path, OutputStream os, ThumbSize size, ThumbFormat format,
-            ProgressListener listener) throws DropboxException {
+                                        ProgressListener listener) throws DropboxException {
         DropboxInputStream thumb = getThumbnailStream(path, size, format);
 
         thumb.copyStreamToOutput(os, listener);
@@ -1203,28 +1226,32 @@ public class DropboxAPI<SESS_T extends Session> {
      * You can also cancel the thumbnail download by closing the returned
      * {@link DropboxInputStream} at any time.
      *
-     * @param path the Dropbox path to the file for which you want to get a
-     *         thumbnail.
-     * @param size the size of the thumbnail to download.
+     * @param path   the Dropbox path to the file for which you want to get a
+     *               thumbnail.
+     * @param size   the size of the thumbnail to download.
      * @param format the image format of the thumbnail to download.
-     *
      * @return a {@link DropboxInputStream} from which to read the thumbnail.
-     *         The contents are retrieved from the network and not stored
-     *         locally.
-     *
+     * The contents are retrieved from the network and not stored
+     * locally.
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code. The most common error codes you
-     *         can expect from this call are 404 (path not found or can't be
-     *         thumbnailed), 415 (this type of file can't be thumbnailed), and
-     *         500 (internal error while creating thumbnail)
-     * @throws DropboxIOException if any network-related error occurs.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  pair on the session, or if the user has revoked access.
+     * @throws DropboxServerException   if the server responds with an error
+     *                                  code. See the constants in {@link DropboxServerException}
+     *                                  for
+     *                                  the meaning of each error code. The most common error codes
+     *                                  you
+     *                                  can expect from this call are 404 (path not found or can't
+     *                                  be
+     *                                  thumbnailed), 415 (this type of file can't be thumbnailed),
+     *                                  and
+     *                                  500 (internal error while creating thumbnail)
+     * @throws DropboxIOException       if any network-related error occurs.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public DropboxInputStream getThumbnailStream(String path, ThumbSize size, ThumbFormat format)
             throws DropboxException {
@@ -1244,39 +1271,41 @@ public class DropboxAPI<SESS_T extends Session> {
      * Returns the metadata for a file, or for a directory and (optionally) its
      * immediate children.
      *
-     * @param path the Dropbox path to the file or directory for which to get
-     *         metadata.
+     * @param path      the Dropbox path to the file or directory for which to get
+     *                  metadata.
      * @param fileLimit the maximum number of children to return for a
-     *         directory. Default is 25,000 if you pass in 0 or less. If there
-     *         are too many entries to return, you will get a 406
-     *         {@link DropboxServerException}. Pass in 1 if getting metadata
-     *         for a file.
-     * @param hash if you previously got metadata for a directory and have it
-     *         stored, pass in the returned hash. If the directory has not
-     *         changed since you got the hash, a 304
-     *         {@link DropboxServerException} will be thrown. Pass in null for
-     *         files or unknown directories.
-     * @param list if true, returns metadata for a directory's immediate
-     *         children, or just the directory entry itself if false. Ignored
-     *         for files.
-     * @param rev optionally gets metadata for a file at a prior rev (does not
-     *         apply to folders). Use null for the latest metadata.
-     *
+     *                  directory. Default is 25,000 if you pass in 0 or less. If there
+     *                  are too many entries to return, you will get a 406
+     *                  {@link DropboxServerException}. Pass in 1 if getting metadata
+     *                  for a file.
+     * @param hash      if you previously got metadata for a directory and have it
+     *                  stored, pass in the returned hash. If the directory has not
+     *                  changed since you got the hash, a 304
+     *                  {@link DropboxServerException} will be thrown. Pass in null for
+     *                  files or unknown directories.
+     * @param list      if true, returns metadata for a directory's immediate
+     *                  children, or just the directory entry itself if false. Ignored
+     *                  for files.
+     * @param rev       optionally gets metadata for a file at a prior rev (does not
+     *                  apply to folders). Use null for the latest metadata.
      * @return a metadata {@link Entry}.
-     *
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code. The most common error codes you
-     *         can expect from this call are 304 (contents haven't changed
-     *         based on the hash), 404 (path not found or unknown rev for
-     *         path), and 406 (too many entries to return).
-     * @throws DropboxIOException if any network-related error occurs.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  pair on the session, or if the user has revoked access.
+     * @throws DropboxServerException   if the server responds with an error
+     *                                  code. See the constants in {@link DropboxServerException}
+     *                                  for
+     *                                  the meaning of each error code. The most common error codes
+     *                                  you
+     *                                  can expect from this call are 304 (contents haven't changed
+     *                                  based on the hash), 404 (path not found or unknown rev for
+     *                                  path), and 406 (too many entries to return).
+     * @throws DropboxIOException       if any network-related error occurs.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public Entry metadata(String path, int fileLimit, String hash, boolean list, String rev) throws DropboxException {
         assertAuthenticated();
@@ -1302,25 +1331,28 @@ public class DropboxAPI<SESS_T extends Session> {
     /**
      * Returns a list of metadata for all revs of the path.
      *
-     * @param path the Dropbox path to the file for which to get revisions
-     *         (directories are not supported).
+     * @param path     the Dropbox path to the file for which to get revisions
+     *                 (directories are not supported).
      * @param revLimit the maximum number of revisions to return. Default is
-     *         1,000 if you pass in 0 or less, and 1,000 is the most that will
-     *         ever be returned.
-     *
+     *                 1,000 if you pass in 0 or less, and 1,000 is the most that will
+     *                 ever be returned.
      * @return a list of metadata entries.
-     *
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code. The most common error code you
-     *         can expect from this call is 404 (no revisions found for path).
-     * @throws DropboxIOException if any network-related error occurs.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  pair on the session, or if the user has revoked access.
+     * @throws DropboxServerException   if the server responds with an error
+     *                                  code. See the constants in {@link DropboxServerException}
+     *                                  for
+     *                                  the meaning of each error code. The most common error code
+     *                                  you
+     *                                  can expect from this call is 404 (no revisions found for
+     *                                  path).
+     * @throws DropboxIOException       if any network-related error occurs.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     @SuppressWarnings("unchecked")
     public List<Entry> revisions(String path, int revLimit) throws DropboxException {
@@ -1350,26 +1382,27 @@ public class DropboxAPI<SESS_T extends Session> {
     /**
      * Searches a directory for entries matching the query.
      *
-     * @param path the Dropbox directory to search in.
-     * @param query the query to search for (minimum 3 characters).
-     * @param fileLimit the maximum number of file entries to return. Default
-     *         is 10,000 if you pass in 0 or less, and 1,000 is the most that
-     *         will ever be returned.
+     * @param path           the Dropbox directory to search in.
+     * @param query          the query to search for (minimum 3 characters).
+     * @param fileLimit      the maximum number of file entries to return. Default
+     *                       is 10,000 if you pass in 0 or less, and 1,000 is the most that
+     *                       will ever be returned.
      * @param includeDeleted whether to include deleted files in search
-     *         results.
-     *
+     *                       results.
      * @return a list of metadata entries of matching files.
-     *
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code.
-     * @throws DropboxIOException if any network-related error occurs.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  pair on the session, or if the user has revoked access.
+     * @throws DropboxServerException   if the server responds with an error
+     *                                  code. See the constants in {@link DropboxServerException}
+     *                                  for
+     *                                  the meaning of each error code.
+     * @throws DropboxIOException       if any network-related error occurs.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public List<Entry> search(String path, String query, int fileLimit, boolean includeDeleted) throws DropboxException {
         assertAuthenticated();
@@ -1408,22 +1441,25 @@ public class DropboxAPI<SESS_T extends Session> {
      * to another.
      *
      * @param fromPath the Dropbox path to move from.
-     * @param toPath the full Dropbox path to move to (not just a directory).
-     *
+     * @param toPath   the full Dropbox path to move to (not just a directory).
      * @return a metadata {@link Entry}.
-     *
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code. The most common error codes you
-     *         can expect from this call are 403 (operation is forbidden), 404
-     *         (path not found), and 507 (user over quota).
-     * @throws DropboxIOException if any network-related error occurs.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  pair on the session, or if the user has revoked access.
+     * @throws DropboxServerException   if the server responds with an error
+     *                                  code. See the constants in {@link DropboxServerException}
+     *                                  for
+     *                                  the meaning of each error code. The most common error codes
+     *                                  you
+     *                                  can expect from this call are 403 (operation is forbidden),
+     *                                  404
+     *                                  (path not found), and 507 (user over quota).
+     * @throws DropboxIOException       if any network-related error occurs.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public Entry move(String fromPath, String toPath) throws DropboxException {
         assertAuthenticated();
@@ -1445,22 +1481,25 @@ public class DropboxAPI<SESS_T extends Session> {
      * to another.
      *
      * @param fromPath the Dropbox path to copy from.
-     * @param toPath the full Dropbox path to copy to (not just a directory).
-     *
+     * @param toPath   the full Dropbox path to copy to (not just a directory).
      * @return a metadata {@link Entry}.
-     *
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code. The most common error codes you
-     *         can expect from this call are 403 (operation is forbidden), 404
-     *         (path not found), and 507 (user over quota).
-     * @throws DropboxIOException if any network-related error occurs.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  pair on the session, or if the user has revoked access.
+     * @throws DropboxServerException   if the server responds with an error
+     *                                  code. See the constants in {@link DropboxServerException}
+     *                                  for
+     *                                  the meaning of each error code. The most common error codes
+     *                                  you
+     *                                  can expect from this call are 403 (operation is forbidden),
+     *                                  404
+     *                                  (path not found), and 507 (user over quota).
+     * @throws DropboxIOException       if any network-related error occurs.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public Entry copy(String fromPath, String toPath) throws DropboxException {
         assertAuthenticated();
@@ -1481,21 +1520,25 @@ public class DropboxAPI<SESS_T extends Session> {
      * Creates a new Dropbox folder.
      *
      * @param path the Dropbox path to the new folder.
-     *
      * @return a metadata {@link Entry} for the new folder.
-     *
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code. The most common error codes you
-     *         can expect from this call are 403 (something already exists at
-     *         that path), 404 (path not found), and 507 (user over quota).
-     * @throws DropboxIOException if any network-related error occurs.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  pair on the session, or if the user has revoked access.
+     * @throws DropboxServerException   if the server responds with an error
+     *                                  code. See the constants in {@link DropboxServerException}
+     *                                  for
+     *                                  the meaning of each error code. The most common error codes
+     *                                  you
+     *                                  can expect from this call are 403 (something already exists
+     *                                  at
+     *                                  that path), 404 (path not found), and 507 (user over
+     *                                  quota).
+     * @throws DropboxIOException       if any network-related error occurs.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public Entry createFolder(String path) throws DropboxException {
         assertAuthenticated();
@@ -1518,18 +1561,21 @@ public class DropboxAPI<SESS_T extends Session> {
      * be set to {@code true}.
      *
      * @param path the Dropbox path to delete.
-     *
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code. The most common error code you
-     *         can expect from this call is 404 (path not found).
-     * @throws DropboxIOException if any network-related error occurs.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  pair on the session, or if the user has revoked access.
+     * @throws DropboxServerException   if the server responds with an error
+     *                                  code. See the constants in {@link DropboxServerException}
+     *                                  for
+     *                                  the meaning of each error code. The most common error code
+     *                                  you
+     *                                  can expect from this call is 404 (path not found).
+     * @throws DropboxIOException       if any network-related error occurs.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public void delete(String path) throws DropboxException {
         assertAuthenticated();
@@ -1545,23 +1591,25 @@ public class DropboxAPI<SESS_T extends Session> {
      * Restores a file to a previous rev.
      *
      * @param path the Dropbox path to the file to restore.
-     * @param rev the rev to restore to (obtained from a metadata or revisions
-     *         call).
-     *
+     * @param rev  the rev to restore to (obtained from a metadata or revisions
+     *             call).
      * @return a metadata {@link Entry} for the newly restored file.
-     *
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code. The most common error code you
-     *         can expect from this call is 404 (path not found or unknown
-     *         revision).
-     * @throws DropboxIOException if any network-related error occurs.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  pair on the session, or if the user has revoked access.
+     * @throws DropboxServerException   if the server responds with an error
+     *                                  code. See the constants in {@link DropboxServerException}
+     *                                  for
+     *                                  the meaning of each error code. The most common error code
+     *                                  you
+     *                                  can expect from this call is 404 (path not found or unknown
+     *                                  revision).
+     * @throws DropboxIOException       if any network-related error occurs.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public Entry restore(String path, String rev) throws DropboxException {
         assertAuthenticated();
@@ -1584,24 +1632,26 @@ public class DropboxAPI<SESS_T extends Session> {
      * streaming media files).
      *
      * @param path the Dropbox path of the file for which to get a streaming
-     *         link.
-     * @param ssl whether the streaming URL is https or http.  Some Android
-     *         and other platforms won't play https streams, so false converts
-     *         the link to an http link before returning it.
-     *
+     *             link.
+     * @param ssl  whether the streaming URL is https or http.  Some Android
+     *             and other platforms won't play https streams, so false converts
+     *             the link to an http link before returning it.
      * @return a {@link DropboxLink} for streaming the file.
-     *
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code. The most common error code you
-     *         can expect from this call is 404 (path not found).
-     * @throws DropboxIOException if any network-related error occurs.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  pair on the session, or if the user has revoked access.
+     * @throws DropboxServerException   if the server responds with an error
+     *                                  code. See the constants in {@link DropboxServerException}
+     *                                  for
+     *                                  the meaning of each error code. The most common error code
+     *                                  you
+     *                                  can expect from this call is 404 (path not found).
+     * @throws DropboxIOException       if any network-related error occurs.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public DropboxLink media(String path, boolean ssl) throws DropboxException {
         assertAuthenticated();
@@ -1609,7 +1659,7 @@ public class DropboxAPI<SESS_T extends Session> {
 
         @SuppressWarnings("unchecked")
         Map<String, Object> map = (Map<String, Object>) RESTUtility.request(RequestMethod.GET, session.getAPIServer(),
-                target, VERSION, new String[] {
+                target, VERSION, new String[]{
                         "locale", session.getLocale().toString()
                 }, session);
 
@@ -1621,20 +1671,22 @@ public class DropboxAPI<SESS_T extends Session> {
      * file.
      *
      * @param path the Dropbox path to share, either a directory or file.
-     *
      * @return a {@link DropboxLink} for the path.
-     *
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
-     * @throws DropboxServerException if the server responds with an error
-     *         code. See the constants in {@link DropboxServerException} for
-     *         the meaning of each error code. The most common error code you
-     *         can expect from this call is 404 (path not found).
-     * @throws DropboxIOException if any network-related error occurs.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  pair on the session, or if the user has revoked access.
+     * @throws DropboxServerException   if the server responds with an error
+     *                                  code. See the constants in {@link DropboxServerException}
+     *                                  for
+     *                                  the meaning of each error code. The most common error code
+     *                                  you
+     *                                  can expect from this call is 404 (path not found).
+     * @throws DropboxIOException       if any network-related error occurs.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public DropboxLink share(String path) throws DropboxException {
         assertAuthenticated();
@@ -1643,7 +1695,7 @@ public class DropboxAPI<SESS_T extends Session> {
 
         @SuppressWarnings("unchecked")
         Map<String, Object> map = (Map<String, Object>) RESTUtility.request(RequestMethod.GET, session.getAPIServer(),
-                target, VERSION, new String[] {
+                target, VERSION, new String[]{
                         "locale", session.getLocale().toString()
                 }, session);
 
@@ -1660,10 +1712,8 @@ public class DropboxAPI<SESS_T extends Session> {
     /**
      * Helper function to read boolean JSON return values
      *
-     * @param map
-     *            the one to read from
-     * @param name
-     *            the parameter name to read
+     * @param map  the one to read from
+     * @param name the parameter name to read
      * @return the value, with false as a default if no parameter set
      */
     protected static boolean getFromMapAsBoolean(Map<String, Object> map, String name) {
@@ -1681,40 +1731,40 @@ public class DropboxAPI<SESS_T extends Session> {
      * the advanced version, which you should only use if you really need the
      * flexibility of uploading using an {@link InputStream}.
      *
-     * @param path the full Dropbox path where to put the file, including
-     *         directories and filename.
-     * @param is the {@link InputStream} from which to upload.
-     * @param length the amount of bytes to read from the {@link InputStream}.
+     * @param path      the full Dropbox path where to put the file, including
+     *                  directories and filename.
+     * @param is        the {@link InputStream} from which to upload.
+     * @param length    the amount of bytes to read from the {@link InputStream}.
      * @param overwrite whether to overwrite the file if it already exists. If
-     *         true, any existing file will always be overwritten. If false,
-     *         files will be overwritten only if the {@code parentRev} matches
-     *         the current rev on the server or otherwise a conflicted copy of
-     *         the file will be created and you will get the new file's
-     *         metadata {@link Entry}.
+     *                  true, any existing file will always be overwritten. If false,
+     *                  files will be overwritten only if the {@code parentRev} matches
+     *                  the current rev on the server or otherwise a conflicted copy of
+     *                  the file will be created and you will get the new file's
+     *                  metadata {@link Entry}.
      * @param parentRev the rev of the file at which the user started editing
-     *         it (obtained from a metadata call), or null if this is a new
-     *         upload. If null, or if it does not match the latest rev on the
-     *         server, a copy of the file will be created and you'll receive
-     *         the new metadata upon executing the request.
-     * @param listener an optional {@link ProgressListener} to receive upload
-     *         progress updates, or null.
-     *
+     *                  it (obtained from a metadata call), or null if this is a new
+     *                  upload. If null, or if it does not match the latest rev on the
+     *                  server, a copy of the file will be created and you'll receive
+     *                  the new metadata upon executing the request.
+     * @param listener  an optional {@link ProgressListener} to receive upload
+     *                  progress updates, or null.
      * @return an {@link UploadRequest}.
-     *
      * @throws IllegalArgumentException if {@code newFilename} is null or
-     *         empty.
+     *                                  empty.
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
+     *                                  pair on the session, or if the user has revoked access.
      * @throws DropboxFileSizeException if the file is bigger than the
-     *         maximum allowed by the API. See
-     *         {@code DropboxAPI.MAX_UPLOAD_SIZE}.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  maximum allowed by the API. See
+     *                                  {@code DropboxAPI.MAX_UPLOAD_SIZE}.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     private UploadRequest putFileRequest(String path, InputStream is, long length, boolean overwrite, String parentRev,
-            ProgressListener listener) throws DropboxException {
+                                         ProgressListener listener) throws DropboxException {
         if (path == null || path.equals("")) {
             throw new IllegalArgumentException("path is null or empty.");
         }
@@ -1731,7 +1781,7 @@ public class DropboxAPI<SESS_T extends Session> {
             parentRev = "";
         }
 
-        String[] params = new String[] {
+        String[] params = new String[]{
                 "overwrite", String.valueOf(overwrite), "parent_rev", parentRev, "locale",
                 session.getLocale().toString()
         };
@@ -1762,26 +1812,25 @@ public class DropboxAPI<SESS_T extends Session> {
      * entries", which are instructions on how to update your local state to match
      * the server's state.
      *
-     * @param cursor
-     *     On the first call, you should pass in <code>null</code>.  On subsequent
-     *     calls, pass in the {@link DeltaPage#cursor cursor} returned by the previous
-     *     call.
-     *
-     * @return
-     *     A single {@link DeltaPage DeltaPage} of results.  The {@link DeltaPage#hasMore hasMore}
-     *     field will tell you whether the server has more pages of results to return.
-     *     If the server doesn't have more results, you can wait a bit (say,
-     *     5 or 10 minutes) and poll again.
-     *
+     * @param cursor On the first call, you should pass in <code>null</code>.  On subsequent
+     *               calls, pass in the {@link DeltaPage#cursor cursor} returned by the previous
+     *               call.
+     * @return A single {@link DeltaPage DeltaPage} of results.  The {@link DeltaPage#hasMore
+     * hasMore}
+     * field will tell you whether the server has more pages of results to return.
+     * If the server doesn't have more results, you can wait a bit (say,
+     * 5 or 10 minutes) and poll again.
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  pair on the session, or if the user has revoked access.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public DeltaPage<Entry> delta(String cursor) throws DropboxException {
-        String[] params = new String[] {
+        String[] params = new String[]{
                 "cursor", cursor, "locale", session.getLocale().toString(),
         };
 
@@ -1872,18 +1921,18 @@ public class DropboxAPI<SESS_T extends Session> {
          * </p>
          * <ul>
          * <li>
-         *     If the path refers to parent folders that don't exist yet in your local
-         *     state, create those parent folders in your local state.
+         * If the path refers to parent folders that don't exist yet in your local
+         * state, create those parent folders in your local state.
          * </li>
          * <li>
-         *     If the metadata is for a file, replace whatever your local state has at
-         *     that path with the new entry.
+         * If the metadata is for a file, replace whatever your local state has at
+         * that path with the new entry.
          * </li>
          * <li>
-         *     If the metadata is for a folder, check what your local state has at the
-         *     path.  If it's a file, replace it with the new entry.  If it's a folder,
-         *     apply the new metadata to the folder, but do not modify the folder's
-         *     children.
+         * If the metadata is for a folder, check what your local state has at the
+         * path.  If it's a file, replace it with the new entry.  If it's a folder,
+         * apply the new metadata to the folder, but do not modify the folder's
+         * children.
          * </li>
          * </ul>
          */
@@ -1907,7 +1956,7 @@ public class DropboxAPI<SESS_T extends Session> {
             }
 
             public static <MD> DeltaEntry<MD> extract(JsonThing j,
-                    com.dropbox.client2.jsonextract.JsonExtractor<MD> mdExtractor) throws JsonExtractionException {
+                                                      com.dropbox.client2.jsonextract.JsonExtractor<MD> mdExtractor) throws JsonExtractionException {
                 JsonList l = j.expectList();
                 String path = l.get(0).expectString();
                 MD metadata = l.get(1).optionalExtract(mdExtractor);
@@ -1922,18 +1971,16 @@ public class DropboxAPI<SESS_T extends Session> {
      * addFromCopyRef()} to copy the contents of the file at that path to a
      * different Dropbox account.  This is more efficient than copying the content
      *
-     * @param sourcePath
-     *     The full path to the file that you want a
-     *
-     * @return
-     *     A string representation of the file pointer.
-     *
+     * @param sourcePath The full path to the file that you want a
+     * @return A string representation of the file pointer.
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  pair on the session, or if the user has revoked access.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public CreatedCopyRef createCopyRef(String sourcePath) throws DropboxException {
         assertAuthenticated();
@@ -1978,26 +2025,24 @@ public class DropboxAPI<SESS_T extends Session> {
 
     /**
      * Creates a file in the Dropbox that the client is currently connected to, using
-     * the contents from a {@link com.dropbox.client2.DropboxAPI.CreatedCopyRef CopyRef} created with
+     * the contents from a {@link com.dropbox.client2.DropboxAPI.CreatedCopyRef CopyRef} created
+     * with
      * {@link #createCopyRef createCopyRef()}.  The {@link CreatedCopyRef CreatedCopyRef}
      * can be for a file in a different Dropbox account.
      *
-     * @param sourceCopyRef
-     *     The copy-ref to use as the source of the file data (comes from
-     *     {@link CreatedCopyRef#copyRef CreatedCopyRef.copyRef}, which is created
-     *     through {@link #createCopyRef createCopyRef()}).
-     * @param targetPath
-     *     The path that you want to create the file at.
-     *
-     * @return
-     *     The {@link Entry} for the new file.
-     *
+     * @param sourceCopyRef The copy-ref to use as the source of the file data (comes from
+     *                      {@link CreatedCopyRef#copyRef CreatedCopyRef.copyRef}, which is created
+     *                      through {@link #createCopyRef createCopyRef()}).
+     * @param targetPath    The path that you want to create the file at.
+     * @return The {@link Entry} for the new file.
      * @throws DropboxUnlinkedException if you have not set an access token
-     *         pair on the session, or if the user has revoked access.
-     * @throws DropboxException for any other unknown errors. This is also a
-     *         superclass of all other Dropbox exceptions, so you may want to
-     *         only catch this exception which signals that some kind of error
-     *         occurred.
+     *                                  pair on the session, or if the user has revoked access.
+     * @throws DropboxException         for any other unknown errors. This is also a
+     *                                  superclass of all other Dropbox exceptions, so you may want
+     *                                  to
+     *                                  only catch this exception which signals that some kind of
+     *                                  error
+     *                                  occurred.
      */
     public Entry addFromCopyRef(String sourceCopyRef, String targetPath) throws DropboxException {
         assertAuthenticated();
@@ -2033,10 +2078,8 @@ public class DropboxAPI<SESS_T extends Session> {
     /**
      * Helper function to read long JSON return values
      *
-     * @param map
-     *            the one to read from
-     * @param name
-     *            the parameter name to read
+     * @param map  the one to read from
+     * @param name the parameter name to read
      * @return the value, with 0 as a default if no parameter set
      */
     protected static long getFromMapAsLong(Map<String, Object> map, String name) {

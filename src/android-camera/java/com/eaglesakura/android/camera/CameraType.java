@@ -70,8 +70,6 @@ public class CameraType {
 
     /**
      * フロントカメラであればtrue
-     *
-     * @return
      */
     public boolean isFrontCamera() {
         return info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT;
@@ -79,8 +77,6 @@ public class CameraType {
 
     /**
      * リアカメラであればtrue
-     *
-     * @return
      */
     public boolean isRearCamera() {
         return !isFrontCamera();
@@ -88,8 +84,6 @@ public class CameraType {
 
     /**
      * 端末がメインカメラを持っていたらtrue
-     *
-     * @return
      */
     public static boolean hasMainCamera() {
         return TYPE_MAIN != null;
@@ -97,8 +91,6 @@ public class CameraType {
 
     /**
      * 端末がサブカメラを持っていたらtrue
-     *
-     * @return
      */
     public static boolean hasSubCamera() {
         return TYPE_SUB != null;

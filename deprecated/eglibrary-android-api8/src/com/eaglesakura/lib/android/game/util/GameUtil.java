@@ -1,14 +1,14 @@
 package com.eaglesakura.lib.android.game.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import com.eaglesakura.lib.android.game.math.Vector2;
 
 import android.graphics.RectF;
 import android.os.Looper;
 
-import com.eaglesakura.lib.android.game.math.Vector2;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class GameUtil {
 
@@ -16,8 +16,6 @@ public class GameUtil {
 
     /**
      * 単純にsleepさせる。
-     * 
-     * @param timems
      */
     public static void sleep(long timems) {
         try {
@@ -30,9 +28,6 @@ public class GameUtil {
     /**
      * centerから見たpositionが何度になるか360度系で返す。
      * １２時の方向が0度で、反時計回りに角度を進ませる。
-     * @param center
-     * @param position
-     * @return
      */
     public static float getAngleDegree2D(Vector2 center, Vector2 position) {
         float result = 0;
@@ -52,8 +47,6 @@ public class GameUtil {
 
     /**
      * UIスレッドだったらtrueを返す。
-     * 
-     * @return
      */
     public static boolean isUIThread() {
         return Thread.currentThread().equals(Looper.getMainLooper().getThread());
@@ -70,10 +63,6 @@ public class GameUtil {
 
     /**
      * InputStreamを全てメモリ上に展開する。 isの長さがOOMにならないように調整すること。
-     * 
-     * @param is
-     * @return
-     * @throws IOException
      */
     public static byte[] toByteArray(InputStream is) throws IOException {
         byte[] result = null;
@@ -96,11 +85,6 @@ public class GameUtil {
 
     /**
      * InputStreamを全てメモリ上に展開する。 isの長さがOOMにならないように調整すること。
-     * 
-     * @param is
-     * @param close
-     * @return
-     * @throws IOException
      */
     public static byte[] toByteArray(InputStream is, boolean close) throws IOException {
         byte[] result = null;
@@ -125,10 +109,6 @@ public class GameUtil {
 
     /**
      * inputのバッファを全てoutputへコピーする。 完了した時点でストリームはcloseされる。
-     * 
-     * @param input
-     * @param output
-     * @throws IOException
      */
     public static void copyTo(InputStream input, OutputStream output) throws IOException {
         byte[] buffer = new byte[1024 * 128];
@@ -143,12 +123,8 @@ public class GameUtil {
     }
 
     /**
-     * inputのバッファを全てoutputへコピーする。 
+     * inputのバッファを全てoutputへコピーする。
      * close=trueの場合、完了した時点でストリームはcloseされる。
-     * 
-     * @param input
-     * @param output
-     * @throws IOException
      */
     public static void copyTo(InputStream input, OutputStream output, boolean close) throws IOException {
         byte[] buffer = new byte[1024 * 128];
@@ -166,8 +142,6 @@ public class GameUtil {
 
     /**
      * RectFを四捨五入で丸める。
-     * 
-     * @param rect
      */
     public static void round(RectF rect) {
         rect.left = Math.round(rect.left);
@@ -178,12 +152,6 @@ public class GameUtil {
 
     /**
      * min <= result <= maxとなるようにnowを補正する。
-     * 
-     * 
-     * @param min
-     * @param max
-     * @param now
-     * @return
      */
     public static final int minmax(int min, int max, int now) {
         if (now < min)
@@ -195,12 +163,6 @@ public class GameUtil {
 
     /**
      * min <= result <= maxとなるようにnowを補正する。
-     * 
-     * 
-     * @param min
-     * @param max
-     * @param now
-     * @return
      */
     public static final float minmax(float min, float max, float now) {
         if (now < min)
@@ -212,11 +174,6 @@ public class GameUtil {
 
     /**
      * 360度系の正規化を行う。
-     * 
-     * 
-     * @param now
-     * @return
-     * 
      */
     public static final float normalizeDegree(float now) {
         while (now < 0.0f) {
@@ -232,11 +189,6 @@ public class GameUtil {
 
     /**
      * 特定のビットフラグが立っていることを検証する。
-     * 
-     * 
-     * @param flg
-     * @param check
-     * @return
      */
     public static final boolean isFlagOn(int flg, int check) {
         return (flg & check) != 0;
@@ -244,11 +196,6 @@ public class GameUtil {
 
     /**
      * 特定のビットフラグがすべて立っていることを検証する。
-     * 
-     * 
-     * @param flg
-     * @param check
-     * @return
      */
     public static final boolean isFlagOnAll(int flg, int check) {
         return (flg & check) == 0;
@@ -256,13 +203,8 @@ public class GameUtil {
 
     /**
      * フラグ情報を設定する。
-     * 
-     * 
-     * @param flg
-     * @param check
-     * @param is
-     *            ビットを立てる場合はtrue、下げる場合はfalse
-     * @return
+     *
+     * @param is ビットを立てる場合はtrue、下げる場合はfalse
      */
     public static final int setFlag(int flg, int check, boolean is) {
         if (is)
@@ -273,8 +215,6 @@ public class GameUtil {
 
     /**
      * 全角英数を半角英数に変換する
-     * @param s
-     * @return
      */
     public static String zenkakuEngToHankakuEng(String s) {
         StringBuffer sb = new StringBuffer(s);
@@ -318,8 +258,6 @@ public class GameUtil {
 
     /**
      * 全角文字を半角文字に変更する
-     * @param s
-     * @return
      */
     public static String zenkakuHiraganaToZenkakuKatakana(String s) {
         StringBuffer sb = new StringBuffer(s);
@@ -346,17 +284,15 @@ public class GameUtil {
      * 1.0に近いほどaに近い値となる。
      * blend == 1 -> a
      * blend == 0 -> b
-     * @param a
-     * @param b
+     *
      * @param blend aのブレンド値
-     * @return
      */
     public static float blendValue(float a, float b, float blend) {
         return a * blend + b * (1.0f - blend);
     }
 
     /**
-     * 
+     *
      * @param str
      * @return
      */
@@ -398,9 +334,6 @@ public class GameUtil {
 
     /**
      * 日本語を意識してJavaの辞書順に並び替える
-     * @param a
-     * @param b
-     * @return
      */
     public static int compareString(String a, String b) {
         a = zenkakuHiraganaToZenkakuKatakana(a.toLowerCase());
@@ -413,12 +346,6 @@ public class GameUtil {
 
     /**
      * 目標数値へ移動する。
-     *
-     * 
-     * @param now
-     * @param offset
-     * @param target
-     * @return
      */
     public static final int targetMove(int now, int offset, int target) {
         offset = Math.abs(offset);
@@ -433,12 +360,6 @@ public class GameUtil {
 
     /**
      * 目標数値へ移動する。
-     *
-     * 
-     * @param now
-     * @param offset
-     * @param target
-     * @return
      */
     public static final float targetMove(float now, float offset, float target) {
         offset = Math.abs(offset);
@@ -453,8 +374,6 @@ public class GameUtil {
 
     /**
      * Byte配列に変換する。
-     * @param array
-     * @return
      */
     public static final byte[] toByteArray(int[] array) {
         byte[] result = new byte[array.length * 4];
@@ -473,8 +392,6 @@ public class GameUtil {
 
     /**
      * 文字列がnullか空文字だったらtrueを返す。
-     * @param str
-     * @return
      */
     public static boolean isEmpty(String str) {
         if (str == null) {
@@ -486,8 +403,6 @@ public class GameUtil {
 
     /**
      * strがnullかemptyだったらnullを返す。
-     * @param str
-     * @return
      */
     public static String emptyToNull(String str) {
         return isEmpty(str) ? null : str;

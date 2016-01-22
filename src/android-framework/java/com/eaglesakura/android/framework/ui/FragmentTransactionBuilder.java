@@ -1,12 +1,12 @@
 package com.eaglesakura.android.framework.ui;
 
+import com.eaglesakura.android.R;
+import com.eaglesakura.util.StringUtil;
+
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-
-import com.eaglesakura.android.R;
-import com.eaglesakura.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,10 +113,6 @@ public class FragmentTransactionBuilder {
 
     /**
      * setup animation
-     *
-     * @param enterAnimation
-     * @param popAnimation
-     * @return
      */
     public FragmentTransactionBuilder animation(AnimationType enterAnimation, AnimationType popAnimation) {
         int enter = 0;
@@ -171,8 +167,6 @@ public class FragmentTransactionBuilder {
 
     /**
      * 指定したコンテナに移動する
-     *
-     * @param container
      */
     public FragmentTransactionBuilder replace(int container, Fragment fragment) {
         return replace(container, fragment, null);

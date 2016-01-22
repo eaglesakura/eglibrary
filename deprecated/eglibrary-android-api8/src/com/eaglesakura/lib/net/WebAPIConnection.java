@@ -1,10 +1,10 @@
 package com.eaglesakura.lib.net;
 
+import com.eaglesakura.lib.android.game.resource.DisposableResource;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-
-import com.eaglesakura.lib.android.game.resource.DisposableResource;
 
 public class WebAPIConnection extends DisposableResource {
 
@@ -26,7 +26,7 @@ public class WebAPIConnection extends DisposableResource {
     int responceCode;
 
     /**
-     * 
+     *
      * @param connection
      */
     public WebAPIConnection(int status, HttpURLConnection connection) {
@@ -36,7 +36,6 @@ public class WebAPIConnection extends DisposableResource {
 
     /**
      * HTTPのレスポンスコードを取得する
-     * @return
      */
     public int getResponceCode() {
         return responceCode;
@@ -44,8 +43,6 @@ public class WebAPIConnection extends DisposableResource {
 
     /**
      * 入力ストリームを取得する
-     * @return
-     * @throws IOException
      */
     public InputStream getInput() throws IOException {
         if (input == null) {

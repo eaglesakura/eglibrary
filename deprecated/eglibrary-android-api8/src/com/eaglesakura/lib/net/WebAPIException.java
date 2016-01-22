@@ -1,5 +1,8 @@
 package com.eaglesakura.lib.net;
 
+import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.conn.ConnectionPoolTimeoutException;
+
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
@@ -8,9 +11,6 @@ import java.net.UnknownHostException;
 
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLPeerUnverifiedException;
-
-import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.conn.ConnectionPoolTimeoutException;
 
 public class WebAPIException extends Exception {
     static final long serialVersionUID = 0x01;
@@ -22,7 +22,7 @@ public class WebAPIException extends Exception {
     int responce = -1;
 
     /**
-     * 
+     *
      * @param baseException
      */
     public WebAPIException(Exception baseException) {
@@ -32,7 +32,7 @@ public class WebAPIException extends Exception {
     }
 
     /**
-     * 
+     *
      * @param baseException
      */
     public WebAPIException(int responce) {
@@ -42,7 +42,7 @@ public class WebAPIException extends Exception {
     }
 
     /**
-     * 
+     *
      * @param baseException
      */
     public WebAPIException(String message, WebAPIException.Type type) {
@@ -51,7 +51,7 @@ public class WebAPIException extends Exception {
     }
 
     /**
-     * 
+     *
      * @param baseException
      */
     public WebAPIException(String message, int responce, WebAPIException.Type type) {
@@ -62,7 +62,6 @@ public class WebAPIException extends Exception {
 
     /**
      * HTTP戻り値
-     * @return
      */
     public int getResponceCode() {
         return responce;
@@ -70,7 +69,6 @@ public class WebAPIException extends Exception {
 
     /**
      * エラーの種類を取得する
-     * @return
      */
     public Type getType() {
         return type;
@@ -78,7 +76,6 @@ public class WebAPIException extends Exception {
 
     /**
      * 元になった例外を取得する
-     * @return
      */
     public Exception getBase() {
         return base;
@@ -90,8 +87,8 @@ public class WebAPIException extends Exception {
 
     /**
      * エラーの種類
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public enum Type {
         /**
@@ -175,8 +172,6 @@ public class WebAPIException extends Exception {
 
     /**
      * 例外タイプに変換する
-     * @param base
-     * @return
      */
     public static WebAPIException.Type toExceptionType(Exception base) {
         if (base instanceof ConnectTimeoutException) {

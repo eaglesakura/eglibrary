@@ -1,9 +1,9 @@
 package com.eaglesakura.android.camera;
 
-import android.content.Context;
-
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.util.StringUtil;
+
+import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,8 +96,6 @@ public final class SceneSpec {
 
     /**
      * API設定名を取得
-     *
-     * @return
      */
     public String getApiSettingName() {
         return apiSettingName;
@@ -106,7 +104,6 @@ public final class SceneSpec {
     /**
      * 設定名を取得する
      *
-     * @param context
      * @return 日本語での設定名
      */
     public String name(Context context) {
@@ -134,9 +131,6 @@ public final class SceneSpec {
 
     /**
      * シーンを取得する
-     *
-     * @param mode
-     * @return
      */
     public static SceneSpec fromName(String mode) {
         SceneSpec result = gSceneSpecMap.get(mode);
@@ -150,7 +144,6 @@ public final class SceneSpec {
     /**
      * デバイス設定から取得する
      *
-     * @param deviceSettings
      * @return シーン設定
      */
     public static List<SceneSpec> list(List<String> deviceSettings) {

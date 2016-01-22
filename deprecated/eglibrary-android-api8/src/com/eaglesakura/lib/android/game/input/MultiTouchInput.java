@@ -1,21 +1,20 @@
 package com.eaglesakura.lib.android.game.input;
 
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.view.MotionEvent;
-
 import com.eaglesakura.lib.android.game.display.VirtualDisplay;
 import com.eaglesakura.lib.android.game.math.Vector2;
 import com.eaglesakura.lib.android.game.util.GameUtil;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.view.MotionEvent;
+
 /**
  * マルチタッチを処理する。<BR>
  * 毎フレームupdate()を呼ぶ必要がある。<BR>
  * 座標は仮想ディスプレイ位置に投影されるため、 {@link VirtualDisplay}が必要になる。
- * 
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class MultiTouchInput {
     protected TouchPoint[] touchPoints;
@@ -52,19 +51,16 @@ public class MultiTouchInput {
 
     /**
      * ２箇所のタッチ管理を行う。
-     * 
-     * 
-     * 
      */
     public MultiTouchInput(VirtualDisplay display) {
         this(2, display);
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param nums
-     * 
+     *
      */
     protected MultiTouchInput(int nums, VirtualDisplay disp) {
         touchPoints = new TouchPoint[nums];
@@ -76,11 +72,6 @@ public class MultiTouchInput {
 
     /**
      * タッチ箇所を取得する。
-     * 
-     * 
-     * @param index
-     * @return
-     * 
      */
     public TouchPoint getTouchPoint(int index) {
         return touchPoints[index];
@@ -88,7 +79,6 @@ public class MultiTouchInput {
 
     /**
      * 管理しているタッチ座標の数を取得する。
-     * @return
      */
     public int getTouchPointCount() {
         return touchPoints.length;
@@ -96,11 +86,6 @@ public class MultiTouchInput {
 
     /**
      * タッチイベントを管理する。
-     * 
-     * 
-     * @param me
-     * @return
-     * 
      */
     public boolean onTouchEvent(MotionEvent me) {
         try {
@@ -152,10 +137,6 @@ public class MultiTouchInput {
 
     /**
      * ドラッグされた距離を取得する。
-     * 
-     * 
-     * @return
-     * 
      */
     public int getDrugVectorX() {
         return touchPoints[0].getDrugVectorX();
@@ -163,8 +144,6 @@ public class MultiTouchInput {
 
     /**
      * 画面に触れた位置を取得する。
-     * 
-     * @return
      */
     public int getBeginTouchPosX() {
         return touchPoints[0].getTouchPosX();
@@ -172,8 +151,6 @@ public class MultiTouchInput {
 
     /**
      * 画面に触れた位置を取得する。
-     * 
-     * @return
      */
     public int getBeginTouchPosY() {
         return touchPoints[0].getTouchPosY();
@@ -181,8 +158,6 @@ public class MultiTouchInput {
 
     /**
      * 現在のタッチ位置を取得する。
-     * 
-     * @return
      */
     public int getCurrentTouchPosX() {
         return touchPoints[0].getCurrentX();
@@ -190,8 +165,6 @@ public class MultiTouchInput {
 
     /**
      * 現在のタッチ位置を取得する。
-     * 
-     * @return
      */
     public int getCurrentTouchPosY() {
         return touchPoints[0].getCurrentY();
@@ -199,8 +172,6 @@ public class MultiTouchInput {
 
     /**
      * ドラッグされた距離を取得する。
-     * 
-     * @return
      */
     public int getDrugVectorY() {
         return touchPoints[0].getDrugVectorY();
@@ -208,8 +179,6 @@ public class MultiTouchInput {
 
     /**
      * タッチされているかを調べる。
-     * 
-     * @return
      */
     public boolean isTouch() {
         return touchPoints[0].isTouch();
@@ -217,9 +186,6 @@ public class MultiTouchInput {
 
     /**
      * ディスプレイから指が離れているか。
-     * 
-     * 
-     * @return
      */
     public boolean isRelease() {
         return touchPoints[0].isRelease();
@@ -227,8 +193,6 @@ public class MultiTouchInput {
 
     /**
      * ディスプレイから指が離れた瞬間か。
-     * 
-     * @return
      */
     public boolean isReleaseOnce() {
         return touchPoints[0].isReleaseOnce();
@@ -236,8 +200,6 @@ public class MultiTouchInput {
 
     /**
      * タッチされているかを調べる。
-     * 
-     * @return
      */
     public boolean isTouchOnce() {
         return touchPoints[0].isTouchOnce();
@@ -245,8 +207,6 @@ public class MultiTouchInput {
 
     /**
      * 仮想ディスプレイ内をタッチしている場合、trueを返す。
-     * 
-     * @return
      */
     public boolean isInside() {
         return touchPoints[0].isInside();
@@ -254,7 +214,6 @@ public class MultiTouchInput {
 
     /**
      * 毎フレームの更新を行う。
-     * 
      */
     public void update() {
         for (TouchPoint tp : touchPoints) {
@@ -281,9 +240,6 @@ public class MultiTouchInput {
 
     /**
      * タッチのスケーリング補正を行う。
-     * 
-     * @param x
-     * @param y
      */
     public void setSizeScalling(float x, float y) {
         for (TouchPoint tp : touchPoints) {
@@ -342,9 +298,6 @@ public class MultiTouchInput {
 
         /**
          * タッチ一箇所の値に対応している。
-         * 
-         * 
-         * @param id
          */
         public TouchPoint(int id) {
             this.id = id;
@@ -357,9 +310,6 @@ public class MultiTouchInput {
 
         /**
          * タッチされた。
-         * 
-         * 
-         * @param me
          */
         protected boolean onActionDown(float x, float y) {
             touchPos.x = (int) x;
@@ -374,9 +324,6 @@ public class MultiTouchInput {
 
         /**
          * 移動された。
-         * 
-         * 
-         * @param me
          */
         protected boolean onActionMove(float x, float y) {
             releasePos.x = (int) x;
@@ -388,10 +335,6 @@ public class MultiTouchInput {
 
         /**
          * 指が離された。
-         * 
-         * 
-         * @param me
-         * @return
          */
         protected boolean onActionUp(float x, float y) {
             releasePos.x = (int) x;
@@ -403,10 +346,6 @@ public class MultiTouchInput {
 
         /**
          * ディスプレイの外へ出た。
-         * 
-         * 
-         * @param me
-         * @return
          */
         protected boolean onActionOutside(float x, float y) {
             releasePos.x = (int) x;
@@ -418,9 +357,6 @@ public class MultiTouchInput {
 
         /**
          * ドラッグされた距離を取得する。
-         * 
-         * 
-         * @return
          */
         public int getDrugVectorX() {
             return (int) ((releasePos.x - touchPos.x));
@@ -428,9 +364,6 @@ public class MultiTouchInput {
 
         /**
          * 画面に触れた位置を取得する。
-         * 
-         * 
-         * @return
          */
         public int getTouchPosX() {
             return (int) (touchPos.x);
@@ -438,9 +371,6 @@ public class MultiTouchInput {
 
         /**
          * 画面に触れた位置を取得する。
-         * 
-         * 
-         * @return
          */
         public int getTouchPosY() {
             return (int) (touchPos.y);
@@ -448,9 +378,6 @@ public class MultiTouchInput {
 
         /**
          * 現在の指の位置、もしくは離した位置を取得する。
-         * 
-         * 
-         * @return
          */
         public int getCurrentX() {
             return (int) (releasePos.x);
@@ -458,9 +385,6 @@ public class MultiTouchInput {
 
         /**
          * 現在の指の位置、もしくは離した位置を取得する。
-         * 
-         * 
-         * @return
          */
         public int getCurrentY() {
             return (int) (releasePos.y);
@@ -468,11 +392,6 @@ public class MultiTouchInput {
 
         /**
          * 指定地点までの距離を取得する。
-         * 
-         * 
-         * @param x
-         * @param y
-         * @return
          */
         public float getLength(int x, int y) {
             int lx = (int) (releasePos.x) - x, ly = (int) (releasePos.y) - y;
@@ -482,8 +401,6 @@ public class MultiTouchInput {
 
         /**
          * 指を引きずった長さを取得する。
-         * 
-         * @return
          */
         public float getDrugLength() {
             return (float) Math.sqrt(this.getDrugVectorX() * this.getDrugVectorX() + this.getDrugVectorY()
@@ -492,9 +409,6 @@ public class MultiTouchInput {
 
         /**
          * ドラッグされた距離を取得する。
-         * 
-         * 
-         * @return
          */
         public int getDrugVectorY() {
             return (int) ((releasePos.y - touchPos.y));
@@ -502,9 +416,6 @@ public class MultiTouchInput {
 
         /**
          * タッチされているかを調べる。
-         * 
-         * 
-         * @return
          */
         public boolean isTouch() {
             return GameUtil.isFlagOn(attrNow, eAttrTouch);
@@ -512,9 +423,6 @@ public class MultiTouchInput {
 
         /**
          * ディスプレイから指が離れているか。
-         * 
-         * 
-         * @return
          */
         public boolean isRelease() {
             return !GameUtil.isFlagOn(attrNow, eAttrTouch);
@@ -522,9 +430,6 @@ public class MultiTouchInput {
 
         /**
          * ディスプレイから指が離れた瞬間か。
-         * 
-         * 
-         * @return
          */
         public boolean isReleaseOnce() {
             if (!GameUtil.isFlagOn(attrNow, eAttrTouch) && GameUtil.isFlagOn(attrOld, eAttrTouch)) {
@@ -535,9 +440,6 @@ public class MultiTouchInput {
 
         /**
          * タッチされているかを調べる。
-         * 
-         * 
-         * @return
          */
         public boolean isTouchOnce() {
             if (GameUtil.isFlagOn(attrNow, eAttrTouch) && !GameUtil.isFlagOn(attrOld, eAttrTouch)) {
@@ -548,8 +450,6 @@ public class MultiTouchInput {
 
         /**
          * 毎フレームの更新を行う。
-         * 
-         * 
          */
         protected void update() {
             attrOld = attrNow;
@@ -564,8 +464,6 @@ public class MultiTouchInput {
 
         /**
          * 何フレームタッチしたか。
-         * 
-         * @return
          */
         public int getTouchFrame() {
             return touchFrame;
@@ -573,8 +471,6 @@ public class MultiTouchInput {
 
         /**
          * 画面内にタップがある場合trueを返す。
-         * 
-         * @return
          */
         public boolean isInside() {
             if (isRelease() && !isReleaseOnce()) {
@@ -594,8 +490,6 @@ public class MultiTouchInput {
 
         /**
          * 指定した範囲にタップがある場合trueを返す。
-         * 
-         * @return
          */
         public boolean isInside(Rect rect) {
             if (isRelease() && !isReleaseOnce()) {
@@ -608,9 +502,6 @@ public class MultiTouchInput {
 
     /**
      * ピンチ・インの判定を行う。
-     * 
-     * 
-     * @return
      */
     public boolean isPinchIn() {
         TouchPoint tp0 = getTouchPoint(0), tp1 = getTouchPoint(1);
@@ -648,9 +539,6 @@ public class MultiTouchInput {
 
     /**
      * ピンチ・アウトの判定を行う。
-     * 
-     * 
-     * @return
      */
     public boolean isPinchOut() {
         TouchPoint tp0 = getTouchPoint(0), tp1 = getTouchPoint(1);
@@ -688,8 +576,6 @@ public class MultiTouchInput {
 
     /**
      * ピンチアウトが始まった瞬間にtrueを返す。
-     * 
-     * @return
      */
     public boolean isPinchOutStarting() {
         return (eAttrPinchOut & attrNow) != 0 && (eAttrPinchOut & attrBefore) == 0;
@@ -697,8 +583,6 @@ public class MultiTouchInput {
 
     /**
      * ピンチインが始まった瞬間にtrueを返す。
-     * 
-     * @return
      */
     public boolean isPinchInStarting() {
         return (eAttrPichIn & attrNow) != 0 && (eAttrPichIn & attrBefore) == 0;
@@ -710,8 +594,6 @@ public class MultiTouchInput {
 
     /**
      * 1フレームでのXの移動量。
-     * 
-     * @return
      */
     public float getFrameDrugX() {
         return currentPosition.x - beforePosition.x;
@@ -719,8 +601,6 @@ public class MultiTouchInput {
 
     /**
      * 1フレームでのYの移動量。
-     * 
-     * @return
      */
     public float getFrameDrugY() {
         return currentPosition.y - beforePosition.y;
@@ -728,8 +608,6 @@ public class MultiTouchInput {
 
     /**
      * 指定したエリアにあるタッチポイントを取得する。
-     * @param area
-     * @return
      */
     public TouchPoint getEnableTouchPoint(Rect area) {
         for (TouchPoint point : touchPoints) {
@@ -742,8 +620,6 @@ public class MultiTouchInput {
 
     /**
      * 有効なタッチポイント数を取得する。
-     * 
-     * @return
      */
     public int getEnableTouchPoints() {
         int result = 0;
@@ -758,7 +634,6 @@ public class MultiTouchInput {
 
     /**
      * 関連付けられた仮想ディスプレイを取得する。
-     * @return
      */
     public VirtualDisplay getVirtualDisplay() {
         return virtualDisplay;

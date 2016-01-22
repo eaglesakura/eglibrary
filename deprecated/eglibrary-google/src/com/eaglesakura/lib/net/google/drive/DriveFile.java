@@ -1,15 +1,5 @@
 package com.eaglesakura.lib.net.google.drive;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.eaglesakura.lib.android.game.io.BufferTargetOutputStream;
 import com.eaglesakura.lib.android.game.util.FileUtil;
 import com.eaglesakura.lib.android.game.util.GameUtil;
@@ -21,10 +11,20 @@ import com.eaglesakura.lib.net.WebFileDownloader;
 import com.eaglesakura.lib.net.google.drive.GoogleDriveAPIHelper.DriveItem;
 import com.eaglesakura.lib.net.google.drive.GoogleDriveAPIHelper.ParentData;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * GDrive上のファイルを扱う。
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class DriveFile {
     GoogleDriveAPIHelper.DriveItem item;
@@ -40,9 +40,6 @@ public class DriveFile {
 
     /**
      * 配下にあるファイル一覧を取得する
-     * @param connector
-     * @return
-     * @throws GoogleAPIException
      */
     public List<DriveFile> list(WebAPIConnectorBase connector) throws WebAPIException {
         if (!isDirectory()) {
@@ -64,9 +61,6 @@ public class DriveFile {
 
     /**
      * ダウンローダーを作成する
-     * @param connector
-     * @return
-     * @throws GoogleAPIException
      */
     public WebFileDownloader createDownloader(WebAPIConnectorBase connector) throws WebAPIException {
         if (!isFile() || item.downloadUrl == null) {
@@ -77,26 +71,21 @@ public class DriveFile {
 
     /**
      * ダウンロード中の制御を行わせる。
-     *
      */
     public interface DownloadCallback {
         /**
          * ダウンロードをキャンセルする場合はtrueを返す
-         * @return
          */
         boolean isCanceled();
 
         /**
          * ダウンロードを開始するタイミングで呼び出される
-         * @param file
          */
         void onStart(DriveFile file);
 
         /**
          * ダウンロードの進捗が進むごとに呼び出される。
          * ファイルが小さい場合は呼び出されない場合もある
-         * @param file
-         * @param downloaded
          */
         void onUpdate(DriveFile file, long downloaded);
     }
@@ -104,15 +93,9 @@ public class DriveFile {
     /**
      * dstFileに対し、rangeBegin-rangeEndの範囲をダウンロードする。
      * dstFileは常に上書きが行われるため、レジュームは期待しないこと。
-     * @param connector
-     * @param dstFile
-     * @param rangeBegin
-     * @param rangeEnd
-     * @param callback
-     * @return
      */
     public boolean downloadRange(WebAPIConnectorBase connector, File dstFile, int rangeBegin, int rangeEnd,
-            DownloadCallback callback) throws WebAPIException {
+                                 DownloadCallback callback) throws WebAPIException {
         if (!isFile()) {
             return false;
         }
@@ -167,11 +150,6 @@ public class DriveFile {
      * ファイルにダウンロードを行う。
      * ダウンロード中の制御はコールバックを通じて行う。
      * dstFileのサイズが0より大きい場合、自動的にレジュームが行われる
-     * @param connector
-     * @param dstFile
-     * @param callback
-     * @return
-     * @throws GoogleAPIException
      */
     public boolean download(WebAPIConnectorBase connector, File dstFile, DownloadCallback callback)
             throws WebAPIException {
@@ -234,9 +212,6 @@ public class DriveFile {
 
     /**
      * 親ディレクトリを取得する
-     * @param connector
-     * @return
-     * @throws GoogleAPIException
      */
     public DriveFile getParent(WebAPIConnectorBase connector) throws WebAPIException {
         if (isRoot()) {
@@ -255,7 +230,6 @@ public class DriveFile {
 
     /**
      * ファイルタイトルを取得する
-     * @return
      */
     public String getTitle() {
         return item.title;
@@ -263,7 +237,6 @@ public class DriveFile {
 
     /**
      * MD5チェックサムを取得する
-     * @return
      */
     public String getMD5() {
         return item.md5Checksum;
@@ -271,7 +244,6 @@ public class DriveFile {
 
     /**
      * ファイルサイズを取得する
-     * @return
      */
     public long getFileSize() {
         return item.fileSize;
@@ -279,7 +251,6 @@ public class DriveFile {
 
     /**
      * 更新日を取得する
-     * @return
      */
     public Date getModifiDate() {
         if (item.modifiedDate == null) {
@@ -296,7 +267,6 @@ public class DriveFile {
 
     /**
      * 作成日を取得する
-     * @return
      */
     public Date getCreatedDate() {
         try {
@@ -309,7 +279,6 @@ public class DriveFile {
 
     /**
      * ファイルの場合はtrue
-     * @return
      */
     public boolean isFile() {
         return GoogleDriveAPIHelper.isFile(item);
@@ -317,7 +286,6 @@ public class DriveFile {
 
     /**
      * 空ファイルの場合trueを設定する
-     * @return
      */
     public boolean isEmptyFile() {
         return isFile() && getFileSize() == 0;
@@ -325,7 +293,6 @@ public class DriveFile {
 
     /**
      * ディレクトリの場合はtrue
-     * @return
      */
     public boolean isDirectory() {
         return GoogleDriveAPIHelper.isDirectory(item);
@@ -333,7 +300,6 @@ public class DriveFile {
 
     /**
      * ルートディレクトリの場合はtrueを返す。
-     * @return
      */
     public boolean isRoot() {
         return !GoogleDriveAPIHelper.hasParent(item);
@@ -345,7 +311,6 @@ public class DriveFile {
 
     /**
      * 強制的に親として認識させる
-     * @param parent
      */
     public void setParentForcing(DriveFile parent) {
         this.parent = parent;
@@ -356,16 +321,14 @@ public class DriveFile {
         data.parentLink = parent.item.selfLink;
         data.selfLink = parent.item.selfLink;
 
-        this.item.parents = new ParentData[] {
-            data
+        this.item.parents = new ParentData[]{
+                data
         };
 
     }
 
     /**
      * 親との接続情報を設定する
-     * @param parent
-     * @return
      */
     public boolean setParent(DriveFile parent) {
         if (isRoot()) {
@@ -385,7 +348,6 @@ public class DriveFile {
 
     /**
      * 親ディレクトリ一覧を取得する
-     * @return
      */
     public List<String> getParentIds() {
         List<String> parents = new LinkedList<String>();
@@ -397,7 +359,6 @@ public class DriveFile {
 
     /**
      * 直近の親IDを取得する
-     * @return
      */
     public String getParentId() {
         List<String> ids = getParentIds();
@@ -410,9 +371,6 @@ public class DriveFile {
 
     /**
      * ファイルの内容をサーバーへアップロードし、内部データを更新する。
-     * @param conn
-     * @param buffer
-     * @throws GoogleAPIException
      */
     public void upload(WebAPIConnectorBase conn, byte[] buffer) throws WebAPIException {
         if (!isFile()) {
@@ -424,7 +382,6 @@ public class DriveFile {
 
     /**
      * 絶対パスを取得する
-     * @return
      */
     public String getAbsolutePath(WebAPIConnectorBase conn) throws WebAPIException {
         if (isRoot()) {
@@ -448,8 +405,6 @@ public class DriveFile {
     /**
      * ルートディレクトリを取得する。
      * 一切ファイルが入っていない場合、nullを返す。
-     * @param connector
-     * @return
      */
     public static DriveFile root(WebAPIConnectorBase connector) throws WebAPIException {
         DriveItem raw = GoogleDriveAPIHelper.rootDirectory(connector);
@@ -459,10 +414,6 @@ public class DriveFile {
     /**
      * Google Driveからファイルを検索して取得する。
      * ただし、ファイル名が一意に決まることが前提となる。
-     * @param connector
-     * @param fileName
-     * @return
-     * @throws GoogleAPIException
      */
     public static DriveFile get(WebAPIConnectorBase connector, String fileName) throws WebAPIException {
         List<DriveItem> search = GoogleDriveAPIHelper.search(connector,
@@ -481,11 +432,6 @@ public class DriveFile {
     /**
      * Google Driveからファイルを検索して取得する。
      * もしファイルが見つからなかった場合、新しい空ファイルを作成して返す。
-     * @param connector
-     * @param fileName
-     * @param mimeType
-     * @return
-     * @throws GoogleAPIException
      */
     public static DriveFile getOrNewfile(WebAPIConnectorBase connector, String fileName, String mimeType)
             throws WebAPIException {
@@ -516,9 +462,6 @@ public class DriveFile {
 
     /**
      * オブジェクトのラッピングを行う
-     * @param list
-     * @param result
-     * @return
      */
     public static List<DriveFile> wrap(List<DriveItem> list, List<DriveFile> result) {
         for (DriveItem item : list) {
@@ -545,7 +488,6 @@ public class DriveFile {
 
         /**
          * 指定の順番でソートする
-         * @param files
          */
         public abstract void sort(List<DriveFile> files);
     }

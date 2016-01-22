@@ -1,10 +1,10 @@
 package com.eaglesakura.material.widget;
 
-import android.content.Context;
-import android.view.View;
-
 import com.eaglesakura.android.R;
 import com.eaglesakura.android.aquery.AQuery;
+
+import android.content.Context;
+import android.view.View;
 
 /**
  *

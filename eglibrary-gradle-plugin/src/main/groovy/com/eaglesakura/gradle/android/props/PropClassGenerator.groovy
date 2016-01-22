@@ -1,8 +1,6 @@
 package com.eaglesakura.gradle.android.props
 
 import com.eaglesakura.tool.generator.CodeWriter
-import com.eaglesakura.tool.log.Logger
-import org.gradle.api.tasks.TaskAction
 
 public class PropClassGenerator {
     def classPackageName = "com.example";

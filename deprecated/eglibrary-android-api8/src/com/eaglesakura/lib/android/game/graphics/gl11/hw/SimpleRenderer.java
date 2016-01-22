@@ -3,8 +3,8 @@ package com.eaglesakura.lib.android.game.graphics.gl11.hw;
 /**
  * シンプルなGL処理を行う。
  * rendering/working共にrun()を内部で呼び出す。
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public abstract class SimpleRenderer implements GLRenderer, Runnable {
 

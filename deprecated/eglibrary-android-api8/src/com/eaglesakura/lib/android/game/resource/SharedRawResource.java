@@ -2,8 +2,8 @@ package com.eaglesakura.lib.android.game.resource;
 
 /**
  * 複数箇所から参照を取れるように、リソースを共有する。
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class SharedRawResource implements IRawResource {
 
@@ -39,7 +39,6 @@ public class SharedRawResource implements IRawResource {
 
     /**
      * 管理対象のリソースを取得する。
-     * @return
      */
     public IRawResource getResource() {
         return resource;

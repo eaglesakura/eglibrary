@@ -3,18 +3,17 @@
  */
 package com.eaglesakura.lib.android.web.amazon;
 
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eaglesakura.lib.android.game.io.WebInputStream;
 import com.eaglesakura.lib.android.game.util.GameUtil;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Amazonで扱っている商品を示す。
  * 商品情報は基本的にケータイ端末用のデータを参照するため、画像解像度は低い。
- *
  */
 public class Commodity {
 
@@ -87,7 +86,6 @@ public class Commodity {
 
     /**
      * ASINコードを取得する。
-     * @return
      */
     public String getASIN() {
         return ASIN;
@@ -96,7 +94,6 @@ public class Commodity {
     /**
      * ISBN番号を取得する。<BR>
      * ISBNが見つからなかった場合、nullを返す。
-     * @return
      */
     public String getISBN10() {
         return ISBN10;
@@ -105,7 +102,6 @@ public class Commodity {
     /**
      * ISBN番号を取得する。<BR>
      * 通常、こちらは利用しない。
-     * @return
      */
     public String getISBN13() {
         return ISBN13;
@@ -113,7 +109,6 @@ public class Commodity {
 
     /**
      * 書籍名取得
-     * @return
      */
     public String getName() {
         return name;
@@ -122,7 +117,6 @@ public class Commodity {
     /**
      * 画像URLを取得。<BR>
      * ただし、このURLはケータイ用の縮小画像である。
-     * @return
      */
     public String getImageUrl() {
         return imageUrl;
@@ -130,7 +124,6 @@ public class Commodity {
 
     /**
      * 商品のURLを取得する。
-     * @return
      */
     public String getUrl() {
         return url;
@@ -138,7 +131,6 @@ public class Commodity {
 
     /**
      * 広告URLを取得する。
-     * @return
      */
     public String getAdURL(String developerId) {
         return url + developerId + "/ref=nosim";
@@ -146,7 +138,6 @@ public class Commodity {
 
     /**
      * 発売日を取得する。
-     * @return
      */
     public String getReleaseDate() {
         return releaseDate;
@@ -154,7 +145,6 @@ public class Commodity {
 
     /**
      * 出版社を取得する。
-     * @return
      */
     public String getPublisher() {
         return publisher;
@@ -162,7 +152,6 @@ public class Commodity {
 
     /**
      * 検索用バーコードを取得する。
-     * @return
      */
     public String getBarcode() {
         return barcode;
@@ -170,7 +159,6 @@ public class Commodity {
 
     /**
      * 書籍の場合、trueを返す。
-     * @return
      */
     public boolean isBook() {
         return ISBN10 != null && ISBN13 != null;
@@ -178,7 +166,6 @@ public class Commodity {
 
     /**
      * ゲームの場合、プラットフォームを取得する。
-     * @return
      */
     public String getGamePlatform() {
         return gamePlatform;
@@ -186,7 +173,6 @@ public class Commodity {
 
     /**
      * ゲームの場合、trueを返す。
-     * @return
      */
     public boolean isGame() {
         return gamePlatform != null;
@@ -194,7 +180,6 @@ public class Commodity {
 
     /**
      * 著者・製作者を取得する。
-     * @return
      */
     public List<String> getAuthors() {
         return authors;
@@ -202,7 +187,6 @@ public class Commodity {
 
     /**
      * 価格を取得する。
-     * @return
      */
     public Integer getPrice() {
         return price;
@@ -230,8 +214,6 @@ public class Commodity {
 
     /**
      * 商品URLから商品情報を取得する。
-     * @param url
-     * @return
      */
     static Commodity load(String _url, OnCommodityLoadListener listen) {
         try {
@@ -272,8 +254,6 @@ public class Commodity {
 
     /**
      * バーコードからAmazon商品情報を検索する。
-     * @param barcode
-     * @return
      */
     public static Commodity searchBarcode(String barcode, OnCommodityLoadListener listener) {
         try {
@@ -317,24 +297,18 @@ public class Commodity {
 
     /**
      * 商品情報のローディングに関するメッセージを受信する。
-     *
      */
     public interface OnCommodityLoadListener {
 
         /**
          * 商品のロードを終了した場合に呼び出される。<BR>
          * falseを返した場合、resultの商品一覧に含まない。
-         * @param item
-         * @return
          */
         boolean onLoadComplete(String html, Commodity item);
     }
 
     /**
      * Amazonの検索結果URLを指定し、URLを取得する。
-     * @param keyword
-     * @param category
-     * @return
      */
     public static List<Commodity> searchUrl(String url, int limit, OnCommodityLoadListener listener) {
 
@@ -371,12 +345,9 @@ public class Commodity {
 
     /**
      * Amazonからキーワード検索し、結果を返す。
-     * @param keyword
-     * @param category
-     * @return
      */
     public static List<Commodity> searchKeyword(String keyword, String category, int limit,
-            OnCommodityLoadListener listener) {
+                                                OnCommodityLoadListener listener) {
 
         List<Commodity> result = new ArrayList<Commodity>();
 
@@ -401,8 +372,6 @@ public class Commodity {
     /**
      * 検索キーワードを検索用に最適化する。<BR>
      * ECB向け。適当実装。
-     * @param origin
-     * @return
      */
     public static String collectSearchKeyword(final String origin) {
         try {
@@ -463,8 +432,6 @@ public class Commodity {
 
     /**
      * Amazonの検索結果HTMLから商品一覧を取得する。
-     * @param _html
-     * @return
      */
     static List<String> enumrateURL(final String _html) {
         List<String> result = new ArrayList<String>();
@@ -501,8 +468,6 @@ public class Commodity {
 
     /**
      * Amazonの検索結果HTMLから商品URLを取り出す。
-     * @param html
-     * @return
      */
     static String get1stURL(final String _html) {
         try {
@@ -536,8 +501,6 @@ public class Commodity {
 
     /**
      * Amazonの検索URLから商品URLを取り出す。
-     * @param html
-     * @return
      */
     static String getASIN(final String htmlBase, String keyword) {
         try {
@@ -736,8 +699,6 @@ public class Commodity {
 
     /**
      * Amazonの検索URLから商品URLを取り出す。
-     * @param html
-     * @return
      */
     static String getTitle(final String _html) {
 
@@ -767,8 +728,6 @@ public class Commodity {
 
     /**
      * Amazonの検索URLから商品URLを取り出す。
-     * @param html
-     * @return
      */
     static String getImageURL(String html) {
 

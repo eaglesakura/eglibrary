@@ -1,8 +1,8 @@
 package com.eaglesakura.dummybeaconadvertiser;
 
-import android.app.Application;
-
 import com.eaglesakura.android.framework.FrameworkCentral;
+
+import android.app.Application;
 
 public class AdvertiserApplication extends Application implements FrameworkCentral.FrameworkApplication {
 

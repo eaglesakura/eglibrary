@@ -1,5 +1,8 @@
 package com.eaglesakura.material.widget;
 
+import com.eaglesakura.android.R;
+import com.eaglesakura.util.StringUtil;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.text.Editable;
@@ -7,9 +10,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.eaglesakura.android.R;
-import com.eaglesakura.util.StringUtil;
 
 /**
  * 入力用ダイアログを構築する
@@ -79,10 +79,6 @@ public abstract class MaterialInputDialog extends MaterialAlertDialog {
 
     /**
      * 入力された内容がcommit可能であればtrueを返す
-     *
-     * @param text
-     * @param validateHintText
-     * @return
      */
     protected boolean validateInputText(EditText text, TextView validateHintText) {
         return !StringUtil.isEmpty(text.getText().toString());
@@ -95,8 +91,6 @@ public abstract class MaterialInputDialog extends MaterialAlertDialog {
 
     /**
      * メッセージが確定された
-     *
-     * @param input
      */
     protected abstract void onCommit(EditText input);
 }

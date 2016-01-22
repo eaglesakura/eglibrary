@@ -1,9 +1,9 @@
 package com.eaglesakura.lib.android.game.graphics;
 
+import com.eaglesakura.lib.android.game.resource.IRawResource;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.eaglesakura.lib.android.game.resource.IRawResource;
 
 public class ImageStub extends ImageBase {
     int width;

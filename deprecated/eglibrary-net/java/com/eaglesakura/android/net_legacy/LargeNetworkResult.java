@@ -1,13 +1,14 @@
 package com.eaglesakura.android.net_legacy;
 
+import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpResponse;
+
 import com.eaglesakura.android.dao.net.DbNetCache;
 import com.eaglesakura.thread.MultiRunningTasks;
 import com.eaglesakura.util.IOUtil;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.StringUtil;
-import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpResponse;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -276,9 +277,6 @@ public class LargeNetworkResult<T> extends LegacyNetworkResult<T> {
 
     /**
      * URLを指定してキャッシュとして登録する
-     *
-     * @param url
-     * @param timeoutMs
      */
     protected void putCache(final String url, final HttpHeaders headers, final String method, final long timeoutMs) {
         if (downloadedDataSize == 0) {

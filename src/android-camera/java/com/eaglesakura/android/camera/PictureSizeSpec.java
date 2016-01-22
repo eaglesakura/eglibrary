@@ -87,8 +87,6 @@ public class PictureSizeSpec {
 
         /**
          * 横ピクセル数 / 縦ピクセル数のアスペクト比を取得する
-         *
-         * @return
          */
         public abstract double aspect();
 
@@ -96,16 +94,11 @@ public class PictureSizeSpec {
          * アスペクト比のテキストを取得する
          * <br>
          * 例：16:9
-         *
-         * @return
          */
         public abstract String aspectText();
 
         /**
          * 最も近いアスペクト比を取得する
-         *
-         * @param aspect
-         * @return
          */
         public static AspectID getNearAspect(double aspect) {
             double diffNear = 99999999;
@@ -149,8 +142,6 @@ public class PictureSizeSpec {
 
     /**
      * カメラ用サイズを取得する
-     *
-     * @return
      */
     public Camera.Size getCameraSize() {
         return size;
@@ -174,7 +165,6 @@ public class PictureSizeSpec {
     /**
      * アスペクト比表示用テキストを取得する
      * 例) 16:9
-     * @return
      */
     public String getAspectText() {
         return aspectID.aspectText();
@@ -182,8 +172,6 @@ public class PictureSizeSpec {
 
     /**
      * アスペクト比を取得する
-     *
-     * @return
      */
     public double getAspect() {
         return (double) getWidth() / (double) getHeight();
@@ -191,8 +179,6 @@ public class PictureSizeSpec {
 
     /**
      * 一意に識別するためのIDを取得する
-     *
-     * @return
      */
     public String getId() {
         return String.format("pic(%dx%d)", getWidth(), getHeight());

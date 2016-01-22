@@ -1,10 +1,10 @@
 package com.eaglesakura.android.joint.message;
 
-import android.os.Bundle;
-
 import com.eaglesakura.jc.annotation.JCClass;
 import com.eaglesakura.jc.annotation.JCMethod;
 import com.eaglesakura.util.StringUtil;
+
+import android.os.Bundle;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
@@ -41,9 +41,6 @@ public class JointMessage {
 
     /**
      * Nativeで利用可能なBytesとして返す
-     *
-     * @param key
-     * @return
      */
     @JCMethod
     public Buffer getNativeByteArray(String key) {
@@ -88,9 +85,6 @@ public class JointMessage {
 
     /**
      * UTF16 LE形式のバッファをJava/NDKで利用しやすいようにUTF-8に変換する
-     *
-     * @param buffer
-     * @return
      */
     @JCMethod
     public static byte[] utf16toString(byte[] buffer) {

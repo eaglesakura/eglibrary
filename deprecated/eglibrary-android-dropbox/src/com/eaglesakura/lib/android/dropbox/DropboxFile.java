@@ -1,11 +1,5 @@
 package com.eaglesakura.lib.android.dropbox;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.dropbox.client2.DropboxAPI.Entry;
 import com.eaglesakura.lib.android.dropbox.DropboxAPIException.Type;
 import com.eaglesakura.lib.android.game.io.BufferTargetOutputStream;
@@ -13,10 +7,16 @@ import com.eaglesakura.lib.android.game.util.EncodeUtil;
 import com.eaglesakura.lib.android.game.util.FileUtil;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Dropboxのファイル情報を隠蔽する
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class DropboxFile {
     Entry entry;
@@ -27,7 +27,6 @@ public class DropboxFile {
 
     /**
      * ファイル名を取得する
-     * @return
      */
     public String getTitle() {
         return entry.fileName();
@@ -35,7 +34,6 @@ public class DropboxFile {
 
     /**
      * ファイルならtrue
-     * @return
      */
     public boolean isFile() {
         return !entry.isDir;
@@ -43,8 +41,6 @@ public class DropboxFile {
 
     /**
      * 詳細情報を同期する。lsを行うために必要。
-     * @param helper
-     * @throws DropboxAPIException
      */
     public void syncDetails(DropboxAPIHelper helper) throws DropboxAPIException {
         entry = helper.metadata(entry.path);
@@ -53,9 +49,6 @@ public class DropboxFile {
     /**
      * ファイル一覧を返す。
      * コレがディレクトリでない場合はnullを返す。
-     * @param helper
-     * @return
-     * @throws DropboxAPIException
      */
     public List<DropboxFile> listFiles(DropboxAPIHelper helper) throws DropboxAPIException {
         if (isFile()) {
@@ -79,7 +72,6 @@ public class DropboxFile {
 
     /**
      * ファイルのパス情報を取得する
-     * @return
      */
     public String getAbsolutePath() {
         return entry.path;
@@ -87,7 +79,6 @@ public class DropboxFile {
 
     /**
      * リビジョンを取得する
-     * @return
      */
     public String getRev() {
         return entry.rev;
@@ -96,7 +87,6 @@ public class DropboxFile {
     /**
      * ファイル絶対パスとリビジョンによる唯一の識別子を取得する。
      * 内部的にはMD5を利用する
-     * @return
      */
     public String getUniqueId() {
         return EncodeUtil.genMD5((getRev() + "::" + getAbsolutePath()).getBytes());
@@ -104,7 +94,6 @@ public class DropboxFile {
 
     /**
      * ファイルサイズを取得する
-     * @return
      */
     public long getFileSize() {
         return entry.bytes;
@@ -112,8 +101,6 @@ public class DropboxFile {
 
     /**
      * ダウンロード補助クラスを作成する
-     * @param helper
-     * @return
      */
     public DropboxDownloader createDownloader(DropboxAPIHelper helper) {
         return new DropboxDownloader(helper, this);
@@ -122,9 +109,6 @@ public class DropboxFile {
     /**
      * ダウンロードを直接行う。
      * このメソッドが戻った時点でダウンロードの成否が確定している。
-     * @param helper
-     * @param dstFile
-     * @param callback
      */
     public boolean download(DropboxAPIHelper helper, File dstFile, DownloadCallback callback)
             throws DropboxAPIException {
@@ -186,10 +170,6 @@ public class DropboxFile {
 
     /**
      * Dropboxからファイルを取得する
-     * @param helper
-     * @param path
-     * @return
-     * @throws DropboxAPIException
      */
     public static DropboxFile get(DropboxAPIHelper helper, String path) throws DropboxAPIException {
         Entry entry = helper.metadata(path);
@@ -201,10 +181,6 @@ public class DropboxFile {
 
     /**
      * Dropboxからファイルを取得する
-     * @param helper
-     * @param path
-     * @return
-     * @throws DropboxAPIException
      */
     public static DropboxFile getSearchedItem(DropboxAPIHelper helper, String fileName) throws DropboxAPIException {
         List<DropboxFile> search = search(helper, "/", fileName);
@@ -216,11 +192,6 @@ public class DropboxFile {
 
     /**
      * ファイルを検索して結果を返す
-     * @param helper
-     * @param path
-     * @param query
-     * @return
-     * @throws DropboxAPIException
      */
     public static List<DropboxFile> search(DropboxAPIHelper helper, String path, String query)
             throws DropboxAPIException {
@@ -229,11 +200,6 @@ public class DropboxFile {
 
     /**
      * ファイルを検索して結果を返す
-     * @param helper
-     * @param path
-     * @param query
-     * @return
-     * @throws DropboxAPIException
      */
     public static List<DropboxFile> search(DropboxAPIHelper helper, String path, String query, int limit)
             throws DropboxAPIException {
@@ -254,27 +220,22 @@ public class DropboxFile {
 
     /**
      * ダウンロード進捗を受け取る
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public interface DownloadCallback {
         /**
          * キャンセルを行う場合はtrue
-         * @param file
-         * @return
          */
         public boolean isCanceled(DropboxFile file);
 
         /**
          * ダウンロードを開始する
-         * @param file
          */
         public void onStart(DropboxFile file);
 
         /**
          * ダウンロード進捗を受け取る
-         * @param file
-         * @param downloaded
          */
         public void onUpdate(DropboxFile file, long downloaded);
     }

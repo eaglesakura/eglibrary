@@ -1,5 +1,20 @@
 package com.eaglesakura.android.framework.ui.license;
 
+import com.eaglesakura.android.R;
+import com.eaglesakura.android.aquery.AQuery;
+import com.eaglesakura.android.framework.FrameworkCentral;
+import com.eaglesakura.android.framework.ui.BaseActivity;
+import com.eaglesakura.android.thread.async.AsyncAction;
+import com.eaglesakura.android.thread.async.AsyncTaskResult;
+import com.eaglesakura.android.thread.async.IAsyncTask;
+import com.eaglesakura.android.thread.ui.UIHandler;
+import com.eaglesakura.android.util.ViewUtil;
+import com.eaglesakura.material.widget.MaterialLicenseDialog;
+import com.eaglesakura.material.widget.support.SupportRecyclerView;
+import com.eaglesakura.util.IOUtil;
+import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.Util;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,21 +24,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.eaglesakura.android.R;
-import com.eaglesakura.android.aquery.AQuery;
-import com.eaglesakura.android.thread.async.AsyncTaskResult;
-import com.eaglesakura.android.thread.async.IAsyncTask;
-import com.eaglesakura.android.framework.FrameworkCentral;
-import com.eaglesakura.android.framework.ui.BaseActivity;
-import com.eaglesakura.android.thread.async.AsyncAction;
-import com.eaglesakura.android.thread.ui.UIHandler;
-import com.eaglesakura.android.util.ViewUtil;
-import com.eaglesakura.util.IOUtil;
-import com.eaglesakura.material.widget.MaterialLicenseDialog;
-import com.eaglesakura.material.widget.support.SupportRecyclerView;
-import com.eaglesakura.util.LogUtil;
-import com.eaglesakura.util.Util;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -165,8 +165,6 @@ public class LicenseViewActivity extends BaseActivity {
 
     /**
      * Licenseを追加する
-     *
-     * @param assetsPath
      */
     LicenseItem newLicense(String assetsPath) {
         InputStream is = null;
@@ -228,8 +226,6 @@ public class LicenseViewActivity extends BaseActivity {
 
     /**
      * ライセンスの読み込みと表示を行う
-     *
-     * @param item
      */
     void loadLicense(final LicenseItem item) {
         {
@@ -276,8 +272,6 @@ public class LicenseViewActivity extends BaseActivity {
 
     /**
      * 表示を開始する
-     *
-     * @param context
      */
     public static void startContent(Context context) {
         context.startActivity(new Intent(context, LicenseViewActivity.class));

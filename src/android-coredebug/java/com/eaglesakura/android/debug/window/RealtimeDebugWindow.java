@@ -1,18 +1,18 @@
 package com.eaglesakura.android.debug.window;
 
+import com.eaglesakura.android.debug.window.log.DebugItemGroup;
+import com.eaglesakura.android.debug.window.log.DebugRenderingItem;
+import com.eaglesakura.android.debug.window.log.DebugText;
+import com.eaglesakura.android.graphics.ColorRGBA;
+import com.eaglesakura.android.thread.loop.HandlerLoopController;
+import com.eaglesakura.android.thread.ui.UIHandler;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.view.WindowManager;
-
-import com.eaglesakura.android.debug.window.log.DebugItemGroup;
-import com.eaglesakura.android.debug.window.log.DebugRenderingItem;
-import com.eaglesakura.android.debug.window.log.DebugText;
-import com.eaglesakura.android.thread.loop.HandlerLoopController;
-import com.eaglesakura.android.thread.ui.UIHandler;
-import com.eaglesakura.android.graphics.ColorRGBA;
 
 /**
  * 毎フレーム処理のリアルタイムデバッグ出力のサポートを行う
@@ -125,8 +125,6 @@ public class RealtimeDebugWindow {
 
     /**
      * デバッグ用メッセージを投げる
-     *
-     * @param item
      */
     public void addMessage(DebugRenderingItem item) {
         if (!active) {
@@ -153,11 +151,6 @@ public class RealtimeDebugWindow {
 
     /**
      * テキストメッセージを追加する
-     *
-     * @param text
-     * @param flags
-     * @param showTimeMs
-     * @param rgba
      */
     public void addTextMessage(String text, int flags, int showTimeMs, int rgba) {
         DebugText debugText = new DebugText();
@@ -173,8 +166,6 @@ public class RealtimeDebugWindow {
      * デバッグ描画のフレームレートを指定する
      * <br>
      * デフォルトは10fps
-     *
-     * @param rate
      */
     public void setFrameRate(int rate) {
         looper.setFrameRate(rate);

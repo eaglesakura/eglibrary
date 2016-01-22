@@ -1,5 +1,8 @@
 package com.eaglesakura.material.widget.support.header;
 
+import com.eaglesakura.android.util.ViewUtil;
+import com.eaglesakura.util.LogUtil;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
@@ -7,9 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
-
-import com.eaglesakura.android.util.ViewUtil;
-import com.eaglesakura.util.LogUtil;
 
 /**
  * スクロールにリンクしてヘッダ用のView位置や透過等を制御する
@@ -104,8 +104,6 @@ public class ScrollLinkHeaderController {
 
     /**
      * リンクさせるツールバーを指定する
-     *
-     * @param toolbar
      */
     public void setToolbar(Toolbar toolbar) {
         this.toolbar = toolbar;
@@ -115,8 +113,6 @@ public class ScrollLinkHeaderController {
 
     /**
      * ヘッダスクロールの遅延値を指定する
-     *
-     * @param headerScrollDelay
      */
     public void setHeaderScrollDelay(float headerScrollDelay) {
         this.headerScrollDelay = headerScrollDelay;
@@ -124,8 +120,6 @@ public class ScrollLinkHeaderController {
 
     /**
      * Toolbarの背景色を指定する
-     *
-     * @param toolbarBackgroundRGB
      */
     public void setToolbarBackgroundXRGB(int toolbarBackgroundRGB) {
         this.toolbarBackgroundRGB = toolbarBackgroundRGB;
@@ -137,8 +131,6 @@ public class ScrollLinkHeaderController {
 
     /**
      * 閉じた状態の高さを指定する
-     *
-     * @param closeHeight
      */
     public void setCloseHeight(int closeHeight) {
         this.closeHeight = closeHeight;
@@ -146,8 +138,6 @@ public class ScrollLinkHeaderController {
 
     /**
      * Y座標がスクロールされたため、コールバックする
-     *
-     * @param currentY
      */
     @SuppressLint("NewApi")
     public void onScrollY(int currentY) {
@@ -190,16 +180,11 @@ public class ScrollLinkHeaderController {
     public interface ScrollListener {
         /**
          * スクロール位置のコントロールを要求する
-         *
-         * @param newPosition
          */
         void requestScrollPosition(int newPosition);
 
         /**
          * ヘッダViewの値が変更になった
-         *
-         * @param alpha
-         * @param scroll
          */
         void onHeaderStateChanged(float alpha, int scroll);
     }

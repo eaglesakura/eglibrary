@@ -49,8 +49,6 @@ public interface IStateful {
 
     /**
      * 現在のステートを取得する
-     *
-     * @return
      */
     LifecycleState getCurrentState();
 }

@@ -4,23 +4,19 @@ import android.opengl.Matrix;
 
 /**
  * OpenGL ESの挙動に合わせた4x4行列を管理する
- * 
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public final class Matrix4x4 {
     /**
      * 単位行列を作成する。
-     * 
-     * 
-     * 
      */
     public Matrix4x4() {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param origin
      */
     public Matrix4x4(Matrix4x4 origin) {
@@ -31,12 +27,6 @@ public final class Matrix4x4 {
 
     /**
      * 回転行列を作成する。
-     * 
-     * 
-     * @param x
-     * @param y
-     * @param z
-     * @param w
      */
     public void rotate(float x, float y, float z, float w) {
         Matrix.rotateM(m, 0, w, x, y, z);
@@ -44,11 +34,6 @@ public final class Matrix4x4 {
 
     /**
      * 位置行列を作成する。
-     * 
-     * 
-     * @param x
-     * @param y
-     * @param z
      */
     public void translate(float x, float y, float z) {
         m[4 * 3 + 0] += x;
@@ -58,7 +43,6 @@ public final class Matrix4x4 {
 
     /**
      * 逆行列を作成する。
-     * 
      */
     public void invert() {
         Matrix.invertM(m, 0, m, 0);
@@ -66,10 +50,6 @@ public final class Matrix4x4 {
 
     /**
      * 逆行列を作成する。
-     * 
-     * 
-     * @param result
-     * 
      */
     public Matrix4x4 invert(Matrix4x4 result) {
         Matrix.invertM(result.m, 0, m, 0);
@@ -78,10 +58,6 @@ public final class Matrix4x4 {
 
     /**
      * this = this * transの計算を行う。
-     * 
-     * 
-     * @param trans
-     * 
      */
     public void multiply(Matrix4x4 trans) {
         Matrix.multiplyMM(m, 0, trans.m, 0, m, 0);
@@ -89,12 +65,8 @@ public final class Matrix4x4 {
 
     /**
      * この行列を適用したベクトルをresultへ格納する。
-     * 
-     * 
-     * @param v
-     * @param result
+     *
      * @return resultの参照
-     * 
      */
     public Vector3 transVector(Vector3 v, Vector3 result) {
         //! Wを生成する
@@ -102,9 +74,9 @@ public final class Matrix4x4 {
 
         result.set(((m[4 * 0 + 0] * v.x) + (m[4 * 1 + 0] * v.y) + (m[4 * 2 + 0] * v.z) + m[4 * 3 + 0]) / w,
 
-        ((m[4 * 0 + 1] * v.x) + (m[4 * 1 + 1] * v.y) + (m[4 * 2 + 1] * v.z) + m[4 * 3 + 1]) / w,
+                ((m[4 * 0 + 1] * v.x) + (m[4 * 1 + 1] * v.y) + (m[4 * 2 + 1] * v.z) + m[4 * 3 + 1]) / w,
 
-        ((m[4 * 0 + 2] * v.x) + (m[4 * 1 + 2] * v.y) + (m[4 * 2 + 2] * v.z) + m[4 * 3 + 2]) / w);
+                ((m[4 * 0 + 2] * v.x) + (m[4 * 1 + 2] * v.y) + (m[4 * 2 + 2] * v.z) + m[4 * 3 + 2]) / w);
 
         return result;
     }
@@ -116,14 +88,8 @@ public final class Matrix4x4 {
      * 適用は<BR>
      * scale -> rotateX -> rotateY -> rotateZ -> position<BR>
      * となる。
-     * 
-     * 
-     * @param scale
-     * @param rotate
-     * @param position
-     * @param result
+     *
      * @return resultの参照
-     * 
      */
     public static Matrix4x4 create(Vector3 scale, Vector3 rotate, Vector3 position, Matrix4x4 result) {
         result.identity();
@@ -166,12 +132,6 @@ public final class Matrix4x4 {
 
     /**
      * result = this * transの計算を行う。
-     * 
-     * 
-     * @param trans
-     * @param result
-     * @return
-     * 
      */
     public Matrix4x4 multiply(Matrix4x4 trans, Matrix4x4 result) {
         Matrix.multiplyMM(result.m, 0, trans.m, 0, m, 0);
@@ -189,12 +149,6 @@ public final class Matrix4x4 {
 
     /**
      * 拡大行列を作成する。
-     * 
-     * 
-     * @param x
-     * @param y
-     * @param z
-     * 
      */
     public void scale(float x, float y, float z) {
         m[4 * 0 + 0] = x;
@@ -204,10 +158,6 @@ public final class Matrix4x4 {
 
     /**
      * 値をコピーする。
-     * 
-     * 
-     * @param origin
-     * 
      */
     public void set(Matrix4x4 origin) {
         for (int i = 0; i < 4 * 4; ++i) {
@@ -217,9 +167,6 @@ public final class Matrix4x4 {
 
     /**
      * 単位行列を作成する。
-     * 
-     * 
-     * 
      */
     public void identity() {
         for (int i = 0; i < 4; ++i) {
@@ -238,12 +185,6 @@ public final class Matrix4x4 {
 
     /**
      * 視線変更行列を生成する。
-     * 
-     * 
-     * @param position
-     * @param look
-     * @param up
-     * 
      */
     public void lookAt(Vector3 position, Vector3 look, Vector3 up) {
         Vector3 zaxis = new Vector3(), xaxis = new Vector3(), yaxis = new Vector3();
@@ -290,13 +231,6 @@ public final class Matrix4x4 {
 
     /**
      * 射影行列を作成する。
-     * 
-     * 
-     * @param near
-     * @param far
-     * @param fovY
-     * @param aspect
-     * 
      */
     public void projection(float near, float far, float fovY, float aspect) {
         float h, w, Q;

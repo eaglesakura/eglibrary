@@ -1,9 +1,7 @@
 package com.eaglesakura.lib.android.db;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import com.eaglesakura.lib.android.game.resource.DisposableResource;
+import com.eaglesakura.lib.android.game.util.LogUtil;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,14 +10,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Base64;
 
-import com.eaglesakura.lib.android.game.resource.DisposableResource;
-import com.eaglesakura.lib.android.game.util.LogUtil;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * SQLを利用した簡単なKVSを提供する。
  * insert時にはkey-valueと更新時刻が保存される。
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class TextKeyValueStore extends DisposableResource {
 
@@ -39,7 +39,7 @@ public class TextKeyValueStore extends DisposableResource {
     Context context;
 
     /**
-     * 
+     *
      */
     Helper helper = null;
 
@@ -116,8 +116,6 @@ public class TextKeyValueStore extends DisposableResource {
 
     /**
      * 簡易的に値を挿入する
-     * @param key
-     * @param value
      */
     public void putDirect(String key, String value) {
         try {
@@ -131,8 +129,6 @@ public class TextKeyValueStore extends DisposableResource {
     /**
      * DBに値を新規登録する。
      * 登録済みの場合、上書きを行う。
-     * @param key
-     * @param value
      */
     public void insertOrUpdate(String key, String value) {
         final ContentValues values = createValues(key, value);
@@ -147,8 +143,6 @@ public class TextKeyValueStore extends DisposableResource {
 
     /**
      * 値の更新を行う
-     * @param key
-     * @param value
      */
     public void update(String key, String value) {
         final ContentValues values = createValues(key, value);
@@ -162,7 +156,6 @@ public class TextKeyValueStore extends DisposableResource {
     /**
      * byte配列を書き込む。
      * ただし、Base64エンコードされるため見た目上のデータは大きくなる。
-     * @param buffer
      */
     public void insert(String key, byte[] buffer) {
         insert(key, toString(buffer));
@@ -170,8 +163,6 @@ public class TextKeyValueStore extends DisposableResource {
 
     /**
      * byte配列を挿入もしくは更新する。
-     * @param key
-     * @param buffer
      */
     public void insertOrUpdate(String key, byte[] buffer) {
         insertOrUpdate(key, toString(buffer));
@@ -180,7 +171,6 @@ public class TextKeyValueStore extends DisposableResource {
     /**
      * DBに値を新規登録する。
      * 失敗した場合は何も行わない。
-     * @param key
      */
     public void insert(String key, String value) {
         final ContentValues values = createValues(key, value);
@@ -193,7 +183,6 @@ public class TextKeyValueStore extends DisposableResource {
 
     /**
      * DBに書き込み済みの値を削除する
-     * @param key
      */
     public void remove(String key) {
         try {
@@ -218,8 +207,6 @@ public class TextKeyValueStore extends DisposableResource {
 
     /**
      * 詳細なデータを取得する。
-     * @param key
-     * @return
      */
     public Data get(String key) {
         Cursor cursor = null;
@@ -243,7 +230,6 @@ public class TextKeyValueStore extends DisposableResource {
 
     /**
      * 管理しているデータ一覧を返す。
-     * @return
      */
     public List<Data> list() {
         Cursor cursor = null;
@@ -268,8 +254,6 @@ public class TextKeyValueStore extends DisposableResource {
 
     /**
      * 同じvalueを持つデータ一覧を返す。
-     * @param value
-     * @return
      */
     public List<Data> listValues(String value) {
         Cursor cursor = null;
@@ -295,9 +279,6 @@ public class TextKeyValueStore extends DisposableResource {
 
     /**
      * 日付がdate以降で、上位max件を取得する。
-     * @param date
-     * @param max
-     * @return
      */
     public List<Data> listTimesUpToDate(long date, int max) {
         List<Data> result = new LinkedList<TextKeyValueStore.Data>();
@@ -323,7 +304,7 @@ public class TextKeyValueStore extends DisposableResource {
     }
 
     /**
-     * 
+     *
      * @param key
      * @param _def
      * @return
@@ -339,9 +320,6 @@ public class TextKeyValueStore extends DisposableResource {
 
     /**
      * 文字列をint変換して取得する
-     * @param key
-     * @param def
-     * @return
      */
     public int getInteger(String key, int def) {
         return (int) getLong(key, def);
@@ -349,9 +327,6 @@ public class TextKeyValueStore extends DisposableResource {
 
     /**
      * 文字列をlong変換して取得する
-     * @param key
-     * @param def
-     * @return
      */
     public long getLong(String key, long def) {
         String value = get(key, null);
@@ -364,9 +339,6 @@ public class TextKeyValueStore extends DisposableResource {
 
     /**
      * 文字列をlong変換して取得する
-     * @param key
-     * @param def
-     * @return
      */
     public float getFloat(String key, float def) {
         String value = get(key, null);
@@ -379,15 +351,13 @@ public class TextKeyValueStore extends DisposableResource {
 
     /**
      * 値を取得する
-     * @param key
-     * @return
      */
     public String getOrNull(String key) {
         Cursor cursor = null;
         try {
             String selection = DB_KEY + "='" + key + "'";
-            cursor = db.query(tableName, new String[] {
-                DB_VALUE
+            cursor = db.query(tableName, new String[]{
+                    DB_VALUE
             }, selection, null, null, null, null);
 
             cursor.moveToFirst();
@@ -403,8 +373,6 @@ public class TextKeyValueStore extends DisposableResource {
 
     /**
      * キーが存在したらtrue
-     * @param key
-     * @return
      */
     public boolean exists(String key) {
         return get(key, null) != null;
@@ -427,10 +395,6 @@ public class TextKeyValueStore extends DisposableResource {
 
     /**
      * 値を挿入する。
-     * @param key
-     * @param value
-     * @param date
-     * @param filter
      */
     private void _insert(String key, String insertValue, long insertDate, InsertFilter filter) throws Exception {
         // 存在しないから、挿入して終了
@@ -444,7 +408,7 @@ public class TextKeyValueStore extends DisposableResource {
         }
 
         // 存在するなら、値を取得する
-        Cursor cursor = db.query(tableName, new String[] {
+        Cursor cursor = db.query(tableName, new String[]{
                 DB_VALUE, DB_DATE,
         }, DB_KEY + "='" + key + "'", null, null, null, null);
 
@@ -473,11 +437,10 @@ public class TextKeyValueStore extends DisposableResource {
     /**
      * insertDBをこのオブジェクトが管理するDBに結合する。
      * データが競合した場合、どちらを優先するかはfilterによって確定される。
-     * @param insertDB
      */
     public void insertTo(final TextKeyValueStore insertDB, InsertFilter filter) {
         beginTransaction();
-        Cursor cursor = insertDB.db.query(tableName, new String[] {
+        Cursor cursor = insertDB.db.query(tableName, new String[]{
                 DB_KEY, DB_VALUE, DB_DATE,
         }, null, null, null, null, null);
 
@@ -506,7 +469,7 @@ public class TextKeyValueStore extends DisposableResource {
     @Deprecated
     public void print() {
         String selection = null;
-        Cursor cursor = db.query(tableName, new String[] {
+        Cursor cursor = db.query(tableName, new String[]{
                 DB_KEY, DB_VALUE
         }, selection, null, null, null, null);
 
@@ -552,22 +515,16 @@ public class TextKeyValueStore extends DisposableResource {
 
     /**
      * ２つのテーブルを結合する際に呼び出される。
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public interface InsertFilter {
         /**
          * insertValueで古い値を上書きするかどうかを確定する。
          * trueを返した場合、insertValueで値を上書きする。
-         * @param key
-         * @param currentValue
-         * @param currentDate
-         * @param insertValue
-         * @param insertDate
-         * @return
          */
         public boolean isOverwrite(String key, String currentValue, long currentDate, String insertValue,
-                long insertDate);
+                                   long insertDate);
     }
 
     /**
@@ -576,7 +533,7 @@ public class TextKeyValueStore extends DisposableResource {
     public static final InsertFilter FILTER_NEWDATA = new InsertFilter() {
         @Override
         public boolean isOverwrite(String key, String currentValue, long currentDate, String insertValue,
-                long insertDate) {
+                                   long insertDate) {
             return insertDate > currentDate;
         }
     };
@@ -587,7 +544,7 @@ public class TextKeyValueStore extends DisposableResource {
     public static final InsertFilter FILTER_OLDDATA = new InsertFilter() {
         @Override
         public boolean isOverwrite(String key, String currentValue, long currentDate, String insertValue,
-                long insertDate) {
+                                   long insertDate) {
             return insertDate < currentDate;
         }
     };
@@ -598,7 +555,7 @@ public class TextKeyValueStore extends DisposableResource {
     public static final InsertFilter FILTER_ALWAYS_OVERWRITE = new InsertFilter() {
         @Override
         public boolean isOverwrite(String key, String currentValue, long currentDate, String insertValue,
-                long insertDate) {
+                                   long insertDate) {
             return true;
         }
     };
@@ -610,7 +567,7 @@ public class TextKeyValueStore extends DisposableResource {
 
         @Override
         public boolean isOverwrite(String key, String currentValue, long currentDate, String insertValue,
-                long insertDate) {
+                                   long insertDate) {
             return false;
         }
     };
@@ -632,7 +589,6 @@ public class TextKeyValueStore extends DisposableResource {
 
         /**
          * データのテキストをそのまま取得する
-         * @return
          */
         public String getText() {
             return text;
@@ -640,7 +596,6 @@ public class TextKeyValueStore extends DisposableResource {
 
         /**
          * データの日付を取得する
-         * @return
          */
         public long getDate() {
             return date;
@@ -648,7 +603,6 @@ public class TextKeyValueStore extends DisposableResource {
 
         /**
          * データのキーを取得する
-         * @return
          */
         public String getKey() {
             return key;
@@ -657,7 +611,6 @@ public class TextKeyValueStore extends DisposableResource {
         /**
          * データをbyte配列として取得する
          * ただし、insert()時にbyte[]で挿入したデータだけが対象。
-         * @return
          */
         public byte[] getBytes() {
             return Base64.decode(text, Base64.DEFAULT);

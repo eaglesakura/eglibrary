@@ -1,16 +1,16 @@
 package com.eaglesakura.lib.android.game.thread;
 
-import android.os.Handler;
-
 import com.eaglesakura.lib.android.game.util.ContextUtil;
 import com.eaglesakura.lib.android.game.util.GameUtil;
 import com.eaglesakura.lib.android.game.util.Timer;
 
+import android.os.Handler;
+
 /**
  * 何らかの事情で別スレッドで特定処理を行わせる必要がある場合に利用するヘルパ。
  * UIスレッド実行まで待つ、GLスレッド実行まで待つ等の用途に利用
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public abstract class ThreadSyncRunnerBase<T> {
 
@@ -38,7 +38,6 @@ public abstract class ThreadSyncRunnerBase<T> {
     Object lock = new Object();
 
     /**
-     * 
      * @param targetHandler 実行対象スレッドのハンドラ
      */
     public ThreadSyncRunnerBase(Handler targetHandler) {
@@ -51,7 +50,6 @@ public abstract class ThreadSyncRunnerBase<T> {
 
     /**
      * 別スレッドで実行を行い、実行が終了するまで待つ。
-     * @return
      */
     public T run() {
         if (ContextUtil.isHandlerThread(handler)) {
@@ -100,7 +98,6 @@ public abstract class ThreadSyncRunnerBase<T> {
 
     /**
      * 処理がタイムアウトしたらtrue
-     * @return
      */
     public boolean isTimeout() {
         return timeout;
@@ -109,7 +106,6 @@ public abstract class ThreadSyncRunnerBase<T> {
     /**
      * 処理にかけていい最大時間を指定する。
      * 0以下でタイムアウト無効
-     * @param maxTime
      */
     public ThreadSyncRunnerBase<T> setMaxTime(long maxTime) {
         this.maxTime = maxTime;
@@ -118,7 +114,6 @@ public abstract class ThreadSyncRunnerBase<T> {
 
     /**
      * 指定スレッドでの実行を行う。
-     * @return
      */
     public abstract T onOtherThreadRun() throws Exception;
 
@@ -126,7 +121,6 @@ public abstract class ThreadSyncRunnerBase<T> {
      * 別スレッドで例外が投げられた場合、例外を取得する。
      * 正常終了している場合、nullを返す。
      * RuntimeExceptionの場合は例外のthrowを代行する。
-     * @return
      */
     public Exception getException() {
         return exception;

@@ -1,5 +1,14 @@
 package com.eaglesakura.lib.net.google.drive;
 
+import com.eaglesakura.lib.android.game.util.JsonModel;
+import com.eaglesakura.lib.android.game.util.LogUtil;
+import com.eaglesakura.lib.net.WebAPIConnection;
+import com.eaglesakura.lib.net.WebAPIConnectorBase;
+import com.eaglesakura.lib.net.WebAPIException;
+import com.eaglesakura.lib.net.WebAPIException.Type;
+
+import net.arnx.jsonic.JSON;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
@@ -8,19 +17,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.arnx.jsonic.JSON;
-
-import com.eaglesakura.lib.android.game.util.JsonModel;
-import com.eaglesakura.lib.android.game.util.LogUtil;
-import com.eaglesakura.lib.net.WebAPIConnection;
-import com.eaglesakura.lib.net.WebAPIConnectorBase;
-import com.eaglesakura.lib.net.WebAPIException;
-import com.eaglesakura.lib.net.WebAPIException.Type;
-
 /**
  * Google DriveのAPI呼び出しを行う
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class GoogleDriveAPIHelper {
 
@@ -28,9 +28,6 @@ public class GoogleDriveAPIHelper {
 
     /**
      * リンク情報にしたがってアップデートを続ける
-     * @param nextLink
-     * @return
-     * @throws GoogleAPIException
      */
     private static List<DriveItem> listup(WebAPIConnectorBase connector, String baseURL, int maxResults)
             throws WebAPIException {
@@ -99,8 +96,6 @@ public class GoogleDriveAPIHelper {
 
     /**
      * キーワードを含んだ検索を行う
-     * @param keyword
-     * @return
      */
     public static String createQueryFullTextContains(String keyword) {
         return createQuery("fullText contains '" + keyword + "' and trashed = false");
@@ -108,8 +103,6 @@ public class GoogleDriveAPIHelper {
 
     /**
      * キーワードを含んだ検索を行う
-     * @param keyword
-     * @return
      */
     public static String createQueryTitleContains(String keyword) {
         return createQuery("fullText contains '" + keyword + "' and trashed = false");
@@ -117,8 +110,6 @@ public class GoogleDriveAPIHelper {
 
     /**
      * キーワードを含んだ検索を行う
-     * @param keyword
-     * @return
      */
     public static String createQuery(String raw) {
         // "mimeType = 'application/vnd.google-apps.folder'"
@@ -131,9 +122,6 @@ public class GoogleDriveAPIHelper {
 
     /**
      * リンクを指定して直接インフォメーションを取得する
-     * @param url
-     * @return
-     * @throws GoogleAPIException
      */
     public static DriveItem infoFromLink(WebAPIConnectorBase connector, String url) throws WebAPIException {
         WebAPIConnection connection = connector.get(url, null);
@@ -163,8 +151,6 @@ public class GoogleDriveAPIHelper {
 
     /**
      * 親を持っている場合はtrue
-     * @param item
-     * @return
      */
     public static boolean hasParent(DriveItem item) {
         if (item.parents != null && item.parents.length > 0) {
@@ -176,8 +162,6 @@ public class GoogleDriveAPIHelper {
 
     /**
      * MD5が存在したらファイル
-     * @param item
-     * @return
      */
     public static boolean isFile(DriveItem item) {
         return item.md5Checksum != null;
@@ -185,8 +169,6 @@ public class GoogleDriveAPIHelper {
 
     /**
      * ディレクトリオブジェクトの場合はtrue
-     * @param item
-     * @return
      */
     public static boolean isDirectory(DriveItem item) {
         return item.mimeType.equals("application/vnd.google-apps.folder");
@@ -194,9 +176,6 @@ public class GoogleDriveAPIHelper {
 
     /**
      * 親オブジェクトを取得する
-     * @param connector
-     * @return
-     * @throws IOException
      */
     public static DriveItem getParent(DriveItem item, WebAPIConnectorBase connector) throws WebAPIException {
         if (!hasParent(item)) {
@@ -207,10 +186,6 @@ public class GoogleDriveAPIHelper {
 
     /**
      * 特定のディレクトリ配下を取得する
-     * @param item
-     * @param connector
-     * @return
-     * @throws GoogleAPIException
      */
     public static List<DriveItem> ls(DriveItem driveDirectory, WebAPIConnectorBase connector) throws WebAPIException {
         if (isFile(driveDirectory)) {
@@ -223,8 +198,6 @@ public class GoogleDriveAPIHelper {
 
     /**
      * ルートディレクトリを取得する
-     * @param connector
-     * @return
      */
     public static DriveItem rootDirectory(WebAPIConnectorBase connector) throws WebAPIException {
         DriveAbout aboutData = about(connector);
@@ -235,9 +208,6 @@ public class GoogleDriveAPIHelper {
 
     /**
      * 検索を行う
-     * @param connector
-     * @return
-     * @throws GoogleAPIException
      */
     public static List<DriveItem> search(WebAPIConnectorBase connector, String query, int maxResults)
             throws WebAPIException {
@@ -247,9 +217,6 @@ public class GoogleDriveAPIHelper {
 
     /**
      * 一覧を取得する
-     * @param connector
-     * @return
-     * @throws GoogleAPIException
      */
     public static List<DriveItem> list(WebAPIConnectorBase connector) throws WebAPIException {
         String nextLink = "https://www.googleapis.com/drive/v2/files?maxResults=1000";
@@ -258,9 +225,6 @@ public class GoogleDriveAPIHelper {
 
     /**
      * ディレクトリ一覧を取得する
-     * @param connector
-     * @return
-     * @throws GoogleAPIException
      */
     public static List<DriveItem> listDirectories(WebAPIConnectorBase connector) throws WebAPIException {
         return search(connector, createQuery("mimeType = 'application/vnd.google-apps.folder'"), 1000);
@@ -268,9 +232,6 @@ public class GoogleDriveAPIHelper {
 
     /**
      * 適当な１アイテムを取得する。
-     * @param connector
-     * @return
-     * @throws GoogleAPIException
      */
     public static DriveItem pick(WebAPIConnectorBase connector) throws WebAPIException {
         String nextLink = "https://www.googleapis.com/drive/v2/files?maxResults=1";
@@ -285,9 +246,7 @@ public class GoogleDriveAPIHelper {
 
     /**
      * サーバー上に新しいファイルを作成する。
-     * @param item
-     * @return
-     * @throws GoogleAPIException
+     *
      * @see {@link DriveItem#title}
      * @see {@link DriveItem#mimeType}
      */
@@ -318,11 +277,6 @@ public class GoogleDriveAPIHelper {
     /**
      * バッファを転送する。
      * バッファに載せきれないほどの大きさのファイルは別な方法でアップロードする
-     * @param connector
-     * @param item
-     * @param buffer
-     * @return
-     * @throws GoogleAPIException
      */
     public static DriveItem upload(WebAPIConnectorBase connector, DriveItem item, byte[] buffer) throws WebAPIException {
         if (item.id == null) {
@@ -347,10 +301,6 @@ public class GoogleDriveAPIHelper {
 
     /**
      * ファイルの基本情報を更新する
-     * @param connector
-     * @param item
-     * @return
-     * @throws GoogleAPIException
      */
     public static DriveItem updateFileInfo(WebAPIConnectorBase connector, DriveItem item) throws WebAPIException {
         if (item.id == null) {
@@ -378,9 +328,6 @@ public class GoogleDriveAPIHelper {
 
     /**
      * 基本情報を取得する
-     * @param connector
-     * @return
-     * @throws GoogleAPIException
      */
     public static DriveAbout about(WebAPIConnectorBase connector) throws WebAPIException {
         final String url = "https://www.googleapis.com/drive/v2/about";
@@ -401,8 +348,8 @@ public class GoogleDriveAPIHelper {
 
     /**
      * Driveの情報を取得する
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public static class DriveAbout extends JsonModel {
         public String kind = null;
@@ -429,7 +376,7 @@ public class GoogleDriveAPIHelper {
         public Long remainingChangeIds = null;
 
         /**
-         * 
+         *
          */
         public String rootFolderId = null;
 
@@ -440,8 +387,8 @@ public class GoogleDriveAPIHelper {
 
     /**
      * Drive上のデータリスト
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public static class DriveItemList extends JsonModel {
         public String kind = null;
@@ -463,8 +410,8 @@ public class GoogleDriveAPIHelper {
 
     /**
      * Drive上でパースするJSONデータ
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public static class DriveItem extends JsonModel {
         /**
@@ -515,7 +462,7 @@ public class GoogleDriveAPIHelper {
         public String modifiedDate = null;
 
         /**
-         * 
+         *
          */
         public String modifiedByMeDate = null;
 
@@ -550,8 +497,8 @@ public class GoogleDriveAPIHelper {
 
     /**
      * ラベル情報
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public static class LabelData extends JsonModel {
         public Boolean starred = null;

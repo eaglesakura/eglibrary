@@ -3,10 +3,10 @@
  */
 package com.eaglesakura.lib.android.game.thread;
 
+import android.os.AsyncTask;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import android.os.AsyncTask;
 
 /**
  * 非同期待ち行列の処理を行う。
@@ -27,8 +27,6 @@ public class AsyncActionQueue {
 
     /**
      * 末尾にアクションを追加する。
-     *
-     * @param action
      */
     public void pushBack(Action action) {
         synchronized (queue) {
@@ -38,8 +36,6 @@ public class AsyncActionQueue {
 
     /**
      * 先頭にアクションを追加する。
-     *
-     * @param action
      */
     public void pushFront(Action action) {
         if (action == null) {
@@ -52,8 +48,6 @@ public class AsyncActionQueue {
 
     /**
      * キャンセルする。
-     *
-     * @param action
      */
     public void cancel(Action action) {
         synchronized (queue) {
@@ -69,8 +63,6 @@ public class AsyncActionQueue {
 
     /**
      * equalsで比較し、一致したものをキャンセルする。
-     *
-     * @param action
      */
     public void cancelEquals(Action action) {
         synchronized (queue) {
@@ -127,8 +119,6 @@ public class AsyncActionQueue {
 
     /**
      * アクションリストが開始されているか。
-     *
-     * @return
      */
     public boolean isStartActions() {
         return isStarted;
@@ -257,8 +247,9 @@ public class AsyncActionQueue {
 
         /**
          * 本当に開始するかを確かめる。
-         * @return
          */
         public boolean isNoStart();
-    };
+    }
+
+    ;
 }

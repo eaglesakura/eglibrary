@@ -1,13 +1,13 @@
 package com.eaglesakura.lib.android.game.graphics.gl11;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
+
+import javax.microedition.khronos.opengles.GL10;
 
 /**
  * RGBAの適当な色配列からテクスチャを作成する。
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class RawTextureImage extends TextureImageBase {
 
@@ -22,13 +22,9 @@ public class RawTextureImage extends TextureImageBase {
 
     /**
      * MipMapの適当な場所へテクスチャを流し込む。
-     * @param mipLevel
-     * @param rgba8888Array
-     * @param mipWidth
-     * @param mipHeight
      */
     public void loadMipmapRGBA8888(final int mipLevel, final int[] rgba8888Array, final int mipWidth,
-            final int mipHeight) {
+                                   final int mipHeight) {
         // テクスチャ転送
         bind();
         {
@@ -40,10 +36,6 @@ public class RawTextureImage extends TextureImageBase {
 
     /**
      * MipMapの適当な場所へテクスチャを流し込む。
-     * @param mipLevel
-     * @param rgbaArray
-     * @param mipWidth
-     * @param mipHeight
      */
     public void loadMipmapRGB888(final int mipLevel, final byte[] rgbArray, final int mipWidth, final int mipHeight) {
         // テクスチャ転送

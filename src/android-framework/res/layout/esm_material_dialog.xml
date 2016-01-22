@@ -6,99 +6,99 @@
 
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:minWidth="@dimen/EsMaterial.Dialog.MinWidth"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:id="@+id/EsMaterial.Dialog.Title.Root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/EsMaterial.Margin.KeyLine1Horizontal"
-            android:layout_marginRight="@dimen/EsMaterial.Margin.KeyLine1Horizontal"
-            android:minHeight="@dimen/EsMaterial.Dialog.Button.Height"
-            android:orientation="horizontal"
-            android:paddingTop="@dimen/EsMaterial.Margin.KeyLine1Vertical">
+            android:layout_gravity="center"
+            android:minWidth="@dimen/EsMaterial.Dialog.MinWidth"
+            android:orientation="vertical">
+
+        <LinearLayout
+                android:id="@+id/EsMaterial.Dialog.Title.Root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/EsMaterial.Margin.KeyLine1Horizontal"
+                android:layout_marginRight="@dimen/EsMaterial.Margin.KeyLine1Horizontal"
+                android:minHeight="@dimen/EsMaterial.Dialog.Button.Height"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/EsMaterial.Margin.KeyLine1Vertical">
 
             <TextView
-                android:id="@+id/EsMaterial.Dialog.Title"
-                style="@style/EsMaterial.Font.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                    android:id="@+id/EsMaterial.Dialog.Title"
+                    style="@style/EsMaterial.Font.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/EsMaterial.Margin.KeyLine1Horizontal"
-            android:layout_marginRight="@dimen/EsMaterial.Margin.KeyLine1Horizontal"
-            android:paddingBottom="@dimen/EsMaterial.Margin.KeyLine1Vertical"
-            android:paddingTop="@dimen/EsMaterial.Margin.KeyLine1Vertical">
-
-            <FrameLayout
-                android:id="@+id/EsMaterial.Dialog.Content.Root"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="@dimen/EsMaterial.Dialog.Content.MinHeight">
+                android:layout_marginLeft="@dimen/EsMaterial.Margin.KeyLine1Horizontal"
+                android:layout_marginRight="@dimen/EsMaterial.Margin.KeyLine1Horizontal"
+                android:paddingBottom="@dimen/EsMaterial.Margin.KeyLine1Vertical"
+                android:paddingTop="@dimen/EsMaterial.Margin.KeyLine1Vertical">
+
+            <FrameLayout
+                    android:id="@+id/EsMaterial.Dialog.Content.Root"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/EsMaterial.Dialog.Content.MinHeight">
 
                 <TextView
-                    android:id="@+id/EsMaterial.Dialog.Message"
-                    style="@style/EsMaterial.Font.Normal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"/>
+                        android:id="@+id/EsMaterial.Dialog.Message"
+                        style="@style/EsMaterial.Font.Normal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"/>
 
             </FrameLayout>
         </LinearLayout>
 
 
         <FrameLayout
-            android:id="@+id/EsMaterial.Dialog.BasicButtons.Root"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/EsMaterial.Margin.KeyLine1Vertical"
-            android:layout_marginLeft="@dimen/EsMaterial.Margin.KeyLine1Horizontal"
-            android:layout_marginRight="@dimen/EsMaterial.Margin.KeyLine1Horizontal"
-            android:minHeight="@dimen/EsMaterial.Dialog.Button.Height"
-            android:orientation="horizontal"
-            android:visibility="gone">
+                android:id="@+id/EsMaterial.Dialog.BasicButtons.Root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/EsMaterial.Margin.KeyLine1Vertical"
+                android:layout_marginLeft="@dimen/EsMaterial.Margin.KeyLine1Horizontal"
+                android:layout_marginRight="@dimen/EsMaterial.Margin.KeyLine1Horizontal"
+                android:minHeight="@dimen/EsMaterial.Dialog.Button.Height"
+                android:orientation="horizontal"
+                android:visibility="gone">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/EsMaterial.Dialog.BasicButtons.Negative"
-                    style="@style/EsMaterial.FlatButton.Teal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/EsMaterial.Button.Margin"
-                    android:layout_marginRight="@dimen/EsMaterial.Button.Margin"
-                    android:text="Negative"
-                    android:visibility="gone"/>
+                    android:layout_gravity="right"
+                    android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/EsMaterial.Dialog.BasicButtons.Neutral"
-                    style="@style/EsMaterial.FlatButton.Teal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/EsMaterial.Button.Margin"
-                    android:layout_marginRight="@dimen/EsMaterial.Button.Margin"
-                    android:text="Neutral"
-                    android:visibility="gone"/>
+                        android:id="@+id/EsMaterial.Dialog.BasicButtons.Negative"
+                        style="@style/EsMaterial.FlatButton.Teal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/EsMaterial.Button.Margin"
+                        android:layout_marginRight="@dimen/EsMaterial.Button.Margin"
+                        android:text="Negative"
+                        android:visibility="gone"/>
 
                 <Button
-                    android:id="@+id/EsMaterial.Dialog.BasicButtons.Positive"
-                    style="@style/EsMaterial.FlatButton.Teal"
+                        android:id="@+id/EsMaterial.Dialog.BasicButtons.Neutral"
+                        style="@style/EsMaterial.FlatButton.Teal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/EsMaterial.Button.Margin"
+                        android:layout_marginRight="@dimen/EsMaterial.Button.Margin"
+                        android:text="Neutral"
+                        android:visibility="gone"/>
 
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Positive"
-                    android:visibility="gone"/>
+                <Button
+                        android:id="@+id/EsMaterial.Dialog.BasicButtons.Positive"
+                        style="@style/EsMaterial.FlatButton.Teal"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Positive"
+                        android:visibility="gone"/>
             </LinearLayout>
         </FrameLayout>
     </LinearLayout>

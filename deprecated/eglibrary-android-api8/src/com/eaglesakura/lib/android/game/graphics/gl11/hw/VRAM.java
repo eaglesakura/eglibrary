@@ -1,5 +1,9 @@
 package com.eaglesakura.lib.android.game.graphics.gl11.hw;
 
+import com.eaglesakura.lib.android.game.resource.DisposableResource;
+import com.eaglesakura.lib.android.game.resource.GarbageCollector;
+import com.eaglesakura.lib.android.game.util.LogUtil;
+
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -9,10 +13,6 @@ import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.opengles.GL11;
 import javax.microedition.khronos.opengles.GL11ExtensionPack;
-
-import com.eaglesakura.lib.android.game.resource.DisposableResource;
-import com.eaglesakura.lib.android.game.resource.GarbageCollector;
-import com.eaglesakura.lib.android.game.util.LogUtil;
 
 /**
  * EGLContextに関連付けられたVRAM領域を取得する
@@ -43,7 +43,6 @@ public class VRAM extends DisposableResource {
 
     /**
      * フレームバッファを生成する。
-     * @return
      */
     public int genFrameBufferObject() {
         int[] buffer = new int[1];
@@ -57,18 +56,16 @@ public class VRAM extends DisposableResource {
     /**
      * フレームバッファを削除する。
      * 別スレッドから投げられた場合、GLスレッドにpostされる。
-     * @param buffer
      */
     public void deleteFrameBufferObject(final int buffer) {
         gl11.glGetError();
-        gl11EP.glDeleteFramebuffersOES(1, new int[] {
-            buffer
+        gl11EP.glDeleteFramebuffersOES(1, new int[]{
+                buffer
         }, 0);
     }
 
     /**
      * レンダリング用バッファを生成する。
-     * @return
      */
     public int genRenderBuffer() {
         int[] buffer = new int[1];
@@ -82,19 +79,16 @@ public class VRAM extends DisposableResource {
     /**
      * レンダリングバッファを削除する
      * 別スレッドから投げられた場合、GLスレッドにpostされる。
-     * @param buffer
      */
     public void deleteRenderBuffer(final int buffer) {
         gl11.glGetError();
-        gl11EP.glDeleteRenderbuffersOES(1, new int[] {
-            buffer
+        gl11EP.glDeleteRenderbuffersOES(1, new int[]{
+                buffer
         }, 0);
     }
 
     /**
      * VBOのバッファをひとつ作成する。
-     * 
-     * @return
      */
     public int genVertexBufferObject() {
         int[] buf = new int[1];
@@ -110,20 +104,16 @@ public class VRAM extends DisposableResource {
     /**
      * VBOのバッファをひとつ削除する。
      * 別スレッドから投げられた場合、GLスレッドにpostされる。
-     * 
-     * @param vbo
      */
     public void deleteVertexBufferObject(final int vbo) {
         gl11.glGetError();
-        gl11.glDeleteBuffers(1, new int[] {
-            vbo
+        gl11.glDeleteBuffers(1, new int[]{
+                vbo
         }, 0);
     }
 
     /**
      * テクスチャバッファをひとつ作成する。
-     * 
-     * @return
      */
     public int genTexture() {
         gl11.glGetError();
@@ -139,7 +129,6 @@ public class VRAM extends DisposableResource {
 
     /**
      * GC管理クラスを取得する。
-     * @return
      */
     public GarbageCollector getGarbageCollector() {
         return garbageCollector;
@@ -147,19 +136,16 @@ public class VRAM extends DisposableResource {
 
     /**
      * テクスチャバッファを削除する。
-     * 
-     * @param tex
      */
     public void deleteTexture(final int tex) {
         gl11.glGetError();
-        gl11.glDeleteTextures(1, new int[] {
-            tex
+        gl11.glDeleteTextures(1, new int[]{
+                tex
         }, 0);
     }
 
     /**
      * GLオブジェクトを取得する
-     * @return
      */
     public GL11 getGL() {
         return gl11;
@@ -185,7 +171,6 @@ public class VRAM extends DisposableResource {
 
     /**
      * エラーを持っていた場合、GLのエラーを出力する。
-     * @return
      */
     public boolean printGLError() {
         return egl.printGlError();
@@ -193,7 +178,6 @@ public class VRAM extends DisposableResource {
 
     /**
      * EGLのエラーを表示する
-     * @return
      */
     public boolean printEGLError() {
         return egl.printEglError();
@@ -201,8 +185,6 @@ public class VRAM extends DisposableResource {
 
     /**
      * 指定した配列をラッピングする。
-     * @param buffer
-     * @return
      */
     public static IntBuffer wrap(int[] buffer) {
         IntBuffer result = ByteBuffer.allocateDirect(buffer.length * 4).order(ByteOrder.nativeOrder()).asIntBuffer();
@@ -212,8 +194,6 @@ public class VRAM extends DisposableResource {
 
     /**
      * 指定した配列をラッピングする。
-     * @param buffer
-     * @return
      */
     public static FloatBuffer wrap(float[] buffer) {
         FloatBuffer result = ByteBuffer.allocateDirect(buffer.length * 4).order(ByteOrder.nativeOrder())
@@ -224,8 +204,6 @@ public class VRAM extends DisposableResource {
 
     /**
      * 指定した配列をラッピングする。
-     * @param buffer
-     * @return
      */
     public static ByteBuffer wrap(byte[] buffer) {
         ByteBuffer result = ByteBuffer.allocateDirect(buffer.length).order(ByteOrder.nativeOrder());
@@ -236,8 +214,6 @@ public class VRAM extends DisposableResource {
     /**
      * 指定した配列を色情報としてラッピングする。
      * 色はRGBAで配列されている必要がある。
-     * @param buffer
-     * @return
      */
     public static Buffer wrapColor(int[] buffer) {
         IntBuffer result = ByteBuffer.allocateDirect(buffer.length * 4).order(ByteOrder.BIG_ENDIAN).asIntBuffer();
@@ -247,8 +223,6 @@ public class VRAM extends DisposableResource {
 
     /**
      * 指定した配列をラッピングする。
-     * @param buffer
-     * @return
      */
     public static ShortBuffer wrap(short[] buffer) {
         ShortBuffer result = ByteBuffer.allocateDirect(buffer.length * 2).order(ByteOrder.nativeOrder())

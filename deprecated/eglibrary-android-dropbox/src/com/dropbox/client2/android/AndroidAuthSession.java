@@ -1,6 +1,8 @@
 package com.dropbox.client2.android;
 
-import java.util.List;
+import com.dropbox.client2.session.AbstractSession;
+import com.dropbox.client2.session.AccessTokenPair;
+import com.dropbox.client2.session.AppKeyPair;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,9 +14,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 
-import com.dropbox.client2.session.AbstractSession;
-import com.dropbox.client2.session.AccessTokenPair;
-import com.dropbox.client2.session.AppKeyPair;
+import java.util.List;
 
 /**
  * Keeps track of a logged in user and contains configuration options for the
@@ -76,14 +76,14 @@ public class AndroidAuthSession extends AbstractSession {
      * will log in and allow your app access.
      *
      * @param context the {@link Context} which to use to launch the
-     *         Dropbox authentication activity. This will typically be an
-     *         {@link Activity} and the user will be taken back to that
-     *         activity after authentication is complete (i.e., your activity
-     *         will receive an {@code onResume()}).
-     *
+     *                Dropbox authentication activity. This will typically be an
+     *                {@link Activity} and the user will be taken back to that
+     *                activity after authentication is complete (i.e., your activity
+     *                will receive an {@code onResume()}).
      * @throws IllegalStateException if you have not correctly set up the
-     *         AuthActivity in your manifest, meaning that the Dropbox app will
-     *         not be able to redirect back to your app after auth.
+     *                               AuthActivity in your manifest, meaning that the Dropbox app
+     *                               will
+     *                               not be able to redirect back to your app after auth.
      */
     public void startAuthentication(Context context) {
         AppKeyPair appKeyPair = getAppKeyPair();
@@ -177,9 +177,8 @@ public class AndroidAuthSession extends AbstractSession {
      * after checking that {@link #authenticationSuccessful()} is {@code true}.
      *
      * @return the authenticated user's Dropbox UID.
-     *
      * @throws IllegalStateException if authentication was not successful prior
-     *         to this call (check with {@link #authenticationSuccessful()}.
+     *                               to this call (check with {@link #authenticationSuccessful()}.
      */
     public String finishAuthentication() throws IllegalStateException {
         Intent data = AuthActivity.lastResult;

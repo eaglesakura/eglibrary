@@ -4,9 +4,8 @@ import android.util.Log;
 
 /**
  * ログ出力を制御する。
- * 
+ *
  * @author TAKESHI YAMASHITA
- * 
  */
 public class LogUtil {
     static String tag = "gamelib";
@@ -54,8 +53,6 @@ public class LogUtil {
 
     /**
      * ログ出力時に使用するタグを設定する。
-     * 
-     * @param tag
      */
     public static void setTag(String tag) {
         LogUtil.tag = tag;
@@ -63,7 +60,6 @@ public class LogUtil {
 
     /**
      * ロガーを設定する。
-     * @param logger
      */
     public static void setLogger(Logger logger) {
         LogUtil.logger = logger;
@@ -71,7 +67,6 @@ public class LogUtil {
 
     /**
      * 実際に出力する場合はtrueを設定する
-     * @param output
      */
     public static void setOutput(boolean output) {
         LogUtil.output = output;
@@ -79,8 +74,6 @@ public class LogUtil {
 
     /**
      * ログ出力を行う。
-     * 
-     * @param message
      */
     public static void log(String message) {
         if (output) {

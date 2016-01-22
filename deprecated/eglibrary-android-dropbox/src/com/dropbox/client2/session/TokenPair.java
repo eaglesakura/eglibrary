@@ -26,9 +26,8 @@ public abstract class TokenPair implements Serializable {
     public final String secret;
 
     /**
-     * @param key assigned to {@link #key}.
+     * @param key    assigned to {@link #key}.
      * @param secret assigned to {@link #secret}.
-     *
      * @throws IllegalArgumentException if key or secret is null or invalid.
      */
     public TokenPair(String key, String secret) {

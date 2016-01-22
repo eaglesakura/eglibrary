@@ -1,14 +1,15 @@
 package com.eaglesakura.android.playservice;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
+import com.eaglesakura.android.framework.ui.BaseFragment;
+import com.eaglesakura.util.LogUtil;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
-import com.eaglesakura.android.framework.ui.BaseFragment;
-import com.eaglesakura.util.LogUtil;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class GoogleApiFragment extends BaseFragment {
     protected GoogleApiClientToken googleApiClientToken;
@@ -45,8 +46,6 @@ public class GoogleApiFragment extends BaseFragment {
 
     /**
      * エラーダイアログを表示する
-     *
-     * @param statusCode
      */
     protected void showGoogleErrorDialog(final int statusCode) {
         Dialog dialog = GooglePlayServicesUtil.getErrorDialog(statusCode, getActivity(), REQUEST_GOOGLEPLAYSERVICE_RECOVER, new DialogInterface.OnCancelListener() {

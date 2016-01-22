@@ -1,14 +1,14 @@
 package com.eaglesakura.android.framework.ui.adapter;
 
+import com.eaglesakura.android.framework.ui.FragmentChooser;
+import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.Util;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
-
-import com.eaglesakura.android.framework.ui.FragmentChooser;
-import com.eaglesakura.util.LogUtil;
-import com.eaglesakura.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +51,6 @@ public class FragmentListAdapter extends FragmentPagerAdapter {
 
     /**
      * ViewPagerと接続する
-     *
-     * @param pager
      */
     public void setViewPager(ViewPager pager) {
         this.containerViewId = pager.getId();
@@ -71,8 +69,6 @@ public class FragmentListAdapter extends FragmentPagerAdapter {
     /**
      * Fragment管理を行う
      * Callbackを自動で設定するため、事前に設定したCallbackが呼び出されないことに注意すること。
-     *
-     * @param chooser
      */
     public void setChooser(FragmentChooser chooser) {
         this.chooser = chooser;
@@ -131,10 +127,6 @@ public class FragmentListAdapter extends FragmentPagerAdapter {
     public interface FragmentCreater {
         /**
          * Fragmentを生成させる
-         *
-         * @param adapter
-         * @param index
-         * @return
          */
         Fragment newFragment(FragmentListAdapter adapter, int index);
     }
@@ -151,9 +143,6 @@ public class FragmentListAdapter extends FragmentPagerAdapter {
 
         /**
          * 何か初期化の必要がある時はオーバーライドする
-         *
-         * @param fragment
-         * @return
          */
         protected Fragment initialize(Fragment fragment) {
             return fragment;

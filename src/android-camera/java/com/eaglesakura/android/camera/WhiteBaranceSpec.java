@@ -1,9 +1,9 @@
 package com.eaglesakura.android.camera;
 
-import android.content.Context;
-
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.util.StringUtil;
+
+import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,8 +58,6 @@ public final class WhiteBaranceSpec {
 
     /**
      * API設定名を取得する
-     *
-     * @return
      */
     public String getApiSettingName() {
         return apiSettingName;
@@ -68,7 +66,6 @@ public final class WhiteBaranceSpec {
     /**
      * 設定名を取得する
      *
-     * @param context
      * @return 日本語での設定名
      */
     public String name(Context context) {
@@ -96,9 +93,6 @@ public final class WhiteBaranceSpec {
 
     /**
      * ホワイトバランス設定モードを取得する
-     *
-     * @param mode
-     * @return
      */
     public static WhiteBaranceSpec fromName(String mode) {
         WhiteBaranceSpec result = gWhiteBaranceSpecMap.get(mode);
@@ -112,7 +106,6 @@ public final class WhiteBaranceSpec {
     /**
      * デバイス設定から取得する
      *
-     * @param deviceSettings
      * @return ホワイトバランス設定
      */
     public static List<WhiteBaranceSpec> list(List<String> deviceSettings) {

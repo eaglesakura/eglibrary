@@ -1,11 +1,11 @@
 package com.eaglesakura.android.framework.ui;
 
+import com.eaglesakura.util.LogUtil;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-
-import com.eaglesakura.util.LogUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -65,8 +65,6 @@ public final class FragmentChooser implements Parcelable {
 
         /**
          * 選択対象のFragmentを取得する
-         *
-         * @return
          */
         public Fragment get() {
             if (fragment != null) {
@@ -80,8 +78,6 @@ public final class FragmentChooser implements Parcelable {
 
         /**
          * 値の設定を適切に行う
-         *
-         * @param fragment
          */
         private void set(Fragment fragment) {
             switch (referenceType) {
@@ -157,8 +153,6 @@ public final class FragmentChooser implements Parcelable {
      * Fragment一覧を生成する。
      * <br>
      * 参照切れのFragmentは登録しない
-     *
-     * @return
      */
     public List<Fragment> listExistFragments() {
         compact();
@@ -178,8 +172,6 @@ public final class FragmentChooser implements Parcelable {
 
     /**
      * 管理しているFragment数を取得する
-     *
-     * @return
      */
     public int getFragmentNum() {
         return fragmentCaches.size();
@@ -187,9 +179,6 @@ public final class FragmentChooser implements Parcelable {
 
     /**
      * Fragmentを取得する
-     *
-     * @param index
-     * @return
      */
     public Fragment getFragment(int index) {
         FragmentCache cache = fragmentCaches.get(index);
@@ -251,9 +240,6 @@ public final class FragmentChooser implements Parcelable {
 
     /**
      * Fragmentを追加する
-     *
-     * @param fragment
-     * @param tag
      */
     public void addFragment(Fragment fragment, String tag) {
         addFragment(ReferenceType.Strong, fragment, tag, -1);
@@ -261,10 +247,6 @@ public final class FragmentChooser implements Parcelable {
 
     /**
      * Fragmentを条件付きで追加する
-     *
-     * @param type
-     * @param fragment
-     * @param tag
      */
     public void addFragment(ReferenceType type, Fragment fragment, String tag) {
         addFragment(type, fragment, tag, -1);
@@ -272,11 +254,6 @@ public final class FragmentChooser implements Parcelable {
 
     /**
      * Fragmentを条件指定で追加する
-     *
-     * @param type
-     * @param fragment
-     * @param tag
-     * @param index
      */
     public void addFragment(ReferenceType type, Fragment fragment, String tag, int index) {
         FragmentCache cache = new FragmentCache(type, fragment, tag);
@@ -362,27 +339,16 @@ public final class FragmentChooser implements Parcelable {
     public interface Callback {
         /**
          * 検索対象のFragmentManagerを取得する
-         *
-         * @param chooser
-         * @return
          */
         FragmentManager getFragmentManager(FragmentChooser chooser);
 
         /**
          * このFragmentが有効であればtrue
-         *
-         * @param chooser
-         * @param fragment
-         * @return
          */
         boolean isFragmentExist(FragmentChooser chooser, Fragment fragment);
 
         /**
          * Fragmentの生成を行わせる
-         *
-         * @param chooser
-         * @param requestTag
-         * @return
          */
         Fragment newFragment(FragmentChooser chooser, String requestTag);
     }

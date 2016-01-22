@@ -1,21 +1,20 @@
 package com.eaglesakura.lib.android.game.graphics.gl11;
 
-import javax.microedition.khronos.opengles.GL10;
-import javax.microedition.khronos.opengles.GL11;
-
-import android.graphics.Rect;
-
 import com.eaglesakura.lib.android.game.display.VirtualDisplay;
 import com.eaglesakura.lib.android.game.graphics.Color;
 import com.eaglesakura.lib.android.game.graphics.ImageBase;
 import com.eaglesakura.lib.android.game.graphics.Sprite;
 import com.eaglesakura.lib.android.game.resource.DisposableResource;
 
+import android.graphics.Rect;
+
+import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
+
 /**
  * スプライト描画の管理を行う。
- * 
+ *
  * @author TAKESHI YAMASHITA
- * 
  */
 public class SpriteManager extends DisposableResource {
     //! 投影先の計算
@@ -35,7 +34,7 @@ public class SpriteManager extends DisposableResource {
     Rect renderArea = null;
 
     /**
-     * 
+     *
      * @param display
      * @param gl
      */
@@ -51,8 +50,6 @@ public class SpriteManager extends DisposableResource {
 
     /**
      * GLを取得する。
-     * 
-     * @return
      */
     public GPU getGPU() {
         return gpu;
@@ -60,8 +57,6 @@ public class SpriteManager extends DisposableResource {
 
     /**
      * 仮想ディスプレイ環境を取得する。
-     * 
-     * @return
      */
     public VirtualDisplay getVirtualDisplay() {
         return virtualDisplay;
@@ -69,10 +64,6 @@ public class SpriteManager extends DisposableResource {
 
     /**
      * 描画エリアを指定位置に変更する。
-     * @param x
-     * @param y
-     * @param width
-     * @param height
      */
     public void setRenderArea(int x, int y, int width, int height) {
     }
@@ -118,8 +109,6 @@ public class SpriteManager extends DisposableResource {
 
     /**
      * スプライト情報を元に描画する。
-     * 
-     * @param sprite
      */
     public void draw(Sprite sprite) {
         Rect src = sprite.getSrcRect();
@@ -130,9 +119,6 @@ public class SpriteManager extends DisposableResource {
 
     /**
      * 単純な位置に描画を行う。
-     * @param image
-     * @param x
-     * @param y
      */
     public void drawImage(ImageBase image, int x, int y) {
         drawImage(image, 0, 0, image.getWidth(), image.getHeight(), x, y, image.getWidth(), image.getHeight(), 0,
@@ -141,10 +127,6 @@ public class SpriteManager extends DisposableResource {
 
     /**
      * 単純な位置に描画を行う。
-     * @param image
-     * @param x
-     * @param y
-     * @param colorRGBA
      */
     public void drawImage(ImageBase image, int x, int y, int colorRGBA) {
         drawImage(image, 0, 0, image.getWidth(), image.getHeight(), x, y, image.getWidth(), image.getHeight(), 0,
@@ -153,21 +135,9 @@ public class SpriteManager extends DisposableResource {
 
     /**
      * 画像の描画を行う。
-     * 
-     * @param image
-     * @param srcX
-     * @param srcY
-     * @param srcWidth
-     * @param srcHeight
-     * @param dstX
-     * @param dstY
-     * @param dstWidth
-     * @param dstHeight
-     * @param degree
-     * @param colorRGBA
      */
     public void drawImage(ImageBase image, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY,
-            int dstWidth, int dstHeight, float degree, int colorRGBA) {
+                          int dstWidth, int dstHeight, float degree, int colorRGBA) {
 
         final int left = dstX;
         final int top = dstY;
@@ -239,8 +209,6 @@ public class SpriteManager extends DisposableResource {
 
     /**
      * 仮想ディスプレイを全て消去する。
-     * 
-     * @param colorRGBA
      */
     public void clear(int colorRGBA) {
         fillRect(0, 0, virtualDisplay.getVirtualDisplayWidth(), virtualDisplay.getVirtualDisplayHeight(), colorRGBA);
@@ -248,10 +216,6 @@ public class SpriteManager extends DisposableResource {
 
     /**
      * 仮想ディスプレイの内容を単色クリアする。
-     * @param r
-     * @param g
-     * @param b
-     * @param a
      */
     public void clear(int r, int g, int b, int a) {
         clear(Color.toColorRGBA(r, g, b, a));
@@ -259,8 +223,6 @@ public class SpriteManager extends DisposableResource {
 
     /**
      * 四角形を描画する
-     * @param area
-     * @param colorRGBA
      */
     public void fillRect(Rect area, int colorRGBA) {
         if (area == null) {
@@ -272,11 +234,6 @@ public class SpriteManager extends DisposableResource {
 
     /**
      * 四角形を描画する。
-     * 
-     * @param x
-     * @param y
-     * @param width
-     * @param height
      */
     public void fillRect(int x, int y, int width, int height, int colorRGBA) {
         final float displayWidth = virtualDisplay.getVirtualDisplayWidth();
@@ -307,8 +264,6 @@ public class SpriteManager extends DisposableResource {
 
     /**
      * ポリゴンの描画色を指定する。
-     * 
-     * @param colorRGBA
      */
     void setColor(int colorRGBA) {
         //! 描画色指定
@@ -326,8 +281,6 @@ public class SpriteManager extends DisposableResource {
 
     /**
      * 描画用テクスチャを設定する。
-     * 
-     * @param newTexture
      */
     void setTexture(TextureImageBase newTexture) {
 

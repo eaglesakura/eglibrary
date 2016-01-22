@@ -1,5 +1,9 @@
 package com.eaglesakura.lib.android.game.io;
 
+import com.eaglesakura.lib.android.game.util.EncodeUtil;
+import com.eaglesakura.lib.android.game.util.GameUtil;
+import com.eaglesakura.lib.android.game.util.LogUtil;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,15 +12,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.UUID;
 
-import com.eaglesakura.lib.android.game.util.EncodeUtil;
-import com.eaglesakura.lib.android.game.util.GameUtil;
-import com.eaglesakura.lib.android.game.util.LogUtil;
-
 /**
  * Webからストリームを得るために利用する。
- * 
+ *
  * @author TAKESHI YAMASHITA
- * 
  */
 public class WebInputStream extends InputStream {
     InputStream stream;
@@ -76,8 +75,6 @@ public class WebInputStream extends InputStream {
 
     /**
      * ストリームを全てbyte配列化し、close()する。
-     * 
-     * @return
      */
     public byte[] toByteArray() throws IOException {
         return GameUtil.toByteArray(stream);
@@ -85,8 +82,6 @@ public class WebInputStream extends InputStream {
 
     /**
      * レスポンスコードを取得する。
-     * 
-     * @return
      */
     public int getResponceCode() {
         return responceCode;
@@ -94,8 +89,6 @@ public class WebInputStream extends InputStream {
 
     /**
      * ステータスが200ならtrueを返す。
-     * 
-     * @return
      */
     public boolean isStatusOK() {
         return responceCode == 200;
@@ -103,11 +96,6 @@ public class WebInputStream extends InputStream {
 
     /**
      * getメソッドで指定URLを開く。
-     * 
-     * @param url
-     * @param timeout
-     * @return
-     * @throws IOException
      */
     public static WebInputStream get(String url, int timeout) throws IOException {
         WebInputStream webInputStream = new WebInputStream();

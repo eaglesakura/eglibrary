@@ -9,7 +9,7 @@ dependencies {
 
 apply plugin: 'maven'
 
-if(!hasProperty("EGLIBRARY_ARTIFACT_VERSION")){
+if (!hasProperty("EGLIBRARY_ARTIFACT_VERSION")) {
     ext.EGLIBRARY_ARTIFACT_VERSION = ""
 }
 

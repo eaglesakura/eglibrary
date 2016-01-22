@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/EsMaterial.Separator.Height"
-    android:layout_height="match_parent">
+             android:layout_width="@dimen/EsMaterial.Separator.Height"
+             android:layout_height="match_parent">
 
     <View
-        android:layout_width="@dimen/EsMaterial.Separator.Bar.Height"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/EsMaterial.Separator.Bar.SideMargin"
-        android:layout_marginTop="@dimen/EsMaterial.Separator.Bar.SideMargin"
-        android:background="?attr/esmSeparatorBarColor"></View>
+            android:layout_width="@dimen/EsMaterial.Separator.Bar.Height"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/EsMaterial.Separator.Bar.SideMargin"
+            android:layout_marginTop="@dimen/EsMaterial.Separator.Bar.SideMargin"
+            android:background="?attr/esmSeparatorBarColor"></View>
 
 </FrameLayout>

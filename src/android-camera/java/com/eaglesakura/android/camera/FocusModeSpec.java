@@ -1,9 +1,9 @@
 package com.eaglesakura.android.camera;
 
-import android.content.Context;
-
 import com.eaglesakura.android.util.ContextUtil;
 import com.eaglesakura.util.StringUtil;
+
+import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,7 +64,6 @@ public class FocusModeSpec {
     /**
      * 設定名を取得する
      *
-     * @param context
      * @return 日本語での設定名
      */
     public String name(Context context) {
@@ -78,9 +77,6 @@ public class FocusModeSpec {
 
     /**
      * フォーカス設定モードを取得する
-     *
-     * @param mode
-     * @return
      */
     public static FocusModeSpec fromName(String mode) {
         FocusModeSpec result = gFocusModeSpecMap.get(mode);
@@ -94,7 +90,6 @@ public class FocusModeSpec {
     /**
      * デバイス設定から取得する
      *
-     * @param deviceSettings
      * @return フォーカス設定
      */
     public static List<FocusModeSpec> list(List<String> deviceSettings) {

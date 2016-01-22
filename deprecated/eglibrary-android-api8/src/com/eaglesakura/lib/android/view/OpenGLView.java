@@ -1,16 +1,16 @@
 package com.eaglesakura.lib.android.view;
 
-import android.content.Context;
-import android.view.SurfaceHolder;
-
 import com.eaglesakura.lib.android.game.graphics.gl11.GPU;
 import com.eaglesakura.lib.android.game.math.Vector2;
 import com.eaglesakura.lib.android.game.util.ContextUtil;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
+import android.content.Context;
+import android.view.SurfaceHolder;
+
 /**
- * 
- * 
+ *
+ *
  */
 @Deprecated
 public class OpenGLView extends LooperSurfaceView {
@@ -22,10 +22,10 @@ public class OpenGLView extends LooperSurfaceView {
     Context context = null;
 
     /**
-     * 
-     * 
+     *
+     *
      * @param context
-     * 
+     *
      */
     public OpenGLView(Context context) {
         super(context);
@@ -35,10 +35,6 @@ public class OpenGLView extends LooperSurfaceView {
 
     /**
      * サーフェイスが作成された。
-     * 
-     * 
-     * @param holder
-     * 
      */
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
@@ -52,10 +48,6 @@ public class OpenGLView extends LooperSurfaceView {
 
     /**
      * GL管理クラスを取得する。
-     * 
-     * 
-     * @return
-     * 
      */
     public GPU getGLManager() {
         return gpu;
@@ -68,13 +60,13 @@ public class OpenGLView extends LooperSurfaceView {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param holder
      * @param format
      * @param width
      * @param height
-     * 
+     *
      */
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -86,8 +78,6 @@ public class OpenGLView extends LooperSurfaceView {
 
     /**
      * サーフェイスが破棄されている場合trueを返す。 呼び出し後、破棄フラグはリセットされる。
-     * 
-     * @return
      */
     public boolean isDestroyed() {
         boolean result = destroyed;
@@ -99,10 +89,6 @@ public class OpenGLView extends LooperSurfaceView {
 
     /**
      * サーフェイスが破棄された。
-     * 
-     * 
-     * @param holder
-     * 
      */
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {

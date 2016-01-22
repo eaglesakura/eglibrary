@@ -15,7 +15,6 @@ public class StringField extends NonProguardModel {
 
     /**
      * 日付として読み込む
-     * @return
      */
     public Date toDate() {
         return StringField.toDate(value);

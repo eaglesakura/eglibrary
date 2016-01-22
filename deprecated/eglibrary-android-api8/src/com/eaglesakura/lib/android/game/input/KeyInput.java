@@ -1,19 +1,19 @@
 package com.eaglesakura.lib.android.game.input;
 
+import com.eaglesakura.lib.android.game.util.GameUtil;
+
+import android.view.KeyEvent;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import android.view.KeyEvent;
-
-import com.eaglesakura.lib.android.game.util.GameUtil;
-
 /**
  * ゲーム中でキー入力をサポートするためのクラス。
  * デフォルトは上下左右。
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class KeyInput {
 
@@ -56,9 +56,6 @@ public class KeyInput {
 
         /**
          * タッチされているかを調べる。
-         * 
-         * 
-         * @return
          */
         public boolean isTouch() {
             return GameUtil.isFlagOn(attrNow, ATTR_KEY_PRESS);
@@ -66,9 +63,6 @@ public class KeyInput {
 
         /**
          * ディスプレイから指が離れているか。
-         * 
-         * 
-         * @return
          */
         public boolean isRelease() {
             return !GameUtil.isFlagOn(attrNow, ATTR_KEY_PRESS);
@@ -76,9 +70,6 @@ public class KeyInput {
 
         /**
          * ディスプレイから指が離れた瞬間か。
-         * 
-         * 
-         * @return
          */
         public boolean isReleaseOnce() {
             if (!GameUtil.isFlagOn(attrNow, ATTR_KEY_PRESS) && GameUtil.isFlagOn(attrOld, ATTR_KEY_PRESS)) {
@@ -89,9 +80,6 @@ public class KeyInput {
 
         /**
          * タッチされているかを調べる。
-         * 
-         * 
-         * @return
          */
         public boolean isTouchOnce() {
             if (GameUtil.isFlagOn(attrNow, ATTR_KEY_PRESS) && !GameUtil.isFlagOn(attrOld, ATTR_KEY_PRESS)) {
@@ -102,8 +90,6 @@ public class KeyInput {
 
         /**
          * 毎フレームの更新を行う。
-         * 
-         * 
          */
         void update() {
             attrOld = attrNow;
@@ -168,7 +154,6 @@ public class KeyInput {
 
     /**
      * 認識を行うキーを追加する。
-     * @param keyCode
      */
     public void addKey(int keyCode) {
         keys.put(keyCode, new Key(keyCode));
@@ -187,8 +172,6 @@ public class KeyInput {
 
     /**
      * 対応したキーを取得する。
-     * @param keyCode
-     * @return
      */
     public Key getKey(int keyCode) {
         return keys.get(keyCode);
@@ -196,8 +179,6 @@ public class KeyInput {
 
     /**
      * keydownイベントを受け取る。
-     * @param keyCode
-     * @param event
      */
     public boolean onKeyEvent(int keyCode, KeyEvent event) {
         final int action = event.getAction();

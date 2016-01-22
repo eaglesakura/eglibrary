@@ -1,5 +1,12 @@
 package com.eaglesakura.android.glkit.gl;
 
+import com.eaglesakura.android.glkit.egl.IEGLContextGroup;
+import com.eaglesakura.android.glkit.egl.IEGLDevice;
+import com.eaglesakura.android.glkit.egl.IEGLManager;
+import com.eaglesakura.android.thread.ui.UIHandler;
+import com.eaglesakura.util.LogUtil;
+import com.eaglesakura.util.Util;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -9,13 +16,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.Window;
-
-import com.eaglesakura.android.glkit.egl.IEGLContextGroup;
-import com.eaglesakura.android.glkit.egl.IEGLDevice;
-import com.eaglesakura.android.glkit.egl.IEGLManager;
-import com.eaglesakura.android.thread.ui.UIHandler;
-import com.eaglesakura.util.LogUtil;
-import com.eaglesakura.util.Util;
 
 /**
  * GL処理管理を行う。
@@ -55,9 +55,6 @@ public abstract class GLProcessingManager {
 
     /**
      * オフスクリーンレンダリング用EGLDeviceを生成する
-     *
-     * @param surfaceWidth
-     * @param surfaceHeight
      */
     public void initializeOffscreenDevice(int surfaceWidth, int surfaceHeight, IEGLContextGroup contextGroup) {
         if (surfaceWidth < 1 || surfaceHeight < 1) {
@@ -77,8 +74,6 @@ public abstract class GLProcessingManager {
 
     /**
      * EGL管理クラスを取得する
-     *
-     * @return
      */
     public IEGLManager getEglManager() {
         return eglManager;
@@ -86,8 +81,6 @@ public abstract class GLProcessingManager {
 
     /**
      * 処理用デバイスを取得する
-     *
-     * @return
      */
     public IEGLDevice getDevice() {
         return device;
@@ -146,8 +139,6 @@ public abstract class GLProcessingManager {
 
     /**
      * Thread名を生成する
-     *
-     * @return
      */
     protected String getThreadName() {
         return String.format("GLProc(%d)", thread.hashCode());

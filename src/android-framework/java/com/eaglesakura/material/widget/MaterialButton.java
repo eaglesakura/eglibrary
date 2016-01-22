@@ -1,22 +1,22 @@
 package com.eaglesakura.material.widget;
 
+import com.eaglesakura.android.R;
+import com.eaglesakura.android.graphics.Graphics;
+import com.eaglesakura.util.LogUtil;
+
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.os.Build;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v7.graphics.Palette;
-//import android.support.v7.internal.widget.ThemeUtils;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 import android.view.Gravity;
 
-import com.eaglesakura.android.R;
-import com.eaglesakura.android.graphics.Graphics;
-import com.eaglesakura.util.LogUtil;
+//import android.support.v7.internal.widget.ThemeUtils;
 
 /**
  *

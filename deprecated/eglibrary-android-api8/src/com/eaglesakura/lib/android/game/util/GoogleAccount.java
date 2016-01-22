@@ -1,7 +1,5 @@
 package com.eaglesakura.lib.android.game.util;
 
-import java.io.IOException;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
@@ -12,10 +10,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
+import java.io.IOException;
+
 /**
  * Googleアカウントを管理する。
- * @author SAKURA
  *
+ * @author SAKURA
  */
 public class GoogleAccount {
     AccountManager manager = null;
@@ -30,7 +30,6 @@ public class GoogleAccount {
 
     /**
      * 登録されているアカウント数を取得する。
-     * @return
      */
     public int getAccountCount() {
         return accounts.length;
@@ -38,8 +37,6 @@ public class GoogleAccount {
 
     /**
      * ユーザーのメールアドレスを取得する
-     * @param num
-     * @return
      */
     public String getMailAddress(int num) {
         return accounts[num].name;
@@ -47,8 +44,6 @@ public class GoogleAccount {
 
     /**
      * アカウントアクセス用トークンを取得する。
-     * @param acountNumber
-     * @return
      */
     public void getGoogleDocsToken(int accountNumber, AccountManagerCallback<Bundle> callback) {
         manager.getAuthToken(accounts[accountNumber], "writely", null, context, callback, new Handler() {

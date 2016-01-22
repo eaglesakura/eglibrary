@@ -1,5 +1,11 @@
 package com.eaglesakura.lib.android.game.graphics.gl11;
 
+import com.eaglesakura.lib.android.game.display.VirtualDisplay;
+import com.eaglesakura.lib.android.game.graphics.gl11.DisposableGLResource.GLResource;
+import com.eaglesakura.lib.android.game.graphics.gl11.DisposableGLResource.Type;
+import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
+import com.eaglesakura.lib.android.game.resource.IRawResource;
+
 import java.nio.Buffer;
 import java.util.List;
 
@@ -7,17 +13,11 @@ import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 import javax.microedition.khronos.opengles.GL11ExtensionPack;
 
-import com.eaglesakura.lib.android.game.display.VirtualDisplay;
-import com.eaglesakura.lib.android.game.graphics.gl11.DisposableGLResource.GLResource;
-import com.eaglesakura.lib.android.game.graphics.gl11.DisposableGLResource.Type;
-import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
-import com.eaglesakura.lib.android.game.resource.IRawResource;
-
 /**
  * レンダリングターゲット用のテクスチャ。
  * 作成されたテクスチャは必ず上下が逆さになることに注意。
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class RenderTargetTexture extends TextureImageBase {
 
@@ -63,7 +63,7 @@ public class RenderTargetTexture extends TextureImageBase {
     }
 
     /**
-     * 
+     *
      */
     protected void initRenderFrame() {
         GL10 gl10 = getGL();
@@ -172,7 +172,6 @@ public class RenderTargetTexture extends TextureImageBase {
 
     /**
      * 投影用のディスプレイを取得する。
-     * @return
      */
     public VirtualDisplay getDisplay() {
         return display;

@@ -1,9 +1,9 @@
 package com.dropbox.client2.jsonextract;
 
-import static org.json.simple.JSONValue.toJSONString;
-
 import java.util.List;
 import java.util.Map;
+
+import static org.json.simple.JSONValue.toJSONString;
 
 public final class JsonExtractionException extends Exception {
     static final long serialVersionUID = 1;

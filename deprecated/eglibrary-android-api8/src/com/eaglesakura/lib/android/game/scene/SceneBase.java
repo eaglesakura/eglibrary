@@ -4,7 +4,6 @@ public abstract class SceneBase {
 
     /**
      * シーンを開始したタイミングで呼び出される。
-     * @param before
      */
     public abstract void onSceneStart(SceneManager manager, SceneBase before);
 
@@ -15,7 +14,6 @@ public abstract class SceneBase {
 
     /**
      * フレームの更新を行う。
-     * @return
      */
     public abstract void onFrameBegin(SceneManager manager);
 
@@ -31,13 +29,11 @@ public abstract class SceneBase {
 
     /**
      * Activityが一時停止した
-     * @param manager
      */
     public abstract void onGamePause(SceneManager manager);
 
     /**
      * Activityが再開した。
-     * @param manager
      */
     public abstract void onGameResume(SceneManager manager);
 }

@@ -1,20 +1,19 @@
 package com.eaglesakura.lib.android.game.graphics.gl11;
 
-import javax.microedition.khronos.opengles.GL10;
-import javax.microedition.khronos.opengles.GL11;
+import com.eaglesakura.lib.android.game.graphics.canvas.Graphics;
+import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.opengl.GLUtils;
 
-import com.eaglesakura.lib.android.game.graphics.canvas.Graphics;
-import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
+import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
 
 /**
  * Bitmap画像を利用してテクスチャを生成する。
- * 
+ *
  * @author TAKESHI YAMASHITA
- * 
  */
 public class BitmapTextureImage extends TextureImageBase {
 
@@ -23,9 +22,6 @@ public class BitmapTextureImage extends TextureImageBase {
      * 引数imageはrecycleされないので、外部で適宜解放すること。<BR>
      * <BR>
      * GLに適さないテクスチャサイズの場合、拡大する。
-     * 
-     * @param image
-     * @param glManager
      */
     public BitmapTextureImage(Bitmap image, VRAM vram) {
         super(vram);
@@ -36,7 +32,7 @@ public class BitmapTextureImage extends TextureImageBase {
     }
 
     /**
-     * 
+     *
      * @param glManager
      */
     protected BitmapTextureImage(VRAM vram) {
@@ -45,7 +41,6 @@ public class BitmapTextureImage extends TextureImageBase {
 
     /**
      * 画像からテクスチャを生成する。
-     * @param image
      */
     protected void initTexture(Bitmap image) {
         dispose();

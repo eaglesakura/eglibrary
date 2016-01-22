@@ -10,7 +10,7 @@ public class BufferTargetOutputStream extends OutputStream {
     byte[] buffer;
 
     /**
-     * 
+     *
      */
     int pointer;
 
@@ -44,7 +44,6 @@ public class BufferTargetOutputStream extends OutputStream {
 
     /**
      * 書き込み対象のバッファを取得する
-     * @return
      */
     public byte[] getBuffer() {
         return buffer;
@@ -52,7 +51,6 @@ public class BufferTargetOutputStream extends OutputStream {
 
     /**
      * 書き込みポインタを取得する
-     * @return
      */
     public int getWriteIndex() {
         return pointer;
@@ -60,7 +58,6 @@ public class BufferTargetOutputStream extends OutputStream {
 
     /**
      * 書き込みバッファの最大サイズを取得する
-     * @return
      */
     public int getBufferSize() {
         return buffer.length;

@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/EsMaterial.Grey.300"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:background="@color/EsMaterial.Grey.300"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
         <android.support.v7.widget.Toolbar
-            app:theme="@style/EsMaterial.Theme.Grey.Toolbar"
-            android:id="@+id/EsMaterial.Toolbar"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize" />
+                app:theme="@style/EsMaterial.Theme.Grey.Toolbar"
+                android:id="@+id/EsMaterial.Toolbar"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:background="?attr/colorPrimary"
+                android:minHeight="?attr/actionBarSize"/>
 
         <com.eaglesakura.material.widget.support.SupportRecyclerView
-            android:id="@+id/eglibrary.License.List"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+                android:id="@+id/eglibrary.License.List"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
     </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/eglibrary.License.Loading"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            android:id="@+id/eglibrary.License.Loading"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
 
         <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"/>
     </FrameLayout>
 </FrameLayout>

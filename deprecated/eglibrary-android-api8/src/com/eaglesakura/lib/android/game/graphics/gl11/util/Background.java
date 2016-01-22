@@ -1,10 +1,5 @@
 package com.eaglesakura.lib.android.game.graphics.gl11.util;
 
-import javax.microedition.khronos.opengles.GL10;
-import javax.microedition.khronos.opengles.GL11;
-
-import android.graphics.Bitmap;
-
 import com.eaglesakura.lib.android.game.graphics.Color;
 import com.eaglesakura.lib.android.game.graphics.Sprite;
 import com.eaglesakura.lib.android.game.graphics.canvas.BitmapImage;
@@ -15,16 +10,21 @@ import com.eaglesakura.lib.android.game.graphics.gl11.hw.VRAM;
 import com.eaglesakura.lib.android.game.resource.DisposableResource;
 import com.eaglesakura.lib.android.game.util.LogUtil;
 
+import android.graphics.Bitmap;
+
+import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
+
 /**
  * 巨大な一枚絵を表示する。
- * @author TAKESHI YAMASHITA
  *
+ * @author TAKESHI YAMASHITA
  */
 public class Background extends DisposableResource {
     /**
      * 画像読み込みタイプを指定する。
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public enum ImageType {
         /**
@@ -71,7 +71,6 @@ public class Background extends DisposableResource {
 
     /**
      * テクスチャの分割サイズ
-     * @param textureHeight
      */
     public Background setTextureHeight(int textureHeight) {
         this.textureHeight = textureHeight;
@@ -80,7 +79,6 @@ public class Background extends DisposableResource {
 
     /**
      * テクスチャの分割サイズ
-     * @param textureWidth
      */
     public Background setTextureWidth(int textureWidth) {
         this.textureWidth = textureWidth;
@@ -97,9 +95,6 @@ public class Background extends DisposableResource {
 
     /**
      * 画像を分割して読み込む。
-     * @param bitmap
-     * @param originSize
-     * @param type
      */
     public void load(final BitmapImage image, final ImageType type, VRAM vram, ImageLoadingListener listener) {
         if (listener == null) {
@@ -167,14 +162,9 @@ public class Background extends DisposableResource {
     /**
      * サブテクスチャを作成する。
      * テクスチャはRGBA8888が利用される。
-     * @param origin
-     * @param glManager
-     * @param x
-     * @param y
-     * @return
      */
     public static TextureImageBase createSubTextureRGBA8888(Bitmap origin, VRAM vram, int x, int y, int textureWidth,
-            int textureHeight) {
+                                                            int textureHeight) {
         int[] pixels = new int[textureWidth * textureHeight];
         final int pixWidth = Math.min(textureWidth, origin.getWidth() - x);
         final int pixHeight = Math.min(textureHeight, origin.getHeight() - y);
@@ -205,14 +195,9 @@ public class Background extends DisposableResource {
     /**
      * サブテクスチャを作成する。
      * テクスチャはRGB888が利用される。
-     * @param origin
-     * @param glManager
-     * @param x
-     * @param y
-     * @return
      */
     public static TextureImageBase createSubTextureRGB888(Bitmap origin, VRAM vram, int x, int y, int textureWidth,
-            int textureHeight) {
+                                                          int textureHeight) {
         int[] pixels = new int[textureWidth * textureHeight];
         final int pixWidth = Math.min(textureWidth, origin.getWidth() - x);
         final int pixHeight = Math.min(textureHeight, origin.getHeight() - y);
@@ -246,7 +231,6 @@ public class Background extends DisposableResource {
 
     /**
      * 色情報を取得する
-     * @return
      */
     public Color getColor() {
         return color;
@@ -254,8 +238,6 @@ public class Background extends DisposableResource {
 
     /**
      * 仮で作成したスプライトの位置へ描画する
-     * @param spriteManager
-     * @param sprite
      */
     public void draw(SpriteManager spriteManager, Sprite sprite) {
         color.set(sprite.getColorRGBA());
@@ -264,11 +246,6 @@ public class Background extends DisposableResource {
 
     /**
      * 指定領域に描画を行う。
-     * @param spriteManager
-     * @param dstX
-     * @param dstY
-     * @param dstWidth
-     * @param dstHeight
      */
     public void draw(SpriteManager spriteManager, int dstX, int dstY, int dstWidth, int dstHeight) {
         if (textures == null) {
@@ -346,30 +323,27 @@ public class Background extends DisposableResource {
 
     /**
      * 画像読み込み時のリスナ。
-     * @author TAKESHI YAMASHITA
      *
+     * @author TAKESHI YAMASHITA
      */
     public interface ImageLoadingListener {
         /**
          * テクスチャへの転送を開始する。
          * 分割画像1枚ごとに呼ばれる。
-         * @param image
+         *
          * @return 処理を続行する場合true
          */
         public boolean onSubTextureLoadingStart(Background image);
 
         /**
          * テクスチャへの転送が終わった時に呼び出される。
-         * @param image
+         *
          * @param completed コンプリート率を0.0f〜1.0fで設定される
-         * @return
          */
         public void onSubTextureLoadingComplete(Background image, float completed);
 
         /**
          * 全テクスチャへの転送が完了した場合に呼び出される。
-         * @param image
-         * @return
          */
         public void onTextureLoadingComplete(Background image);
     }

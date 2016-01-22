@@ -2,9 +2,8 @@ package com.eaglesakura.lib.android.game.loop;
 
 /**
  * フレームレートの実測を行うカウンタ。
- * 
+ *
  * @author TAKESHI YAMASHITA
- * 
  */
 public class FramerateCounter {
     int updates = 0;
@@ -27,8 +26,6 @@ public class FramerateCounter {
 
     /**
      * 実際のレートを取得する。
-     * 
-     * @return
      */
     public int getRealRate() {
         return realRate;

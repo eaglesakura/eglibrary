@@ -1,13 +1,13 @@
 package com.eaglesakura.dummybeaconadvertiser;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.os.Bundle;
-
 import com.eaglesakura.android.annotations.AnnotationUtil;
 import com.eaglesakura.android.framework.ui.BaseActivity;
 
 import org.androidannotations.annotations.EActivity;
+
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.os.Bundle;
 
 
 @EActivity(R.layout.activity_main)

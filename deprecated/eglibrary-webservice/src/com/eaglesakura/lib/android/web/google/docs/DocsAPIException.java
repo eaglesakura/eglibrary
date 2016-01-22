@@ -1,16 +1,16 @@
 package com.eaglesakura.lib.android.web.google.docs;
 
+import com.google.api.client.http.HttpResponseException;
+
+import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.conn.ConnectionPoolTimeoutException;
+
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import javax.net.ssl.SSLPeerUnverifiedException;
-
-import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.conn.ConnectionPoolTimeoutException;
-
-import com.google.api.client.http.HttpResponseException;
 
 public class DocsAPIException extends Exception {
     public static final long serialVersionUID = 0x01;
@@ -101,8 +101,6 @@ public class DocsAPIException extends Exception {
 
     /**
      * 例外タイプに変換する
-     * @param base
-     * @return
      */
     public static DocsAPIException.Type toExceptionType(Exception base) {
         if (base instanceof HttpResponseException) {

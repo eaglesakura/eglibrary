@@ -1,6 +1,5 @@
 package com.eaglesakura.gradle.tasks
 
-import com.eaglesakura.tool.log.Logger
 import org.gradle.testfixtures.ProjectBuilder
 
 public class AndroidGooglePlayPublishTaskTest extends GroovyTestCase {
