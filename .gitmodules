@@ -19,3 +19,6 @@
 [submodule "android-net"]
 	path = android-net
 	url = git@github.com:eaglesakura/android-net.git
+[submodule "android-command-service"]
+	path = android-command-service
+	url = git@github.com:eaglesakura/android-command-service.git
