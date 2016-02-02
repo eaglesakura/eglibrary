@@ -31,3 +31,6 @@
 [submodule "json-wrapper"]
 	path = json-wrapper
 	url = git@github.com:eaglesakura/json-wrapper.git
+[submodule "geo-utils"]
+	path = geo-utils
+	url = git@github.com:eaglesakura/geo-utils.git

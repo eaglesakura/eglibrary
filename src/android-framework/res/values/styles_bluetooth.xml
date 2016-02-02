@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="DeviceSetting.Dialog.DeviceDiable.Message">
-        BluetoothがOFFになっています。\nBluetoothをONに切り替えてください。
-    </string>
-    <string name="DeviceSetting.Dialog.DeviceDiable.Retry">設定</string>
-
-</resources>
