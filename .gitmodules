@@ -22,3 +22,12 @@
 [submodule "android-command-service"]
 	path = android-command-service
 	url = git@github.com:eaglesakura/android-command-service.git
+[submodule "simple-logger"]
+	path = simple-logger
+	url = git@github.com:eaglesakura/simple-logger.git
+[submodule "greendao-wrapper"]
+	path = greendao-wrapper
+	url = git@github.com:eaglesakura/greendao-wrapper.git
+[submodule "json-wrapper"]
+	path = json-wrapper
+	url = git@github.com:eaglesakura/json-wrapper.git
