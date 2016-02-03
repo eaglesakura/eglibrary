@@ -34,3 +34,6 @@
 [submodule "geo-utils"]
 	path = geo-utils
 	url = git@github.com:eaglesakura/geo-utils.git
+[submodule "android-framework"]
+	path = android-framework
+	url = git@github.com:eaglesakura/android-framework.git
