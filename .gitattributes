@@ -1,0 +1,38 @@
+# Resources
+*.xml text eol=lf
+*.properties text=auto
+
+# Source Codes
+*.java text eol=lf
+*.aidl text eol=lf
+*.gradle text eol=lf
+
+# C Source Codes(Visual Studio Support)
+*.c text eol=crlf
+*.h text eol=crlf
+*.cpp text eol=crlf
+*.hpp text eol=crlf
+*.cc text eol=crlf
+
+# Scripts
+*.bat text eol=crlf
+*.sh text eol=lf
+gradlew text=auto
+
+# Others
+*.md text eol=lf
+*.txt text eol=lf
+*.pro text eol=lf
+
+# binary
+*.jar binary
+*.jks binary
+*.bin binary
+*.png binary
+*.so binary
+*.a binary
+
+
+# git files
+.gitignore text eol=lf
+.gitattributes text eol=lf

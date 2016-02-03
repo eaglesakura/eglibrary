@@ -1,0 +1,26 @@
+// Local or maven
+if (!hasProperty("EGLIBRARY_COMPILE_LOCAL")) {
+    ext.EGLIBRARY_COMPILE_LOCAL = false
+}
+
+if (EGLIBRARY_COMPILE_LOCAL) {
+    // Java
+    include ':eglibrary:simple-logger'
+    include ':eglibrary:simple-utils'
+    include ':eglibrary:simple-serialize'
+    include ':eglibrary:geo-utils'
+    include ':eglibrary:json-wrapper'
+
+    // Android
+    include ':eglibrary:android-simple-utils'
+    include ':eglibrary:android-bluetooth'
+    include ':eglibrary:android-canvas-graphics'
+    include ':eglibrary:android-text-kvs'
+    include ':eglibrary:android-thread'
+    include ':eglibrary:android-egl'
+    include ':eglibrary:android-command-service'
+    include ':eglibrary:android-net'
+    include ':eglibrary:greendao-wrapper'
+    include ':eglibrary:onactivityresult-invoke'
+    include ':eglibrary:small-aquery'
+}

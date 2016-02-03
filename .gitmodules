@@ -37,3 +37,15 @@
 [submodule "android-framework"]
 	path = android-framework
 	url = git@github.com:eaglesakura/android-framework.git
+[submodule "android-bluetooth"]
+	path = android-bluetooth
+	url = git@github.com:eaglesakura/android-bluetooth.git
+[submodule "small-aquery"]
+	path = small-aquery
+	url = git@github.com:eaglesakura/small-aquery.git
+[submodule "onactivityresult-invoke"]
+	path = onactivityresult-invoke
+	url = git@github.com:eaglesakura/onactivityresult-invoke.git
+[submodule "android-egl"]
+	path = android-egl
+	url = git@github.com:eaglesakura/android-egl.git
