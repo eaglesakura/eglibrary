@@ -49,6 +49,6 @@
 [submodule "android-egl"]
 	path = android-egl
 	url = git@github.com:eaglesakura/android-egl.git
-[submodule "groovy-logger"]
-	path = groovy-logger
-	url = git@github.com:eaglesakura/groovy-logger.git
+[submodule "gradle-plugin-utils"]
+	path = gradle-plugin-utils
+	url = git@github.com:eaglesakura/gradle-plugin-utils.git

@@ -33,3 +33,5 @@ repo_sync "simple-logger" "develop"
 repo_sync "simple-serialize" "develop"
 repo_sync "simple-utils" "develop"
 repo_sync "small-aquery" "v0.26.8.x"
+repo_sync "gradle-plugin-utils" "develop"
+
