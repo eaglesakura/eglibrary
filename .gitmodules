@@ -52,3 +52,6 @@
 [submodule "gradle-plugin-utils"]
 	path = gradle-plugin-utils
 	url = git@github.com:eaglesakura/gradle-plugin-utils.git
+[submodule "android-dex-report"]
+	path = android-dex-report
+	url = git@github.com:eaglesakura/android-dex-report.git
