@@ -24,4 +24,8 @@ if (EGLIBRARY_COMPILE_LOCAL) {
     include ':eglibrary:greendao-wrapper'
     include ':eglibrary:onactivityresult-invoke'
     include ':eglibrary:small-aquery'
+
+    // Gradle Plugins
+    include ':eglibrary:gradle-plugin-utils'
+    include ':eglibrary:android-dex-report'
 }
