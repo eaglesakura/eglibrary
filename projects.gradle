@@ -24,6 +24,7 @@ if (EGLIBRARY_COMPILE_LOCAL) {
     include ':eglibrary:greendao-wrapper'
     include ':eglibrary:onactivityresult-invoke'
     include ':eglibrary:small-aquery'
+    include ':eglibrary:android-support-bottomsheet'
 
     // Gradle Plugins
     include ':eglibrary:gradle-plugin-utils'
