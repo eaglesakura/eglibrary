@@ -11,6 +11,13 @@ if (EGLIBRARY_COMPILE_LOCAL) {
     include ':eglibrary:geo-utils'
     include ':eglibrary:json-wrapper'
 
+    // Android Support
+    include ':eglibrary:greendao-wrapper'
+    include ':eglibrary:onactivityresult-invoke'
+    include ':eglibrary:small-aquery'
+    include ':eglibrary:android-support-bottomsheet'
+    include ':eglibrary:rxandroid-support'
+
     // Android
     include ':eglibrary:android-simple-utils'
     include ':eglibrary:android-bluetooth'
@@ -21,10 +28,6 @@ if (EGLIBRARY_COMPILE_LOCAL) {
     include ':eglibrary:android-command-service'
     include ':eglibrary:android-net'
     include ':eglibrary:android-framework'
-    include ':eglibrary:greendao-wrapper'
-    include ':eglibrary:onactivityresult-invoke'
-    include ':eglibrary:small-aquery'
-    include ':eglibrary:android-support-bottomsheet'
 
     // Gradle Plugins
     include ':eglibrary:gradle-plugin-utils'
