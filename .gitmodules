@@ -61,3 +61,6 @@
 [submodule "rxandroid-support"]
 	path = rxandroid-support
 	url = git@github.com:eaglesakura/rxandroid-support.git
+[submodule "plugin-ci-support"]
+	path = plugin-ci-support
+	url = git@github.com:eaglesakura/plugin-ci-support.git
