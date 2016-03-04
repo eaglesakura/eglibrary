@@ -32,5 +32,6 @@ if (EGLIBRARY_COMPILE_LOCAL) {
     // Gradle Plugins
     include ':eglibrary:gradle-plugin-utils'
     include ':eglibrary:plugin-ci-support'
+    include ':eglibrary:plugin-android-dbgenerator'
     include ':eglibrary:android-dex-report'
 }

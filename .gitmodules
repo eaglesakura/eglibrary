@@ -64,3 +64,6 @@
 [submodule "plugin-ci-support"]
 	path = plugin-ci-support
 	url = git@github.com:eaglesakura/plugin-ci-support.git
+[submodule "plugin-android-dbgenerator"]
+	path = plugin-android-dbgenerator
+	url = git@github.com:eaglesakura/plugin-android-dbgenerator.git
