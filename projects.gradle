@@ -29,6 +29,9 @@ if (EGLIBRARY_COMPILE_LOCAL) {
     include ':eglibrary:android-net'
     include ':eglibrary:android-framework'
 
+    // Android UnitTest Project
+    include ':eglibrary:unittest'
+
     // Gradle Plugins
     include ':eglibrary:gradle-plugin-utils'
     include ':eglibrary:plugin-ci-support'
