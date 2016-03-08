@@ -19,12 +19,15 @@ repositories {
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda' /* Android Lambda Support */
 
-dependencies {
+configurations {
+    all*.exclude group: "org.apache.httpcomponents", module: "httpclient"
+}
 
+dependencies {
     compile project(":eglibrary:android-net")
     compile project(":eglibrary:android-framework")
 
-    testCompile 'junit:junit:4.12'
+    testCompile 'junit:junit:4.+'
 }
 
 android {

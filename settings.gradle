@@ -1,5 +1,0 @@
-include ':eglibrary-java-core'
-include ':eglibrary-android-java-core'
-include ':eglibrary-groovy-core'
-include ':eglibrary-gradle-plugin'
-include ':eglibrary-android-framework'

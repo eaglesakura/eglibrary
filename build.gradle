@@ -19,30 +19,3 @@ allprojects {
         mavenCentral()
     }
 }
-
-void rsyncJavadoc(String projectName) {
-    def src = file("${projectName}/build/docs/javadoc/");
-    def dst = new File("${System.env.MAVEN_LOCAL_REPO}/doc/${projectName}/");
-    dst.deleteDir();
-    dst.mkdirs();
-
-    ["/usr/bin/rsync", "-a", src.absolutePath, dst.absolutePath].execute().text;
-}
-
-task uploadJavadoc << {
-    /**
-     * Java
-     */
-    rsyncJavadoc("eglibrary-java-core")
-    rsyncJavadoc("eglibrary-java-spreadsheet")
-
-    /**
-     * Android modules
-     */
-    rsyncJavadoc("eglibrary-android-java-core")
-
-    /**
-     * Android framework
-     */
-    rsyncJavadoc("eglibrary-android-framework")
-}
