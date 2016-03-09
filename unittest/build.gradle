@@ -24,10 +24,9 @@ configurations {
 }
 
 dependencies {
-    compile project(":eglibrary:android-net")
-    compile project(":eglibrary:android-framework")
-
-    testCompile 'junit:junit:4.+'
+    androidTestCompile project(":eglibrary:android-net")
+    androidTestCompile project(":eglibrary:android-framework")
+    androidTestCompile project(":eglibrary:android-devicetest-support")
 }
 
 android {

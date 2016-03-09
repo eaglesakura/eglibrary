@@ -1,10 +1,10 @@
 package com.eaglesakura.android.rx;
 
+import com.eaglesakura.android.devicetest.ModuleTestCase;
 import com.eaglesakura.android.rx.error.TaskCanceledException;
 import com.eaglesakura.android.thread.ui.UIHandler;
 import com.eaglesakura.android.util.AndroidThreadUtil;
 import com.eaglesakura.thread.Holder;
-import com.eaglesakura.unittest.ModuleTestCase;
 import com.eaglesakura.util.LogUtil;
 import com.eaglesakura.util.Util;
 

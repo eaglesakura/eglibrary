@@ -67,3 +67,6 @@
 [submodule "plugin-android-dbgenerator"]
 	path = plugin-android-dbgenerator
 	url = git@github.com:eaglesakura/plugin-android-dbgenerator.git
+[submodule "android-devicetest-support"]
+	path = android-devicetest-support
+	url = git@github.com:eaglesakura/android-devicetest-support.git

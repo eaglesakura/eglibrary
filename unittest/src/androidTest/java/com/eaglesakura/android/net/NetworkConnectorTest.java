@@ -1,11 +1,11 @@
 package com.eaglesakura.android.net;
 
+import com.eaglesakura.android.devicetest.ModuleTestCase;
 import com.eaglesakura.android.net.parser.BitmapParser;
 import com.eaglesakura.android.net.request.ConnectRequest;
 import com.eaglesakura.android.net.request.SimpleHttpRequest;
 import com.eaglesakura.android.net.stream.ByteArrayStreamController;
 import com.eaglesakura.android.util.AndroidThreadUtil;
-import com.eaglesakura.unittest.ModuleTestCase;
 import com.eaglesakura.util.IOUtil;
 import com.eaglesakura.util.Util;
 
