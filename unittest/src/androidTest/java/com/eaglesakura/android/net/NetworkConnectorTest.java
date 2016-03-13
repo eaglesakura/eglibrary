@@ -6,6 +6,7 @@ import com.eaglesakura.android.net.request.ConnectRequest;
 import com.eaglesakura.android.net.request.SimpleHttpRequest;
 import com.eaglesakura.android.net.stream.ByteArrayStreamController;
 import com.eaglesakura.android.util.AndroidThreadUtil;
+import com.eaglesakura.util.CollectionUtil;
 import com.eaglesakura.util.IOUtil;
 import com.eaglesakura.util.Util;
 
@@ -22,7 +23,7 @@ public class NetworkConnectorTest extends ModuleTestCase {
 
         NetworkConnector connector = NetworkConnector.createBinaryApi(getContext(), cacheDirectory);
         SimpleHttpRequest request = new SimpleHttpRequest(ConnectRequest.Method.GET);
-        request.setUrl("https://http.cat/200", Util.asMap(Arrays.asList("ThisIs", "UnitTest"), it -> it));
+        request.setUrl("https://http.cat/200", CollectionUtil.asPairMap(Arrays.asList("ThisIs", "UnitTest"), it -> it));
         request.setReadTimeoutMs(1000 * 30);
         request.setConnectTimeoutMs(1000 * 30);
         request.getCachePolicy().setCacheLimitTimeMs(0);

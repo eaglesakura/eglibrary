@@ -391,7 +391,7 @@ public class DriveFile {
         String result = "";
 
         do {
-            if (GameUtil.isEmpty(result)) {
+            if (GameCollectionUtil.isEmpty(result)) {
                 result = current.getTitle();
             } else {
                 result = current.getTitle() + "/" + result;
