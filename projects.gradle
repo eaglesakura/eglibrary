@@ -31,7 +31,6 @@ if (EGLIBRARY_COMPILE_LOCAL) {
 
     // Android UnitTest Project
     include ':eglibrary:android-devicetest-support'
-    include ':eglibrary:unittest'
 
     // Gradle Plugins
     include ':eglibrary:gradle-plugin-utils'
