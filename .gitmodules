@@ -70,3 +70,6 @@
 [submodule "android-devicetest-support"]
 	path = android-devicetest-support
 	url = git@github.com:eaglesakura/android-devicetest-support.git
+[submodule "android-unittest-support"]
+	path = android-unittest-support
+	url = git@github.com:eaglesakura/android-unittest-support.git
