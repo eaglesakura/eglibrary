@@ -73,3 +73,6 @@
 [submodule "android-unittest-support"]
 	path = android-unittest-support
 	url = git@github.com:eaglesakura/android-unittest-support.git
+[submodule "margarineknife"]
+	path = margarineknife
+	url = git@github.com:eaglesakura/margarineknife.git

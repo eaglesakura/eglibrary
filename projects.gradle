@@ -28,6 +28,7 @@ if (EGLIBRARY_COMPILE_LOCAL) {
     include ':eglibrary:android-command-service'
     include ':eglibrary:android-net'
     include ':eglibrary:android-framework'
+    include ':eglibrary:margarineknife'
 
     // Android UnitTest Project
     include ':eglibrary:android-unittest-support'
