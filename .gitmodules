@@ -55,9 +55,6 @@
 [submodule "android-dex-report"]
 	path = android-dex-report
 	url = git@github.com:eaglesakura/android-dex-report.git
-[submodule "android-support-bottomsheet"]
-	path = android-support-bottomsheet
-	url = git@github.com:eaglesakura/android-support-bottomsheet.git
 [submodule "rxandroid-support"]
 	path = rxandroid-support
 	url = git@github.com:eaglesakura/rxandroid-support.git
