@@ -38,5 +38,6 @@ if (EGLIBRARY_COMPILE_LOCAL) {
     include ':eglibrary:gradle-plugin-utils'
     include ':eglibrary:plugin-ci-support'
     include ':eglibrary:plugin-android-dbgenerator'
+    include ':eglibrary:plugin-android-mipmap'
 //    include ':eglibrary:android-dex-report'   // Pending
 }

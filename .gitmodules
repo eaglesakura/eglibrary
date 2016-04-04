@@ -73,3 +73,6 @@
 [submodule "margarineknife"]
 	path = margarineknife
 	url = git@github.com:eaglesakura/margarineknife.git
+[submodule "plugin-android-mipmap"]
+	path = plugin-android-mipmap
+	url = git@github.com:eaglesakura/plugin-android-mipmap.git
