@@ -76,3 +76,6 @@
 [submodule "plugin-android-mipmap"]
 	path = plugin-android-mipmap
 	url = git@github.com:eaglesakura/plugin-android-mipmap.git
+[submodule "garnet"]
+	path = garnet
+	url = git@github.com:eaglesakura/garnet.git
