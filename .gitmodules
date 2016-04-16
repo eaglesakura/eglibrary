@@ -79,3 +79,6 @@
 [submodule "garnet"]
 	path = garnet
 	url = git@github.com:eaglesakura/garnet.git
+[submodule "android-apptour"]
+	path = android-apptour
+	url = git@github.com:eaglesakura/android-apptour.git
