@@ -82,3 +82,6 @@
 [submodule "android-apptour"]
 	path = android-apptour
 	url = git@github.com:eaglesakura/android-apptour.git
+[submodule "android-camera"]
+	path = android-camera
+	url = git@github.com:eaglesakura/android-camera.git
