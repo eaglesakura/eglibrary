@@ -44,4 +44,5 @@ repo_sync "margarineknife" "develop"
 repo_sync "garnet" "develop"
 repo_sync "plugin-android-mipmap" "develop"
 repo_sync "android-apptour" "develop"
+repo_sync "android-camera" "develop"
 

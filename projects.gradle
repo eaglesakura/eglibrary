@@ -12,6 +12,10 @@ if (!hasProperty("EGLIBRARY_COMPILE_PROJECT_ANDROID_BLUETOOTH")) {
 if (!hasProperty("EGLIBRARY_COMPILE_PROJECT_ANDROID_EGL")) {
     ext.EGLIBRARY_COMPILE_PROJECT_ANDROID_EGL = true        // OpenGLを利用する
 }
+if (!hasProperty("EGLIBRARY_COMPILE_PROJECT_ANDROID_CAMERA")) {
+    ext.EGLIBRARY_COMPILE_PROJECT_ANDROID_EGL = true        // OpenGLを利用する
+    ext.EGLIBRARY_COMPILE_PROJECT_ANDROID_CAMERA = true        // カメラを利用する
+}
 if (!hasProperty("EGLIBRARY_COMPILE_PROJECT_ANDROID_CANVAS")) {
     ext.EGLIBRARY_COMPILE_PROJECT_ANDROID_CANVAS = true     // Canvasでの自力レンダリングを利用する
 }
@@ -45,6 +49,9 @@ if (EGLIBRARY_COMPILE_LOCAL) {
     }
     if (EGLIBRARY_COMPILE_PROJECT_ANDROID_EGL) {
         include ':eglibrary:android-egl'
+    }
+    if (EGLIBRARY_COMPILE_PROJECT_ANDROID_CAMERA) {
+        include ':eglibrary:android-camera'
     }
     if (EGLIBRARY_COMPILE_PROJECT_ANDROID_CANVAS) {
         include ':eglibrary:android-canvas-graphics'
