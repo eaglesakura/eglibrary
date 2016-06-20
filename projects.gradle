@@ -6,20 +6,28 @@ if (!hasProperty("EGLIBRARY_COMPILE_LOCAL")) {
 if (!hasProperty("EGLIBRARY_COMPILE_PROJECT_JAVA_GEO")) {
     ext.EGLIBRARY_COMPILE_PROJECT_JAVA_GEO = true           // GEOHASH等を利用する
 }
+if (!hasProperty("EGLIBRARY_COMPILE_PROJECT_ANDROID")) {
+    ext.EGLIBRARY_COMPILE_PROJECT_ANDROID = true           // Android関連のプロジェクトを利用する
+}
 if (!hasProperty("EGLIBRARY_COMPILE_PROJECT_ANDROID_BLUETOOTH")) {
+    ext.EGLIBRARY_COMPILE_PROJECT_ANDROID = true           // Android関連のプロジェクトを利用する
     ext.EGLIBRARY_COMPILE_PROJECT_ANDROID_BLUETOOTH = true  // Bluetoothを利用する
 }
 if (!hasProperty("EGLIBRARY_COMPILE_PROJECT_ANDROID_EGL")) {
+    ext.EGLIBRARY_COMPILE_PROJECT_ANDROID = true           // Android関連のプロジェクトを利用する
     ext.EGLIBRARY_COMPILE_PROJECT_ANDROID_EGL = true        // OpenGLを利用する
 }
 if (!hasProperty("EGLIBRARY_COMPILE_PROJECT_ANDROID_CAMERA")) {
+    ext.EGLIBRARY_COMPILE_PROJECT_ANDROID = true           // Android関連のプロジェクトを利用する
     ext.EGLIBRARY_COMPILE_PROJECT_ANDROID_EGL = true        // OpenGLを利用する
     ext.EGLIBRARY_COMPILE_PROJECT_ANDROID_CAMERA = true        // カメラを利用する
 }
 if (!hasProperty("EGLIBRARY_COMPILE_PROJECT_ANDROID_CANVAS")) {
+    ext.EGLIBRARY_COMPILE_PROJECT_ANDROID = true           // Android関連のプロジェクトを利用する
     ext.EGLIBRARY_COMPILE_PROJECT_ANDROID_CANVAS = true     // Canvasでの自力レンダリングを利用する
 }
 if (!hasProperty("EGLIBRARY_COMPILE_PROJECT_ANDROID_FRAMEWORK")) {
+    ext.EGLIBRARY_COMPILE_PROJECT_ANDROID = true           // Android関連のプロジェクトを利用する
     ext.EGLIBRARY_COMPILE_PROJECT_ANDROID_FRAMEWORK = true  // アプリフレームワークを使用する
 }
 if (!hasProperty("EGLIBRARY_COMPILE_PROJECT_PLUGINS")) {
@@ -39,9 +47,11 @@ if (EGLIBRARY_COMPILE_LOCAL) {
     }
 
     // Android
-    include ':eglibrary:android-simple-utils'
-    include ':eglibrary:android-unittest-support'
-    include ':eglibrary:android-devicetest-support'
+    if(EGLIBRARY_COMPILE_PROJECT_ANDROID) {
+        include ':eglibrary:android-simple-utils'
+        include ':eglibrary:android-unittest-support'
+        include ':eglibrary:android-devicetest-support'
+    }
 
     // Android
     if (EGLIBRARY_COMPILE_PROJECT_ANDROID_BLUETOOTH) {
