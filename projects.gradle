@@ -69,6 +69,7 @@ if (EGLIBRARY_COMPILE_LOCAL) {
         include ':eglibrary:onactivityresult-invoke'
         include ':eglibrary:small-aquery'
         include ':eglibrary:rxandroid-support'
+        include ':eglibrary:light-saver'
     }
 
     // Gradle Plugins

@@ -85,3 +85,6 @@
 [submodule "android-camera"]
 	path = android-camera
 	url = git@github.com:eaglesakura/android-camera.git
+[submodule "light-saver"]
+	path = light-saver
+	url = git@github.com:eaglesakura/light-saver.git
