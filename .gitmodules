@@ -88,3 +88,6 @@
 [submodule "light-saver"]
 	path = light-saver
 	url = git@github.com:eaglesakura/light-saver.git
+[submodule "plugin-firebase-remoteconfig"]
+	path = plugin-firebase-remoteconfig
+	url = git@github.com:eaglesakura/plugin-firebase-remoteconfig.git
