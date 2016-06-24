@@ -88,6 +88,7 @@ if (EGLIBRARY_COMPILE_LOCAL) {
         include ':eglibrary:plugin-ci-support'
         include ':eglibrary:plugin-android-dbgenerator'
         include ':eglibrary:plugin-android-mipmap'
+        include ':eglibrary:plugin-firebase-remoteconfig'
 //    include ':eglibrary:android-dex-report'   // Pending
     }
 }
