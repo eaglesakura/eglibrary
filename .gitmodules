@@ -91,3 +91,6 @@
 [submodule "plugin-firebase-remoteconfig"]
 	path = plugin-firebase-remoteconfig
 	url = git@github.com:eaglesakura/plugin-firebase-remoteconfig.git
+[submodule "android-framework-playservice"]
+	path = android-framework-playservice
+	url = git@github.com:eaglesakura/android-framework-playservice.git

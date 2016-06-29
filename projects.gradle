@@ -30,6 +30,11 @@ if (!hasProperty("EGLIBRARY_COMPILE_PROJECT_ANDROID_FRAMEWORK")) {
     ext.EGLIBRARY_COMPILE_PROJECT_ANDROID = true           // Android関連のプロジェクトを利用する
     ext.EGLIBRARY_COMPILE_PROJECT_ANDROID_FRAMEWORK = true  // アプリフレームワークを使用する
 }
+if (!hasProperty("EGLIBRARY_COMPILE_PROJECT_ANDROID_FRAMEWORK_PLAYSERVICE")) {
+    ext.EGLIBRARY_COMPILE_PROJECT_ANDROID = true           // Android関連のプロジェクトを利用する
+    ext.EGLIBRARY_COMPILE_PROJECT_ANDROID_FRAMEWORK = true  // アプリフレームワークを使用する
+    ext.EGLIBRARY_COMPILE_PROJECT_ANDROID_FRAMEWORK_PLAYSERVICE = true; // Google Play Service
+}
 if (!hasProperty("EGLIBRARY_COMPILE_PROJECT_PLUGINS")) {
     ext.EGLIBRARY_COMPILE_PROJECT_PLUGINS = true            // プラグインプロジェクトを使用する
 }
@@ -47,7 +52,7 @@ if (EGLIBRARY_COMPILE_LOCAL) {
     }
 
     // Android
-    if(EGLIBRARY_COMPILE_PROJECT_ANDROID) {
+    if (EGLIBRARY_COMPILE_PROJECT_ANDROID) {
         include ':eglibrary:android-simple-utils'
         include ':eglibrary:android-unittest-support'
         include ':eglibrary:android-devicetest-support'
@@ -81,6 +86,9 @@ if (EGLIBRARY_COMPILE_LOCAL) {
         include ':eglibrary:rxandroid-support'
         include ':eglibrary:light-saver'
     }
+    if (EGLIBRARY_COMPILE_PROJECT_ANDROID_FRAMEWORK_PLAYSERVICE) {
+        include ':eglibrary:android-framework-playservice'
+    }
 
     // Gradle Plugins
     if (EGLIBRARY_COMPILE_PROJECT_PLUGINS) {
@@ -91,4 +99,5 @@ if (EGLIBRARY_COMPILE_LOCAL) {
         include ':eglibrary:plugin-firebase-remoteconfig'
 //    include ':eglibrary:android-dex-report'   // Pending
     }
+
 }

@@ -46,4 +46,6 @@ repo_sync "plugin-android-mipmap" "develop"
 repo_sync "android-apptour" "develop"
 repo_sync "android-camera" "develop"
 repo_sync "light-saver" "develop"
+repo_sync "plugin-firebase-remoteconfig" "develop"
+repo_sync "android-framework-playservice" "develop"
 
