@@ -94,3 +94,6 @@
 [submodule "android-framework-playservice"]
 	path = android-framework-playservice
 	url = git@github.com:eaglesakura/android-framework-playservice.git
+[submodule "android-framework-firebase"]
+	path = android-framework-firebase
+	url = git@github.com:eaglesakura/android-framework-firebase.git
