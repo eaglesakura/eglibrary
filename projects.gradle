@@ -87,7 +87,8 @@ if (EGLIBRARY_COMPILE_LOCAL) {
         include ':eglibrary:light-saver'
     }
     if (EGLIBRARY_COMPILE_PROJECT_ANDROID_FRAMEWORK_PLAYSERVICE) {
-        include ':eglibrary:android-framework-playservice'
+        include ':eglibrary:android-gms'
+        include ':eglibrary:android-firebase'
     }
 
     // Gradle Plugins

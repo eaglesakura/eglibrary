@@ -47,5 +47,5 @@ repo_sync "android-apptour" "develop"
 repo_sync "android-camera" "develop"
 repo_sync "light-saver" "develop"
 repo_sync "plugin-firebase-remoteconfig" "develop"
-repo_sync "android-framework-playservice" "develop"
-
+repo_sync "android-gms" "develop"
+repo_sync "android-firebase" "develop"

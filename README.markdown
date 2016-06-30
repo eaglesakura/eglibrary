@@ -53,7 +53,7 @@ apply plugin: 'com.eaglesakura.android-support'
 
 * アプリ等の成果物で権利情報を表示可能な場合
 	* 権利情報の表示を行う（行える）場合、MIT Licenseを使用してください。
-	* [MIT License](LICENSE-MIT.txt)	
+	* [MIT License](LICENSE-MIT.txt)
 * 何らかの理由で権利情報を表示不可能な場合
 	* 何らかの事情によりライセンス表記を行えない場合、下記のライセンスで使用可能です。
 	* ライブラリ内で依存している別なライブラリについては、必ずそのライブラリのライセンスに従ってください。
@@ -63,50 +63,6 @@ apply plugin: 'com.eaglesakura.android-support'
 	* dependenciesを利用して取得する場合、継続してNYSLとして使用できます。
 	* [旧ライセンス(NYSL)](LICENSE-NYSL-eng.txt)
 
-## 各ライブラリの内容
-
-### eglibrary-java-core
-
-* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-java-core/javadoc/)
-* Pure-Javaで記述されたライブラリです。
-* Androidで実行可能、もしくはJava 1.7相当の機能で記述されています。
-* 依存外部ライブラリ
-	* com.fasterxml.jackson.core:jackson-core:2.4.+
-	* com.fasterxml.jackson.core:jackson-databind:2.4.+
-* 内部に含まれているGeohash.javaはMIT LICENSEで提供されています（後述）。
-* 参考URL
-	* [2点間の距離測定](http://perota.sakura.ne.jp/blog/android%E3%81%A7%E3%82%82%E7%B7%AF%E5%BA%A6%E7%B5%8C%E5%BA%A6%E3%81%A72%E7%82%B9%E9%96%93%E3%81%AE%E8%B7%9D%E9%9B%A2%E3%82%92%E5%8F%96%E5%BE%97/)
-	* [Geohash library for Java](http://github.com/davetroy/geohash-js/tree/master)
-	* [Geohash.java](https://github.com/hakobe/Gotouchi/blob/master/src/jp/hakobe/android/util/Geohash.java)
-
-### eglibrary-java-spreadsheet
-
-* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-java-spreadsheet/javadoc/)
-* Spreadsheetとの通信&パース用ModelやUtilをまとめています。
-* 依存外部ライブラリ
-	* com.fasterxml.jackson.core:jackson-core:2.4.+
-	* com.fasterxml.jackson.core:jackson-databind:2.4.+
-
-### eglibrary-android-java-core
-
-
-* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-android-java-core/javadoc/)
-* Android SDKのみで動作します。
-* minSdkVersion 10
-
-### eglibrary-android-framework
-
-* [JavaDoc](http://eaglesakura.github.io/maven/doc/eglibrary-android-framework/javadoc/)
-* アプリ開発で使用するActivityやFragment、ネットワーク等のよく使う機能をまとめたフレームワークです。
-* minSdkVersion 10
-* 依存外部ライブラリ
-	* com.fasterxml.jackson.core:jackson-core:2.4.+
-	* com.fasterxml.jackson.core:jackson-databind:2.4.+
-	* org.androidannotations:androidannotations-api:3.0.+
-	* com.googlecode.android-query:android-query:+
-	* de.greenrobot:greendao:1.3.+
-	* com.google.protobuf:protobuf-java:2.5.+
-
 ## ソースコードとして含まれているライブラリのライセンス
 
 ### com.eaglesakura.android.aquery 配下
@@ -115,7 +71,7 @@ apply plugin: 'com.eaglesakura.android-support'
  * 名前衝突を避けるため、package名を変更しています。
  * ver 0.26.8
 
-<pre>
+```
 /*
  * Copyright 2011 - AndroidQuery.com (tinyeeliu@gmail.com)
  *
@@ -131,10 +87,12 @@ apply plugin: 'com.eaglesakura.android-support'
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-</pre>
+
+ ```
 
 ### Geohash.java License
-<pre>
+
+```
 // Geohash.java
 // Geohash library for Java
 // ported from David Troy's Geohash library for Javascript
@@ -184,4 +142,5 @@ Demo Site (http://openlocation.org/geohash/geohash-js)
 Source Code (http://github.com/davetroy/geohash-js/tree/master)
 
 Please contact me at dave at roundhousetech.com with any questions you may have about this code;  right now this is experimental.  The bounding box code found here will be added to the Ruby gem soon.
-</pre>
+
+```
