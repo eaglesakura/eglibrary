@@ -97,3 +97,6 @@
 [submodule "android-firebase"]
 	path = android-firebase
 	url = git@github.com:eaglesakura/android-firebase.git
+[submodule "junit-support"]
+	path = junit-support
+	url = git@github.com:eaglesakura/junit-support.git
