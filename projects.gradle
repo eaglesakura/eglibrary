@@ -45,6 +45,7 @@ if (EGLIBRARY_COMPILE_LOCAL) {
     include ':eglibrary:simple-utils'
     include ':eglibrary:simple-serialize'
     include ':eglibrary:json-wrapper'
+    include ':eglibrary:junit-support'
 
     // Java Geo
     if (EGLIBRARY_COMPILE_PROJECT_JAVA_GEO) {
