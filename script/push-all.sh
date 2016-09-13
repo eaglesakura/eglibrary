@@ -1,19 +1,22 @@
 #! /bin/sh
-
 repo_sync() {
     echo "########################################"
     echo "## sync $1 / $2"
     echo "########################################"
     cd $1
 
-    git diff
-    git add ./build.gradle
-    git add ./sample/build.gradle
-    git commit -m "update plugin version"
     git push origin $2
     cd ..
 }
+# java
+repo_sync "geo-utils" "develop"
+repo_sync "json-wrapper" "develop"
+repo_sync "simple-logger" "develop"
+repo_sync "simple-serialize" "develop"
+repo_sync "simple-utils" "develop"
+repo_sync "junit-support" "develop"
 
+# android
 repo_sync "android-bluetooth" "develop"
 repo_sync "android-canvas-graphics" "develop"
 repo_sync "android-command-service" "develop"
@@ -36,3 +39,10 @@ repo_sync "android-camera" "develop"
 repo_sync "light-saver" "develop"
 repo_sync "android-gms" "develop"
 repo_sync "android-firebase" "develop"
+
+# plugin
+repo_sync "gradle-plugin-utils" "develop"
+repo_sync "plugin-ci-support" "develop"
+repo_sync "plugin-android-dbgenerator" "develop"
+repo_sync "plugin-android-mipmap" "develop"
+repo_sync "plugin-firebase-remoteconfig" "develop"
