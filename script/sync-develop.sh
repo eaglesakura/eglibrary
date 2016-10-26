@@ -53,3 +53,7 @@ repo_sync "plugin-ci-support" "develop"
 repo_sync "plugin-android-dbgenerator" "develop"
 repo_sync "plugin-android-mipmap" "develop"
 repo_sync "plugin-firebase-remoteconfig" "develop"
+
+# jointcoding
+repo_sync "jointcoding-annotation" "develop"
+repo_sync "jointcoding-plugin" "develop"

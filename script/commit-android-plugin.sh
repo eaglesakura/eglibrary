@@ -36,3 +36,7 @@ repo_sync "android-camera" "develop"
 repo_sync "light-saver" "develop"
 repo_sync "android-gms" "develop"
 repo_sync "android-firebase" "develop"
+
+# jointcoding
+repo_sync "jointcoding-annotation" "develop"
+repo_sync "jointcoding-plugin" "develop"
