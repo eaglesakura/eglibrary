@@ -100,3 +100,9 @@
 [submodule "junit-support"]
 	path = junit-support
 	url = git@github.com:eaglesakura/junit-support.git
+[submodule "jointcoding-annotation"]
+	path = jointcoding-annotation
+	url = git@github.com:eaglesakura/jointcoding-annotation.git
+[submodule "jointcoding-plugin"]
+	path = jointcoding-plugin
+	url = git@github.com:eaglesakura/jointcoding-plugin.git
